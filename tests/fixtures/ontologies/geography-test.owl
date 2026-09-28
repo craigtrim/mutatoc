@@ -1,0 +1,369 @@
+@prefix : <http://test.ai/geography#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <http://test.ai/geography#> .
+
+<http://test.ai/geography> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://test.ai/geography#implies
+:implies rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/geography#inflection
+:inflection rdf:type owl:AnnotationProperty ;
+            rdfs:label "inflection"@en ;
+            rdfs:subPropertyOf skos:altLabel .
+
+###  http://test.ai/geography#locatedIn
+:locatedIn rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/geography#requires
+:requires rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/geography#similarTo
+:similarTo rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/geography#uses
+:uses rdf:type owl:AnnotationProperty .
+
+###  http://www.w3.org/2004/02/skos/core#altLabel
+skos:altLabel rdf:type owl:AnnotationProperty .
+
+###  http://www.w3.org/2004/02/skos/core#definition
+skos:definition rdf:type owl:AnnotationProperty .
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://test.ai/geography#Geographic_Region
+:Geographic_Region rdf:type owl:Class ;
+                   rdfs:label "Geographic Region" .
+
+###  http://test.ai/geography#Continent
+:Continent rdf:type owl:Class ;
+           rdfs:subClassOf :Geographic_Region ;
+           rdfs:label "Continent" .
+
+###  http://test.ai/geography#Country
+:Country rdf:type owl:Class ;
+         rdfs:subClassOf :Geographic_Region ;
+         rdfs:label "Country" ;
+         skos:altLabel "nation" .
+
+###  http://test.ai/geography#City
+:City rdf:type owl:Class ;
+      rdfs:subClassOf :Geographic_Region ;
+      rdfs:label "City" ;
+      skos:altLabel "town" .
+
+###  http://test.ai/geography#Landmark
+:Landmark rdf:type owl:Class ;
+          rdfs:subClassOf :Geographic_Region ;
+          rdfs:label "Landmark" .
+
+###  http://test.ai/geography#Ocean
+:Ocean rdf:type owl:Class ;
+       rdfs:subClassOf :Geographic_Region ;
+       rdfs:label "Ocean" .
+
+###  http://test.ai/geography#Mountain
+:Mountain rdf:type owl:Class ;
+          rdfs:subClassOf :Geographic_Region ;
+          rdfs:label "Mountain" .
+
+### ---- Continents ----
+
+###  http://test.ai/geography#North_America
+:North_America rdf:type owl:Class ;
+               rdfs:subClassOf :Continent ;
+               rdfs:label "North America" .
+
+###  http://test.ai/geography#South_America
+:South_America rdf:type owl:Class ;
+               rdfs:subClassOf :Continent ;
+               rdfs:label "South America" .
+
+###  http://test.ai/geography#Europe
+:Europe rdf:type owl:Class ;
+        rdfs:subClassOf :Continent ;
+        rdfs:label "Europe" .
+
+###  http://test.ai/geography#Asia
+:Asia rdf:type owl:Class ;
+      rdfs:subClassOf :Continent ;
+      rdfs:label "Asia" .
+
+###  http://test.ai/geography#Africa
+:Africa rdf:type owl:Class ;
+        rdfs:subClassOf :Continent ;
+        rdfs:label "Africa" .
+
+###  http://test.ai/geography#Australia_Continent
+:Australia_Continent rdf:type owl:Class ;
+                     rdfs:subClassOf :Continent ;
+                     rdfs:label "Australia Continent" ;
+                     skos:altLabel "oceania" ;
+                     skos:altLabel "down under" .
+
+###  http://test.ai/geography#Antarctica
+:Antarctica rdf:type owl:Class ;
+            rdfs:subClassOf :Continent ;
+            rdfs:label "Antarctica" .
+
+### ---- Countries ----
+
+###  http://test.ai/geography#United_States
+:United_States rdf:type owl:Class ;
+               rdfs:subClassOf :Country ;
+               rdfs:label "United States" ;
+               skos:altLabel "USA" ;
+               skos:altLabel "America" ;
+               skos:altLabel "US" ;
+               :locatedIn :North_America .
+
+###  http://test.ai/geography#Canada
+:Canada rdf:type owl:Class ;
+        rdfs:subClassOf :Country ;
+        rdfs:label "Canada" ;
+        :locatedIn :North_America .
+
+###  http://test.ai/geography#Mexico
+:Mexico rdf:type owl:Class ;
+        rdfs:subClassOf :Country ;
+        rdfs:label "Mexico" ;
+        :locatedIn :North_America .
+
+###  http://test.ai/geography#United_Kingdom
+:United_Kingdom rdf:type owl:Class ;
+                rdfs:subClassOf :Country ;
+                rdfs:label "United Kingdom" ;
+                skos:altLabel "UK" ;
+                skos:altLabel "Britain" ;
+                skos:altLabel "England" ;
+                :locatedIn :Europe .
+
+###  http://test.ai/geography#France
+:France rdf:type owl:Class ;
+        rdfs:subClassOf :Country ;
+        rdfs:label "France" ;
+        skos:altLabel "French Republic" ;
+        :locatedIn :Europe .
+
+###  http://test.ai/geography#Germany
+:Germany rdf:type owl:Class ;
+         rdfs:subClassOf :Country ;
+         rdfs:label "Germany" ;
+         skos:altLabel "Deutschland" ;
+         :locatedIn :Europe .
+
+###  http://test.ai/geography#Italy
+:Italy rdf:type owl:Class ;
+       rdfs:subClassOf :Country ;
+       rdfs:label "Italy" ;
+       :locatedIn :Europe .
+
+###  http://test.ai/geography#Spain
+:Spain rdf:type owl:Class ;
+       rdfs:subClassOf :Country ;
+       rdfs:label "Spain" ;
+       :locatedIn :Europe .
+
+###  http://test.ai/geography#Japan
+:Japan rdf:type owl:Class ;
+       rdfs:subClassOf :Country ;
+       rdfs:label "Japan" ;
+       :locatedIn :Asia .
+
+###  http://test.ai/geography#China
+:China rdf:type owl:Class ;
+       rdfs:subClassOf :Country ;
+       rdfs:label "China" ;
+       skos:altLabel "PRC" ;
+       :locatedIn :Asia .
+
+###  http://test.ai/geography#India
+:India rdf:type owl:Class ;
+       rdfs:subClassOf :Country ;
+       rdfs:label "India" ;
+       :locatedIn :Asia .
+
+###  http://test.ai/geography#Brazil
+:Brazil rdf:type owl:Class ;
+        rdfs:subClassOf :Country ;
+        rdfs:label "Brazil" ;
+        :locatedIn :South_America .
+
+###  http://test.ai/geography#Argentina
+:Argentina rdf:type owl:Class ;
+           rdfs:subClassOf :Country ;
+           rdfs:label "Argentina" ;
+           :locatedIn :South_America .
+
+###  http://test.ai/geography#South_Africa
+:South_Africa rdf:type owl:Class ;
+              rdfs:subClassOf :Country ;
+              rdfs:label "South Africa" ;
+              :locatedIn :Africa .
+
+### ---- Cities ----
+
+###  http://test.ai/geography#New_York
+:New_York rdf:type owl:Class ;
+          rdfs:subClassOf :City ;
+          rdfs:label "New York" ;
+          skos:altLabel "NYC" ;
+          skos:altLabel "the big apple" ;
+          :locatedIn :United_States .
+
+###  http://test.ai/geography#Los_Angeles
+:Los_Angeles rdf:type owl:Class ;
+             rdfs:subClassOf :City ;
+             rdfs:label "Los Angeles" ;
+             skos:altLabel "LA" ;
+             :locatedIn :United_States .
+
+###  http://test.ai/geography#Chicago
+:Chicago rdf:type owl:Class ;
+         rdfs:subClassOf :City ;
+         rdfs:label "Chicago" ;
+         :locatedIn :United_States .
+
+###  http://test.ai/geography#London
+:London rdf:type owl:Class ;
+        rdfs:subClassOf :City ;
+        rdfs:label "London" ;
+        :locatedIn :United_Kingdom .
+
+###  http://test.ai/geography#Paris
+:Paris rdf:type owl:Class ;
+       rdfs:subClassOf :City ;
+       rdfs:label "Paris" ;
+       :locatedIn :France .
+
+###  http://test.ai/geography#Tokyo
+:Tokyo rdf:type owl:Class ;
+       rdfs:subClassOf :City ;
+       rdfs:label "Tokyo" ;
+       :locatedIn :Japan .
+
+###  http://test.ai/geography#Beijing
+:Beijing rdf:type owl:Class ;
+         rdfs:subClassOf :City ;
+         rdfs:label "Beijing" ;
+         skos:altLabel "peking" ;
+         :locatedIn :China .
+
+###  http://test.ai/geography#Sydney
+:Sydney rdf:type owl:Class ;
+        rdfs:subClassOf :City ;
+        rdfs:label "Sydney" .
+
+###  http://test.ai/geography#Mumbai
+:Mumbai rdf:type owl:Class ;
+        rdfs:subClassOf :City ;
+        rdfs:label "Mumbai" ;
+        skos:altLabel "bombay" ;
+        :locatedIn :India .
+
+###  http://test.ai/geography#Berlin
+:Berlin rdf:type owl:Class ;
+        rdfs:subClassOf :City ;
+        rdfs:label "Berlin" ;
+        :locatedIn :Germany .
+
+###  http://test.ai/geography#Rome
+:Rome rdf:type owl:Class ;
+      rdfs:subClassOf :City ;
+      rdfs:label "Rome" ;
+      :locatedIn :Italy .
+
+### ---- Landmarks ----
+
+###  http://test.ai/geography#Eiffel_Tower
+:Eiffel_Tower rdf:type owl:Class ;
+              rdfs:subClassOf :Landmark ;
+              rdfs:label "Eiffel Tower" ;
+              :locatedIn :Paris .
+
+###  http://test.ai/geography#Great_Wall
+:Great_Wall rdf:type owl:Class ;
+            rdfs:subClassOf :Landmark ;
+            rdfs:label "Great Wall" ;
+            skos:altLabel "great wall of china" ;
+            :locatedIn :China .
+
+###  http://test.ai/geography#Statue_of_Liberty
+:Statue_of_Liberty rdf:type owl:Class ;
+                   rdfs:subClassOf :Landmark ;
+                   rdfs:label "Statue of Liberty" ;
+                   :locatedIn :New_York .
+
+###  http://test.ai/geography#Big_Ben
+:Big_Ben rdf:type owl:Class ;
+         rdfs:subClassOf :Landmark ;
+         rdfs:label "Big Ben" ;
+         :locatedIn :London .
+
+###  http://test.ai/geography#Colosseum
+:Colosseum rdf:type owl:Class ;
+           rdfs:subClassOf :Landmark ;
+           rdfs:label "Colosseum" ;
+           :locatedIn :Rome .
+
+###  http://test.ai/geography#Mount_Fuji
+:Mount_Fuji rdf:type owl:Class ;
+            rdfs:subClassOf :Landmark ;
+            rdfs:label "Mount Fuji" ;
+            :locatedIn :Japan .
+
+### ---- Oceans ----
+
+###  http://test.ai/geography#Pacific_Ocean
+:Pacific_Ocean rdf:type owl:Class ;
+               rdfs:subClassOf :Ocean ;
+               rdfs:label "Pacific Ocean" .
+
+###  http://test.ai/geography#Atlantic_Ocean
+:Atlantic_Ocean rdf:type owl:Class ;
+                rdfs:subClassOf :Ocean ;
+                rdfs:label "Atlantic Ocean" .
+
+###  http://test.ai/geography#Indian_Ocean
+:Indian_Ocean rdf:type owl:Class ;
+              rdfs:subClassOf :Ocean ;
+              rdfs:label "Indian Ocean" .
+
+###  http://test.ai/geography#Arctic_Ocean
+:Arctic_Ocean rdf:type owl:Class ;
+              rdfs:subClassOf :Ocean ;
+              rdfs:label "Arctic Ocean" .
+
+### ---- Mountains ----
+
+###  http://test.ai/geography#Mount_Everest
+:Mount_Everest rdf:type owl:Class ;
+               rdfs:subClassOf :Mountain ;
+               rdfs:label "Mount Everest" ;
+               skos:altLabel "everest" ;
+               :locatedIn :Asia .
+
+###  http://test.ai/geography#Mont_Blanc
+:Mont_Blanc rdf:type owl:Class ;
+            rdfs:subClassOf :Mountain ;
+            rdfs:label "Mont Blanc" ;
+            :locatedIn :Europe .
+
+###  http://test.ai/geography#Kilimanjaro
+:Kilimanjaro rdf:type owl:Class ;
+             rdfs:subClassOf :Mountain ;
+             rdfs:label "Kilimanjaro" ;
+             skos:altLabel "mount kilimanjaro" ;
+             :locatedIn :Africa .

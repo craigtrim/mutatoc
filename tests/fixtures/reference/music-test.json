@@ -1,0 +1,2247 @@
+{
+  "children": {
+    "Wind_Instrument": [
+      "Flute",
+      "Piccolo",
+      "Trumpet",
+      "Trombone",
+      "Saxophone",
+      "Clarinet",
+      "Oboe",
+      "Bassoon",
+      "French_Horn",
+      "Tuba"
+    ],
+    "String_Instrument": [
+      "Guitar",
+      "Violin",
+      "Cello",
+      "Harp",
+      "Ukulele",
+      "Banjo",
+      "Mandolin"
+    ],
+    "Saxophone": [
+      "Alto_Saxophone",
+      "Tenor_Saxophone"
+    ],
+    "Rock_Music": [
+      "Heavy_Metal",
+      "Punk_Rock"
+    ],
+    "Piano": [
+      "Grand_Piano",
+      "Upright_Piano"
+    ],
+    "Percussion_Instrument": [
+      "Drum",
+      "Cymbal",
+      "Xylophone",
+      "Marimba",
+      "Tambourine",
+      "Timpani"
+    ],
+    "Music_Topic": [
+      "Instrument",
+      "Genre",
+      "Concept"
+    ],
+    "Keyboard_Instrument": [
+      "Piano",
+      "Organ",
+      "Synthesizer",
+      "Harpsichord"
+    ],
+    "Jazz": [
+      "Bebop",
+      "Smooth_Jazz"
+    ],
+    "Instrument": [
+      "String_Instrument",
+      "Wind_Instrument",
+      "Percussion_Instrument",
+      "Keyboard_Instrument"
+    ],
+    "Guitar": [
+      "Electric_Guitar",
+      "Acoustic_Guitar",
+      "Bass_Guitar"
+    ],
+    "Genre": [
+      "Jazz",
+      "Classical_Music",
+      "Rock_Music",
+      "Pop_Music",
+      "Blues",
+      "Folk_Music",
+      "Country_Music",
+      "Hip_Hop",
+      "Electronic_Music",
+      "Reggae",
+      "Soul",
+      "Opera"
+    ],
+    "Drum": [
+      "Snare_Drum",
+      "Bass_Drum"
+    ],
+    "Concept": [
+      "Melody",
+      "Harmony",
+      "Rhythm",
+      "Tempo",
+      "Chord",
+      "Scale",
+      "Pitch",
+      "Timbre"
+    ],
+    "Classical_Music": [
+      "Baroque",
+      "Romantic"
+    ]
+  },
+  "parents": {
+    "Xylophone": [
+      "Percussion_Instrument"
+    ],
+    "Wind_Instrument": [
+      "Instrument"
+    ],
+    "Violin": [
+      "String_Instrument"
+    ],
+    "Upright_Piano": [
+      "Piano"
+    ],
+    "Ukulele": [
+      "String_Instrument"
+    ],
+    "Tuba": [
+      "Wind_Instrument"
+    ],
+    "Trumpet": [
+      "Wind_Instrument"
+    ],
+    "Trombone": [
+      "Wind_Instrument"
+    ],
+    "Timpani": [
+      "Percussion_Instrument"
+    ],
+    "Timbre": [
+      "Concept"
+    ],
+    "Tenor_Saxophone": [
+      "Saxophone"
+    ],
+    "Tempo": [
+      "Concept"
+    ],
+    "Tambourine": [
+      "Percussion_Instrument"
+    ],
+    "Synthesizer": [
+      "Keyboard_Instrument"
+    ],
+    "String_Instrument": [
+      "Instrument"
+    ],
+    "Soul": [
+      "Genre"
+    ],
+    "Snare_Drum": [
+      "Drum"
+    ],
+    "Smooth_Jazz": [
+      "Jazz"
+    ],
+    "Scale": [
+      "Concept"
+    ],
+    "Saxophone": [
+      "Wind_Instrument"
+    ],
+    "Romantic": [
+      "Classical_Music"
+    ],
+    "Rock_Music": [
+      "Genre"
+    ],
+    "Rhythm": [
+      "Concept"
+    ],
+    "Reggae": [
+      "Genre"
+    ],
+    "Punk_Rock": [
+      "Rock_Music"
+    ],
+    "Pop_Music": [
+      "Genre"
+    ],
+    "Pitch": [
+      "Concept"
+    ],
+    "Piccolo": [
+      "Wind_Instrument"
+    ],
+    "Piano": [
+      "Keyboard_Instrument"
+    ],
+    "Percussion_Instrument": [
+      "Instrument"
+    ],
+    "Organ": [
+      "Keyboard_Instrument"
+    ],
+    "Opera": [
+      "Genre"
+    ],
+    "Oboe": [
+      "Wind_Instrument"
+    ],
+    "Melody": [
+      "Concept"
+    ],
+    "Marimba": [
+      "Percussion_Instrument"
+    ],
+    "Mandolin": [
+      "String_Instrument"
+    ],
+    "Keyboard_Instrument": [
+      "Instrument"
+    ],
+    "Jazz": [
+      "Genre"
+    ],
+    "Instrument": [
+      "Music_Topic"
+    ],
+    "Hip_Hop": [
+      "Genre"
+    ],
+    "Heavy_Metal": [
+      "Rock_Music"
+    ],
+    "Harpsichord": [
+      "Keyboard_Instrument"
+    ],
+    "Harp": [
+      "String_Instrument"
+    ],
+    "Harmony": [
+      "Concept"
+    ],
+    "Guitar": [
+      "String_Instrument"
+    ],
+    "Grand_Piano": [
+      "Piano"
+    ],
+    "Genre": [
+      "Music_Topic"
+    ],
+    "French_Horn": [
+      "Wind_Instrument"
+    ],
+    "Folk_Music": [
+      "Genre"
+    ],
+    "Flute": [
+      "Wind_Instrument"
+    ],
+    "Electronic_Music": [
+      "Genre"
+    ],
+    "Electric_Guitar": [
+      "Guitar"
+    ],
+    "Drum": [
+      "Percussion_Instrument"
+    ],
+    "Cymbal": [
+      "Percussion_Instrument"
+    ],
+    "Country_Music": [
+      "Genre"
+    ],
+    "Concept": [
+      "Music_Topic"
+    ],
+    "Classical_Music": [
+      "Genre"
+    ],
+    "Clarinet": [
+      "Wind_Instrument"
+    ],
+    "Chord": [
+      "Concept"
+    ],
+    "Cello": [
+      "String_Instrument"
+    ],
+    "Blues": [
+      "Genre"
+    ],
+    "Bebop": [
+      "Jazz"
+    ],
+    "Bassoon": [
+      "Wind_Instrument"
+    ],
+    "Bass_Guitar": [
+      "Guitar"
+    ],
+    "Bass_Drum": [
+      "Drum"
+    ],
+    "Baroque": [
+      "Classical_Music"
+    ],
+    "Banjo": [
+      "String_Instrument"
+    ],
+    "Alto_Saxophone": [
+      "Saxophone"
+    ],
+    "Acoustic_Guitar": [
+      "Guitar"
+    ]
+  },
+  "trie": {
+    "1": [
+      "harpsichord",
+      "synthesizer",
+      "instrument",
+      "tambourine",
+      "saxophone",
+      "xylophone",
+      "trombone",
+      "mandolin",
+      "clarinet",
+      "romantic",
+      "piccolo",
+      "marimba",
+      "ukulele",
+      "trumpet",
+      "harmony",
+      "baroque",
+      "concept",
+      "bassoon",
+      "timpani",
+      "reggae",
+      "melody",
+      "guitar",
+      "timbre",
+      "rhythm",
+      "violin",
+      "cymbal",
+      "scale",
+      "tempo",
+      "pitch",
+      "bebop",
+      "piano",
+      "banjo",
+      "chord",
+      "flute",
+      "blues",
+      "organ",
+      "genre",
+      "opera",
+      "cello",
+      "harp",
+      "tuba",
+      "soul",
+      "drum",
+      "jazz",
+      "oboe"
+    ],
+    "2": {
+      "string": [
+        "instrument"
+      ],
+      "wind": [
+        "instrument"
+      ],
+      "percussion": [
+        "instrument"
+      ],
+      "keyboard": [
+        "instrument"
+      ],
+      "electric": [
+        "guitar"
+      ],
+      "acoustic": [
+        "guitar"
+      ],
+      "bass": [
+        "guitar",
+        "drum"
+      ],
+      "french": [
+        "horn"
+      ],
+      "alto": [
+        "saxophone"
+      ],
+      "tenor": [
+        "saxophone"
+      ],
+      "snare": [
+        "drum"
+      ],
+      "grand": [
+        "piano"
+      ],
+      "upright": [
+        "piano"
+      ],
+      "classical": [
+        "music"
+      ],
+      "rock": [
+        "music"
+      ],
+      "pop": [
+        "music"
+      ],
+      "folk": [
+        "music"
+      ],
+      "country": [
+        "music"
+      ],
+      "hip": [
+        "hop"
+      ],
+      "electronic": [
+        "music"
+      ],
+      "smooth": [
+        "jazz"
+      ],
+      "heavy": [
+        "metal"
+      ],
+      "punk": [
+        "rock"
+      ]
+    },
+    "3": {},
+    "4": {},
+    "5": {},
+    "6": {}
+  },
+  "ngrams": {
+    "1": [
+      "instrument",
+      "genre",
+      "concept",
+      "guitar",
+      "violin",
+      "cello",
+      "harp",
+      "ukulele",
+      "banjo",
+      "mandolin",
+      "flute",
+      "piccolo",
+      "trumpet",
+      "trombone",
+      "saxophone",
+      "clarinet",
+      "oboe",
+      "bassoon",
+      "tuba",
+      "drum",
+      "cymbal",
+      "xylophone",
+      "marimba",
+      "tambourine",
+      "timpani",
+      "piano",
+      "organ",
+      "synthesizer",
+      "harpsichord",
+      "jazz",
+      "blues",
+      "reggae",
+      "soul",
+      "opera",
+      "bebop",
+      "baroque",
+      "romantic",
+      "melody",
+      "harmony",
+      "rhythm",
+      "tempo",
+      "chord",
+      "scale",
+      "pitch",
+      "timbre"
+    ],
+    "2": [
+      "string_instrument",
+      "wind_instrument",
+      "percussion_instrument",
+      "keyboard_instrument",
+      "electric_guitar",
+      "acoustic_guitar",
+      "bass_guitar",
+      "french_horn",
+      "alto_saxophone",
+      "tenor_saxophone",
+      "snare_drum",
+      "bass_drum",
+      "grand_piano",
+      "upright_piano",
+      "classical_music",
+      "rock_music",
+      "pop_music",
+      "folk_music",
+      "country_music",
+      "hip_hop",
+      "electronic_music",
+      "smooth_jazz",
+      "heavy_metal",
+      "punk_rock"
+    ],
+    "3": [],
+    "4": [],
+    "5": [],
+    "6": [],
+    "7": [],
+    "8": [],
+    "9": []
+  },
+  "spans": {
+    "music": [
+      {
+        "content": [
+          "topic"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "music_topic"
+      }
+    ],
+    "string": [
+      {
+        "content": [
+          "instrument"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "string_instrument"
+      }
+    ],
+    "wind": [
+      {
+        "content": [
+          "instrument"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "wind_instrument"
+      }
+    ],
+    "percussion": [
+      {
+        "content": [
+          "instrument"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "percussion_instrument"
+      }
+    ],
+    "keyboard": [
+      {
+        "content": [
+          "instrument"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "keyboard_instrument"
+      }
+    ],
+    "electric": [
+      {
+        "content": [
+          "guitar"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "electric_guitar"
+      }
+    ],
+    "acoustic": [
+      {
+        "content": [
+          "guitar"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "acoustic_guitar"
+      }
+    ],
+    "bass": [
+      {
+        "content": [
+          "guitar"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "bass_guitar"
+      },
+      {
+        "content": [
+          "drum"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "bass_drum"
+      }
+    ],
+    "alto": [
+      {
+        "content": [
+          "saxophone"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "alto_saxophone"
+      },
+      {
+        "content": [
+          "sax"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "alto_saxophone"
+      }
+    ],
+    "tenor": [
+      {
+        "content": [
+          "saxophone"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "tenor_saxophone"
+      },
+      {
+        "content": [
+          "sax"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "tenor_saxophone"
+      }
+    ],
+    "french": [
+      {
+        "content": [
+          "horn"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "french_horn"
+      }
+    ],
+    "snare": [
+      {
+        "content": [
+          "drum"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "snare_drum"
+      }
+    ],
+    "grand": [
+      {
+        "content": [
+          "piano"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "grand_piano"
+      }
+    ],
+    "upright": [
+      {
+        "content": [
+          "piano"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "upright_piano"
+      }
+    ],
+    "smooth": [
+      {
+        "content": [
+          "jazz"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "smooth_jazz"
+      }
+    ],
+    "classical": [
+      {
+        "content": [
+          "music"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "classical_music"
+      }
+    ],
+    "rock": [
+      {
+        "content": [
+          "music"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "rock_music"
+      }
+    ],
+    "heavy": [
+      {
+        "content": [
+          "metal"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "heavy_metal"
+      }
+    ],
+    "punk": [
+      {
+        "content": [
+          "rock"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "punk_rock"
+      }
+    ],
+    "pop": [
+      {
+        "content": [
+          "music"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "pop_music"
+      }
+    ],
+    "folk": [
+      {
+        "content": [
+          "music"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "folk_music"
+      }
+    ],
+    "country": [
+      {
+        "content": [
+          "music"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "country_music"
+      }
+    ],
+    "hip": [
+      {
+        "content": [
+          "hop"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "hip_hop"
+      }
+    ],
+    "electronic": [
+      {
+        "content": [
+          "music"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "electronic_music"
+      }
+    ]
+  },
+  "labels": {
+    "inflection": "inflection",
+    "Music_Topic": "Music Topic",
+    "Instrument": "Instrument",
+    "Genre": "Genre",
+    "Concept": "Concept",
+    "String_Instrument": "String Instrument",
+    "Wind_Instrument": "Wind Instrument",
+    "Percussion_Instrument": "Percussion Instrument",
+    "Keyboard_Instrument": "Keyboard Instrument",
+    "Guitar": "Guitar",
+    "Electric_Guitar": "Electric Guitar",
+    "Acoustic_Guitar": "Acoustic Guitar",
+    "Bass_Guitar": "Bass Guitar",
+    "Violin": "Violin",
+    "Cello": "Cello",
+    "Harp": "Harp",
+    "Ukulele": "Ukulele",
+    "Banjo": "Banjo",
+    "Mandolin": "Mandolin",
+    "Flute": "Flute",
+    "Piccolo": "Piccolo",
+    "Trumpet": "Trumpet",
+    "Trombone": "Trombone",
+    "Saxophone": "Saxophone",
+    "Alto_Saxophone": "Alto Saxophone",
+    "Tenor_Saxophone": "Tenor Saxophone",
+    "Clarinet": "Clarinet",
+    "Oboe": "Oboe",
+    "Bassoon": "Bassoon",
+    "French_Horn": "French Horn",
+    "Tuba": "Tuba",
+    "Drum": "Drum",
+    "Snare_Drum": "Snare Drum",
+    "Bass_Drum": "Bass Drum",
+    "Cymbal": "Cymbal",
+    "Xylophone": "Xylophone",
+    "Marimba": "Marimba",
+    "Tambourine": "Tambourine",
+    "Timpani": "Timpani",
+    "Piano": "Piano",
+    "Grand_Piano": "Grand Piano",
+    "Upright_Piano": "Upright Piano",
+    "Organ": "Organ",
+    "Synthesizer": "Synthesizer",
+    "Harpsichord": "Harpsichord",
+    "Jazz": "Jazz",
+    "Bebop": "Bebop",
+    "Smooth_Jazz": "Smooth Jazz",
+    "Classical_Music": "Classical Music",
+    "Baroque": "Baroque",
+    "Romantic": "Romantic",
+    "Rock_Music": "Rock Music",
+    "Heavy_Metal": "Heavy Metal",
+    "Punk_Rock": "Punk Rock",
+    "Pop_Music": "Pop Music",
+    "Blues": "Blues",
+    "Folk_Music": "Folk Music",
+    "Country_Music": "Country Music",
+    "Hip_Hop": "Hip Hop",
+    "Electronic_Music": "Electronic Music",
+    "Reggae": "Reggae",
+    "Soul": "Soul",
+    "Opera": "Opera",
+    "Melody": "Melody",
+    "Harmony": "Harmony",
+    "Rhythm": "Rhythm",
+    "Tempo": "Tempo",
+    "Chord": "Chord",
+    "Scale": "Scale",
+    "Pitch": "Pitch",
+    "Timbre": "Timbre"
+  },
+  "equivalents": null,
+  "predicates": [
+    ":similarTo",
+    ":inflection"
+  ],
+  "by_predicate": {
+    "rdfs:subClassOf": {
+      "instrument": [
+        "music_topic"
+      ],
+      "genre": [
+        "music_topic"
+      ],
+      "concept": [
+        "music_topic"
+      ],
+      "string_instrument": [
+        "instrument"
+      ],
+      "wind_instrument": [
+        "instrument"
+      ],
+      "percussion_instrument": [
+        "instrument"
+      ],
+      "keyboard_instrument": [
+        "instrument"
+      ],
+      "guitar": [
+        "string_instrument"
+      ],
+      "violin": [
+        "string_instrument"
+      ],
+      "cello": [
+        "string_instrument"
+      ],
+      "harp": [
+        "string_instrument"
+      ],
+      "ukulele": [
+        "string_instrument"
+      ],
+      "banjo": [
+        "string_instrument"
+      ],
+      "mandolin": [
+        "string_instrument"
+      ],
+      "electric_guitar": [
+        "guitar"
+      ],
+      "acoustic_guitar": [
+        "guitar"
+      ],
+      "bass_guitar": [
+        "guitar"
+      ],
+      "flute": [
+        "wind_instrument"
+      ],
+      "piccolo": [
+        "wind_instrument"
+      ],
+      "trumpet": [
+        "wind_instrument"
+      ],
+      "trombone": [
+        "wind_instrument"
+      ],
+      "saxophone": [
+        "wind_instrument"
+      ],
+      "clarinet": [
+        "wind_instrument"
+      ],
+      "oboe": [
+        "wind_instrument"
+      ],
+      "bassoon": [
+        "wind_instrument"
+      ],
+      "french_horn": [
+        "wind_instrument"
+      ],
+      "tuba": [
+        "wind_instrument"
+      ],
+      "alto_saxophone": [
+        "saxophone"
+      ],
+      "tenor_saxophone": [
+        "saxophone"
+      ],
+      "drum": [
+        "percussion_instrument"
+      ],
+      "cymbal": [
+        "percussion_instrument"
+      ],
+      "xylophone": [
+        "percussion_instrument"
+      ],
+      "marimba": [
+        "percussion_instrument"
+      ],
+      "tambourine": [
+        "percussion_instrument"
+      ],
+      "timpani": [
+        "percussion_instrument"
+      ],
+      "snare_drum": [
+        "drum"
+      ],
+      "bass_drum": [
+        "drum"
+      ],
+      "piano": [
+        "keyboard_instrument"
+      ],
+      "organ": [
+        "keyboard_instrument"
+      ],
+      "synthesizer": [
+        "keyboard_instrument"
+      ],
+      "harpsichord": [
+        "keyboard_instrument"
+      ],
+      "grand_piano": [
+        "piano"
+      ],
+      "upright_piano": [
+        "piano"
+      ],
+      "jazz": [
+        "genre"
+      ],
+      "classical_music": [
+        "genre"
+      ],
+      "rock_music": [
+        "genre"
+      ],
+      "pop_music": [
+        "genre"
+      ],
+      "blues": [
+        "genre"
+      ],
+      "folk_music": [
+        "genre"
+      ],
+      "country_music": [
+        "genre"
+      ],
+      "hip_hop": [
+        "genre"
+      ],
+      "electronic_music": [
+        "genre"
+      ],
+      "reggae": [
+        "genre"
+      ],
+      "soul": [
+        "genre"
+      ],
+      "opera": [
+        "genre"
+      ],
+      "bebop": [
+        "jazz"
+      ],
+      "smooth_jazz": [
+        "jazz"
+      ],
+      "baroque": [
+        "classical_music"
+      ],
+      "romantic": [
+        "classical_music"
+      ],
+      "heavy_metal": [
+        "rock_music"
+      ],
+      "punk_rock": [
+        "rock_music"
+      ],
+      "melody": [
+        "concept"
+      ],
+      "harmony": [
+        "concept"
+      ],
+      "rhythm": [
+        "concept"
+      ],
+      "tempo": [
+        "concept"
+      ],
+      "chord": [
+        "concept"
+      ],
+      "scale": [
+        "concept"
+      ],
+      "pitch": [
+        "concept"
+      ],
+      "timbre": [
+        "concept"
+      ]
+    },
+    "rdfs:label": {
+      "inflection": [],
+      "music_topic": [
+        "music topic"
+      ],
+      "instrument": [],
+      "genre": [],
+      "concept": [],
+      "string_instrument": [
+        "string instrument"
+      ],
+      "wind_instrument": [
+        "wind instrument"
+      ],
+      "percussion_instrument": [
+        "percussion instrument"
+      ],
+      "keyboard_instrument": [
+        "keyboard instrument"
+      ],
+      "guitar": [],
+      "electric_guitar": [
+        "electric guitar"
+      ],
+      "acoustic_guitar": [
+        "acoustic guitar"
+      ],
+      "bass_guitar": [
+        "bass guitar"
+      ],
+      "violin": [],
+      "cello": [],
+      "harp": [],
+      "ukulele": [],
+      "banjo": [],
+      "mandolin": [],
+      "flute": [],
+      "piccolo": [],
+      "trumpet": [],
+      "trombone": [],
+      "saxophone": [],
+      "alto_saxophone": [
+        "alto saxophone"
+      ],
+      "tenor_saxophone": [
+        "tenor saxophone"
+      ],
+      "clarinet": [],
+      "oboe": [],
+      "bassoon": [],
+      "french_horn": [
+        "french horn"
+      ],
+      "tuba": [],
+      "drum": [],
+      "snare_drum": [
+        "snare drum"
+      ],
+      "bass_drum": [
+        "bass drum"
+      ],
+      "cymbal": [],
+      "xylophone": [],
+      "marimba": [],
+      "tambourine": [],
+      "timpani": [],
+      "piano": [],
+      "grand_piano": [
+        "grand piano"
+      ],
+      "upright_piano": [
+        "upright piano"
+      ],
+      "organ": [],
+      "synthesizer": [],
+      "harpsichord": [],
+      "jazz": [],
+      "bebop": [],
+      "smooth_jazz": [
+        "smooth jazz"
+      ],
+      "classical_music": [
+        "classical music"
+      ],
+      "baroque": [],
+      "romantic": [],
+      "rock_music": [
+        "rock music"
+      ],
+      "heavy_metal": [
+        "heavy metal"
+      ],
+      "punk_rock": [
+        "punk rock"
+      ],
+      "pop_music": [
+        "pop music"
+      ],
+      "blues": [],
+      "folk_music": [
+        "folk music"
+      ],
+      "country_music": [
+        "country music"
+      ],
+      "hip_hop": [
+        "hip hop"
+      ],
+      "electronic_music": [
+        "electronic music"
+      ],
+      "reggae": [],
+      "soul": [],
+      "opera": [],
+      "melody": [],
+      "harmony": [],
+      "rhythm": [],
+      "tempo": [],
+      "chord": [],
+      "scale": [],
+      "pitch": [],
+      "timbre": []
+    },
+    "rdfs:subPropertyOf": {
+      "inflection": [
+        "altlabel"
+      ]
+    },
+    "skos:altLabel": {
+      "music_topic": [
+        "music"
+      ],
+      "instrument": [
+        "musical instrument"
+      ],
+      "genre": [
+        "music genre"
+      ],
+      "guitar": [
+        "axe"
+      ],
+      "bass_guitar": [
+        "bass"
+      ],
+      "violin": [
+        "fiddle"
+      ],
+      "saxophone": [
+        "sax"
+      ],
+      "alto_saxophone": [
+        "alto sax"
+      ],
+      "tenor_saxophone": [
+        "tenor sax"
+      ],
+      "timpani": [
+        "kettle drum"
+      ],
+      "organ": [
+        "pipe organ"
+      ],
+      "synthesizer": [
+        "synth"
+      ],
+      "classical_music": [
+        "classical"
+      ],
+      "rock_music": [
+        "rock"
+      ],
+      "heavy_metal": [
+        "metal"
+      ],
+      "punk_rock": [
+        "punk"
+      ],
+      "pop_music": [
+        "pop"
+      ],
+      "folk_music": [
+        "folk"
+      ],
+      "country_music": [
+        "country"
+      ],
+      "hip_hop": [
+        "rap"
+      ],
+      "electronic_music": [
+        "edm"
+      ],
+      "rhythm": [
+        "beat"
+      ]
+    },
+    "rdf:type": {
+      "http://test.ai/music": [
+        "ontology"
+      ],
+      "implies": [
+        "annotationproperty"
+      ],
+      "inflection": [
+        "annotationproperty"
+      ],
+      "requires": [
+        "annotationproperty"
+      ],
+      "similarto": [
+        "annotationproperty"
+      ],
+      "uses": [
+        "annotationproperty"
+      ],
+      "altlabel": [
+        "annotationproperty"
+      ],
+      "definition": [
+        "annotationproperty"
+      ],
+      "music_topic": [
+        "class"
+      ],
+      "instrument": [
+        "class"
+      ],
+      "genre": [
+        "class"
+      ],
+      "concept": [
+        "class"
+      ],
+      "string_instrument": [
+        "class"
+      ],
+      "wind_instrument": [
+        "class"
+      ],
+      "percussion_instrument": [
+        "class"
+      ],
+      "keyboard_instrument": [
+        "class"
+      ],
+      "guitar": [
+        "class"
+      ],
+      "electric_guitar": [
+        "class"
+      ],
+      "acoustic_guitar": [
+        "class"
+      ],
+      "bass_guitar": [
+        "class"
+      ],
+      "violin": [
+        "class"
+      ],
+      "cello": [
+        "class"
+      ],
+      "harp": [
+        "class"
+      ],
+      "ukulele": [
+        "class"
+      ],
+      "banjo": [
+        "class"
+      ],
+      "mandolin": [
+        "class"
+      ],
+      "flute": [
+        "class"
+      ],
+      "piccolo": [
+        "class"
+      ],
+      "trumpet": [
+        "class"
+      ],
+      "trombone": [
+        "class"
+      ],
+      "saxophone": [
+        "class"
+      ],
+      "alto_saxophone": [
+        "class"
+      ],
+      "tenor_saxophone": [
+        "class"
+      ],
+      "clarinet": [
+        "class"
+      ],
+      "oboe": [
+        "class"
+      ],
+      "bassoon": [
+        "class"
+      ],
+      "french_horn": [
+        "class"
+      ],
+      "tuba": [
+        "class"
+      ],
+      "drum": [
+        "class"
+      ],
+      "snare_drum": [
+        "class"
+      ],
+      "bass_drum": [
+        "class"
+      ],
+      "cymbal": [
+        "class"
+      ],
+      "xylophone": [
+        "class"
+      ],
+      "marimba": [
+        "class"
+      ],
+      "tambourine": [
+        "class"
+      ],
+      "timpani": [
+        "class"
+      ],
+      "piano": [
+        "class"
+      ],
+      "grand_piano": [
+        "class"
+      ],
+      "upright_piano": [
+        "class"
+      ],
+      "organ": [
+        "class"
+      ],
+      "synthesizer": [
+        "class"
+      ],
+      "harpsichord": [
+        "class"
+      ],
+      "jazz": [
+        "class"
+      ],
+      "bebop": [
+        "class"
+      ],
+      "smooth_jazz": [
+        "class"
+      ],
+      "classical_music": [
+        "class"
+      ],
+      "baroque": [
+        "class"
+      ],
+      "romantic": [
+        "class"
+      ],
+      "rock_music": [
+        "class"
+      ],
+      "heavy_metal": [
+        "class"
+      ],
+      "punk_rock": [
+        "class"
+      ],
+      "pop_music": [
+        "class"
+      ],
+      "blues": [
+        "class"
+      ],
+      "folk_music": [
+        "class"
+      ],
+      "country_music": [
+        "class"
+      ],
+      "hip_hop": [
+        "class"
+      ],
+      "electronic_music": [
+        "class"
+      ],
+      "reggae": [
+        "class"
+      ],
+      "soul": [
+        "class"
+      ],
+      "opera": [
+        "class"
+      ],
+      "melody": [
+        "class"
+      ],
+      "harmony": [
+        "class"
+      ],
+      "rhythm": [
+        "class"
+      ],
+      "tempo": [
+        "class"
+      ],
+      "chord": [
+        "class"
+      ],
+      "scale": [
+        "class"
+      ],
+      "pitch": [
+        "class"
+      ],
+      "timbre": [
+        "class"
+      ]
+    },
+    ":similarTo": {
+      "piccolo": [
+        "flute"
+      ],
+      "marimba": [
+        "xylophone"
+      ]
+    },
+    ":inflection": {
+      "drum": [
+        "drums"
+      ]
+    }
+  },
+  "ner": {
+    "inflection": "NER",
+    "Music Topic": "NER",
+    "Instrument": "NER",
+    "Genre": "NER",
+    "Concept": "NER",
+    "String Instrument": "NER",
+    "Wind Instrument": "NER",
+    "Percussion Instrument": "NER",
+    "Keyboard Instrument": "NER",
+    "Guitar": "NER",
+    "Electric Guitar": "NER",
+    "Acoustic Guitar": "NER",
+    "Bass Guitar": "NER",
+    "Violin": "NER",
+    "Cello": "NER",
+    "Harp": "NER",
+    "Ukulele": "NER",
+    "Banjo": "NER",
+    "Mandolin": "NER",
+    "Flute": "NER",
+    "Piccolo": "NER",
+    "Trumpet": "NER",
+    "Trombone": "NER",
+    "Saxophone": "NER",
+    "Alto Saxophone": "NER",
+    "Tenor Saxophone": "NER",
+    "Clarinet": "NER",
+    "Oboe": "NER",
+    "Bassoon": "NER",
+    "French Horn": "NER",
+    "Tuba": "NER",
+    "Drum": "NER",
+    "Snare Drum": "NER",
+    "Bass Drum": "NER",
+    "Cymbal": "NER",
+    "Xylophone": "NER",
+    "Marimba": "NER",
+    "Tambourine": "NER",
+    "Timpani": "NER",
+    "Piano": "NER",
+    "Grand Piano": "NER",
+    "Upright Piano": "NER",
+    "Organ": "NER",
+    "Synthesizer": "NER",
+    "Harpsichord": "NER",
+    "Jazz": "NER",
+    "Bebop": "NER",
+    "Smooth Jazz": "NER",
+    "Classical Music": "NER",
+    "Baroque": "NER",
+    "Romantic": "NER",
+    "Rock Music": "NER",
+    "Heavy Metal": "NER",
+    "Punk Rock": "NER",
+    "Pop Music": "NER",
+    "Blues": "NER",
+    "Folk Music": "NER",
+    "Country Music": "NER",
+    "Hip Hop": "NER",
+    "Electronic Music": "NER",
+    "Reggae": "NER",
+    "Soul": "NER",
+    "Opera": "NER",
+    "Melody": "NER",
+    "Harmony": "NER",
+    "Rhythm": "NER",
+    "Tempo": "NER",
+    "Chord": "NER",
+    "Scale": "NER",
+    "Pitch": "NER",
+    "Timbre": "NER"
+  },
+  "synonyms": {
+    "lookup": {
+      "1": [
+        "synthesizer",
+        "harpsichord",
+        "instrument",
+        "inflection",
+        "tambourine",
+        "saxophone",
+        "classical",
+        "xylophone",
+        "trombone",
+        "mandolin",
+        "clarinet",
+        "romantic",
+        "piccolo",
+        "marimba",
+        "ukulele",
+        "country",
+        "trumpet",
+        "harmony",
+        "baroque",
+        "concept",
+        "bassoon",
+        "timpani",
+        "reggae",
+        "melody",
+        "guitar",
+        "timbre",
+        "rhythm",
+        "violin",
+        "fiddle",
+        "cymbal",
+        "scale",
+        "tempo",
+        "pitch",
+        "music",
+        "piano",
+        "bebop",
+        "banjo",
+        "synth",
+        "chord",
+        "drums",
+        "flute",
+        "organ",
+        "genre",
+        "blues",
+        "metal",
+        "opera",
+        "cello",
+        "jazz",
+        "tuba",
+        "harp",
+        "folk",
+        "beat",
+        "soul",
+        "drum",
+        "bass",
+        "rock",
+        "oboe",
+        "punk",
+        "sax",
+        "pop",
+        "rap",
+        "axe",
+        "edm"
+      ],
+      "2": [
+        "percussion instrument",
+        "keyboard instrument",
+        "musical instrument",
+        "string instrument",
+        "electronic music",
+        "wind instrument",
+        "electric guitar",
+        "classical music",
+        "tenor saxophone",
+        "acoustic guitar",
+        "alto saxophone",
+        "upright piano",
+        "country music",
+        "music topic",
+        "bass guitar",
+        "grand piano",
+        "music genre",
+        "heavy metal",
+        "kettle drum",
+        "smooth jazz",
+        "french horn",
+        "rock music",
+        "snare drum",
+        "pipe organ",
+        "folk music",
+        "pop music",
+        "punk rock",
+        "tenor sax",
+        "bass drum",
+        "alto sax",
+        "hip hop"
+      ],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": []
+    },
+    "fwd": {
+      "inflection": [
+        "inflection"
+      ],
+      "music_topic": [
+        "music",
+        "music topic"
+      ],
+      "instrument": [
+        "instrument",
+        "musical instrument"
+      ],
+      "genre": [
+        "genre",
+        "music genre"
+      ],
+      "concept": [
+        "concept"
+      ],
+      "string_instrument": [
+        "string instrument"
+      ],
+      "wind_instrument": [
+        "wind instrument"
+      ],
+      "percussion_instrument": [
+        "percussion instrument"
+      ],
+      "keyboard_instrument": [
+        "keyboard instrument"
+      ],
+      "guitar": [
+        "axe",
+        "guitar"
+      ],
+      "electric_guitar": [
+        "electric guitar"
+      ],
+      "acoustic_guitar": [
+        "acoustic guitar"
+      ],
+      "bass_guitar": [
+        "bass",
+        "bass guitar"
+      ],
+      "violin": [
+        "fiddle",
+        "violin"
+      ],
+      "cello": [
+        "cello"
+      ],
+      "harp": [
+        "harp"
+      ],
+      "ukulele": [
+        "ukulele"
+      ],
+      "banjo": [
+        "banjo"
+      ],
+      "mandolin": [
+        "mandolin"
+      ],
+      "flute": [
+        "flute"
+      ],
+      "piccolo": [
+        "piccolo"
+      ],
+      "trumpet": [
+        "trumpet"
+      ],
+      "trombone": [
+        "trombone"
+      ],
+      "saxophone": [
+        "sax",
+        "saxophone"
+      ],
+      "alto_saxophone": [
+        "alto sax",
+        "alto saxophone"
+      ],
+      "tenor_saxophone": [
+        "tenor sax",
+        "tenor saxophone"
+      ],
+      "clarinet": [
+        "clarinet"
+      ],
+      "oboe": [
+        "oboe"
+      ],
+      "bassoon": [
+        "bassoon"
+      ],
+      "french_horn": [
+        "french horn"
+      ],
+      "tuba": [
+        "tuba"
+      ],
+      "drum": [
+        "drum",
+        "drums"
+      ],
+      "snare_drum": [
+        "snare drum"
+      ],
+      "bass_drum": [
+        "bass drum"
+      ],
+      "cymbal": [
+        "cymbal"
+      ],
+      "xylophone": [
+        "xylophone"
+      ],
+      "marimba": [
+        "marimba"
+      ],
+      "tambourine": [
+        "tambourine"
+      ],
+      "timpani": [
+        "timpani",
+        "kettle drum"
+      ],
+      "piano": [
+        "piano"
+      ],
+      "grand_piano": [
+        "grand piano"
+      ],
+      "upright_piano": [
+        "upright piano"
+      ],
+      "organ": [
+        "organ",
+        "pipe organ"
+      ],
+      "synthesizer": [
+        "synth",
+        "synthesizer"
+      ],
+      "harpsichord": [
+        "harpsichord"
+      ],
+      "jazz": [
+        "jazz"
+      ],
+      "bebop": [
+        "bebop"
+      ],
+      "smooth_jazz": [
+        "smooth jazz"
+      ],
+      "classical_music": [
+        "classical",
+        "classical music"
+      ],
+      "baroque": [
+        "baroque"
+      ],
+      "romantic": [
+        "romantic"
+      ],
+      "rock_music": [
+        "rock",
+        "rock music"
+      ],
+      "heavy_metal": [
+        "metal",
+        "heavy metal"
+      ],
+      "punk_rock": [
+        "punk",
+        "punk rock"
+      ],
+      "pop_music": [
+        "pop",
+        "pop music"
+      ],
+      "blues": [
+        "blues"
+      ],
+      "folk_music": [
+        "folk",
+        "folk music"
+      ],
+      "country_music": [
+        "country",
+        "country music"
+      ],
+      "hip_hop": [
+        "rap",
+        "hip hop"
+      ],
+      "electronic_music": [
+        "edm",
+        "electronic music"
+      ],
+      "reggae": [
+        "reggae"
+      ],
+      "soul": [
+        "soul"
+      ],
+      "opera": [
+        "opera"
+      ],
+      "melody": [
+        "melody"
+      ],
+      "harmony": [
+        "harmony"
+      ],
+      "rhythm": [
+        "beat",
+        "rhythm"
+      ],
+      "tempo": [
+        "tempo"
+      ],
+      "chord": [
+        "chord"
+      ],
+      "scale": [
+        "scale"
+      ],
+      "pitch": [
+        "pitch"
+      ],
+      "timbre": [
+        "timbre"
+      ]
+    },
+    "rev": {
+      "inflection": [
+        "inflection"
+      ],
+      "music": [
+        "music_topic"
+      ],
+      "music topic": [
+        "music_topic"
+      ],
+      "instrument": [
+        "instrument"
+      ],
+      "musical instrument": [
+        "instrument"
+      ],
+      "genre": [
+        "genre"
+      ],
+      "music genre": [
+        "genre"
+      ],
+      "concept": [
+        "concept"
+      ],
+      "string instrument": [
+        "string_instrument"
+      ],
+      "wind instrument": [
+        "wind_instrument"
+      ],
+      "percussion instrument": [
+        "percussion_instrument"
+      ],
+      "keyboard instrument": [
+        "keyboard_instrument"
+      ],
+      "axe": [
+        "guitar"
+      ],
+      "guitar": [
+        "guitar"
+      ],
+      "electric guitar": [
+        "electric_guitar"
+      ],
+      "acoustic guitar": [
+        "acoustic_guitar"
+      ],
+      "bass": [
+        "bass_guitar"
+      ],
+      "bass guitar": [
+        "bass_guitar"
+      ],
+      "fiddle": [
+        "violin"
+      ],
+      "violin": [
+        "violin"
+      ],
+      "cello": [
+        "cello"
+      ],
+      "harp": [
+        "harp"
+      ],
+      "ukulele": [
+        "ukulele"
+      ],
+      "banjo": [
+        "banjo"
+      ],
+      "mandolin": [
+        "mandolin"
+      ],
+      "flute": [
+        "flute"
+      ],
+      "piccolo": [
+        "piccolo"
+      ],
+      "trumpet": [
+        "trumpet"
+      ],
+      "trombone": [
+        "trombone"
+      ],
+      "sax": [
+        "saxophone"
+      ],
+      "saxophone": [
+        "saxophone"
+      ],
+      "alto sax": [
+        "alto_saxophone"
+      ],
+      "alto saxophone": [
+        "alto_saxophone"
+      ],
+      "tenor sax": [
+        "tenor_saxophone"
+      ],
+      "tenor saxophone": [
+        "tenor_saxophone"
+      ],
+      "clarinet": [
+        "clarinet"
+      ],
+      "oboe": [
+        "oboe"
+      ],
+      "bassoon": [
+        "bassoon"
+      ],
+      "french horn": [
+        "french_horn"
+      ],
+      "tuba": [
+        "tuba"
+      ],
+      "drum": [
+        "drum"
+      ],
+      "drums": [
+        "drum"
+      ],
+      "snare drum": [
+        "snare_drum"
+      ],
+      "bass drum": [
+        "bass_drum"
+      ],
+      "cymbal": [
+        "cymbal"
+      ],
+      "xylophone": [
+        "xylophone"
+      ],
+      "marimba": [
+        "marimba"
+      ],
+      "tambourine": [
+        "tambourine"
+      ],
+      "timpani": [
+        "timpani"
+      ],
+      "kettle drum": [
+        "timpani"
+      ],
+      "piano": [
+        "piano"
+      ],
+      "grand piano": [
+        "grand_piano"
+      ],
+      "upright piano": [
+        "upright_piano"
+      ],
+      "organ": [
+        "organ"
+      ],
+      "pipe organ": [
+        "organ"
+      ],
+      "synth": [
+        "synthesizer"
+      ],
+      "synthesizer": [
+        "synthesizer"
+      ],
+      "harpsichord": [
+        "harpsichord"
+      ],
+      "jazz": [
+        "jazz"
+      ],
+      "bebop": [
+        "bebop"
+      ],
+      "smooth jazz": [
+        "smooth_jazz"
+      ],
+      "classical": [
+        "classical_music"
+      ],
+      "classical music": [
+        "classical_music"
+      ],
+      "baroque": [
+        "baroque"
+      ],
+      "romantic": [
+        "romantic"
+      ],
+      "rock": [
+        "rock_music"
+      ],
+      "rock music": [
+        "rock_music"
+      ],
+      "metal": [
+        "heavy_metal"
+      ],
+      "heavy metal": [
+        "heavy_metal"
+      ],
+      "punk": [
+        "punk_rock"
+      ],
+      "punk rock": [
+        "punk_rock"
+      ],
+      "pop": [
+        "pop_music"
+      ],
+      "pop music": [
+        "pop_music"
+      ],
+      "blues": [
+        "blues"
+      ],
+      "folk": [
+        "folk_music"
+      ],
+      "folk music": [
+        "folk_music"
+      ],
+      "country": [
+        "country_music"
+      ],
+      "country music": [
+        "country_music"
+      ],
+      "rap": [
+        "hip_hop"
+      ],
+      "hip hop": [
+        "hip_hop"
+      ],
+      "edm": [
+        "electronic_music"
+      ],
+      "electronic music": [
+        "electronic_music"
+      ],
+      "reggae": [
+        "reggae"
+      ],
+      "soul": [
+        "soul"
+      ],
+      "opera": [
+        "opera"
+      ],
+      "melody": [
+        "melody"
+      ],
+      "harmony": [
+        "harmony"
+      ],
+      "beat": [
+        "rhythm"
+      ],
+      "rhythm": [
+        "rhythm"
+      ],
+      "tempo": [
+        "tempo"
+      ],
+      "chord": [
+        "chord"
+      ],
+      "scale": [
+        "scale"
+      ],
+      "pitch": [
+        "pitch"
+      ],
+      "timbre": [
+        "timbre"
+      ]
+    }
+  }
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "name": "courses-20250122",
+    "snapshot": "courses-20250122.snapshot.json",
+    "cases": "courses-20250122.cases.json",
+    "count": 24
+  },
+  {
+    "name": "animals-test",
+    "snapshot": "animals-test.snapshot.json",
+    "cases": "animals-test.cases.json",
+    "count": 76
+  },
+  {
+    "name": "colors-test",
+    "snapshot": "colors-test.snapshot.json",
+    "cases": "colors-test.cases.json",
+    "count": 48
+  },
+  {
+    "name": "econ-20160218",
+    "snapshot": "econ-20160218.snapshot.json",
+    "cases": "econ-20160218.cases.json",
+    "count": 93
+  },
+  {
+    "name": "geography-test",
+    "snapshot": "geography-test.snapshot.json",
+    "cases": "geography-test.cases.json",
+    "count": 49
+  },
+  {
+    "name": "music-test",
+    "snapshot": "music-test.snapshot.json",
+    "cases": "music-test.cases.json",
+    "count": 82
+  },
+  {
+    "name": "courses-20241129",
+    "snapshot": "courses-20241129.snapshot.json",
+    "cases": "courses-20241129.cases.json",
+    "count": 2
+  },
+  {
+    "name": "courses-20241213",
+    "snapshot": "courses-20241213.snapshot.json",
+    "cases": "courses-20241213.cases.json",
+    "count": 1
+  },
+  {
+    "name": "courses-20250131",
+    "snapshot": "courses-20250131.snapshot.json",
+    "cases": "courses-20250131.cases.json",
+    "count": 1
+  },
+  {
+    "name": "medicopilot",
+    "snapshot": "medicopilot.snapshot.json",
+    "cases": "medicopilot.cases.json",
+    "count": 10
+  },
+  {
+    "name": "courses-20251028",
+    "snapshot": "courses-20251028.snapshot.json",
+    "cases": "courses-20251028.cases.json",
+    "count": 1
+  },
+  {
+    "name": "courses-20240709",
+    "snapshot": "courses-20240709.snapshot.json",
+    "cases": "courses-20240709.cases.json",
+    "count": 4
+  },
+  {
+    "name": "courses-20241023",
+    "snapshot": "courses-20241023.snapshot.json",
+    "cases": "courses-20241023.cases.json",
+    "count": 1
+  },
+  {
+    "name": "medic-copilot-20230726",
+    "snapshot": "medic-copilot-20230726.snapshot.json",
+    "cases": "medic-copilot-20230726.cases.json",
+    "count": 1
+  }
+]

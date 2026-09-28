@@ -1,0 +1,4836 @@
+[
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_case_invariant_red",
+    "text": "Red",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "5764037739878831584#0",
+        "text": "Red",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "5764037739878831584#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 5764037739878831584,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 5764037739878831584,
+          "head_text": "Red"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 3,
+        "is_wordnet": true,
+        "normal": "red",
+        "stem": "red"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "5764037739878831584#0",
+        "x": 0,
+        "y": 3,
+        "ner": null,
+        "text": "Red",
+        "normal": "red",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "5764037739878831584#0",
+              "text": "Red",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "5764037739878831584#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 5764037739878831584,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 5764037739878831584,
+                "head_text": "Red"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 3,
+              "is_wordnet": true,
+              "normal": "red",
+              "stem": "red"
+            }
+          ],
+          "canon": "red",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "red"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_blue_exact_match",
+    "text": "Blue",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "16525029037422792391#0",
+        "text": "Blue",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "16525029037422792391#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 16525029037422792391,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 16525029037422792391,
+          "head_text": "Blue"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 4,
+        "is_wordnet": true,
+        "normal": "blue",
+        "stem": "blue"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "16525029037422792391#0",
+        "x": 0,
+        "y": 4,
+        "ner": null,
+        "text": "Blue",
+        "normal": "blue",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "16525029037422792391#0",
+              "text": "Blue",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "16525029037422792391#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 16525029037422792391,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 16525029037422792391,
+                "head_text": "Blue"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 4,
+              "is_wordnet": true,
+              "normal": "blue",
+              "stem": "blue"
+            }
+          ],
+          "canon": "blue",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "blue"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_yellow_exact_match",
+    "text": "Yellow",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "8485502072298702525#0",
+        "text": "Yellow",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "8485502072298702525#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 8485502072298702525,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 8485502072298702525,
+          "head_text": "Yellow"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 6,
+        "is_wordnet": true,
+        "normal": "yellow",
+        "stem": "yellow"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "8485502072298702525#0",
+        "x": 0,
+        "y": 6,
+        "ner": null,
+        "text": "Yellow",
+        "normal": "yellow",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "8485502072298702525#0",
+              "text": "Yellow",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "8485502072298702525#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 8485502072298702525,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 8485502072298702525,
+                "head_text": "Yellow"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 6,
+              "is_wordnet": true,
+              "normal": "yellow",
+              "stem": "yellow"
+            }
+          ],
+          "canon": "yellow",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "yellow"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_orange_exact_match",
+    "text": "Orange",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "7752216554273339937#0",
+        "text": "Orange",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "7752216554273339937#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 7752216554273339937,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 7752216554273339937,
+          "head_text": "Orange"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 6,
+        "is_wordnet": true,
+        "normal": "orange",
+        "stem": "orange"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "7752216554273339937#0",
+        "x": 0,
+        "y": 6,
+        "ner": null,
+        "text": "Orange",
+        "normal": "orange",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "7752216554273339937#0",
+              "text": "Orange",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "7752216554273339937#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 7752216554273339937,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 7752216554273339937,
+                "head_text": "Orange"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 6,
+              "is_wordnet": true,
+              "normal": "orange",
+              "stem": "orange"
+            }
+          ],
+          "canon": "orange",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "orange"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_green_exact_match",
+    "text": "Green",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "6056264313941430663#0",
+        "text": "Green",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "6056264313941430663#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 6056264313941430663,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 6056264313941430663,
+          "head_text": "Green"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 5,
+        "is_wordnet": true,
+        "normal": "green",
+        "stem": "green"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "6056264313941430663#0",
+        "x": 0,
+        "y": 5,
+        "ner": null,
+        "text": "Green",
+        "normal": "green",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "6056264313941430663#0",
+              "text": "Green",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "6056264313941430663#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 6056264313941430663,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 6056264313941430663,
+                "head_text": "Green"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 5,
+              "is_wordnet": true,
+              "normal": "green",
+              "stem": "green"
+            }
+          ],
+          "canon": "green",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "green"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_purple_exact_match",
+    "text": "Purple",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "9535147292922932216#0",
+        "text": "Purple",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "9535147292922932216#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 9535147292922932216,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 9535147292922932216,
+          "head_text": "Purple"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 6,
+        "is_wordnet": true,
+        "normal": "purple",
+        "stem": "purple"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "9535147292922932216#0",
+        "x": 0,
+        "y": 6,
+        "ner": null,
+        "text": "Purple",
+        "normal": "purple",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "9535147292922932216#0",
+              "text": "Purple",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "9535147292922932216#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 9535147292922932216,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 9535147292922932216,
+                "head_text": "Purple"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 6,
+              "is_wordnet": true,
+              "normal": "purple",
+              "stem": "purple"
+            }
+          ],
+          "canon": "purple",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "purple"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_indigo_exact_match",
+    "text": "Indigo",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "1819300884635363893#0",
+        "text": "Indigo",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "ORG",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "1819300884635363893#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 1819300884635363893,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 1819300884635363893,
+          "head_text": "Indigo"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 6,
+        "is_wordnet": true,
+        "normal": "indigo",
+        "stem": "indigo"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "1819300884635363893#0",
+        "x": 0,
+        "y": 6,
+        "ner": null,
+        "text": "Indigo",
+        "normal": "indigo",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "1819300884635363893#0",
+              "text": "Indigo",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "ORG",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "1819300884635363893#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 1819300884635363893,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 1819300884635363893,
+                "head_text": "Indigo"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 6,
+              "is_wordnet": true,
+              "normal": "indigo",
+              "stem": "indigo"
+            }
+          ],
+          "canon": "indigo",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "indigo"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_black_exact_match",
+    "text": "Black",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "8586368155987542876#0",
+        "text": "Black",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "8586368155987542876#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 8586368155987542876,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 8586368155987542876,
+          "head_text": "Black"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 5,
+        "is_wordnet": true,
+        "normal": "black",
+        "stem": "black"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "8586368155987542876#0",
+        "x": 0,
+        "y": 5,
+        "ner": null,
+        "text": "Black",
+        "normal": "black",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "8586368155987542876#0",
+              "text": "Black",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "8586368155987542876#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 8586368155987542876,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 8586368155987542876,
+                "head_text": "Black"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 5,
+              "is_wordnet": true,
+              "normal": "black",
+              "stem": "black"
+            }
+          ],
+          "canon": "black",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "black"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_white_exact_match",
+    "text": "White",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "2796950474500970872#0",
+        "text": "White",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "2796950474500970872#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 2796950474500970872,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 2796950474500970872,
+          "head_text": "White"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 5,
+        "is_wordnet": true,
+        "normal": "white",
+        "stem": "white"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "2796950474500970872#0",
+        "x": 0,
+        "y": 5,
+        "ner": null,
+        "text": "White",
+        "normal": "white",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "2796950474500970872#0",
+              "text": "White",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "2796950474500970872#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 2796950474500970872,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 2796950474500970872,
+                "head_text": "White"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 5,
+              "is_wordnet": true,
+              "normal": "white",
+              "stem": "white"
+            }
+          ],
+          "canon": "white",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "white"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_gray_exact_match",
+    "text": "Gray",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "6823173840826101838#0",
+        "text": "Gray",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "6823173840826101838#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 6823173840826101838,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 6823173840826101838,
+          "head_text": "Gray"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 4,
+        "is_wordnet": true,
+        "normal": "gray",
+        "stem": "grai"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "6823173840826101838#0",
+        "x": 0,
+        "y": 4,
+        "ner": null,
+        "text": "Gray",
+        "normal": "gray",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "6823173840826101838#0",
+              "text": "Gray",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "6823173840826101838#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 6823173840826101838,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 6823173840826101838,
+                "head_text": "Gray"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 4,
+              "is_wordnet": true,
+              "normal": "gray",
+              "stem": "grai"
+            }
+          ],
+          "canon": "gray",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "gray"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_brown_exact_match",
+    "text": "Brown",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "12667495615604954721#0",
+        "text": "Brown",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "PERSON",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "12667495615604954721#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 12667495615604954721,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 12667495615604954721,
+          "head_text": "Brown"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 5,
+        "is_wordnet": true,
+        "normal": "brown",
+        "stem": "brown"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "12667495615604954721#0",
+        "x": 0,
+        "y": 5,
+        "ner": null,
+        "text": "Brown",
+        "normal": "brown",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "12667495615604954721#0",
+              "text": "Brown",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "PERSON",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "12667495615604954721#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 12667495615604954721,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 12667495615604954721,
+                "head_text": "Brown"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 5,
+              "is_wordnet": true,
+              "normal": "brown",
+              "stem": "brown"
+            }
+          ],
+          "canon": "brown",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "brown"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_beige_exact_match",
+    "text": "Beige",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "3244868558141301929#0",
+        "text": "Beige",
+        "tense": "",
+        "noun_number": "plural",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NNS",
+        "dep": "ROOT",
+        "ent": "PERSON",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "3244868558141301929#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 3244868558141301929,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 3244868558141301929,
+          "head_text": "Beige"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 5,
+        "is_wordnet": true,
+        "normal": "beige",
+        "stem": "beige"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "3244868558141301929#0",
+        "x": 0,
+        "y": 5,
+        "ner": null,
+        "text": "Beige",
+        "normal": "beige",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "3244868558141301929#0",
+              "text": "Beige",
+              "tense": "",
+              "noun_number": "plural",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NNS",
+              "dep": "ROOT",
+              "ent": "PERSON",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "3244868558141301929#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 3244868558141301929,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 3244868558141301929,
+                "head_text": "Beige"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 5,
+              "is_wordnet": true,
+              "normal": "beige",
+              "stem": "beige"
+            }
+          ],
+          "canon": "beige",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "beige"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_coral_exact_match",
+    "text": "Coral",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "18242057570894421861#0",
+        "text": "Coral",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "18242057570894421861#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 18242057570894421861,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 18242057570894421861,
+          "head_text": "Coral"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 5,
+        "is_wordnet": true,
+        "normal": "coral",
+        "stem": "coral"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "18242057570894421861#0",
+        "x": 0,
+        "y": 5,
+        "ner": null,
+        "text": "Coral",
+        "normal": "coral",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "18242057570894421861#0",
+              "text": "Coral",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "18242057570894421861#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 18242057570894421861,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 18242057570894421861,
+                "head_text": "Coral"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 5,
+              "is_wordnet": true,
+              "normal": "coral",
+              "stem": "coral"
+            }
+          ],
+          "canon": "coral",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "coral"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_pink_exact_match",
+    "text": "Pink",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "14227765689232614200#0",
+        "text": "Pink",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14227765689232614200#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 14227765689232614200,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 14227765689232614200,
+          "head_text": "Pink"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 4,
+        "is_wordnet": true,
+        "normal": "pink",
+        "stem": "pink"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "14227765689232614200#0",
+        "x": 0,
+        "y": 4,
+        "ner": null,
+        "text": "Pink",
+        "normal": "pink",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "14227765689232614200#0",
+              "text": "Pink",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14227765689232614200#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 14227765689232614200,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 14227765689232614200,
+                "head_text": "Pink"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 4,
+              "is_wordnet": true,
+              "normal": "pink",
+              "stem": "pink"
+            }
+          ],
+          "canon": "pink",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "pink"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_maroon_exact_match",
+    "text": "Maroon",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "336836919946884129#0",
+        "text": "Maroon",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "GPE",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "336836919946884129#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 336836919946884129,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 336836919946884129,
+          "head_text": "Maroon"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 6,
+        "is_wordnet": true,
+        "normal": "maroon",
+        "stem": "maroon"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "336836919946884129#0",
+        "x": 0,
+        "y": 6,
+        "ner": null,
+        "text": "Maroon",
+        "normal": "maroon",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "336836919946884129#0",
+              "text": "Maroon",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "GPE",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "336836919946884129#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 336836919946884129,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 336836919946884129,
+                "head_text": "Maroon"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 6,
+              "is_wordnet": true,
+              "normal": "maroon",
+              "stem": "maroon"
+            }
+          ],
+          "canon": "maroon",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "maroon"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_teal_exact_match",
+    "text": "Teal",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "12507485021415685190#0",
+        "text": "Teal",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "12507485021415685190#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 12507485021415685190,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 12507485021415685190,
+          "head_text": "Teal"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 4,
+        "is_wordnet": true,
+        "normal": "teal",
+        "stem": "teal"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "12507485021415685190#0",
+        "x": 0,
+        "y": 4,
+        "ner": null,
+        "text": "Teal",
+        "normal": "teal",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "12507485021415685190#0",
+              "text": "Teal",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "12507485021415685190#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 12507485021415685190,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 12507485021415685190,
+                "head_text": "Teal"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 4,
+              "is_wordnet": true,
+              "normal": "teal",
+              "stem": "teal"
+            }
+          ],
+          "canon": "teal",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "teal"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_turquoise_exact_match",
+    "text": "Turquoise",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "2605697255758376028#0",
+        "text": "Turquoise",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADV",
+        "tag": "RB",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "2605697255758376028#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 2605697255758376028,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 2605697255758376028,
+          "head_text": "Turquoise"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 9,
+        "is_wordnet": true,
+        "normal": "turquoise",
+        "stem": "turquoise"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "2605697255758376028#0",
+        "x": 0,
+        "y": 9,
+        "ner": null,
+        "text": "Turquoise",
+        "normal": "turquoise",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "2605697255758376028#0",
+              "text": "Turquoise",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADV",
+              "tag": "RB",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "2605697255758376028#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 2605697255758376028,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 2605697255758376028,
+                "head_text": "Turquoise"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 9,
+              "is_wordnet": true,
+              "normal": "turquoise",
+              "stem": "turquoise"
+            }
+          ],
+          "canon": "turquoise",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "turquoise"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_navy_exact_match",
+    "text": "Navy",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "11566012753151149660#0",
+        "text": "Navy",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "ORG",
+        "shape": "Xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "11566012753151149660#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 11566012753151149660,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 11566012753151149660,
+          "head_text": "Navy"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 4,
+        "is_wordnet": true,
+        "normal": "navy",
+        "stem": "navi"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "11566012753151149660#0",
+        "x": 0,
+        "y": 4,
+        "ner": null,
+        "text": "Navy",
+        "normal": "navy",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "11566012753151149660#0",
+              "text": "Navy",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "ORG",
+              "shape": "Xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "11566012753151149660#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 11566012753151149660,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 11566012753151149660,
+                "head_text": "Navy"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 4,
+              "is_wordnet": true,
+              "normal": "navy",
+              "stem": "navi"
+            }
+          ],
+          "canon": "navy",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "navy"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_mint_exact_match",
+    "text": "Mint",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "9996406211293112423#0",
+        "text": "Mint",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "9996406211293112423#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 9996406211293112423,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 9996406211293112423,
+          "head_text": "Mint"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 4,
+        "is_wordnet": true,
+        "normal": "mint",
+        "stem": "mint"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "9996406211293112423#0",
+        "x": 0,
+        "y": 4,
+        "ner": null,
+        "text": "Mint",
+        "normal": "mint",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "9996406211293112423#0",
+              "text": "Mint",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "9996406211293112423#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 9996406211293112423,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 9996406211293112423,
+                "head_text": "Mint"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 4,
+              "is_wordnet": true,
+              "normal": "mint",
+              "stem": "mint"
+            }
+          ],
+          "canon": "mint",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "mint"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_silver_exact_match",
+    "text": "Silver",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "16949993694123909320#0",
+        "text": "Silver",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "16949993694123909320#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 16949993694123909320,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 16949993694123909320,
+          "head_text": "Silver"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 6,
+        "is_wordnet": true,
+        "normal": "silver",
+        "stem": "silver"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "16949993694123909320#0",
+        "x": 0,
+        "y": 6,
+        "ner": null,
+        "text": "Silver",
+        "normal": "silver",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "16949993694123909320#0",
+              "text": "Silver",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "16949993694123909320#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 16949993694123909320,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 16949993694123909320,
+                "head_text": "Silver"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 6,
+              "is_wordnet": true,
+              "normal": "silver",
+              "stem": "silver"
+            }
+          ],
+          "canon": "silver",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "silver"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_bronze_exact_match",
+    "text": "Bronze",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "8606150225420045602#0",
+        "text": "Bronze",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "PERSON",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "8606150225420045602#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 8606150225420045602,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 8606150225420045602,
+          "head_text": "Bronze"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 6,
+        "is_wordnet": true,
+        "normal": "bronze",
+        "stem": "bronze"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "8606150225420045602#0",
+        "x": 0,
+        "y": 6,
+        "ner": null,
+        "text": "Bronze",
+        "normal": "bronze",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "8606150225420045602#0",
+              "text": "Bronze",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "PERSON",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "8606150225420045602#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 8606150225420045602,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 8606150225420045602,
+                "head_text": "Bronze"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 6,
+              "is_wordnet": true,
+              "normal": "bronze",
+              "stem": "bronze"
+            }
+          ],
+          "canon": "bronze",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "bronze"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_crimson_maps_to_red",
+    "text": "crimson",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "13318318663013578591#0",
+        "text": "crimson",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "13318318663013578591#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 13318318663013578591,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 13318318663013578591,
+          "head_text": "crimson"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 7,
+        "is_wordnet": true,
+        "normal": "crimson",
+        "stem": "crimson"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "13318318663013578591#0",
+        "x": 0,
+        "y": 7,
+        "ner": null,
+        "text": "crimson",
+        "normal": "red",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "13318318663013578591#0",
+              "text": "crimson",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "13318318663013578591#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 13318318663013578591,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 13318318663013578591,
+                "head_text": "crimson"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 7,
+              "is_wordnet": true,
+              "normal": "crimson",
+              "stem": "crimson"
+            }
+          ],
+          "canon": "red",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "red"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_scarlet_maps_to_red",
+    "text": "scarlet",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "8251360531512364519#0",
+        "text": "scarlet",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "8251360531512364519#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 8251360531512364519,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 8251360531512364519,
+          "head_text": "scarlet"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 7,
+        "is_wordnet": true,
+        "normal": "scarlet",
+        "stem": "scarlet"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "8251360531512364519#0",
+        "x": 0,
+        "y": 7,
+        "ner": null,
+        "text": "scarlet",
+        "normal": "red",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "8251360531512364519#0",
+              "text": "scarlet",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "8251360531512364519#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 8251360531512364519,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 8251360531512364519,
+                "head_text": "scarlet"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 7,
+              "is_wordnet": true,
+              "normal": "scarlet",
+              "stem": "scarlet"
+            }
+          ],
+          "canon": "red",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "red"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_azure_maps_to_blue",
+    "text": "azure",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "9805150402525830243#0",
+        "text": "azure",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "9805150402525830243#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 9805150402525830243,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 9805150402525830243,
+          "head_text": "azure"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 5,
+        "is_wordnet": true,
+        "normal": "azure",
+        "stem": "azure"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "9805150402525830243#0",
+        "x": 0,
+        "y": 5,
+        "ner": null,
+        "text": "azure",
+        "normal": "blue",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "9805150402525830243#0",
+              "text": "azure",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "9805150402525830243#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 9805150402525830243,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 9805150402525830243,
+                "head_text": "azure"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 5,
+              "is_wordnet": true,
+              "normal": "azure",
+              "stem": "azure"
+            }
+          ],
+          "canon": "blue",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "blue"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_cobalt_maps_to_blue",
+    "text": "cobalt",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "14188188596294247823#0",
+        "text": "cobalt",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14188188596294247823#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 14188188596294247823,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 14188188596294247823,
+          "head_text": "cobalt"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 6,
+        "is_wordnet": true,
+        "normal": "cobalt",
+        "stem": "cobalt"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "14188188596294247823#0",
+        "x": 0,
+        "y": 6,
+        "ner": null,
+        "text": "cobalt",
+        "normal": "blue",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "14188188596294247823#0",
+              "text": "cobalt",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14188188596294247823#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 14188188596294247823,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 14188188596294247823,
+                "head_text": "cobalt"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 6,
+              "is_wordnet": true,
+              "normal": "cobalt",
+              "stem": "cobalt"
+            }
+          ],
+          "canon": "blue",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "blue"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_emerald_maps_to_green",
+    "text": "emerald",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "15604137901287282315#0",
+        "text": "emerald",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "15604137901287282315#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 15604137901287282315,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 15604137901287282315,
+          "head_text": "emerald"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 7,
+        "is_wordnet": true,
+        "normal": "emerald",
+        "stem": "emerald"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "15604137901287282315#0",
+        "x": 0,
+        "y": 7,
+        "ner": null,
+        "text": "emerald",
+        "normal": "green",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "15604137901287282315#0",
+              "text": "emerald",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "15604137901287282315#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 15604137901287282315,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 15604137901287282315,
+                "head_text": "emerald"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 7,
+              "is_wordnet": true,
+              "normal": "emerald",
+              "stem": "emerald"
+            }
+          ],
+          "canon": "green",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "green"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_violet_maps_to_purple",
+    "text": "violet",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "2276416410380410342#0",
+        "text": "violet",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "ORG",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "2276416410380410342#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 2276416410380410342,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 2276416410380410342,
+          "head_text": "violet"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 6,
+        "is_wordnet": true,
+        "normal": "violet",
+        "stem": "violet"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "2276416410380410342#0",
+        "x": 0,
+        "y": 6,
+        "ner": null,
+        "text": "violet",
+        "normal": "purple",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "2276416410380410342#0",
+              "text": "violet",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "ORG",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "2276416410380410342#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 2276416410380410342,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 2276416410380410342,
+                "head_text": "violet"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 6,
+              "is_wordnet": true,
+              "normal": "violet",
+              "stem": "violet"
+            }
+          ],
+          "canon": "purple",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "purple"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_lavender_maps_to_purple",
+    "text": "lavender",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "12982654811450096703#0",
+        "text": "lavender",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "12982654811450096703#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 12982654811450096703,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 12982654811450096703,
+          "head_text": "lavender"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 8,
+        "is_wordnet": true,
+        "normal": "lavender",
+        "stem": "lavend"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "12982654811450096703#0",
+        "x": 0,
+        "y": 8,
+        "ner": null,
+        "text": "lavender",
+        "normal": "purple",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "12982654811450096703#0",
+              "text": "lavender",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "12982654811450096703#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 12982654811450096703,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 12982654811450096703,
+                "head_text": "lavender"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 8,
+              "is_wordnet": true,
+              "normal": "lavender",
+              "stem": "lavend"
+            }
+          ],
+          "canon": "purple",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "purple"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_grey_maps_to_gray",
+    "text": "grey",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "10475807793332549289#0",
+        "text": "grey",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "ORG",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "10475807793332549289#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 10475807793332549289,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 10475807793332549289,
+          "head_text": "grey"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 4,
+        "is_wordnet": true,
+        "normal": "grey",
+        "stem": "grei"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "10475807793332549289#0",
+        "x": 0,
+        "y": 4,
+        "ner": null,
+        "text": "grey",
+        "normal": "gray",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "10475807793332549289#0",
+              "text": "grey",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "ORG",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "10475807793332549289#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 10475807793332549289,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 10475807793332549289,
+                "head_text": "grey"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 4,
+              "is_wordnet": true,
+              "normal": "grey",
+              "stem": "grei"
+            }
+          ],
+          "canon": "gray",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "gray"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_tan_maps_to_brown",
+    "text": "tan",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "5127631211755802587#0",
+        "text": "tan",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "PERSON",
+        "shape": "xxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "5127631211755802587#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 5127631211755802587,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 5127631211755802587,
+          "head_text": "tan"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 3,
+        "is_wordnet": true,
+        "normal": "tan",
+        "stem": "tan"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "5127631211755802587#0",
+        "x": 0,
+        "y": 3,
+        "ner": null,
+        "text": "tan",
+        "normal": "brown",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "5127631211755802587#0",
+              "text": "tan",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "PERSON",
+              "shape": "xxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "5127631211755802587#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 5127631211755802587,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 5127631211755802587,
+                "head_text": "tan"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 3,
+              "is_wordnet": true,
+              "normal": "tan",
+              "stem": "tan"
+            }
+          ],
+          "canon": "brown",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "brown"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_chocolate_maps_to_brown",
+    "text": "chocolate",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "10946593968795032542#0",
+        "text": "chocolate",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "10946593968795032542#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 10946593968795032542,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 10946593968795032542,
+          "head_text": "chocolate"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 9,
+        "is_wordnet": true,
+        "normal": "chocolate",
+        "stem": "chocol"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "10946593968795032542#0",
+        "x": 0,
+        "y": 9,
+        "ner": null,
+        "text": "chocolate",
+        "normal": "brown",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "10946593968795032542#0",
+              "text": "chocolate",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "10946593968795032542#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 10946593968795032542,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 10946593968795032542,
+                "head_text": "chocolate"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 9,
+              "is_wordnet": true,
+              "normal": "chocolate",
+              "stem": "chocol"
+            }
+          ],
+          "canon": "brown",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "brown"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_rose_maps_to_pink",
+    "text": "rose",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "5580784729243738386#0",
+        "text": "rose",
+        "tense": "past",
+        "noun_number": "",
+        "verb_form": "fin",
+        "sentiment": 0.0,
+        "pos": "VERB",
+        "tag": "VBD",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "5580784729243738386#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 5580784729243738386,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 5580784729243738386,
+          "head_text": "rose"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 4,
+        "is_wordnet": true,
+        "normal": "rose",
+        "stem": "rose"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "5580784729243738386#0",
+        "x": 0,
+        "y": 4,
+        "ner": null,
+        "text": "rose",
+        "normal": "pink",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "5580784729243738386#0",
+              "text": "rose",
+              "tense": "past",
+              "noun_number": "",
+              "verb_form": "fin",
+              "sentiment": 0.0,
+              "pos": "VERB",
+              "tag": "VBD",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "5580784729243738386#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 5580784729243738386,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 5580784729243738386,
+                "head_text": "rose"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 4,
+              "is_wordnet": true,
+              "normal": "rose",
+              "stem": "rose"
+            }
+          ],
+          "canon": "pink",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "pink"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_magenta_maps_to_pink",
+    "text": "magenta",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "14328614359251251548#0",
+        "text": "magenta",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "GPE",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14328614359251251548#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 14328614359251251548,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 14328614359251251548,
+          "head_text": "magenta"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 7,
+        "is_wordnet": true,
+        "normal": "magenta",
+        "stem": "magenta"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "14328614359251251548#0",
+        "x": 0,
+        "y": 7,
+        "ner": null,
+        "text": "magenta",
+        "normal": "pink",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "14328614359251251548#0",
+              "text": "magenta",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "GPE",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14328614359251251548#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 14328614359251251548,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 14328614359251251548,
+                "head_text": "magenta"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 7,
+              "is_wordnet": true,
+              "normal": "magenta",
+              "stem": "magenta"
+            }
+          ],
+          "canon": "pink",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "pink"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_cyan_maps_to_teal",
+    "text": "cyan",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "17740462828774604389#0",
+        "text": "cyan",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "PERSON",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "17740462828774604389#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 17740462828774604389,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 17740462828774604389,
+          "head_text": "cyan"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 4,
+        "is_wordnet": true,
+        "normal": "cyan",
+        "stem": "cyan"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "17740462828774604389#0",
+        "x": 0,
+        "y": 4,
+        "ner": null,
+        "text": "cyan",
+        "normal": "teal",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "17740462828774604389#0",
+              "text": "cyan",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "PERSON",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "17740462828774604389#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 17740462828774604389,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 17740462828774604389,
+                "head_text": "cyan"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 4,
+              "is_wordnet": true,
+              "normal": "cyan",
+              "stem": "cyan"
+            }
+          ],
+          "canon": "teal",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "teal"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_burgundy_maps_to_maroon",
+    "text": "burgundy",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "16424350533775740444#0",
+        "text": "burgundy",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "ORG",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "16424350533775740444#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 16424350533775740444,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 16424350533775740444,
+          "head_text": "burgundy"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 8,
+        "is_wordnet": true,
+        "normal": "burgundy",
+        "stem": "burgundi"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "16424350533775740444#0",
+        "x": 0,
+        "y": 8,
+        "ner": null,
+        "text": "burgundy",
+        "normal": "maroon",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "16424350533775740444#0",
+              "text": "burgundy",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "ORG",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "16424350533775740444#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 16424350533775740444,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 16424350533775740444,
+                "head_text": "burgundy"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 8,
+              "is_wordnet": true,
+              "normal": "burgundy",
+              "stem": "burgundi"
+            }
+          ],
+          "canon": "maroon",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "maroon"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_tangerine_maps_to_orange",
+    "text": "tangerine",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "7288156672279321610#0",
+        "text": "tangerine",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "NORP",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "7288156672279321610#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 7288156672279321610,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 7288156672279321610,
+          "head_text": "tangerine"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 9,
+        "is_wordnet": true,
+        "normal": "tangerine",
+        "stem": "tangerine"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "7288156672279321610#0",
+        "x": 0,
+        "y": 9,
+        "ner": null,
+        "text": "tangerine",
+        "normal": "orange",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "7288156672279321610#0",
+              "text": "tangerine",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "NORP",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "7288156672279321610#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 7288156672279321610,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 7288156672279321610,
+                "head_text": "tangerine"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 9,
+              "is_wordnet": true,
+              "normal": "tangerine",
+              "stem": "tangerine"
+            }
+          ],
+          "canon": "orange",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "orange"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_chrome_maps_to_silver",
+    "text": "chrome",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "1990513926937082596#0",
+        "text": "chrome",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "1990513926937082596#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 1990513926937082596,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 1990513926937082596,
+          "head_text": "chrome"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 6,
+        "is_wordnet": true,
+        "normal": "chrome",
+        "stem": "chrome"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "1990513926937082596#0",
+        "x": 0,
+        "y": 6,
+        "ner": null,
+        "text": "chrome",
+        "normal": "silver",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "1990513926937082596#0",
+              "text": "chrome",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "1990513926937082596#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 1990513926937082596,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 1990513926937082596,
+                "head_text": "chrome"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 6,
+              "is_wordnet": true,
+              "normal": "chrome",
+              "stem": "chrome"
+            }
+          ],
+          "canon": "silver",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "silver"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_colour_maps_to_color",
+    "text": "colour",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "2579953423244470672#0",
+        "text": "colour",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "2579953423244470672#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 2579953423244470672,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 2579953423244470672,
+          "head_text": "colour"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 6,
+        "is_wordnet": true,
+        "normal": "colour",
+        "stem": "colour"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "2579953423244470672#0",
+        "x": 0,
+        "y": 6,
+        "ner": null,
+        "text": "colour",
+        "normal": "color",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "2579953423244470672#0",
+              "text": "colour",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "2579953423244470672#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 2579953423244470672,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 2579953423244470672,
+                "head_text": "colour"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 6,
+              "is_wordnet": true,
+              "normal": "colour",
+              "stem": "colour"
+            }
+          ],
+          "canon": "color",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "color"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_primary_color_span",
+    "text": "Primary Color",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "10007096227271162987#1",
+        "text": "Primary ",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "compound",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 10007096227271162987,
+          "head_i": 2,
+          "head_idx": 9,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 7,
+        "is_wordnet": true,
+        "normal": "primary",
+        "stem": "primari"
+      },
+      {
+        "id": "14752991261910186482#2",
+        "text": "Color",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 2,
+          "idx": 9,
+          "orth": 14752991261910186482,
+          "head_i": 2,
+          "head_idx": 9,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 8,
+        "y": 13,
+        "is_wordnet": true,
+        "normal": "color",
+        "stem": "color"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "10007096227271162987#1",
+        "x": 0,
+        "y": 13,
+        "ner": null,
+        "text": "Primary Color",
+        "normal": "primary_color",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "10007096227271162987#1",
+              "text": "Primary ",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "compound",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 10007096227271162987,
+                "head_i": 2,
+                "head_idx": 9,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 7,
+              "is_wordnet": true,
+              "normal": "primary",
+              "stem": "primari"
+            },
+            {
+              "id": "14752991261910186482#2",
+              "text": "Color",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 2,
+                "idx": 9,
+                "orth": 14752991261910186482,
+                "head_i": 2,
+                "head_idx": 9,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 8,
+              "y": 13,
+              "is_wordnet": true,
+              "normal": "color",
+              "stem": "color"
+            }
+          ],
+          "canon": "primary_color",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "primary_color"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_secondary_color_span",
+    "text": "Secondary Color",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "3680512209835991792#1",
+        "text": "Secondary ",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "amod",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 3680512209835991792,
+          "head_i": 2,
+          "head_idx": 11,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 9,
+        "is_wordnet": true,
+        "normal": "secondary",
+        "stem": "secondari"
+      },
+      {
+        "id": "14752991261910186482#2",
+        "text": "Color",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 2,
+          "idx": 11,
+          "orth": 14752991261910186482,
+          "head_i": 2,
+          "head_idx": 11,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 10,
+        "y": 15,
+        "is_wordnet": true,
+        "normal": "color",
+        "stem": "color"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "3680512209835991792#1",
+        "x": 0,
+        "y": 15,
+        "ner": null,
+        "text": "Secondary Color",
+        "normal": "secondary_color",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "3680512209835991792#1",
+              "text": "Secondary ",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "amod",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 3680512209835991792,
+                "head_i": 2,
+                "head_idx": 11,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 9,
+              "is_wordnet": true,
+              "normal": "secondary",
+              "stem": "secondari"
+            },
+            {
+              "id": "14752991261910186482#2",
+              "text": "Color",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 2,
+                "idx": 11,
+                "orth": 14752991261910186482,
+                "head_i": 2,
+                "head_idx": 11,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 10,
+              "y": 15,
+              "is_wordnet": true,
+              "normal": "color",
+              "stem": "color"
+            }
+          ],
+          "canon": "secondary_color",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "secondary_color"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_neutral_color_span",
+    "text": "Neutral Color",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "2938350322338844147#1",
+        "text": "Neutral ",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "amod",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 2938350322338844147,
+          "head_i": 2,
+          "head_idx": 9,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 7,
+        "is_wordnet": true,
+        "normal": "neutral",
+        "stem": "neutral"
+      },
+      {
+        "id": "14752991261910186482#2",
+        "text": "Color",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 2,
+          "idx": 9,
+          "orth": 14752991261910186482,
+          "head_i": 2,
+          "head_idx": 9,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 8,
+        "y": 13,
+        "is_wordnet": true,
+        "normal": "color",
+        "stem": "color"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "2938350322338844147#1",
+        "x": 0,
+        "y": 13,
+        "ner": null,
+        "text": "Neutral Color",
+        "normal": "neutral_color",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "2938350322338844147#1",
+              "text": "Neutral ",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "amod",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 2938350322338844147,
+                "head_i": 2,
+                "head_idx": 9,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 7,
+              "is_wordnet": true,
+              "normal": "neutral",
+              "stem": "neutral"
+            },
+            {
+              "id": "14752991261910186482#2",
+              "text": "Color",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 2,
+                "idx": 9,
+                "orth": 14752991261910186482,
+                "head_i": 2,
+                "head_idx": 9,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 8,
+              "y": 13,
+              "is_wordnet": true,
+              "normal": "color",
+              "stem": "color"
+            }
+          ],
+          "canon": "neutral_color",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "neutral_color"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_warm_color_span",
+    "text": "Warm Color",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "6779732879609660841#1",
+        "text": "Warm ",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "compound",
+        "ent": "",
+        "shape": "Xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 6779732879609660841,
+          "head_i": 2,
+          "head_idx": 6,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 4,
+        "is_wordnet": true,
+        "normal": "warm",
+        "stem": "warm"
+      },
+      {
+        "id": "14752991261910186482#2",
+        "text": "Color",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 2,
+          "idx": 6,
+          "orth": 14752991261910186482,
+          "head_i": 2,
+          "head_idx": 6,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 5,
+        "y": 10,
+        "is_wordnet": true,
+        "normal": "color",
+        "stem": "color"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "6779732879609660841#1",
+        "x": 0,
+        "y": 10,
+        "ner": null,
+        "text": "Warm Color",
+        "normal": "warm_color",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "6779732879609660841#1",
+              "text": "Warm ",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "compound",
+              "ent": "",
+              "shape": "Xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 6779732879609660841,
+                "head_i": 2,
+                "head_idx": 6,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 4,
+              "is_wordnet": true,
+              "normal": "warm",
+              "stem": "warm"
+            },
+            {
+              "id": "14752991261910186482#2",
+              "text": "Color",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 2,
+                "idx": 6,
+                "orth": 14752991261910186482,
+                "head_i": 2,
+                "head_idx": 6,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 5,
+              "y": 10,
+              "is_wordnet": true,
+              "normal": "color",
+              "stem": "color"
+            }
+          ],
+          "canon": "warm_color",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "warm_color"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_cool_color_span",
+    "text": "Cool Color",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "13016027611896205254#1",
+        "text": "Cool ",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "compound",
+        "ent": "",
+        "shape": "Xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 13016027611896205254,
+          "head_i": 2,
+          "head_idx": 6,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 4,
+        "is_wordnet": true,
+        "normal": "cool",
+        "stem": "cool"
+      },
+      {
+        "id": "14752991261910186482#2",
+        "text": "Color",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 2,
+          "idx": 6,
+          "orth": 14752991261910186482,
+          "head_i": 2,
+          "head_idx": 6,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 5,
+        "y": 10,
+        "is_wordnet": true,
+        "normal": "color",
+        "stem": "color"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "13016027611896205254#1",
+        "x": 0,
+        "y": 10,
+        "ner": null,
+        "text": "Cool Color",
+        "normal": "cool_color",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "13016027611896205254#1",
+              "text": "Cool ",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "compound",
+              "ent": "",
+              "shape": "Xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 13016027611896205254,
+                "head_i": 2,
+                "head_idx": 6,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 4,
+              "is_wordnet": true,
+              "normal": "cool",
+              "stem": "cool"
+            },
+            {
+              "id": "14752991261910186482#2",
+              "text": "Color",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 2,
+                "idx": 6,
+                "orth": 14752991261910186482,
+                "head_i": 2,
+                "head_idx": 6,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 5,
+              "y": 10,
+              "is_wordnet": true,
+              "normal": "color",
+              "stem": "color"
+            }
+          ],
+          "canon": "cool_color",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "cool_color"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_metallic_color_span",
+    "text": "Metallic Color",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "7361062702302490581#1",
+        "text": "Metallic ",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "amod",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 7361062702302490581,
+          "head_i": 2,
+          "head_idx": 10,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 8,
+        "is_wordnet": true,
+        "normal": "metallic",
+        "stem": "metall"
+      },
+      {
+        "id": "14752991261910186482#2",
+        "text": "Color",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "NOUN",
+        "tag": "NN",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "14752991261910186482#2",
+        "other": {
+          "i": 2,
+          "idx": 10,
+          "orth": 14752991261910186482,
+          "head_i": 2,
+          "head_idx": 10,
+          "head_orth": 14752991261910186482,
+          "head_text": "Color"
+        },
+        "is_punct": false,
+        "x": 9,
+        "y": 14,
+        "is_wordnet": true,
+        "normal": "color",
+        "stem": "color"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "7361062702302490581#1",
+        "x": 0,
+        "y": 14,
+        "ner": null,
+        "text": "Metallic Color",
+        "normal": "metallic_color",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "7361062702302490581#1",
+              "text": "Metallic ",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "amod",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 7361062702302490581,
+                "head_i": 2,
+                "head_idx": 10,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 8,
+              "is_wordnet": true,
+              "normal": "metallic",
+              "stem": "metall"
+            },
+            {
+              "id": "14752991261910186482#2",
+              "text": "Color",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "NOUN",
+              "tag": "NN",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "14752991261910186482#2",
+              "other": {
+                "i": 2,
+                "idx": 10,
+                "orth": 14752991261910186482,
+                "head_i": 2,
+                "head_idx": 10,
+                "head_orth": 14752991261910186482,
+                "head_text": "Color"
+              },
+              "is_punct": false,
+              "x": 9,
+              "y": 14,
+              "is_wordnet": true,
+              "normal": "color",
+              "stem": "color"
+            }
+          ],
+          "canon": "metallic_color",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "metallic_color"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_unknown_color_no_swaps",
+    "text": "zzxqfoo",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "9518895558161337725#0",
+        "text": "zzxqfoo",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "PERSON",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "9518895558161337725#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 9518895558161337725,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 9518895558161337725,
+          "head_text": "zzxqfoo"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 7,
+        "is_wordnet": false,
+        "normal": "zzxqfoo",
+        "stem": "zzxqfoo"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "9518895558161337725#0",
+        "text": "zzxqfoo",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "PERSON",
+        "shape": "xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "9518895558161337725#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 9518895558161337725,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 9518895558161337725,
+          "head_text": "zzxqfoo"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 7,
+        "is_wordnet": false,
+        "normal": "zzxqfoo",
+        "stem": "zzxqfoo"
+      }
+    ],
+    "expected_text": "zzxqfoo"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_case_invariant_red",
+    "text": "RED",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "10703295480626775740#0",
+        "text": "RED",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "ORG",
+        "shape": "XXX",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "10703295480626775740#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 10703295480626775740,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 10703295480626775740,
+          "head_text": "RED"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 3,
+        "is_wordnet": true,
+        "normal": "red",
+        "stem": "red"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "10703295480626775740#0",
+        "x": 0,
+        "y": 3,
+        "ner": null,
+        "text": "RED",
+        "normal": "red",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "10703295480626775740#0",
+              "text": "RED",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "ORG",
+              "shape": "XXX",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "10703295480626775740#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 10703295480626775740,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 10703295480626775740,
+                "head_text": "RED"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 3,
+              "is_wordnet": true,
+              "normal": "red",
+              "stem": "red"
+            }
+          ],
+          "canon": "red",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "red"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_case_invariant_red",
+    "text": "red",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "17551718516836219974#0",
+        "text": "red",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "ROOT",
+        "ent": "",
+        "shape": "xxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "17551718516836219974#0",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 17551718516836219974,
+          "head_i": 0,
+          "head_idx": 0,
+          "head_orth": 17551718516836219974,
+          "head_text": "red"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 3,
+        "is_wordnet": true,
+        "normal": "red",
+        "stem": "red"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "17551718516836219974#0",
+        "x": 0,
+        "y": 3,
+        "ner": null,
+        "text": "red",
+        "normal": "red",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "17551718516836219974#0",
+              "text": "red",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "ROOT",
+              "ent": "",
+              "shape": "xxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "17551718516836219974#0",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 17551718516836219974,
+                "head_i": 0,
+                "head_idx": 0,
+                "head_orth": 17551718516836219974,
+                "head_text": "red"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 3,
+              "is_wordnet": true,
+              "normal": "red",
+              "stem": "red"
+            }
+          ],
+          "canon": "red",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "red"
+  },
+  {
+    "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_swap_type_is_known_value",
+    "text": "Red Blue Green",
+    "ctr": 0,
+    "tokens": [
+      {
+        "id": "5764037739878831584#1",
+        "text": "Red ",
+        "tense": "",
+        "noun_number": "",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "ADJ",
+        "tag": "JJ",
+        "dep": "amod",
+        "ent": "ORG",
+        "shape": "Xxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "6056264313941430663#4",
+        "other": {
+          "i": 0,
+          "idx": 0,
+          "orth": 5764037739878831584,
+          "head_i": 4,
+          "head_idx": 11,
+          "head_orth": 6056264313941430663,
+          "head_text": "Green"
+        },
+        "is_punct": false,
+        "x": 0,
+        "y": 3,
+        "is_wordnet": true,
+        "normal": "red",
+        "stem": "red"
+      },
+      {
+        "id": "16525029037422792391#3",
+        "text": "Blue ",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "compound",
+        "ent": "ORG",
+        "shape": "Xxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "6056264313941430663#4",
+        "other": {
+          "i": 2,
+          "idx": 5,
+          "orth": 16525029037422792391,
+          "head_i": 4,
+          "head_idx": 11,
+          "head_orth": 6056264313941430663,
+          "head_text": "Green"
+        },
+        "is_punct": false,
+        "x": 4,
+        "y": 8,
+        "is_wordnet": true,
+        "normal": "blue",
+        "stem": "blue"
+      },
+      {
+        "id": "6056264313941430663#4",
+        "text": "Green",
+        "tense": "",
+        "noun_number": "singular",
+        "verb_form": "",
+        "sentiment": 0.0,
+        "pos": "PROPN",
+        "tag": "NNP",
+        "dep": "ROOT",
+        "ent": "ORG",
+        "shape": "Xxxxx",
+        "is_alpha": true,
+        "is_stop": false,
+        "head": "6056264313941430663#4",
+        "other": {
+          "i": 4,
+          "idx": 11,
+          "orth": 6056264313941430663,
+          "head_i": 4,
+          "head_idx": 11,
+          "head_orth": 6056264313941430663,
+          "head_text": "Green"
+        },
+        "is_punct": false,
+        "x": 9,
+        "y": 14,
+        "is_wordnet": true,
+        "normal": "green",
+        "stem": "green"
+      }
+    ],
+    "expected_tokens": [
+      {
+        "id": "5764037739878831584#1",
+        "x": 0,
+        "y": 3,
+        "ner": null,
+        "text": "Red",
+        "normal": "red",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "5764037739878831584#1",
+              "text": "Red ",
+              "tense": "",
+              "noun_number": "",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "ADJ",
+              "tag": "JJ",
+              "dep": "amod",
+              "ent": "ORG",
+              "shape": "Xxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "6056264313941430663#4",
+              "other": {
+                "i": 0,
+                "idx": 0,
+                "orth": 5764037739878831584,
+                "head_i": 4,
+                "head_idx": 11,
+                "head_orth": 6056264313941430663,
+                "head_text": "Green"
+              },
+              "is_punct": false,
+              "x": 0,
+              "y": 3,
+              "is_wordnet": true,
+              "normal": "red",
+              "stem": "red"
+            }
+          ],
+          "canon": "red",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      },
+      {
+        "id": "16525029037422792391#3",
+        "x": 4,
+        "y": 8,
+        "ner": null,
+        "text": "Blue",
+        "normal": "blue",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "16525029037422792391#3",
+              "text": "Blue ",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "compound",
+              "ent": "ORG",
+              "shape": "Xxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "6056264313941430663#4",
+              "other": {
+                "i": 2,
+                "idx": 5,
+                "orth": 16525029037422792391,
+                "head_i": 4,
+                "head_idx": 11,
+                "head_orth": 6056264313941430663,
+                "head_text": "Green"
+              },
+              "is_punct": false,
+              "x": 4,
+              "y": 8,
+              "is_wordnet": true,
+              "normal": "blue",
+              "stem": "blue"
+            }
+          ],
+          "canon": "blue",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      },
+      {
+        "id": "6056264313941430663#4",
+        "x": 9,
+        "y": 14,
+        "ner": null,
+        "text": "Green",
+        "normal": "green",
+        "swaps": {
+          "tokens": [
+            {
+              "id": "6056264313941430663#4",
+              "text": "Green",
+              "tense": "",
+              "noun_number": "singular",
+              "verb_form": "",
+              "sentiment": 0.0,
+              "pos": "PROPN",
+              "tag": "NNP",
+              "dep": "ROOT",
+              "ent": "ORG",
+              "shape": "Xxxxx",
+              "is_alpha": true,
+              "is_stop": false,
+              "head": "6056264313941430663#4",
+              "other": {
+                "i": 4,
+                "idx": 11,
+                "orth": 6056264313941430663,
+                "head_i": 4,
+                "head_idx": 11,
+                "head_orth": 6056264313941430663,
+                "head_text": "Green"
+              },
+              "is_punct": false,
+              "x": 9,
+              "y": 14,
+              "is_wordnet": true,
+              "normal": "green",
+              "stem": "green"
+            }
+          ],
+          "canon": "green",
+          "type": "exact",
+          "ontologies": [
+            "colors-test"
+          ],
+          "confidence": 100.0
+        }
+      }
+    ],
+    "expected_text": "red blue green"
+  }
+]

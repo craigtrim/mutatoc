@@ -1,0 +1,19 @@
+@prefix : <http://test/#> .
+@prefix proper: <http://test/vocab#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+:Root a owl:Class; rdfs:label "Root"; owl:backwardCompatibleWith "ROOT" .
+:Animal a owl:Class; rdfs:label "Animal", "Living creature"; rdfs:subClassOf :Root; owl:backwardCompatibleWith "ANIMAL" .
+:Dog a owl:Class; rdfs:label "Dog", "Domestic dog"; rdfs:subClassOf :Animal; rdfs:seeAlso "hound", "canine"; :requires :Food; :similarTo :Cat; :uses :Collar; :implies :Pet; :effects :Happiness; owl:backwardCompatibleWith "DOG" .
+:Cat a owl:Class; rdfs:label "Cat"; rdfs:subClassOf :Animal; :similarTo :Dog .
+:Food a owl:Class; rdfs:label "Food"; rdfs:subClassOf :Root .
+:Pet a owl:Class; rdfs:label "Pet"; rdfs:subClassOf :Animal; owl:equivalentClass :Companion .
+:Companion a owl:Class; rdfs:label "Companion"; rdfs:subClassOf :Animal .
+:dog_collar a owl:Class; rdfs:label "dog collar"; rdfs:seeAlso "hound + collar"; rdfs:subClassOf :Root .
+:Unlabelled a owl:Class; rdfs:subClassOf :Dog .
+:Ghost rdfs:subClassOf :Unlabelled .
+
+:Dog proper:requires :Food; proper:similarTo :Cat; proper:uses :Collar; proper:implies :Pet; proper:effects :Happiness .
+:Cat proper:similarTo :Dog .

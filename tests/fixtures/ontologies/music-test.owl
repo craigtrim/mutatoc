@@ -1,0 +1,429 @@
+@prefix : <http://test.ai/music#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <http://test.ai/music#> .
+
+<http://test.ai/music> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://test.ai/music#implies
+:implies rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/music#inflection
+:inflection rdf:type owl:AnnotationProperty ;
+            rdfs:label "inflection"@en ;
+            rdfs:subPropertyOf skos:altLabel .
+
+###  http://test.ai/music#requires
+:requires rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/music#similarTo
+:similarTo rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/music#uses
+:uses rdf:type owl:AnnotationProperty .
+
+###  http://www.w3.org/2004/02/skos/core#altLabel
+skos:altLabel rdf:type owl:AnnotationProperty .
+
+###  http://www.w3.org/2004/02/skos/core#definition
+skos:definition rdf:type owl:AnnotationProperty .
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://test.ai/music#Music_Topic
+:Music_Topic rdf:type owl:Class ;
+             rdfs:label "Music Topic" ;
+             skos:altLabel "music" .
+
+###  http://test.ai/music#Instrument
+:Instrument rdf:type owl:Class ;
+            rdfs:subClassOf :Music_Topic ;
+            rdfs:label "Instrument" ;
+            skos:altLabel "musical instrument" .
+
+###  http://test.ai/music#Genre
+:Genre rdf:type owl:Class ;
+       rdfs:subClassOf :Music_Topic ;
+       rdfs:label "Genre" ;
+       skos:altLabel "music genre" .
+
+###  http://test.ai/music#Concept
+:Concept rdf:type owl:Class ;
+         rdfs:subClassOf :Music_Topic ;
+         rdfs:label "Concept" .
+
+### ---- Instrument Families ----
+
+###  http://test.ai/music#String_Instrument
+:String_Instrument rdf:type owl:Class ;
+                   rdfs:subClassOf :Instrument ;
+                   rdfs:label "String Instrument" .
+
+###  http://test.ai/music#Wind_Instrument
+:Wind_Instrument rdf:type owl:Class ;
+                 rdfs:subClassOf :Instrument ;
+                 rdfs:label "Wind Instrument" .
+
+###  http://test.ai/music#Percussion_Instrument
+:Percussion_Instrument rdf:type owl:Class ;
+                       rdfs:subClassOf :Instrument ;
+                       rdfs:label "Percussion Instrument" .
+
+###  http://test.ai/music#Keyboard_Instrument
+:Keyboard_Instrument rdf:type owl:Class ;
+                     rdfs:subClassOf :Instrument ;
+                     rdfs:label "Keyboard Instrument" .
+
+### ---- String Instruments ----
+
+###  http://test.ai/music#Guitar
+:Guitar rdf:type owl:Class ;
+        rdfs:subClassOf :String_Instrument ;
+        rdfs:label "Guitar" ;
+        skos:altLabel "axe" .
+
+###  http://test.ai/music#Electric_Guitar
+:Electric_Guitar rdf:type owl:Class ;
+                 rdfs:subClassOf :Guitar ;
+                 rdfs:label "Electric Guitar" .
+
+###  http://test.ai/music#Acoustic_Guitar
+:Acoustic_Guitar rdf:type owl:Class ;
+                 rdfs:subClassOf :Guitar ;
+                 rdfs:label "Acoustic Guitar" .
+
+###  http://test.ai/music#Bass_Guitar
+:Bass_Guitar rdf:type owl:Class ;
+             rdfs:subClassOf :Guitar ;
+             rdfs:label "Bass Guitar" ;
+             skos:altLabel "bass" .
+
+###  http://test.ai/music#Violin
+:Violin rdf:type owl:Class ;
+        rdfs:subClassOf :String_Instrument ;
+        rdfs:label "Violin" ;
+        skos:altLabel "fiddle" .
+
+###  http://test.ai/music#Cello
+:Cello rdf:type owl:Class ;
+       rdfs:subClassOf :String_Instrument ;
+       rdfs:label "Cello" .
+
+###  http://test.ai/music#Harp
+:Harp rdf:type owl:Class ;
+      rdfs:subClassOf :String_Instrument ;
+      rdfs:label "Harp" .
+
+###  http://test.ai/music#Ukulele
+:Ukulele rdf:type owl:Class ;
+         rdfs:subClassOf :String_Instrument ;
+         rdfs:label "Ukulele" .
+
+###  http://test.ai/music#Banjo
+:Banjo rdf:type owl:Class ;
+       rdfs:subClassOf :String_Instrument ;
+       rdfs:label "Banjo" .
+
+###  http://test.ai/music#Mandolin
+:Mandolin rdf:type owl:Class ;
+          rdfs:subClassOf :String_Instrument ;
+          rdfs:label "Mandolin" .
+
+### ---- Wind Instruments ----
+
+###  http://test.ai/music#Flute
+:Flute rdf:type owl:Class ;
+       rdfs:subClassOf :Wind_Instrument ;
+       rdfs:label "Flute" .
+
+###  http://test.ai/music#Piccolo
+:Piccolo rdf:type owl:Class ;
+         rdfs:subClassOf :Wind_Instrument ;
+         rdfs:label "Piccolo" ;
+         :similarTo :Flute .
+
+###  http://test.ai/music#Trumpet
+:Trumpet rdf:type owl:Class ;
+         rdfs:subClassOf :Wind_Instrument ;
+         rdfs:label "Trumpet" .
+
+###  http://test.ai/music#Trombone
+:Trombone rdf:type owl:Class ;
+          rdfs:subClassOf :Wind_Instrument ;
+          rdfs:label "Trombone" .
+
+###  http://test.ai/music#Saxophone
+:Saxophone rdf:type owl:Class ;
+           rdfs:subClassOf :Wind_Instrument ;
+           rdfs:label "Saxophone" ;
+           skos:altLabel "sax" .
+
+###  http://test.ai/music#Alto_Saxophone
+:Alto_Saxophone rdf:type owl:Class ;
+                rdfs:subClassOf :Saxophone ;
+                rdfs:label "Alto Saxophone" ;
+                skos:altLabel "alto sax" .
+
+###  http://test.ai/music#Tenor_Saxophone
+:Tenor_Saxophone rdf:type owl:Class ;
+                 rdfs:subClassOf :Saxophone ;
+                 rdfs:label "Tenor Saxophone" ;
+                 skos:altLabel "tenor sax" .
+
+###  http://test.ai/music#Clarinet
+:Clarinet rdf:type owl:Class ;
+          rdfs:subClassOf :Wind_Instrument ;
+          rdfs:label "Clarinet" .
+
+###  http://test.ai/music#Oboe
+:Oboe rdf:type owl:Class ;
+      rdfs:subClassOf :Wind_Instrument ;
+      rdfs:label "Oboe" .
+
+###  http://test.ai/music#Bassoon
+:Bassoon rdf:type owl:Class ;
+         rdfs:subClassOf :Wind_Instrument ;
+         rdfs:label "Bassoon" .
+
+###  http://test.ai/music#French_Horn
+:French_Horn rdf:type owl:Class ;
+             rdfs:subClassOf :Wind_Instrument ;
+             rdfs:label "French Horn" .
+
+###  http://test.ai/music#Tuba
+:Tuba rdf:type owl:Class ;
+      rdfs:subClassOf :Wind_Instrument ;
+      rdfs:label "Tuba" .
+
+### ---- Percussion ----
+
+###  http://test.ai/music#Drum
+:Drum rdf:type owl:Class ;
+      rdfs:subClassOf :Percussion_Instrument ;
+      rdfs:label "Drum" ;
+      :inflection "drums" .
+
+###  http://test.ai/music#Snare_Drum
+:Snare_Drum rdf:type owl:Class ;
+            rdfs:subClassOf :Drum ;
+            rdfs:label "Snare Drum" .
+
+###  http://test.ai/music#Bass_Drum
+:Bass_Drum rdf:type owl:Class ;
+           rdfs:subClassOf :Drum ;
+           rdfs:label "Bass Drum" .
+
+###  http://test.ai/music#Cymbal
+:Cymbal rdf:type owl:Class ;
+        rdfs:subClassOf :Percussion_Instrument ;
+        rdfs:label "Cymbal" .
+
+###  http://test.ai/music#Xylophone
+:Xylophone rdf:type owl:Class ;
+           rdfs:subClassOf :Percussion_Instrument ;
+           rdfs:label "Xylophone" .
+
+###  http://test.ai/music#Marimba
+:Marimba rdf:type owl:Class ;
+         rdfs:subClassOf :Percussion_Instrument ;
+         rdfs:label "Marimba" ;
+         :similarTo :Xylophone .
+
+###  http://test.ai/music#Tambourine
+:Tambourine rdf:type owl:Class ;
+            rdfs:subClassOf :Percussion_Instrument ;
+            rdfs:label "Tambourine" .
+
+###  http://test.ai/music#Timpani
+:Timpani rdf:type owl:Class ;
+         rdfs:subClassOf :Percussion_Instrument ;
+         rdfs:label "Timpani" ;
+         skos:altLabel "kettle drum" .
+
+### ---- Keyboard Instruments ----
+
+###  http://test.ai/music#Piano
+:Piano rdf:type owl:Class ;
+       rdfs:subClassOf :Keyboard_Instrument ;
+       rdfs:label "Piano" .
+
+###  http://test.ai/music#Grand_Piano
+:Grand_Piano rdf:type owl:Class ;
+             rdfs:subClassOf :Piano ;
+             rdfs:label "Grand Piano" .
+
+###  http://test.ai/music#Upright_Piano
+:Upright_Piano rdf:type owl:Class ;
+               rdfs:subClassOf :Piano ;
+               rdfs:label "Upright Piano" .
+
+###  http://test.ai/music#Organ
+:Organ rdf:type owl:Class ;
+       rdfs:subClassOf :Keyboard_Instrument ;
+       rdfs:label "Organ" ;
+       skos:altLabel "pipe organ" .
+
+###  http://test.ai/music#Synthesizer
+:Synthesizer rdf:type owl:Class ;
+             rdfs:subClassOf :Keyboard_Instrument ;
+             rdfs:label "Synthesizer" ;
+             skos:altLabel "synth" .
+
+###  http://test.ai/music#Harpsichord
+:Harpsichord rdf:type owl:Class ;
+             rdfs:subClassOf :Keyboard_Instrument ;
+             rdfs:label "Harpsichord" .
+
+### ---- Genres ----
+
+###  http://test.ai/music#Jazz
+:Jazz rdf:type owl:Class ;
+      rdfs:subClassOf :Genre ;
+      rdfs:label "Jazz" .
+
+###  http://test.ai/music#Bebop
+:Bebop rdf:type owl:Class ;
+       rdfs:subClassOf :Jazz ;
+       rdfs:label "Bebop" .
+
+###  http://test.ai/music#Smooth_Jazz
+:Smooth_Jazz rdf:type owl:Class ;
+             rdfs:subClassOf :Jazz ;
+             rdfs:label "Smooth Jazz" .
+
+###  http://test.ai/music#Classical_Music
+:Classical_Music rdf:type owl:Class ;
+                 rdfs:subClassOf :Genre ;
+                 rdfs:label "Classical Music" ;
+                 skos:altLabel "classical" .
+
+###  http://test.ai/music#Baroque
+:Baroque rdf:type owl:Class ;
+         rdfs:subClassOf :Classical_Music ;
+         rdfs:label "Baroque" .
+
+###  http://test.ai/music#Romantic
+:Romantic rdf:type owl:Class ;
+          rdfs:subClassOf :Classical_Music ;
+          rdfs:label "Romantic" .
+
+###  http://test.ai/music#Rock_Music
+:Rock_Music rdf:type owl:Class ;
+            rdfs:subClassOf :Genre ;
+            rdfs:label "Rock Music" ;
+            skos:altLabel "rock" .
+
+###  http://test.ai/music#Heavy_Metal
+:Heavy_Metal rdf:type owl:Class ;
+             rdfs:subClassOf :Rock_Music ;
+             rdfs:label "Heavy Metal" ;
+             skos:altLabel "metal" .
+
+###  http://test.ai/music#Punk_Rock
+:Punk_Rock rdf:type owl:Class ;
+           rdfs:subClassOf :Rock_Music ;
+           rdfs:label "Punk Rock" ;
+           skos:altLabel "punk" .
+
+###  http://test.ai/music#Pop_Music
+:Pop_Music rdf:type owl:Class ;
+           rdfs:subClassOf :Genre ;
+           rdfs:label "Pop Music" ;
+           skos:altLabel "pop" .
+
+###  http://test.ai/music#Blues
+:Blues rdf:type owl:Class ;
+       rdfs:subClassOf :Genre ;
+       rdfs:label "Blues" .
+
+###  http://test.ai/music#Folk_Music
+:Folk_Music rdf:type owl:Class ;
+            rdfs:subClassOf :Genre ;
+            rdfs:label "Folk Music" ;
+            skos:altLabel "folk" .
+
+###  http://test.ai/music#Country_Music
+:Country_Music rdf:type owl:Class ;
+               rdfs:subClassOf :Genre ;
+               rdfs:label "Country Music" ;
+               skos:altLabel "country" .
+
+###  http://test.ai/music#Hip_Hop
+:Hip_Hop rdf:type owl:Class ;
+         rdfs:subClassOf :Genre ;
+         rdfs:label "Hip Hop" ;
+         skos:altLabel "rap" .
+
+###  http://test.ai/music#Electronic_Music
+:Electronic_Music rdf:type owl:Class ;
+                  rdfs:subClassOf :Genre ;
+                  rdfs:label "Electronic Music" ;
+                  skos:altLabel "EDM" .
+
+###  http://test.ai/music#Reggae
+:Reggae rdf:type owl:Class ;
+        rdfs:subClassOf :Genre ;
+        rdfs:label "Reggae" .
+
+###  http://test.ai/music#Soul
+:Soul rdf:type owl:Class ;
+      rdfs:subClassOf :Genre ;
+      rdfs:label "Soul" .
+
+###  http://test.ai/music#Opera
+:Opera rdf:type owl:Class ;
+       rdfs:subClassOf :Genre ;
+       rdfs:label "Opera" .
+
+### ---- Concepts ----
+
+###  http://test.ai/music#Melody
+:Melody rdf:type owl:Class ;
+        rdfs:subClassOf :Concept ;
+        rdfs:label "Melody" .
+
+###  http://test.ai/music#Harmony
+:Harmony rdf:type owl:Class ;
+         rdfs:subClassOf :Concept ;
+         rdfs:label "Harmony" .
+
+###  http://test.ai/music#Rhythm
+:Rhythm rdf:type owl:Class ;
+        rdfs:subClassOf :Concept ;
+        rdfs:label "Rhythm" ;
+        skos:altLabel "beat" .
+
+###  http://test.ai/music#Tempo
+:Tempo rdf:type owl:Class ;
+       rdfs:subClassOf :Concept ;
+       rdfs:label "Tempo" .
+
+###  http://test.ai/music#Chord
+:Chord rdf:type owl:Class ;
+       rdfs:subClassOf :Concept ;
+       rdfs:label "Chord" .
+
+###  http://test.ai/music#Scale
+:Scale rdf:type owl:Class ;
+       rdfs:subClassOf :Concept ;
+       rdfs:label "Scale" .
+
+###  http://test.ai/music#Pitch
+:Pitch rdf:type owl:Class ;
+       rdfs:subClassOf :Concept ;
+       rdfs:label "Pitch" .
+
+###  http://test.ai/music#Timbre
+:Timbre rdf:type owl:Class ;
+        rdfs:subClassOf :Concept ;
+        rdfs:label "Timbre" .

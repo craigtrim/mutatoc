@@ -1,0 +1,369 @@
+@prefix : <http://test.ai/animals#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <http://test.ai/animals#> .
+
+<http://test.ai/animals> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://test.ai/animals#implies
+:implies rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/animals#inflection
+:inflection rdf:type owl:AnnotationProperty ;
+            rdfs:label "inflection"@en ;
+            rdfs:subPropertyOf skos:altLabel .
+
+###  http://test.ai/animals#requires
+:requires rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/animals#similarTo
+:similarTo rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/animals#uses
+:uses rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/animals#locatedIn
+:locatedIn rdf:type owl:AnnotationProperty .
+
+###  http://www.w3.org/2004/02/skos/core#altLabel
+skos:altLabel rdf:type owl:AnnotationProperty .
+
+###  http://www.w3.org/2004/02/skos/core#definition
+skos:definition rdf:type owl:AnnotationProperty .
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://test.ai/animals#Animal
+:Animal rdf:type owl:Class ;
+        rdfs:label "Animal" .
+
+###  http://test.ai/animals#Mammal
+:Mammal rdf:type owl:Class ;
+        rdfs:subClassOf :Animal ;
+        rdfs:label "Mammal" .
+
+###  http://test.ai/animals#Bird
+:Bird rdf:type owl:Class ;
+      rdfs:subClassOf :Animal ;
+      rdfs:label "Bird" .
+
+###  http://test.ai/animals#Reptile
+:Reptile rdf:type owl:Class ;
+         rdfs:subClassOf :Animal ;
+         rdfs:label "Reptile" .
+
+###  http://test.ai/animals#Fish
+:Fish rdf:type owl:Class ;
+      rdfs:subClassOf :Animal ;
+      rdfs:label "Fish" .
+
+###  http://test.ai/animals#Insect
+:Insect rdf:type owl:Class ;
+        rdfs:subClassOf :Animal ;
+        rdfs:label "Insect" .
+
+### ---- Mammals ----
+
+###  http://test.ai/animals#Dog
+:Dog rdf:type owl:Class ;
+     rdfs:subClassOf :Mammal ;
+     rdfs:label "Dog" ;
+     skos:altLabel "canine" ;
+     :inflection "dogs" .
+
+###  http://test.ai/animals#Poodle
+:Poodle rdf:type owl:Class ;
+        rdfs:subClassOf :Dog ;
+        rdfs:label "Poodle" .
+
+###  http://test.ai/animals#Labrador
+:Labrador rdf:type owl:Class ;
+          rdfs:subClassOf :Dog ;
+          rdfs:label "Labrador" ;
+          skos:altLabel "lab" ;
+          skos:altLabel "labrador retriever" .
+
+###  http://test.ai/animals#German_Shepherd
+:German_Shepherd rdf:type owl:Class ;
+                 rdfs:subClassOf :Dog ;
+                 rdfs:label "German Shepherd" ;
+                 skos:altLabel "GSD" ;
+                 skos:altLabel "alsatian" .
+
+###  http://test.ai/animals#Bulldog
+:Bulldog rdf:type owl:Class ;
+         rdfs:subClassOf :Dog ;
+         rdfs:label "Bulldog" .
+
+###  http://test.ai/animals#Cat
+:Cat rdf:type owl:Class ;
+     rdfs:subClassOf :Mammal ;
+     rdfs:label "Cat" ;
+     skos:altLabel "feline" ;
+     :inflection "cats" .
+
+###  http://test.ai/animals#Siamese
+:Siamese rdf:type owl:Class ;
+         rdfs:subClassOf :Cat ;
+         rdfs:label "Siamese" .
+
+###  http://test.ai/animals#Persian_Cat
+:Persian_Cat rdf:type owl:Class ;
+             rdfs:subClassOf :Cat ;
+             rdfs:label "Persian Cat" .
+
+###  http://test.ai/animals#Maine_Coon
+:Maine_Coon rdf:type owl:Class ;
+            rdfs:subClassOf :Cat ;
+            rdfs:label "Maine Coon" .
+
+###  http://test.ai/animals#Horse
+:Horse rdf:type owl:Class ;
+       rdfs:subClassOf :Mammal ;
+       rdfs:label "Horse" ;
+       skos:altLabel "equine" ;
+       skos:altLabel "steed" .
+
+###  http://test.ai/animals#Arabian_Horse
+:Arabian_Horse rdf:type owl:Class ;
+               rdfs:subClassOf :Horse ;
+               rdfs:label "Arabian Horse" .
+
+###  http://test.ai/animals#Thoroughbred
+:Thoroughbred rdf:type owl:Class ;
+              rdfs:subClassOf :Horse ;
+              rdfs:label "Thoroughbred" .
+
+###  http://test.ai/animals#Elephant
+:Elephant rdf:type owl:Class ;
+          rdfs:subClassOf :Mammal ;
+          rdfs:label "Elephant" .
+
+###  http://test.ai/animals#African_Elephant
+:African_Elephant rdf:type owl:Class ;
+                  rdfs:subClassOf :Elephant ;
+                  rdfs:label "African Elephant" .
+
+###  http://test.ai/animals#Asian_Elephant
+:Asian_Elephant rdf:type owl:Class ;
+                rdfs:subClassOf :Elephant ;
+                rdfs:label "Asian Elephant" .
+
+###  http://test.ai/animals#Whale
+:Whale rdf:type owl:Class ;
+       rdfs:subClassOf :Mammal ;
+       rdfs:label "Whale" ;
+       skos:altLabel "cetacean" .
+
+###  http://test.ai/animals#Blue_Whale
+:Blue_Whale rdf:type owl:Class ;
+            rdfs:subClassOf :Whale ;
+            rdfs:label "Blue Whale" .
+
+###  http://test.ai/animals#Humpback_Whale
+:Humpback_Whale rdf:type owl:Class ;
+                rdfs:subClassOf :Whale ;
+                rdfs:label "Humpback Whale" .
+
+###  http://test.ai/animals#Lion
+:Lion rdf:type owl:Class ;
+      rdfs:subClassOf :Mammal ;
+      rdfs:label "Lion" ;
+      skos:altLabel "big cat" .
+
+###  http://test.ai/animals#Tiger
+:Tiger rdf:type owl:Class ;
+       rdfs:subClassOf :Mammal ;
+       rdfs:label "Tiger" ;
+       :similarTo :Lion .
+
+###  http://test.ai/animals#Bear
+:Bear rdf:type owl:Class ;
+      rdfs:subClassOf :Mammal ;
+      rdfs:label "Bear" ;
+      skos:altLabel "grizzly" .
+
+###  http://test.ai/animals#Polar_Bear
+:Polar_Bear rdf:type owl:Class ;
+            rdfs:subClassOf :Bear ;
+            rdfs:label "Polar Bear" .
+
+###  http://test.ai/animals#Brown_Bear
+:Brown_Bear rdf:type owl:Class ;
+            rdfs:subClassOf :Bear ;
+            rdfs:label "Brown Bear" .
+
+### ---- Birds ----
+
+###  http://test.ai/animals#Eagle
+:Eagle rdf:type owl:Class ;
+       rdfs:subClassOf :Bird ;
+       rdfs:label "Eagle" .
+
+###  http://test.ai/animals#Bald_Eagle
+:Bald_Eagle rdf:type owl:Class ;
+            rdfs:subClassOf :Eagle ;
+            rdfs:label "Bald Eagle" .
+
+###  http://test.ai/animals#Golden_Eagle
+:Golden_Eagle rdf:type owl:Class ;
+              rdfs:subClassOf :Eagle ;
+              rdfs:label "Golden Eagle" .
+
+###  http://test.ai/animals#Parrot
+:Parrot rdf:type owl:Class ;
+        rdfs:subClassOf :Bird ;
+        rdfs:label "Parrot" ;
+        skos:altLabel "macaw" .
+
+###  http://test.ai/animals#Penguin
+:Penguin rdf:type owl:Class ;
+         rdfs:subClassOf :Bird ;
+         rdfs:label "Penguin" .
+
+###  http://test.ai/animals#Sparrow
+:Sparrow rdf:type owl:Class ;
+         rdfs:subClassOf :Bird ;
+         rdfs:label "Sparrow" .
+
+###  http://test.ai/animals#Hummingbird
+:Hummingbird rdf:type owl:Class ;
+             rdfs:subClassOf :Bird ;
+             rdfs:label "Hummingbird" .
+
+###  http://test.ai/animals#Flamingo
+:Flamingo rdf:type owl:Class ;
+          rdfs:subClassOf :Bird ;
+          rdfs:label "Flamingo" .
+
+### ---- Reptiles ----
+
+###  http://test.ai/animals#Snake
+:Snake rdf:type owl:Class ;
+       rdfs:subClassOf :Reptile ;
+       rdfs:label "Snake" ;
+       skos:altLabel "serpent" .
+
+###  http://test.ai/animals#Python
+:Python rdf:type owl:Class ;
+        rdfs:subClassOf :Snake ;
+        rdfs:label "Python" .
+
+###  http://test.ai/animals#Cobra
+:Cobra rdf:type owl:Class ;
+       rdfs:subClassOf :Snake ;
+       rdfs:label "Cobra" ;
+       :similarTo :Python .
+
+###  http://test.ai/animals#Lizard
+:Lizard rdf:type owl:Class ;
+        rdfs:subClassOf :Reptile ;
+        rdfs:label "Lizard" .
+
+###  http://test.ai/animals#Iguana
+:Iguana rdf:type owl:Class ;
+        rdfs:subClassOf :Lizard ;
+        rdfs:label "Iguana" .
+
+###  http://test.ai/animals#Crocodile
+:Crocodile rdf:type owl:Class ;
+           rdfs:subClassOf :Reptile ;
+           rdfs:label "Crocodile" ;
+           skos:altLabel "croc" .
+
+###  http://test.ai/animals#Alligator
+:Alligator rdf:type owl:Class ;
+           rdfs:subClassOf :Reptile ;
+           rdfs:label "Alligator" ;
+           :similarTo :Crocodile .
+
+###  http://test.ai/animals#Turtle
+:Turtle rdf:type owl:Class ;
+        rdfs:subClassOf :Reptile ;
+        rdfs:label "Turtle" ;
+        skos:altLabel "tortoise" .
+
+### ---- Fish ----
+
+###  http://test.ai/animals#Salmon
+:Salmon rdf:type owl:Class ;
+        rdfs:subClassOf :Fish ;
+        rdfs:label "Salmon" .
+
+###  http://test.ai/animals#Tuna
+:Tuna rdf:type owl:Class ;
+      rdfs:subClassOf :Fish ;
+      rdfs:label "Tuna" .
+
+###  http://test.ai/animals#Goldfish
+:Goldfish rdf:type owl:Class ;
+          rdfs:subClassOf :Fish ;
+          rdfs:label "Goldfish" .
+
+###  http://test.ai/animals#Shark
+:Shark rdf:type owl:Class ;
+       rdfs:subClassOf :Fish ;
+       rdfs:label "Shark" .
+
+###  http://test.ai/animals#Great_White_Shark
+:Great_White_Shark rdf:type owl:Class ;
+                   rdfs:subClassOf :Shark ;
+                   rdfs:label "Great White Shark" .
+
+###  http://test.ai/animals#Hammerhead_Shark
+:Hammerhead_Shark rdf:type owl:Class ;
+                  rdfs:subClassOf :Shark ;
+                  rdfs:label "Hammerhead Shark" .
+
+###  http://test.ai/animals#Clownfish
+:Clownfish rdf:type owl:Class ;
+           rdfs:subClassOf :Fish ;
+           rdfs:label "Clownfish" .
+
+### ---- Insects ----
+
+###  http://test.ai/animals#Bee
+:Bee rdf:type owl:Class ;
+     rdfs:subClassOf :Insect ;
+     rdfs:label "Bee" ;
+     :implies "honey" .
+
+###  http://test.ai/animals#Honeybee
+:Honeybee rdf:type owl:Class ;
+          rdfs:subClassOf :Bee ;
+          rdfs:label "Honeybee" .
+
+###  http://test.ai/animals#Butterfly
+:Butterfly rdf:type owl:Class ;
+           rdfs:subClassOf :Insect ;
+           rdfs:label "Butterfly" .
+
+###  http://test.ai/animals#Monarch_Butterfly
+:Monarch_Butterfly rdf:type owl:Class ;
+                   rdfs:subClassOf :Butterfly ;
+                   rdfs:label "Monarch Butterfly" .
+
+###  http://test.ai/animals#Ant
+:Ant rdf:type owl:Class ;
+     rdfs:subClassOf :Insect ;
+     rdfs:label "Ant" .
+
+###  http://test.ai/animals#Mosquito
+:Mosquito rdf:type owl:Class ;
+          rdfs:subClassOf :Insect ;
+          rdfs:label "Mosquito" .
+
+###  http://test.ai/animals#Dragonfly
+:Dragonfly rdf:type owl:Class ;
+           rdfs:subClassOf :Insect ;
+           rdfs:label "Dragonfly" .

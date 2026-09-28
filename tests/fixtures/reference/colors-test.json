@@ -1,0 +1,1057 @@
+{
+  "children": {
+    "Warm_Color": [
+      "Coral",
+      "Pink",
+      "Maroon"
+    ],
+    "Secondary_Color": [
+      "Orange",
+      "Green",
+      "Purple",
+      "Indigo"
+    ],
+    "Primary_Color": [
+      "Red",
+      "Blue",
+      "Yellow"
+    ],
+    "Neutral_Color": [
+      "Black",
+      "White",
+      "Gray",
+      "Brown",
+      "Beige"
+    ],
+    "Metallic_Color": [
+      "Gold_Metallic",
+      "Silver",
+      "Bronze"
+    ],
+    "Cool_Color": [
+      "Teal",
+      "Turquoise",
+      "Navy",
+      "Mint"
+    ],
+    "Color": [
+      "Primary_Color",
+      "Secondary_Color",
+      "Neutral_Color",
+      "Warm_Color",
+      "Cool_Color",
+      "Metallic_Color"
+    ]
+  },
+  "parents": {
+    "Yellow": [
+      "Primary_Color"
+    ],
+    "White": [
+      "Neutral_Color"
+    ],
+    "Warm_Color": [
+      "Color"
+    ],
+    "Turquoise": [
+      "Cool_Color"
+    ],
+    "Teal": [
+      "Cool_Color"
+    ],
+    "Silver": [
+      "Metallic_Color"
+    ],
+    "Secondary_Color": [
+      "Color"
+    ],
+    "Red": [
+      "Primary_Color"
+    ],
+    "Purple": [
+      "Secondary_Color"
+    ],
+    "Primary_Color": [
+      "Color"
+    ],
+    "Pink": [
+      "Warm_Color"
+    ],
+    "Orange": [
+      "Secondary_Color"
+    ],
+    "Neutral_Color": [
+      "Color"
+    ],
+    "Navy": [
+      "Cool_Color"
+    ],
+    "Mint": [
+      "Cool_Color"
+    ],
+    "Metallic_Color": [
+      "Color"
+    ],
+    "Maroon": [
+      "Warm_Color"
+    ],
+    "Indigo": [
+      "Secondary_Color"
+    ],
+    "Green": [
+      "Secondary_Color"
+    ],
+    "Gray": [
+      "Neutral_Color"
+    ],
+    "Gold_Metallic": [
+      "Metallic_Color"
+    ],
+    "Coral": [
+      "Warm_Color"
+    ],
+    "Cool_Color": [
+      "Color"
+    ],
+    "Brown": [
+      "Neutral_Color"
+    ],
+    "Bronze": [
+      "Metallic_Color"
+    ],
+    "Blue": [
+      "Primary_Color"
+    ],
+    "Black": [
+      "Neutral_Color"
+    ],
+    "Beige": [
+      "Neutral_Color"
+    ]
+  },
+  "trie": {
+    "2": {
+      "primary": [
+        "color"
+      ],
+      "secondary": [
+        "color"
+      ],
+      "neutral": [
+        "color"
+      ],
+      "warm": [
+        "color"
+      ],
+      "cool": [
+        "color"
+      ],
+      "metallic": [
+        "color"
+      ],
+      "gold": [
+        "metallic"
+      ]
+    },
+    "1": [
+      "turquoise",
+      "indigo",
+      "maroon",
+      "yellow",
+      "silver",
+      "orange",
+      "bronze",
+      "purple",
+      "brown",
+      "green",
+      "coral",
+      "white",
+      "black",
+      "beige",
+      "pink",
+      "teal",
+      "gray",
+      "mint",
+      "navy",
+      "blue",
+      "red"
+    ],
+    "3": {},
+    "4": {},
+    "5": {},
+    "6": {}
+  },
+  "ngrams": {
+    "1": [
+      "red",
+      "blue",
+      "yellow",
+      "orange",
+      "green",
+      "purple",
+      "indigo",
+      "black",
+      "white",
+      "gray",
+      "brown",
+      "beige",
+      "coral",
+      "pink",
+      "maroon",
+      "teal",
+      "turquoise",
+      "navy",
+      "mint",
+      "silver",
+      "bronze"
+    ],
+    "2": [
+      "primary_color",
+      "secondary_color",
+      "neutral_color",
+      "warm_color",
+      "cool_color",
+      "metallic_color",
+      "gold_metallic"
+    ],
+    "3": [],
+    "4": [],
+    "5": [],
+    "6": [],
+    "7": [],
+    "8": [],
+    "9": []
+  },
+  "spans": {
+    "primary": [
+      {
+        "content": [
+          "color"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "primary_color"
+      }
+    ],
+    "secondary": [
+      {
+        "content": [
+          "color"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "secondary_color"
+      }
+    ],
+    "neutral": [
+      {
+        "content": [
+          "color"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "neutral_color"
+      }
+    ],
+    "warm": [
+      {
+        "content": [
+          "color"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "warm_color"
+      }
+    ],
+    "cool": [
+      {
+        "content": [
+          "color"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "cool_color"
+      }
+    ],
+    "metallic": [
+      {
+        "content": [
+          "color"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "metallic_color"
+      }
+    ],
+    "gold": [
+      {
+        "content": [
+          "metallic"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "gold_metallic"
+      }
+    ]
+  },
+  "labels": {
+    "inflection": "inflection",
+    "Color": "Color",
+    "Primary_Color": "Primary Color",
+    "Secondary_Color": "Secondary Color",
+    "Neutral_Color": "Neutral Color",
+    "Warm_Color": "Warm Color",
+    "Cool_Color": "Cool Color",
+    "Metallic_Color": "Metallic Color",
+    "Red": "Red",
+    "Blue": "Blue",
+    "Yellow": "Yellow",
+    "Orange": "Orange",
+    "Green": "Green",
+    "Purple": "Purple",
+    "Indigo": "Indigo",
+    "Black": "Black",
+    "White": "White",
+    "Gray": "Gray",
+    "Brown": "Brown",
+    "Beige": "Beige",
+    "Coral": "Coral",
+    "Pink": "Pink",
+    "Maroon": "Maroon",
+    "Teal": "Teal",
+    "Turquoise": "Turquoise",
+    "Navy": "Navy",
+    "Mint": "Mint",
+    "Gold_Metallic": "Gold Metallic",
+    "Silver": "Silver",
+    "Bronze": "Bronze"
+  },
+  "equivalents": null,
+  "predicates": [
+    ":inflection",
+    ":similarTo"
+  ],
+  "by_predicate": {
+    "rdfs:label": {
+      "inflection": [],
+      "color": [],
+      "primary_color": [
+        "primary color"
+      ],
+      "secondary_color": [
+        "secondary color"
+      ],
+      "neutral_color": [
+        "neutral color"
+      ],
+      "warm_color": [
+        "warm color"
+      ],
+      "cool_color": [
+        "cool color"
+      ],
+      "metallic_color": [
+        "metallic color"
+      ],
+      "red": [],
+      "blue": [],
+      "yellow": [],
+      "orange": [],
+      "green": [],
+      "purple": [],
+      "indigo": [],
+      "black": [],
+      "white": [],
+      "gray": [],
+      "brown": [],
+      "beige": [],
+      "coral": [],
+      "pink": [],
+      "maroon": [],
+      "teal": [],
+      "turquoise": [],
+      "navy": [],
+      "mint": [],
+      "gold_metallic": [
+        "gold metallic"
+      ],
+      "silver": [],
+      "bronze": []
+    },
+    "rdfs:subClassOf": {
+      "primary_color": [
+        "color"
+      ],
+      "secondary_color": [
+        "color"
+      ],
+      "neutral_color": [
+        "color"
+      ],
+      "warm_color": [
+        "color"
+      ],
+      "cool_color": [
+        "color"
+      ],
+      "metallic_color": [
+        "color"
+      ],
+      "red": [
+        "primary_color"
+      ],
+      "blue": [
+        "primary_color"
+      ],
+      "yellow": [
+        "primary_color"
+      ],
+      "orange": [
+        "secondary_color"
+      ],
+      "green": [
+        "secondary_color"
+      ],
+      "purple": [
+        "secondary_color"
+      ],
+      "indigo": [
+        "secondary_color"
+      ],
+      "black": [
+        "neutral_color"
+      ],
+      "white": [
+        "neutral_color"
+      ],
+      "gray": [
+        "neutral_color"
+      ],
+      "brown": [
+        "neutral_color"
+      ],
+      "beige": [
+        "neutral_color"
+      ],
+      "coral": [
+        "warm_color"
+      ],
+      "pink": [
+        "warm_color"
+      ],
+      "maroon": [
+        "warm_color"
+      ],
+      "teal": [
+        "cool_color"
+      ],
+      "turquoise": [
+        "cool_color"
+      ],
+      "navy": [
+        "cool_color"
+      ],
+      "mint": [
+        "cool_color"
+      ],
+      "gold_metallic": [
+        "metallic_color"
+      ],
+      "silver": [
+        "metallic_color"
+      ],
+      "bronze": [
+        "metallic_color"
+      ]
+    },
+    "rdfs:subPropertyOf": {
+      "inflection": [
+        "altlabel"
+      ]
+    },
+    "skos:altLabel": {
+      "color": [
+        "colour"
+      ],
+      "red": [
+        "crimson",
+        "scarlet"
+      ],
+      "blue": [
+        "azure",
+        "cobalt"
+      ],
+      "yellow": [
+        "amber",
+        "gold"
+      ],
+      "orange": [
+        "tangerine"
+      ],
+      "green": [
+        "emerald",
+        "lime"
+      ],
+      "purple": [
+        "lavender",
+        "violet"
+      ],
+      "gray": [
+        "grey"
+      ],
+      "brown": [
+        "beige",
+        "chocolate",
+        "tan"
+      ],
+      "pink": [
+        "magenta",
+        "rose"
+      ],
+      "maroon": [
+        "burgundy"
+      ],
+      "teal": [
+        "cyan"
+      ],
+      "navy": [
+        "navy blue"
+      ],
+      "mint": [
+        "mint green"
+      ],
+      "gold_metallic": [
+        "golden"
+      ],
+      "silver": [
+        "chrome"
+      ]
+    },
+    "rdf:type": {
+      "http://test.ai/colors": [
+        "ontology"
+      ],
+      "implies": [
+        "annotationproperty"
+      ],
+      "inflection": [
+        "annotationproperty"
+      ],
+      "requires": [
+        "annotationproperty"
+      ],
+      "similarto": [
+        "annotationproperty"
+      ],
+      "uses": [
+        "annotationproperty"
+      ],
+      "altlabel": [
+        "annotationproperty"
+      ],
+      "definition": [
+        "annotationproperty"
+      ],
+      "color": [
+        "class"
+      ],
+      "primary_color": [
+        "class"
+      ],
+      "secondary_color": [
+        "class"
+      ],
+      "neutral_color": [
+        "class"
+      ],
+      "warm_color": [
+        "class"
+      ],
+      "cool_color": [
+        "class"
+      ],
+      "metallic_color": [
+        "class"
+      ],
+      "red": [
+        "class"
+      ],
+      "blue": [
+        "class"
+      ],
+      "yellow": [
+        "class"
+      ],
+      "orange": [
+        "class"
+      ],
+      "green": [
+        "class"
+      ],
+      "purple": [
+        "class"
+      ],
+      "indigo": [
+        "class"
+      ],
+      "black": [
+        "class"
+      ],
+      "white": [
+        "class"
+      ],
+      "gray": [
+        "class"
+      ],
+      "brown": [
+        "class"
+      ],
+      "beige": [
+        "class"
+      ],
+      "coral": [
+        "class"
+      ],
+      "pink": [
+        "class"
+      ],
+      "maroon": [
+        "class"
+      ],
+      "teal": [
+        "class"
+      ],
+      "turquoise": [
+        "class"
+      ],
+      "navy": [
+        "class"
+      ],
+      "mint": [
+        "class"
+      ],
+      "gold_metallic": [
+        "class"
+      ],
+      "silver": [
+        "class"
+      ],
+      "bronze": [
+        "class"
+      ]
+    },
+    ":inflection": {
+      "red": [
+        "reds"
+      ],
+      "blue": [
+        "blues"
+      ],
+      "green": [
+        "greens"
+      ]
+    },
+    ":similarTo": {
+      "beige": [
+        "brown"
+      ]
+    }
+  },
+  "ner": {
+    "inflection": "NER",
+    "Color": "NER",
+    "Primary Color": "NER",
+    "Secondary Color": "NER",
+    "Neutral Color": "NER",
+    "Warm Color": "NER",
+    "Cool Color": "NER",
+    "Metallic Color": "NER",
+    "Red": "NER",
+    "Blue": "NER",
+    "Yellow": "NER",
+    "Orange": "NER",
+    "Green": "NER",
+    "Purple": "NER",
+    "Indigo": "NER",
+    "Black": "NER",
+    "White": "NER",
+    "Gray": "NER",
+    "Brown": "NER",
+    "Beige": "NER",
+    "Coral": "NER",
+    "Pink": "NER",
+    "Maroon": "NER",
+    "Teal": "NER",
+    "Turquoise": "NER",
+    "Navy": "NER",
+    "Mint": "NER",
+    "Gold Metallic": "NER",
+    "Silver": "NER",
+    "Bronze": "NER"
+  },
+  "synonyms": {
+    "lookup": {
+      "1": [
+        "inflection",
+        "turquoise",
+        "chocolate",
+        "tangerine",
+        "lavender",
+        "burgundy",
+        "crimson",
+        "scarlet",
+        "emerald",
+        "magenta",
+        "golden",
+        "indigo",
+        "maroon",
+        "yellow",
+        "chrome",
+        "violet",
+        "silver",
+        "orange",
+        "cobalt",
+        "colour",
+        "bronze",
+        "purple",
+        "greens",
+        "color",
+        "azure",
+        "green",
+        "brown",
+        "blues",
+        "coral",
+        "white",
+        "black",
+        "amber",
+        "beige",
+        "cyan",
+        "pink",
+        "rose",
+        "teal",
+        "gray",
+        "lime",
+        "mint",
+        "gold",
+        "grey",
+        "navy",
+        "reds",
+        "blue",
+        "red",
+        "tan"
+      ],
+      "2": [
+        "secondary color",
+        "metallic color",
+        "primary color",
+        "gold metallic",
+        "neutral color",
+        "mint green",
+        "cool color",
+        "warm color",
+        "navy blue"
+      ],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": []
+    },
+    "fwd": {
+      "inflection": [
+        "inflection"
+      ],
+      "color": [
+        "color",
+        "colour"
+      ],
+      "primary_color": [
+        "primary color"
+      ],
+      "secondary_color": [
+        "secondary color"
+      ],
+      "neutral_color": [
+        "neutral color"
+      ],
+      "warm_color": [
+        "warm color"
+      ],
+      "cool_color": [
+        "cool color"
+      ],
+      "metallic_color": [
+        "metallic color"
+      ],
+      "red": [
+        "red",
+        "reds",
+        "crimson",
+        "scarlet"
+      ],
+      "blue": [
+        "blue",
+        "azure",
+        "blues",
+        "cobalt"
+      ],
+      "yellow": [
+        "gold",
+        "amber",
+        "yellow"
+      ],
+      "orange": [
+        "orange",
+        "tangerine"
+      ],
+      "green": [
+        "lime",
+        "green",
+        "greens",
+        "emerald"
+      ],
+      "purple": [
+        "violet",
+        "purple",
+        "lavender"
+      ],
+      "indigo": [
+        "indigo"
+      ],
+      "black": [
+        "black"
+      ],
+      "white": [
+        "white"
+      ],
+      "gray": [
+        "grey",
+        "gray"
+      ],
+      "brown": [
+        "tan",
+        "brown",
+        "beige",
+        "chocolate"
+      ],
+      "beige": [
+        "beige"
+      ],
+      "coral": [
+        "coral"
+      ],
+      "pink": [
+        "rose",
+        "pink",
+        "magenta"
+      ],
+      "maroon": [
+        "maroon",
+        "burgundy"
+      ],
+      "teal": [
+        "cyan",
+        "teal"
+      ],
+      "turquoise": [
+        "turquoise"
+      ],
+      "navy": [
+        "navy",
+        "navy blue"
+      ],
+      "mint": [
+        "mint",
+        "mint green"
+      ],
+      "gold_metallic": [
+        "golden",
+        "gold metallic"
+      ],
+      "silver": [
+        "chrome",
+        "silver"
+      ],
+      "bronze": [
+        "bronze"
+      ]
+    },
+    "rev": {
+      "inflection": [
+        "inflection"
+      ],
+      "color": [
+        "color"
+      ],
+      "colour": [
+        "color"
+      ],
+      "primary color": [
+        "primary_color"
+      ],
+      "secondary color": [
+        "secondary_color"
+      ],
+      "neutral color": [
+        "neutral_color"
+      ],
+      "warm color": [
+        "warm_color"
+      ],
+      "cool color": [
+        "cool_color"
+      ],
+      "metallic color": [
+        "metallic_color"
+      ],
+      "red": [
+        "red"
+      ],
+      "reds": [
+        "red"
+      ],
+      "crimson": [
+        "red"
+      ],
+      "scarlet": [
+        "red"
+      ],
+      "blue": [
+        "blue"
+      ],
+      "azure": [
+        "blue"
+      ],
+      "blues": [
+        "blue"
+      ],
+      "cobalt": [
+        "blue"
+      ],
+      "gold": [
+        "yellow"
+      ],
+      "amber": [
+        "yellow"
+      ],
+      "yellow": [
+        "yellow"
+      ],
+      "orange": [
+        "orange"
+      ],
+      "tangerine": [
+        "orange"
+      ],
+      "lime": [
+        "green"
+      ],
+      "green": [
+        "green"
+      ],
+      "greens": [
+        "green"
+      ],
+      "emerald": [
+        "green"
+      ],
+      "violet": [
+        "purple"
+      ],
+      "purple": [
+        "purple"
+      ],
+      "lavender": [
+        "purple"
+      ],
+      "indigo": [
+        "indigo"
+      ],
+      "black": [
+        "black"
+      ],
+      "white": [
+        "white"
+      ],
+      "grey": [
+        "gray"
+      ],
+      "gray": [
+        "gray"
+      ],
+      "tan": [
+        "brown"
+      ],
+      "brown": [
+        "brown"
+      ],
+      "beige": [
+        "brown",
+        "beige"
+      ],
+      "chocolate": [
+        "brown"
+      ],
+      "coral": [
+        "coral"
+      ],
+      "rose": [
+        "pink"
+      ],
+      "pink": [
+        "pink"
+      ],
+      "magenta": [
+        "pink"
+      ],
+      "maroon": [
+        "maroon"
+      ],
+      "burgundy": [
+        "maroon"
+      ],
+      "cyan": [
+        "teal"
+      ],
+      "teal": [
+        "teal"
+      ],
+      "turquoise": [
+        "turquoise"
+      ],
+      "navy": [
+        "navy"
+      ],
+      "navy blue": [
+        "navy"
+      ],
+      "mint": [
+        "mint"
+      ],
+      "mint green": [
+        "mint"
+      ],
+      "golden": [
+        "gold_metallic"
+      ],
+      "gold metallic": [
+        "gold_metallic"
+      ],
+      "chrome": [
+        "silver"
+      ],
+      "silver": [
+        "silver"
+      ],
+      "bronze": [
+        "bronze"
+      ]
+    }
+  }
+}

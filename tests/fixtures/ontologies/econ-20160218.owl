@@ -1,0 +1,3965 @@
+@prefix : <http://graffl.ai/skills#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <http://graffl.ai/skills#> .
+
+<http://graffl.ai/skills> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://graffl.ai/skills#hasLevel
+:hasLevel rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/skills#implies
+:implies rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/skills#inflection
+:inflection rdf:type owl:AnnotationProperty ;
+            rdfs:label "inflection"@en ;
+            skos:definition "An inflectional form of a concept"@en ;
+            rdfs:subPropertyOf skos:altLabel .
+
+
+###  http://graffl.ai/skills#locatedIn
+:locatedIn rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/skills#meansOf
+:meansOf rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/skills#measures
+:measures rdf:type owl:AnnotationProperty ;
+          rdfs:subPropertyOf :uses .
+
+
+###  http://graffl.ai/skills#partOf
+:partOf rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/skills#requires
+:requires rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/skills#similarTo
+:similarTo rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/skills#uses
+:uses rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#altLabel
+skos:altLabel rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#definition
+skos:definition rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#example
+skos:example rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#prefLabel
+skos:prefLabel rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://graffl.ai/skills#condition
+:condition rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://graffl.ai/skills#Skill
+:Skill rdf:type owl:Class ;
+       rdfs:label "Skill" .
+
+
+###  http://graffl.ai/skills#SkillDimension
+:SkillDimension rdf:type owl:Class ;
+                rdfs:label "Skill Dimension" .
+
+
+###  http://graffl.ai/skills#Action_Dimension
+:Action_Dimension rdf:type owl:Class ;
+                  rdfs:subClassOf :SkillDimension ;
+                  rdfs:label "Action Dimension" .
+
+
+###  http://graffl.ai/skills#Allocation_Dimension
+:Allocation_Dimension rdf:type owl:Class ;
+                      rdfs:subClassOf :SkillDimension ;
+                      rdfs:label "Allocation Dimension" .
+
+
+###  http://graffl.ai/skills#Analysis_Dimension
+:Analysis_Dimension rdf:type owl:Class ;
+                    rdfs:subClassOf :SkillDimension ;
+                    rdfs:label "Analysis Dimension" .
+
+
+###  http://graffl.ai/skills#Application_Dimension
+:Application_Dimension rdf:type owl:Class ;
+                       rdfs:subClassOf :SkillDimension ;
+                       rdfs:label "Application Dimension" .
+
+
+###  http://graffl.ai/skills#Banking_Dimension
+:Banking_Dimension rdf:type owl:Class ;
+                   rdfs:subClassOf :SkillDimension ;
+                   rdfs:label "Banking Dimension" .
+
+
+###  http://graffl.ai/skills#Calculation_Dimension
+:Calculation_Dimension rdf:type owl:Class ;
+                       rdfs:subClassOf :SkillDimension ;
+                       rdfs:label "Calculation Dimension" .
+
+
+###  http://graffl.ai/skills#Comparison_Dimension
+:Comparison_Dimension rdf:type owl:Class ;
+                      rdfs:subClassOf :SkillDimension ;
+                      rdfs:label "Comparison Dimension" .
+
+
+###  http://graffl.ai/skills#Compliance_Dimension
+:Compliance_Dimension rdf:type owl:Class ;
+                      rdfs:subClassOf :SkillDimension ;
+                      rdfs:label "Compliance Dimension" .
+
+
+###  http://graffl.ai/skills#Concept_Dimension
+:Concept_Dimension rdf:type owl:Class ;
+                   rdfs:subClassOf :SkillDimension ;
+                   rdfs:label "Concept Dimension" .
+
+
+###  http://graffl.ai/skills#Design_Dimension
+:Design_Dimension rdf:type owl:Class ;
+                  rdfs:subClassOf :SkillDimension ;
+                  rdfs:label "Design Dimension" .
+
+
+###  http://graffl.ai/skills#Determination_Dimension
+:Determination_Dimension rdf:type owl:Class ;
+                         rdfs:subClassOf :SkillDimension ;
+                         rdfs:label "Determination Dimension" .
+
+
+###  http://graffl.ai/skills#Development_Dimension
+:Development_Dimension rdf:type owl:Class ;
+                       rdfs:subClassOf :SkillDimension ;
+                       rdfs:label "Development Dimension" .
+
+
+###  http://graffl.ai/skills#Economic_Dimension
+:Economic_Dimension rdf:type owl:Class ;
+                    rdfs:subClassOf :SkillDimension ;
+                    rdfs:label "Economic Dimension" .
+
+
+###  http://graffl.ai/skills#Efficiency_Dimension
+:Efficiency_Dimension rdf:type owl:Class ;
+                      rdfs:subClassOf :SkillDimension ;
+                      rdfs:label "Efficiency Dimension" .
+
+
+###  http://graffl.ai/skills#Factor_Dimension
+:Factor_Dimension rdf:type owl:Class ;
+                  rdfs:subClassOf :SkillDimension ;
+                  rdfs:label "Factor Dimension" .
+
+
+###  http://graffl.ai/skills#Forecasting_Dimension
+:Forecasting_Dimension rdf:type owl:Class ;
+                       rdfs:subClassOf :SkillDimension ;
+                       rdfs:label "Forecasting Dimension" .
+
+
+###  http://graffl.ai/skills#Framework_Dimension
+:Framework_Dimension rdf:type owl:Class ;
+                     rdfs:subClassOf :SkillDimension ;
+                     rdfs:label "Framework Dimension" .
+
+
+###  http://graffl.ai/skills#Implementation_Dimension
+:Implementation_Dimension rdf:type owl:Class ;
+                          rdfs:subClassOf :SkillDimension ;
+                          rdfs:label "Implementation Dimension" .
+
+
+###  http://graffl.ai/skills#Management_Dimension
+:Management_Dimension rdf:type owl:Class ;
+                      rdfs:subClassOf :SkillDimension ;
+                      rdfs:label "Management Dimension" .
+
+
+###  http://graffl.ai/skills#Measurement_Dimension
+:Measurement_Dimension rdf:type owl:Class ;
+                       rdfs:subClassOf :SkillDimension ;
+                       rdfs:label "Measurement Dimension" .
+
+
+###  http://graffl.ai/skills#Model_Dimension
+:Model_Dimension rdf:type owl:Class ;
+                 rdfs:subClassOf :SkillDimension ;
+                 rdfs:label "Model Dimension" .
+
+
+###  http://graffl.ai/skills#Modeling_Dimension
+:Modeling_Dimension rdf:type owl:Class ;
+                    rdfs:subClassOf :SkillDimension ;
+                    rdfs:label "Modeling Dimension" .
+
+
+###  http://graffl.ai/skills#Optimization_Dimension
+:Optimization_Dimension rdf:type owl:Class ;
+                        rdfs:subClassOf :SkillDimension ;
+                        rdfs:label "Optimization Dimension" .
+
+
+###  http://graffl.ai/skills#Positioning_Dimension
+:Positioning_Dimension rdf:type owl:Class ;
+                       rdfs:subClassOf :SkillDimension ;
+                       rdfs:label "Positioning Dimension" .
+
+
+###  http://graffl.ai/skills#Strategy_Dimension
+:Strategy_Dimension rdf:type owl:Class ;
+                    rdfs:subClassOf :SkillDimension ;
+                    rdfs:label "Strategy Dimension" .
+
+
+###  http://graffl.ai/skills#System_Dimension
+:System_Dimension rdf:type owl:Class ;
+                  rdfs:subClassOf :SkillDimension ;
+                  rdfs:label "System Dimension" .
+
+
+###  http://graffl.ai/skills#Theory_Dimension
+:Theory_Dimension rdf:type owl:Class ;
+                  rdfs:subClassOf :SkillDimension ;
+                  rdfs:label "Theory Dimension" .
+
+
+###  http://graffl.ai/skills#Valuation_Dimension
+:Valuation_Dimension rdf:type owl:Class ;
+                     rdfs:subClassOf :SkillDimension ;
+                     rdfs:label "Valuation Dimension" .
+
+
+###  http://graffl.ai/skills#Visualization_Dimension
+:Visualization_Dimension rdf:type owl:Class ;
+                         rdfs:subClassOf :SkillDimension ;
+                         rdfs:label "Visualization Dimension" .
+
+
+###  http://graffl.ai/skills#Adjustment_Analysis
+:Adjustment_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Adjustment Analysis" .
+
+
+###  http://graffl.ai/skills#Advantage_Analysis
+:Advantage_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Advantage Analysis" .
+
+
+###  http://graffl.ai/skills#Aggregate_Analysis
+:Aggregate_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Aggregate Analysis" .
+
+
+###  http://graffl.ai/skills#Aggregate_Modeling
+:Aggregate_Modeling rdf:type owl:Class ;
+                    rdfs:subClassOf :Modeling_Dimension ;
+                    rdfs:label "Aggregate Modeling" .
+
+
+###  http://graffl.ai/skills#Allocation_Efficiency
+:Allocation_Efficiency rdf:type owl:Class ;
+                       rdfs:subClassOf :Efficiency_Dimension ;
+                       rdfs:label "Allocation Efficiency" .
+
+
+###  http://graffl.ai/skills#Allocation_Optimization
+:Allocation_Optimization rdf:type owl:Class ;
+                         rdfs:subClassOf :Optimization_Dimension ;
+                         rdfs:label "Allocation Optimization" .
+
+
+###  http://graffl.ai/skills#Allocation_Strategy
+:Allocation_Strategy rdf:type owl:Class ;
+                     rdfs:subClassOf :Strategy_Dimension ;
+                     rdfs:label "Allocation Strategy" .
+
+
+###  http://graffl.ai/skills#Asymmetric_Analysis
+:Asymmetric_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Asymmetric Analysis" .
+
+
+###  http://graffl.ai/skills#Availability_Analysis
+:Availability_Analysis rdf:type owl:Class ;
+                       rdfs:subClassOf :Analysis_Dimension ;
+                       rdfs:label "Availability Analysis" .
+
+
+###  http://graffl.ai/skills#Balance_Analysis
+:Balance_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Balance Analysis" .
+
+
+###  http://graffl.ai/skills#Banking_Compliance
+:Banking_Compliance rdf:type owl:Class ;
+                    rdfs:subClassOf :Compliance_Dimension ;
+                    rdfs:label "Banking Compliance" .
+
+
+###  http://graffl.ai/skills#Banking_Management
+:Banking_Management rdf:type owl:Class ;
+                    rdfs:subClassOf :Management_Dimension ;
+                    rdfs:label "Banking Management" .
+
+
+###  http://graffl.ai/skills#Barrier_Analysis
+:Barrier_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Barrier Analysis" .
+
+
+###  http://graffl.ai/skills#Behavior_Analysis
+:Behavior_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Behavior Analysis" .
+
+
+###  http://graffl.ai/skills#Benefit_Analysis
+:Benefit_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Benefit Analysis" .
+
+
+###  http://graffl.ai/skills#Budget_Analysis
+:Budget_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Budget Analysis" .
+
+
+###  http://graffl.ai/skills#Budgetary_Management
+:Budgetary_Management rdf:type owl:Class ;
+                      rdfs:subClassOf :Management_Dimension ;
+                      rdfs:label "Budgetary Management" .
+
+
+###  http://graffl.ai/skills#Business_Analysis
+:Business_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Business Analysis" .
+
+
+###  http://graffl.ai/skills#Business_Forecasting
+:Business_Forecasting rdf:type owl:Class ;
+                      rdfs:subClassOf :Forecasting_Dimension ;
+                      rdfs:label "Business Forecasting" .
+
+
+###  http://graffl.ai/skills#Capacity_Strategy
+:Capacity_Strategy rdf:type owl:Class ;
+                   rdfs:subClassOf :Strategy_Dimension ;
+                   rdfs:label "Capacity Strategy" .
+
+
+###  http://graffl.ai/skills#Capital_Analysis
+:Capital_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Capital Analysis" .
+
+
+###  http://graffl.ai/skills#Capital_Valuation
+:Capital_Valuation rdf:type owl:Class ;
+                   rdfs:subClassOf :Valuation_Dimension ;
+                   rdfs:label "Capital Valuation" .
+
+
+###  http://graffl.ai/skills#Causal_Analysis
+:Causal_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Causal Analysis" .
+
+
+###  http://graffl.ai/skills#Central_Management
+:Central_Management rdf:type owl:Class ;
+                    rdfs:subClassOf :Management_Dimension ;
+                    rdfs:label "Central Management" .
+
+
+###  http://graffl.ai/skills#Chain_Economic
+:Chain_Economic rdf:type owl:Class ;
+                rdfs:subClassOf :Economic_Dimension ;
+                rdfs:label "Chain Economic" .
+
+
+###  http://graffl.ai/skills#Choice_Theory
+:Choice_Theory rdf:type owl:Class ;
+               rdfs:subClassOf :Theory_Dimension ;
+               rdfs:label "Choice Theory" .
+
+
+###  http://graffl.ai/skills#Circular_Modeling
+:Circular_Modeling rdf:type owl:Class ;
+                   rdfs:subClassOf :Modeling_Dimension ;
+                   rdfs:label "Circular Modeling" .
+
+
+###  http://graffl.ai/skills#Classical_Theory
+:Classical_Theory rdf:type owl:Class ;
+                  rdfs:subClassOf :Theory_Dimension ;
+                  rdfs:label "Classical Theory" .
+
+
+###  http://graffl.ai/skills#Comparative_Analysis
+:Comparative_Analysis rdf:type owl:Class ;
+                      rdfs:subClassOf :Analysis_Dimension ;
+                      rdfs:label "Comparative Analysis" .
+
+
+###  http://graffl.ai/skills#Comparative_System
+:Comparative_System rdf:type owl:Class ;
+                    rdfs:subClassOf :System_Dimension ;
+                    rdfs:label "Comparative System" .
+
+
+###  http://graffl.ai/skills#Compensation_Analysis
+:Compensation_Analysis rdf:type owl:Class ;
+                       rdfs:subClassOf :Analysis_Dimension ;
+                       rdfs:label "Compensation Analysis" .
+
+
+###  http://graffl.ai/skills#Competitive_Analysis
+:Competitive_Analysis rdf:type owl:Class ;
+                      rdfs:subClassOf :Analysis_Dimension ;
+                      rdfs:label "Competitive Analysis" .
+
+
+###  http://graffl.ai/skills#Consumer_Analysis
+:Consumer_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Consumer Analysis" .
+
+
+###  http://graffl.ai/skills#Consumer_Theory
+:Consumer_Theory rdf:type owl:Class ;
+                 rdfs:subClassOf :Theory_Dimension ;
+                 rdfs:label "Consumer Theory" .
+
+
+###  http://graffl.ai/skills#Contractionary_Implementation
+:Contractionary_Implementation rdf:type owl:Class ;
+                               rdfs:subClassOf :Implementation_Dimension ;
+                               rdfs:label "Contractionary Implementation" .
+
+
+###  http://graffl.ai/skills#Control_Concept
+:Control_Concept rdf:type owl:Class ;
+                 rdfs:subClassOf :Concept_Dimension ;
+                 rdfs:label "Control Concept" .
+
+
+###  http://graffl.ai/skills#Control_Strategy
+:Control_Strategy rdf:type owl:Class ;
+                  rdfs:subClassOf :Strategy_Dimension ;
+                  rdfs:label "Control Strategy" .
+
+
+###  http://graffl.ai/skills#Cost_Analysis
+:Cost_Analysis rdf:type owl:Class ;
+               rdfs:subClassOf :Analysis_Dimension ;
+               rdfs:label "Cost Analysis" .
+
+
+###  http://graffl.ai/skills#Cost_Calculation
+:Cost_Calculation rdf:type owl:Class ;
+                  rdfs:subClassOf :Calculation_Dimension ;
+                  rdfs:label "Cost Calculation" .
+
+
+###  http://graffl.ai/skills#Credit_Analysis
+:Credit_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Credit Analysis" .
+
+
+###  http://graffl.ai/skills#Crisis_Management
+:Crisis_Management rdf:type owl:Class ;
+                   rdfs:subClassOf :Management_Dimension ;
+                   rdfs:label "Crisis Management" .
+
+
+###  http://graffl.ai/skills#Currency_Analysis
+:Currency_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Currency Analysis" .
+
+
+###  http://graffl.ai/skills#Currency_Management
+:Currency_Management rdf:type owl:Class ;
+                     rdfs:subClassOf :Management_Dimension ;
+                     rdfs:label "Currency Management" .
+
+
+###  http://graffl.ai/skills#Cycle_Analysis
+:Cycle_Analysis rdf:type owl:Class ;
+                rdfs:subClassOf :Analysis_Dimension ;
+                rdfs:label "Cycle Analysis" .
+
+
+###  http://graffl.ai/skills#Cycle_Forecasting
+:Cycle_Forecasting rdf:type owl:Class ;
+                   rdfs:subClassOf :Forecasting_Dimension ;
+                   rdfs:label "Cycle Forecasting" .
+
+
+###  http://graffl.ai/skills#Data_Analysis
+:Data_Analysis rdf:type owl:Class ;
+               rdfs:subClassOf :Analysis_Dimension ;
+               rdfs:label "Data Analysis" .
+
+
+###  http://graffl.ai/skills#Data_Visualization
+:Data_Visualization rdf:type owl:Class ;
+                    rdfs:subClassOf :Visualization_Dimension ;
+                    rdfs:label "Data Visualization" .
+
+
+###  http://graffl.ai/skills#Debt_Analysis
+:Debt_Analysis rdf:type owl:Class ;
+               rdfs:subClassOf :Analysis_Dimension ;
+               rdfs:label "Debt Analysis" .
+
+
+###  http://graffl.ai/skills#Decision_Making
+:Decision_Making rdf:type owl:Class ;
+                 rdfs:subClassOf :Action_Dimension ;
+                 rdfs:label "Decision Making" .
+
+
+###  http://graffl.ai/skills#Deficit_Analysis
+:Deficit_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Deficit Analysis" .
+
+
+###  http://graffl.ai/skills#Demand_Analysis
+:Demand_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Demand Analysis" .
+
+
+###  http://graffl.ai/skills#Demand_Forecasting
+:Demand_Forecasting rdf:type owl:Class ;
+                    rdfs:subClassOf :Forecasting_Dimension ;
+                    rdfs:label "Demand Forecasting" .
+
+
+###  http://graffl.ai/skills#Demand_Modeling
+:Demand_Modeling rdf:type owl:Class ;
+                 rdfs:subClassOf :Modeling_Dimension ;
+                 rdfs:label "Demand Modeling" .
+
+
+###  http://graffl.ai/skills#Demographics_Analysis
+:Demographics_Analysis rdf:type owl:Class ;
+                       rdfs:subClassOf :Analysis_Dimension ;
+                       rdfs:label "Demographics Analysis" .
+
+
+###  http://graffl.ai/skills#Determination_Factor
+:Determination_Factor rdf:type owl:Class ;
+                      rdfs:subClassOf :Factor_Dimension ;
+                      rdfs:label "Determination Factor" .
+
+
+###  http://graffl.ai/skills#Determination_Strategy
+:Determination_Strategy rdf:type owl:Class ;
+                        rdfs:subClassOf :Strategy_Dimension ;
+                        rdfs:label "Determination Strategy" .
+
+
+###  http://graffl.ai/skills#Differentiation_Strategy
+:Differentiation_Strategy rdf:type owl:Class ;
+                          rdfs:subClassOf :Strategy_Dimension ;
+                          rdfs:label "Differentiation Strategy" .
+
+
+###  http://graffl.ai/skills#Diminishing_Analysis
+:Diminishing_Analysis rdf:type owl:Class ;
+                      rdfs:subClassOf :Analysis_Dimension ;
+                      rdfs:label "Diminishing Analysis" .
+
+
+###  http://graffl.ai/skills#Disequilibrium_Management
+:Disequilibrium_Management rdf:type owl:Class ;
+                           rdfs:subClassOf :Management_Dimension ;
+                           rdfs:label "Disequilibrium Management" .
+
+
+###  http://graffl.ai/skills#Distribution_Analysis
+:Distribution_Analysis rdf:type owl:Class ;
+                       rdfs:subClassOf :Analysis_Dimension ;
+                       rdfs:label "Distribution Analysis" .
+
+
+###  http://graffl.ai/skills#Economic_Analysis
+:Economic_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Economic Analysis" .
+
+
+###  http://graffl.ai/skills#Economic_Application
+:Economic_Application rdf:type owl:Class ;
+                      rdfs:subClassOf :Application_Dimension ;
+                      rdfs:label "Economic Application" .
+
+
+###  http://graffl.ai/skills#Economic_Calculation
+:Economic_Calculation rdf:type owl:Class ;
+                      rdfs:subClassOf :Calculation_Dimension ;
+                      rdfs:label "Economic Calculation" .
+
+
+###  http://graffl.ai/skills#Economic_Comparison
+:Economic_Comparison rdf:type owl:Class ;
+                     rdfs:subClassOf :Comparison_Dimension ;
+                     rdfs:label "Economic Comparison" .
+
+
+###  http://graffl.ai/skills#Economic_Forecasting
+:Economic_Forecasting rdf:type owl:Class ;
+                      rdfs:subClassOf :Forecasting_Dimension ;
+                      rdfs:label "Economic Forecasting" .
+
+
+###  http://graffl.ai/skills#Economic_Making
+:Economic_Making rdf:type owl:Class ;
+                 rdfs:subClassOf :Action_Dimension ;
+                 rdfs:label "Economic Making" .
+
+
+###  http://graffl.ai/skills#Economic_Management
+:Economic_Management rdf:type owl:Class ;
+                     rdfs:subClassOf :Management_Dimension ;
+                     rdfs:label "Economic Management" .
+
+
+###  http://graffl.ai/skills#Economic_Measurement
+:Economic_Measurement rdf:type owl:Class ;
+                      rdfs:subClassOf :Measurement_Dimension ;
+                      rdfs:label "Economic Measurement" .
+
+
+###  http://graffl.ai/skills#Economic_Modeling
+:Economic_Modeling rdf:type owl:Class ;
+                   rdfs:subClassOf :Modeling_Dimension ;
+                   rdfs:label "Economic Modeling" .
+
+
+###  http://graffl.ai/skills#Economic_Strategy
+:Economic_Strategy rdf:type owl:Class ;
+                   rdfs:subClassOf :Strategy_Dimension ;
+                   rdfs:label "Economic Strategy" .
+
+
+###  http://graffl.ai/skills#Economic_System
+:Economic_System rdf:type owl:Class ;
+                 rdfs:subClassOf :System_Dimension ;
+                 rdfs:label "Economic System" .
+
+
+###  http://graffl.ai/skills#Economic_Theory
+:Economic_Theory rdf:type owl:Class ;
+                 rdfs:subClassOf :Theory_Dimension ;
+                 rdfs:label "Economic Theory" .
+
+
+###  http://graffl.ai/skills#Economic_Visualization
+:Economic_Visualization rdf:type owl:Class ;
+                        rdfs:subClassOf :Visualization_Dimension ;
+                        rdfs:label "Economic Visualization" .
+
+
+###  http://graffl.ai/skills#Economy_Analysis
+:Economy_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Economy Analysis" .
+
+
+###  http://graffl.ai/skills#Efficiency_Analysis
+:Efficiency_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Efficiency Analysis" .
+
+
+###  http://graffl.ai/skills#Efficiency_Optimization
+:Efficiency_Optimization rdf:type owl:Class ;
+                         rdfs:subClassOf :Optimization_Dimension ;
+                         rdfs:label "Efficiency Optimization" .
+
+
+###  http://graffl.ai/skills#Elasticity_Analysis
+:Elasticity_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Elasticity Analysis" .
+
+
+###  http://graffl.ai/skills#Elasticity_Modeling
+:Elasticity_Modeling rdf:type owl:Class ;
+                     rdfs:subClassOf :Modeling_Dimension ;
+                     rdfs:label "Elasticity Modeling" .
+
+
+###  http://graffl.ai/skills#Entrepreneurial_Analysis
+:Entrepreneurial_Analysis rdf:type owl:Class ;
+                          rdfs:subClassOf :Analysis_Dimension ;
+                          rdfs:label "Entrepreneurial Analysis" .
+
+
+###  http://graffl.ai/skills#Equilibrium_Analysis
+:Equilibrium_Analysis rdf:type owl:Class ;
+                      rdfs:subClassOf :Analysis_Dimension ;
+                      rdfs:label "Equilibrium Analysis" .
+
+
+###  http://graffl.ai/skills#Equilibrium_Determination
+:Equilibrium_Determination rdf:type owl:Class ;
+                           rdfs:subClassOf :Determination_Dimension ;
+                           rdfs:label "Equilibrium Determination" .
+
+
+###  http://graffl.ai/skills#Equity_Analysis
+:Equity_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Equity Analysis" .
+
+
+###  http://graffl.ai/skills#Exchange_Analysis
+:Exchange_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Exchange Analysis" .
+
+
+###  http://graffl.ai/skills#Expansionary_Implementation
+:Expansionary_Implementation rdf:type owl:Class ;
+                             rdfs:subClassOf :Implementation_Dimension ;
+                             rdfs:label "Expansionary Implementation" .
+
+
+###  http://graffl.ai/skills#Expenditure_Management
+:Expenditure_Management rdf:type owl:Class ;
+                        rdfs:subClassOf :Management_Dimension ;
+                        rdfs:label "Expenditure Management" .
+
+
+###  http://graffl.ai/skills#Factor_Analysis
+:Factor_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Factor Analysis" .
+
+
+###  http://graffl.ai/skills#Failure_Analysis
+:Failure_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Failure Analysis" .
+
+
+###  http://graffl.ai/skills#Federal_Analysis
+:Federal_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Federal Analysis" .
+
+
+###  http://graffl.ai/skills#Finance_Management
+:Finance_Management rdf:type owl:Class ;
+                    rdfs:subClassOf :Management_Dimension ;
+                    rdfs:label "Finance Management" .
+
+
+###  http://graffl.ai/skills#Financial_Analysis
+:Financial_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Financial Analysis" .
+
+
+###  http://graffl.ai/skills#Financial_Management
+:Financial_Management rdf:type owl:Class ;
+                      rdfs:subClassOf :Management_Dimension ;
+                      rdfs:label "Financial Management" .
+
+
+###  http://graffl.ai/skills#Fiscal_Analysis
+:Fiscal_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Fiscal Analysis" .
+
+
+###  http://graffl.ai/skills#Fiscal_Calculation
+:Fiscal_Calculation rdf:type owl:Class ;
+                    rdfs:subClassOf :Calculation_Dimension ;
+                    rdfs:label "Fiscal Calculation" .
+
+
+###  http://graffl.ai/skills#Fiscal_Development
+:Fiscal_Development rdf:type owl:Class ;
+                    rdfs:subClassOf :Development_Dimension ;
+                    rdfs:label "Fiscal Development" .
+
+
+###  http://graffl.ai/skills#Flow_Modeling
+:Flow_Modeling rdf:type owl:Class ;
+               rdfs:subClassOf :Modeling_Dimension ;
+               rdfs:label "Flow Modeling" .
+
+
+###  http://graffl.ai/skills#Foreign_Analysis
+:Foreign_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Foreign Analysis" .
+
+
+###  http://graffl.ai/skills#Fractional_Banking
+:Fractional_Banking rdf:type owl:Class ;
+                    rdfs:subClassOf :Banking_Dimension ;
+                    rdfs:label "Fractional Banking" .
+
+
+###  http://graffl.ai/skills#Function_Analysis
+:Function_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Function Analysis" .
+
+
+###  http://graffl.ai/skills#Global_Comparison
+:Global_Comparison rdf:type owl:Class ;
+                   rdfs:subClassOf :Comparison_Dimension ;
+                   rdfs:label "Global Comparison" .
+
+
+###  http://graffl.ai/skills#Global_Strategy
+:Global_Strategy rdf:type owl:Class ;
+                 rdfs:subClassOf :Strategy_Dimension ;
+                 rdfs:label "Global Strategy" .
+
+
+###  http://graffl.ai/skills#Globalization_Analysis
+:Globalization_Analysis rdf:type owl:Class ;
+                        rdfs:subClassOf :Analysis_Dimension ;
+                        rdfs:label "Globalization Analysis" .
+
+
+###  http://graffl.ai/skills#Government_Analysis
+:Government_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Government Analysis" .
+
+
+###  http://graffl.ai/skills#Government_Strategy
+:Government_Strategy rdf:type owl:Class ;
+                     rdfs:subClassOf :Strategy_Dimension ;
+                     rdfs:label "Government Strategy" .
+
+
+###  http://graffl.ai/skills#Graphical_Analysis
+:Graphical_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Graphical Analysis" .
+
+
+###  http://graffl.ai/skills#Growth_Forecasting
+:Growth_Forecasting rdf:type owl:Class ;
+                    rdfs:subClassOf :Forecasting_Dimension ;
+                    rdfs:label "Growth Forecasting" .
+
+
+###  http://graffl.ai/skills#Growth_Measurement
+:Growth_Measurement rdf:type owl:Class ;
+                    rdfs:subClassOf :Measurement_Dimension ;
+                    rdfs:label "Growth Measurement" .
+
+
+###  http://graffl.ai/skills#Human_Valuation
+:Human_Valuation rdf:type owl:Class ;
+                 rdfs:subClassOf :Valuation_Dimension ;
+                 rdfs:label "Human Valuation" .
+
+
+###  http://graffl.ai/skills#Impact_Analysis
+:Impact_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Impact Analysis" .
+
+
+###  http://graffl.ai/skills#Impact_Modeling
+:Impact_Modeling rdf:type owl:Class ;
+                 rdfs:subClassOf :Modeling_Dimension ;
+                 rdfs:label "Impact Modeling" .
+
+
+###  http://graffl.ai/skills#Incentive_Design
+:Incentive_Design rdf:type owl:Class ;
+                  rdfs:subClassOf :Design_Dimension ;
+                  rdfs:label "Incentive Design" .
+
+
+###  http://graffl.ai/skills#Income_Analysis
+:Income_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Income Analysis" .
+
+
+###  http://graffl.ai/skills#Indicator_Analysis
+:Indicator_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Indicator Analysis" .
+
+
+###  http://graffl.ai/skills#Inequality_Analysis
+:Inequality_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Inequality Analysis" .
+
+
+###  http://graffl.ai/skills#Inflation_Analysis
+:Inflation_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Inflation Analysis" .
+
+
+###  http://graffl.ai/skills#Inflation_Management
+:Inflation_Management rdf:type owl:Class ;
+                      rdfs:subClassOf :Management_Dimension ;
+                      rdfs:label "Inflation Management" .
+
+
+###  http://graffl.ai/skills#Inflation_Measurement
+:Inflation_Measurement rdf:type owl:Class ;
+                       rdfs:subClassOf :Measurement_Dimension ;
+                       rdfs:label "Inflation Measurement" .
+
+
+###  http://graffl.ai/skills#Inflation_Strategy
+:Inflation_Strategy rdf:type owl:Class ;
+                    rdfs:subClassOf :Strategy_Dimension ;
+                    rdfs:label "Inflation Strategy" .
+
+
+###  http://graffl.ai/skills#Information_Analysis
+:Information_Analysis rdf:type owl:Class ;
+                      rdfs:subClassOf :Analysis_Dimension ;
+                      rdfs:label "Information Analysis" .
+
+
+###  http://graffl.ai/skills#Interest_Analysis
+:Interest_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Interest Analysis" .
+
+
+###  http://graffl.ai/skills#International_Analysis
+:International_Analysis rdf:type owl:Class ;
+                        rdfs:subClassOf :Analysis_Dimension ;
+                        rdfs:label "International Analysis" .
+
+
+###  http://graffl.ai/skills#Intervention_Strategy
+:Intervention_Strategy rdf:type owl:Class ;
+                       rdfs:subClassOf :Strategy_Dimension ;
+                       rdfs:label "Intervention Strategy" .
+
+
+###  http://graffl.ai/skills#Inventory_Concept
+:Inventory_Concept rdf:type owl:Class ;
+                   rdfs:subClassOf :Concept_Dimension ;
+                   rdfs:label "Inventory Concept" .
+
+
+###  http://graffl.ai/skills#Investment_Analysis
+:Investment_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Investment Analysis" .
+
+
+###  http://graffl.ai/skills#Investment_Making
+:Investment_Making rdf:type owl:Class ;
+                   rdfs:subClassOf :Action_Dimension ;
+                   rdfs:label "Investment Making" .
+
+
+###  http://graffl.ai/skills#Keynesian_Application
+:Keynesian_Application rdf:type owl:Class ;
+                       rdfs:subClassOf :Application_Dimension ;
+                       rdfs:label "Keynesian Application" .
+
+
+###  http://graffl.ai/skills#Labor_Analysis
+:Labor_Analysis rdf:type owl:Class ;
+                rdfs:subClassOf :Analysis_Dimension ;
+                rdfs:label "Labor Analysis" .
+
+
+###  http://graffl.ai/skills#Landscape_Analysis
+:Landscape_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Landscape Analysis" .
+
+
+###  http://graffl.ai/skills#Macroeconomic_Analysis
+:Macroeconomic_Analysis rdf:type owl:Class ;
+                        rdfs:subClassOf :Analysis_Dimension ;
+                        rdfs:label "Macroeconomic Analysis" .
+
+
+###  http://graffl.ai/skills#Macroeconomic_Measurement
+:Macroeconomic_Measurement rdf:type owl:Class ;
+                           rdfs:subClassOf :Measurement_Dimension ;
+                           rdfs:label "Macroeconomic Measurement" .
+
+
+###  http://graffl.ai/skills#Management_Strategy
+:Management_Strategy rdf:type owl:Class ;
+                     rdfs:subClassOf :Strategy_Dimension ;
+                     rdfs:label "Management Strategy" .
+
+
+###  http://graffl.ai/skills#Marginal_Analysis
+:Marginal_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Marginal Analysis" .
+
+
+###  http://graffl.ai/skills#Market_Analysis
+:Market_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Market Analysis" .
+
+
+###  http://graffl.ai/skills#Market_Determination
+:Market_Determination rdf:type owl:Class ;
+                      rdfs:subClassOf :Determination_Dimension ;
+                      rdfs:label "Market Determination" .
+
+
+###  http://graffl.ai/skills#Market_Management
+:Market_Management rdf:type owl:Class ;
+                   rdfs:subClassOf :Management_Dimension ;
+                   rdfs:label "Market Management" .
+
+
+###  http://graffl.ai/skills#Market_Positioning
+:Market_Positioning rdf:type owl:Class ;
+                    rdfs:subClassOf :Positioning_Dimension ;
+                    rdfs:label "Market Positioning" .
+
+
+###  http://graffl.ai/skills#Maximization_Framework
+:Maximization_Framework rdf:type owl:Class ;
+                        rdfs:subClassOf :Framework_Dimension ;
+                        rdfs:label "Maximization Framework" .
+
+
+###  http://graffl.ai/skills#Maximization_Strategy
+:Maximization_Strategy rdf:type owl:Class ;
+                       rdfs:subClassOf :Strategy_Dimension ;
+                       rdfs:label "Maximization Strategy" .
+
+
+###  http://graffl.ai/skills#Mechanism_Analysis
+:Mechanism_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Mechanism Analysis" .
+
+
+###  http://graffl.ai/skills#Microeconomic_Application
+:Microeconomic_Application rdf:type owl:Class ;
+                           rdfs:subClassOf :Application_Dimension ;
+                           rdfs:label "Microeconomic Application" .
+
+
+###  http://graffl.ai/skills#Mixed_Analysis
+:Mixed_Analysis rdf:type owl:Class ;
+                rdfs:subClassOf :Analysis_Dimension ;
+                rdfs:label "Mixed Analysis" .
+
+
+###  http://graffl.ai/skills#Monetary_Analysis
+:Monetary_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Monetary Analysis" .
+
+
+###  http://graffl.ai/skills#Monetary_Implementation
+:Monetary_Implementation rdf:type owl:Class ;
+                         rdfs:subClassOf :Implementation_Dimension ;
+                         rdfs:label "Monetary Implementation" .
+
+
+###  http://graffl.ai/skills#Money_Management
+:Money_Management rdf:type owl:Class ;
+                  rdfs:subClassOf :Management_Dimension ;
+                  rdfs:label "Money Management" .
+
+
+###  http://graffl.ai/skills#Monopoly_Strategy
+:Monopoly_Strategy rdf:type owl:Class ;
+                   rdfs:subClassOf :Strategy_Dimension ;
+                   rdfs:label "Monopoly Strategy" .
+
+
+###  http://graffl.ai/skills#Monopsony_Analysis
+:Monopsony_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Monopsony Analysis" .
+
+
+###  http://graffl.ai/skills#Multiplier_Calculation
+:Multiplier_Calculation rdf:type owl:Class ;
+                        rdfs:subClassOf :Calculation_Dimension ;
+                        rdfs:label "Multiplier Calculation" .
+
+
+###  http://graffl.ai/skills#National_Analysis
+:National_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "National Analysis" .
+
+
+###  http://graffl.ai/skills#Operational_Analysis
+:Operational_Analysis rdf:type owl:Class ;
+                      rdfs:subClassOf :Analysis_Dimension ;
+                      rdfs:label "Operational Analysis" .
+
+
+###  http://graffl.ai/skills#Opportunity_Analysis
+:Opportunity_Analysis rdf:type owl:Class ;
+                      rdfs:subClassOf :Analysis_Dimension ;
+                      rdfs:label "Opportunity Analysis" .
+
+
+###  http://graffl.ai/skills#Opportunity_Calculation
+:Opportunity_Calculation rdf:type owl:Class ;
+                         rdfs:subClassOf :Calculation_Dimension ;
+                         rdfs:label "Opportunity Calculation" .
+
+
+###  http://graffl.ai/skills#Optimization_Strategy
+:Optimization_Strategy rdf:type owl:Class ;
+                       rdfs:subClassOf :Strategy_Dimension ;
+                       rdfs:label "Optimization Strategy" .
+
+
+###  http://graffl.ai/skills#Outcome_Analysis
+:Outcome_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Outcome Analysis" .
+
+
+###  http://graffl.ai/skills#Performance_Measurement
+:Performance_Measurement rdf:type owl:Class ;
+                         rdfs:subClassOf :Measurement_Dimension ;
+                         rdfs:label "Performance Measurement" .
+
+
+###  http://graffl.ai/skills#Policy_Analysis
+:Policy_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Policy Analysis" .
+
+
+###  http://graffl.ai/skills#Policy_Development
+:Policy_Development rdf:type owl:Class ;
+                    rdfs:subClassOf :Development_Dimension ;
+                    rdfs:label "Policy Development" .
+
+
+###  http://graffl.ai/skills#Policy_Implementation
+:Policy_Implementation rdf:type owl:Class ;
+                       rdfs:subClassOf :Implementation_Dimension ;
+                       rdfs:label "Policy Implementation" .
+
+
+###  http://graffl.ai/skills#Policy_Management
+:Policy_Management rdf:type owl:Class ;
+                   rdfs:subClassOf :Management_Dimension ;
+                   rdfs:label "Policy Management" .
+
+
+###  http://graffl.ai/skills#Possibility_Analysis
+:Possibility_Analysis rdf:type owl:Class ;
+                      rdfs:subClassOf :Analysis_Dimension ;
+                      rdfs:label "Possibility Analysis" .
+
+
+###  http://graffl.ai/skills#Power_Analysis
+:Power_Analysis rdf:type owl:Class ;
+                rdfs:subClassOf :Analysis_Dimension ;
+                rdfs:label "Power Analysis" .
+
+
+###  http://graffl.ai/skills#Price_Analysis
+:Price_Analysis rdf:type owl:Class ;
+                rdfs:subClassOf :Analysis_Dimension ;
+                rdfs:label "Price Analysis" .
+
+
+###  http://graffl.ai/skills#Price_Modeling
+:Price_Modeling rdf:type owl:Class ;
+                rdfs:subClassOf :Modeling_Dimension ;
+                rdfs:label "Price Modeling" .
+
+
+###  http://graffl.ai/skills#Pricing_Development
+:Pricing_Development rdf:type owl:Class ;
+                     rdfs:subClassOf :Development_Dimension ;
+                     rdfs:label "Pricing Development" .
+
+
+###  http://graffl.ai/skills#Pricing_Model
+:Pricing_Model rdf:type owl:Class ;
+               rdfs:subClassOf :Model_Dimension ;
+               rdfs:label "Pricing Model" .
+
+
+###  http://graffl.ai/skills#Pricing_Strategy
+:Pricing_Strategy rdf:type owl:Class ;
+                  rdfs:subClassOf :Strategy_Dimension ;
+                  rdfs:label "Pricing Strategy" .
+
+
+###  http://graffl.ai/skills#Product_Strategy
+:Product_Strategy rdf:type owl:Class ;
+                  rdfs:subClassOf :Strategy_Dimension ;
+                  rdfs:label "Product Strategy" .
+
+
+###  http://graffl.ai/skills#Production_Analysis
+:Production_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Production Analysis" .
+
+
+###  http://graffl.ai/skills#Production_Strategy
+:Production_Strategy rdf:type owl:Class ;
+                     rdfs:subClassOf :Strategy_Dimension ;
+                     rdfs:label "Production Strategy" .
+
+
+###  http://graffl.ai/skills#Profit_Calculation
+:Profit_Calculation rdf:type owl:Class ;
+                    rdfs:subClassOf :Calculation_Dimension ;
+                    rdfs:label "Profit Calculation" .
+
+
+###  http://graffl.ai/skills#Profit_Strategy
+:Profit_Strategy rdf:type owl:Class ;
+                 rdfs:subClassOf :Strategy_Dimension ;
+                 rdfs:label "Profit Strategy" .
+
+
+###  http://graffl.ai/skills#Propensity_Analysis
+:Propensity_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Propensity Analysis" .
+
+
+###  http://graffl.ai/skills#Public_Analysis
+:Public_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Public Analysis" .
+
+
+###  http://graffl.ai/skills#Public_Management
+:Public_Management rdf:type owl:Class ;
+                   rdfs:subClassOf :Management_Dimension ;
+                   rdfs:label "Public Management" .
+
+
+###  http://graffl.ai/skills#Purchasing_Analysis
+:Purchasing_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Purchasing Analysis" .
+
+
+###  http://graffl.ai/skills#Quantitative_Analysis
+:Quantitative_Analysis rdf:type owl:Class ;
+                       rdfs:subClassOf :Analysis_Dimension ;
+                       rdfs:label "Quantitative Analysis" .
+
+
+###  http://graffl.ai/skills#Rate_Analysis
+:Rate_Analysis rdf:type owl:Class ;
+               rdfs:subClassOf :Analysis_Dimension ;
+               rdfs:label "Rate Analysis" .
+
+
+###  http://graffl.ai/skills#Rate_Calculation
+:Rate_Calculation rdf:type owl:Class ;
+                  rdfs:subClassOf :Calculation_Dimension ;
+                  rdfs:label "Rate Calculation" .
+
+
+###  http://graffl.ai/skills#Rate_Management
+:Rate_Management rdf:type owl:Class ;
+                 rdfs:subClassOf :Management_Dimension ;
+                 rdfs:label "Rate Management" .
+
+
+###  http://graffl.ai/skills#Rate_Measurement
+:Rate_Measurement rdf:type owl:Class ;
+                  rdfs:subClassOf :Measurement_Dimension ;
+                  rdfs:label "Rate Measurement" .
+
+
+###  http://graffl.ai/skills#Recession_Strategy
+:Recession_Strategy rdf:type owl:Class ;
+                    rdfs:subClassOf :Strategy_Dimension ;
+                    rdfs:label "Recession Strategy" .
+
+
+###  http://graffl.ai/skills#Regulation_Compliance
+:Regulation_Compliance rdf:type owl:Class ;
+                       rdfs:subClassOf :Compliance_Dimension ;
+                       rdfs:label "Regulation Compliance" .
+
+
+###  http://graffl.ai/skills#Regulatory_Analysis
+:Regulatory_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Regulatory Analysis" .
+
+
+###  http://graffl.ai/skills#Relationship_Analysis
+:Relationship_Analysis rdf:type owl:Class ;
+                       rdfs:subClassOf :Analysis_Dimension ;
+                       rdfs:label "Relationship Analysis" .
+
+
+###  http://graffl.ai/skills#Relationship_Modeling
+:Relationship_Modeling rdf:type owl:Class ;
+                       rdfs:subClassOf :Modeling_Dimension ;
+                       rdfs:label "Relationship Modeling" .
+
+
+###  http://graffl.ai/skills#Reserve_Banking
+:Reserve_Banking rdf:type owl:Class ;
+                 rdfs:subClassOf :Banking_Dimension ;
+                 rdfs:label "Reserve Banking" .
+
+
+###  http://graffl.ai/skills#Resource_Allocation
+:Resource_Allocation rdf:type owl:Class ;
+                     rdfs:subClassOf :Allocation_Dimension ;
+                     rdfs:label "Resource Allocation" .
+
+
+###  http://graffl.ai/skills#Resource_Efficiency
+:Resource_Efficiency rdf:type owl:Class ;
+                     rdfs:subClassOf :Efficiency_Dimension ;
+                     rdfs:label "Resource Efficiency" .
+
+
+###  http://graffl.ai/skills#Resource_Optimization
+:Resource_Optimization rdf:type owl:Class ;
+                       rdfs:subClassOf :Optimization_Dimension ;
+                       rdfs:label "Resource Optimization" .
+
+
+###  http://graffl.ai/skills#Resource_Strategy
+:Resource_Strategy rdf:type owl:Class ;
+                   rdfs:subClassOf :Strategy_Dimension ;
+                   rdfs:label "Resource Strategy" .
+
+
+###  http://graffl.ai/skills#Returns_Analysis
+:Returns_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Returns Analysis" .
+
+
+###  http://graffl.ai/skills#Revenue_Strategy
+:Revenue_Strategy rdf:type owl:Class ;
+                  rdfs:subClassOf :Strategy_Dimension ;
+                  rdfs:label "Revenue Strategy" .
+
+
+###  http://graffl.ai/skills#Risk_Analysis
+:Risk_Analysis rdf:type owl:Class ;
+               rdfs:subClassOf :Analysis_Dimension ;
+               rdfs:label "Risk Analysis" .
+
+
+###  http://graffl.ai/skills#Risk_Management
+:Risk_Management rdf:type owl:Class ;
+                 rdfs:subClassOf :Management_Dimension ;
+                 rdfs:label "Risk Management" .
+
+
+###  http://graffl.ai/skills#Shortage_Analysis
+:Shortage_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Shortage Analysis" .
+
+
+###  http://graffl.ai/skills#Socioeconomic_Analysis
+:Socioeconomic_Analysis rdf:type owl:Class ;
+                        rdfs:subClassOf :Analysis_Dimension ;
+                        rdfs:label "Socioeconomic Analysis" .
+
+
+###  http://graffl.ai/skills#Sovereign_Analysis
+:Sovereign_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Sovereign Analysis" .
+
+
+###  http://graffl.ai/skills#Specialization_Analysis
+:Specialization_Analysis rdf:type owl:Class ;
+                         rdfs:subClassOf :Analysis_Dimension ;
+                         rdfs:label "Specialization Analysis" .
+
+
+###  http://graffl.ai/skills#Spending_Analysis
+:Spending_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Spending Analysis" .
+
+
+###  http://graffl.ai/skills#Stability_Analysis
+:Stability_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Stability Analysis" .
+
+
+###  http://graffl.ai/skills#Stabilization_Strategy
+:Stabilization_Strategy rdf:type owl:Class ;
+                        rdfs:subClassOf :Strategy_Dimension ;
+                        rdfs:label "Stabilization Strategy" .
+
+
+###  http://graffl.ai/skills#Stakeholder_Analysis
+:Stakeholder_Analysis rdf:type owl:Class ;
+                      rdfs:subClassOf :Analysis_Dimension ;
+                      rdfs:label "Stakeholder Analysis" .
+
+
+###  http://graffl.ai/skills#Strategic_Allocation
+:Strategic_Allocation rdf:type owl:Class ;
+                      rdfs:subClassOf :Allocation_Dimension ;
+                      rdfs:label "Strategic Allocation" .
+
+
+###  http://graffl.ai/skills#Strategic_Making
+:Strategic_Making rdf:type owl:Class ;
+                  rdfs:subClassOf :Action_Dimension ;
+                  rdfs:label "Strategic Making" .
+
+
+###  http://graffl.ai/skills#Strategic_Model
+:Strategic_Model rdf:type owl:Class ;
+                 rdfs:subClassOf :Model_Dimension ;
+                 rdfs:label "Strategic Model" .
+
+
+###  http://graffl.ai/skills#Strategic_Positioning
+:Strategic_Positioning rdf:type owl:Class ;
+                       rdfs:subClassOf :Positioning_Dimension ;
+                       rdfs:label "Strategic Positioning" .
+
+
+###  http://graffl.ai/skills#Strategic_Strategy
+:Strategic_Strategy rdf:type owl:Class ;
+                    rdfs:subClassOf :Strategy_Dimension ;
+                    rdfs:label "Strategic Strategy" .
+
+
+###  http://graffl.ai/skills#Strategy_Development
+:Strategy_Development rdf:type owl:Class ;
+                      rdfs:subClassOf :Development_Dimension ;
+                      rdfs:label "Strategy Development" .
+
+
+###  http://graffl.ai/skills#Structural_Analysis
+:Structural_Analysis rdf:type owl:Class ;
+                     rdfs:subClassOf :Analysis_Dimension ;
+                     rdfs:label "Structural Analysis" .
+
+
+###  http://graffl.ai/skills#Structure_Analysis
+:Structure_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Structure Analysis" .
+
+
+###  http://graffl.ai/skills#Structure_Design
+:Structure_Design rdf:type owl:Class ;
+                  rdfs:subClassOf :Design_Dimension ;
+                  rdfs:label "Structure Design" .
+
+
+###  http://graffl.ai/skills#Supply_Analysis
+:Supply_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "Supply Analysis" .
+
+
+###  http://graffl.ai/skills#Supply_Economic
+:Supply_Economic rdf:type owl:Class ;
+                 rdfs:subClassOf :Economic_Dimension ;
+                 rdfs:label "Supply Economic" .
+
+
+###  http://graffl.ai/skills#Supply_Management
+:Supply_Management rdf:type owl:Class ;
+                   rdfs:subClassOf :Management_Dimension ;
+                   rdfs:label "Supply Management" .
+
+
+###  http://graffl.ai/skills#Surplus_Management
+:Surplus_Management rdf:type owl:Class ;
+                    rdfs:subClassOf :Management_Dimension ;
+                    rdfs:label "Surplus Management" .
+
+
+###  http://graffl.ai/skills#System_Analysis
+:System_Analysis rdf:type owl:Class ;
+                 rdfs:subClassOf :Analysis_Dimension ;
+                 rdfs:label "System Analysis" .
+
+
+###  http://graffl.ai/skills#System_Management
+:System_Management rdf:type owl:Class ;
+                   rdfs:subClassOf :Management_Dimension ;
+                   rdfs:label "System Management" .
+
+
+###  http://graffl.ai/skills#Systemic_Analysis
+:Systemic_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Systemic Analysis" .
+
+
+###  http://graffl.ai/skills#Systems_Analysis
+:Systems_Analysis rdf:type owl:Class ;
+                  rdfs:subClassOf :Analysis_Dimension ;
+                  rdfs:label "Systems Analysis" .
+
+
+###  http://graffl.ai/skills#Tax_Analysis
+:Tax_Analysis rdf:type owl:Class ;
+              rdfs:subClassOf :Analysis_Dimension ;
+              rdfs:label "Tax Analysis" .
+
+
+###  http://graffl.ai/skills#Theory_Application
+:Theory_Application rdf:type owl:Class ;
+                    rdfs:subClassOf :Application_Dimension ;
+                    rdfs:label "Theory Application" .
+
+
+###  http://graffl.ai/skills#Trade_Analysis
+:Trade_Analysis rdf:type owl:Class ;
+                rdfs:subClassOf :Analysis_Dimension ;
+                rdfs:label "Trade Analysis" .
+
+
+###  http://graffl.ai/skills#Trend_Analysis
+:Trend_Analysis rdf:type owl:Class ;
+                rdfs:subClassOf :Analysis_Dimension ;
+                rdfs:label "Trend Analysis" .
+
+
+###  http://graffl.ai/skills#Unemployment_Analysis
+:Unemployment_Analysis rdf:type owl:Class ;
+                       rdfs:subClassOf :Analysis_Dimension ;
+                       rdfs:label "Unemployment Analysis" .
+
+
+###  http://graffl.ai/skills#Unemployment_Calculation
+:Unemployment_Calculation rdf:type owl:Class ;
+                          rdfs:subClassOf :Calculation_Dimension ;
+                          rdfs:label "Unemployment Calculation" .
+
+
+###  http://graffl.ai/skills#Utility_Application
+:Utility_Application rdf:type owl:Class ;
+                     rdfs:subClassOf :Application_Dimension ;
+                     rdfs:label "Utility Application" .
+
+
+###  http://graffl.ai/skills#Utility_Framework
+:Utility_Framework rdf:type owl:Class ;
+                   rdfs:subClassOf :Framework_Dimension ;
+                   rdfs:label "Utility Framework" .
+
+
+###  http://graffl.ai/skills#Variable_Analysis
+:Variable_Analysis rdf:type owl:Class ;
+                   rdfs:subClassOf :Analysis_Dimension ;
+                   rdfs:label "Variable Analysis" .
+
+
+###  http://graffl.ai/skills#Variable_Modeling
+:Variable_Modeling rdf:type owl:Class ;
+                   rdfs:subClassOf :Modeling_Dimension ;
+                   rdfs:label "Variable Modeling" .
+
+
+###  http://graffl.ai/skills#Visualization_Analysis
+:Visualization_Analysis rdf:type owl:Class ;
+                        rdfs:subClassOf :Analysis_Dimension ;
+                        rdfs:label "Visualization Analysis" .
+
+
+###  http://graffl.ai/skills#Wage_Factor
+:Wage_Factor rdf:type owl:Class ;
+             rdfs:subClassOf :Factor_Dimension ;
+             rdfs:label "Wage Factor" .
+
+
+###  http://graffl.ai/skills#Wage_Strategy
+:Wage_Strategy rdf:type owl:Class ;
+               rdfs:subClassOf :Strategy_Dimension ;
+               rdfs:label "Wage Strategy" .
+
+
+###  http://graffl.ai/skills#Workforce_Analysis
+:Workforce_Analysis rdf:type owl:Class ;
+                    rdfs:subClassOf :Analysis_Dimension ;
+                    rdfs:label "Workforce Analysis" .
+
+
+###  http://graffl.ai/skills#Workforce_Forecasting
+:Workforce_Forecasting rdf:type owl:Class ;
+                       rdfs:subClassOf :Forecasting_Dimension ;
+                       rdfs:label "Workforce Forecasting" .
+
+
+###  http://graffl.ai/skills#Aggregate_Demand_Analysis
+:Aggregate_Demand_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Aggregate_Analysis ,
+                                    :Demand_Analysis ;
+                           rdfs:label "Aggregate Demand Analysis" ;
+                           rdfs:seeAlso "Analysis of aggregate demand" ,
+                                        "Aggregate-demand analysis" ,
+                                        "Aggregate demand analyses" .
+
+
+###  http://graffl.ai/skills#Aggregate_Demand_Modeling
+:Aggregate_Demand_Modeling rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Aggregate_Modeling ,
+                                    :Demand_Modeling ;
+                           rdfs:label "Aggregate Demand Modeling" ;
+                           rdfs:seeAlso "Modeling of aggregate demand" ,
+                                        "Aggregate-demand modeling" ,
+                                        "Aggregate demand model development" ,
+                                        "Development of aggregate demand models" ,
+                                        "Aggregate demand models" .
+
+
+###  http://graffl.ai/skills#Aggregate_Market_Analysis
+:Aggregate_Market_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Aggregate_Analysis ,
+                                    :Market_Analysis ;
+                           rdfs:label "Aggregate Market Analysis" ;
+                           rdfs:seeAlso "Market analysis aggregation" ,
+                                        "Aggregate analysis of markets" ,
+                                        "Analysis of aggregate markets" ,
+                                        "Aggregate-market analysis" .
+
+
+###  http://graffl.ai/skills#Aggregate_Supply_Analysis
+:Aggregate_Supply_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Aggregate_Analysis ,
+                                    :Supply_Analysis ;
+                           rdfs:label "Aggregate Supply Analysis" ;
+                           rdfs:seeAlso "Analysis of aggregate supply" ,
+                                        "Aggregate-supply analysis" ,
+                                        "Supply analysis, aggregate" .
+
+
+###  http://graffl.ai/skills#Antitrust_Compliance
+:Antitrust_Compliance rdf:type owl:NamedIndividual ,
+                               :Skill ;
+                      rdfs:label "Antitrust Compliance" ;
+                      rdfs:seeAlso "Antitrust Compliance Concept" ,
+                                   "Compliance with Antitrust" ,
+                                   "Antitrust-Compliance" ,
+                                   "Compliance for Antitrust" .
+
+
+###  http://graffl.ai/skills#Asymmetric_Information_Analysis
+:Asymmetric_Information_Analysis rdf:type owl:NamedIndividual ,
+                                          :Skill ,
+                                          :Asymmetric_Analysis ,
+                                          :Information_Analysis ;
+                                 rdfs:label "Asymmetric Information Analysis" ;
+                                 rdfs:seeAlso "Analysis of asymmetric information" ,
+                                              "Asymmetric-information analysis" ,
+                                              "Information analysis, asymmetric" ,
+                                              "Analysis for asymmetric information" .
+
+
+###  http://graffl.ai/skills#Banking_Regulation_Compliance
+:Banking_Regulation_Compliance rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Banking_Compliance ,
+                                        :Regulation_Compliance ;
+                               rdfs:label "Banking Regulation Compliance" ;
+                               rdfs:seeAlso "Compliance with banking regulation" ,
+                                            "Banking-regulation compliance" ,
+                                            "Compliance of banking regulation" ,
+                                            "Regulation compliance for banking" ,
+                                            "Banking regulation compliances" .
+
+
+###  http://graffl.ai/skills#Barriers_To_Entry_Analysis
+:Barriers_To_Entry_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ;
+                            rdfs:label "Barriers To Entry Analysis" ;
+                            rdfs:seeAlso "Analysis of barriers to entry" ,
+                                         "Barriers-to-entry analysis" ,
+                                         "Entry barriers analysis" ,
+                                         "Analysis of entry barriers" .
+
+
+###  http://graffl.ai/skills#Budgetary_Policy_Management
+:Budgetary_Policy_Management rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Budgetary_Management ,
+                                      :Policy_Management ;
+                             rdfs:label "Budgetary Policy Management" ;
+                             rdfs:seeAlso "Management of budgetary policy" ,
+                                          "Budgetary-policy management" ,
+                                          "Management of budgetary policies" ,
+                                          "Budgetary policy managements" .
+
+
+###  http://graffl.ai/skills#Business_Cycle_Analysis
+:Business_Cycle_Analysis rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Business_Analysis ,
+                                  :Cycle_Analysis ;
+                         rdfs:label "Business Cycle Analysis" ;
+                         rdfs:seeAlso "Analysis of Business cycle" ,
+                                      "Business-cycle Analysis" ,
+                                      "Business cycle Analyses" .
+
+
+###  http://graffl.ai/skills#Business_Cycle_Forecasting
+:Business_Cycle_Forecasting rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Business_Forecasting ,
+                                     :Cycle_Forecasting ;
+                            rdfs:label "Business Cycle Forecasting" ;
+                            rdfs:seeAlso "Forecasting of business cycles" ,
+                                         "Forecasting business cycles" ,
+                                         "Business-cycle forecasting" ,
+                                         "Business cycle forecasting concepts" ,
+                                         "Business cycles forecasting" .
+
+
+###  http://graffl.ai/skills#Capital_Investment_Analysis
+:Capital_Investment_Analysis rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Capital_Analysis ,
+                                      :Investment_Analysis ;
+                             rdfs:label "Capital Investment Analysis" ;
+                             rdfs:seeAlso "Analysis of capital investment" ,
+                                          "Capital-investment analysis" ,
+                                          "Capital investment analyses" .
+
+
+###  http://graffl.ai/skills#Causal_Relationship_Analysis
+:Causal_Relationship_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Causal_Analysis ,
+                                       :Relationship_Analysis ;
+                              rdfs:label "Causal Relationship Analysis" ;
+                              rdfs:seeAlso "Analysis of causal relationships" ,
+                                           "Causal-relationship analysis" ,
+                                           "Analysis of causal-relationships" ,
+                                           "Causal relationships analysis" .
+
+
+###  http://graffl.ai/skills#Central_Banking_Management
+:Central_Banking_Management rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Central_Management ,
+                                     :Banking_Management ;
+                            rdfs:label "Central Banking Management" ;
+                            rdfs:seeAlso "Management of Central Banking" ,
+                                         "Central-Banking Management" ,
+                                         "Central Banking Managements" .
+
+
+###  http://graffl.ai/skills#Circular_Flow_Modeling
+:Circular_Flow_Modeling rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Circular_Modeling ,
+                                 :Flow_Modeling ;
+                        rdfs:label "Circular Flow Modeling" ;
+                        rdfs:seeAlso "Modeling of circular flow" ,
+                                     "Circular-flow modeling" ,
+                                     "Circular flow model" ,
+                                     "Modeling circular flow" .
+
+
+###  http://graffl.ai/skills#Classical_Economic_Theory
+:Classical_Economic_Theory rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Classical_Theory ,
+                                    :Economic_Theory ;
+                           rdfs:label "Classical Economic Theory" ;
+                           rdfs:seeAlso "Theory of classical economics" ,
+                                        "Classical economics theory" ,
+                                        "Economic theory, classical" ,
+                                        "Classical-economic theory" .
+
+
+###  http://graffl.ai/skills#Comparative_Advantage_Analysis
+:Comparative_Advantage_Analysis rdf:type owl:NamedIndividual ,
+                                         :Skill ,
+                                         :Comparative_Analysis ,
+                                         :Advantage_Analysis ;
+                                rdfs:label "Comparative Advantage Analysis" ;
+                                rdfs:seeAlso "Analysis of Comparative Advantage" ,
+                                             "Comparative-Advantage Analysis" ,
+                                             "Comparative Advantage Analyses" .
+
+
+###  http://graffl.ai/skills#Comparative_Economic_System
+:Comparative_Economic_System rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Comparative_System ,
+                                      :Economic_System ;
+                             rdfs:label "Comparative Economic System" ;
+                             rdfs:seeAlso "Comparative economic Systems" ,
+                                          "Economic System Comparison" ,
+                                          "Comparison of Economic Systems" ,
+                                          "Economic Systems Comparison" ,
+                                          "Comparative-economic System" .
+
+
+###  http://graffl.ai/skills#Comparative_Economic_Analysis
+:Comparative_Economic_Analysis rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Comparative_Analysis ,
+                                        :Economic_Analysis ;
+                               rdfs:label "Comparative Economic Analysis" ;
+                               rdfs:seeAlso "Economic analysis, comparative" ,
+                                            "Comparative analysis of economics" ,
+                                            "Analysis of comparative economics" ,
+                                            "Comparative-economic analysis" .
+
+
+###  http://graffl.ai/skills#Compensation_Policy_Analysis
+:Compensation_Policy_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Compensation_Analysis ,
+                                       :Policy_Analysis ;
+                              rdfs:label "Compensation Policy Analysis" ;
+                              rdfs:seeAlso "Analysis of compensation policy" ,
+                                           "Compensation-policy analysis" ,
+                                           "Policy analysis for compensation" ,
+                                           "Analysis for compensation policy" .
+
+
+###  http://graffl.ai/skills#Competitive_Landscape_Analysis
+:Competitive_Landscape_Analysis rdf:type owl:NamedIndividual ,
+                                         :Skill ,
+                                         :Competitive_Analysis ,
+                                         :Landscape_Analysis ;
+                                rdfs:label "Competitive Landscape Analysis" ;
+                                rdfs:seeAlso "Analysis of Competitive Landscape" ,
+                                             "Competitive-Landscape Analysis" ,
+                                             "Landscape Analysis for Competition" ,
+                                             "Competitive Landscape Analyses" .
+
+
+###  http://graffl.ai/skills#Competitive_Market_Analysis
+:Competitive_Market_Analysis rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Competitive_Analysis ,
+                                      :Market_Analysis ;
+                             rdfs:label "Competitive Market Analysis" ;
+                             rdfs:seeAlso "Competitive-market analysis" ,
+                                          "Analysis of competitive market" ,
+                                          "Market analysis, competitive" ,
+                                          "Competitive market analyses" .
+
+
+###  http://graffl.ai/skills#Consumer_Price_Index_CPI_Analysis
+:Consumer_Price_Index_CPI_Analysis rdf:type owl:NamedIndividual ,
+                                            :Skill ;
+                                   rdfs:label "Consumer Price Index (CPI) Analysis" ;
+                                   rdfs:seeAlso "Analysis of Consumer Price Index (CPI)" ,
+                                                "Consumer Price Index (CPI) Analysis" ,
+                                                "CPI analysis" ,
+                                                "Consumer-Price-Index analysis" ,
+                                                "Analysis of the Consumer Price Index (CPI)" .
+
+
+###  http://graffl.ai/skills#Consumer_Behavior_Analysis
+:Consumer_Behavior_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Consumer_Analysis ,
+                                     :Behavior_Analysis ;
+                            rdfs:label "Consumer Behavior Analysis" ;
+                            rdfs:seeAlso "Analysis of consumer behavior" ,
+                                         "Consumer-behavior analysis" ,
+                                         "Consumer behavior analyses" .
+
+
+###  http://graffl.ai/skills#Consumer_Choice_Theory
+:Consumer_Choice_Theory rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Consumer_Theory ,
+                                 :Choice_Theory ;
+                        rdfs:label "Consumer Choice Theory" ;
+                        rdfs:seeAlso "Theory of consumer choice" ,
+                                     "Consumer choice theory concept" ,
+                                     "Theory for consumer choice" ,
+                                     "Consumer-choice theory" .
+
+
+###  http://graffl.ai/skills#Consumer_Spending_Behavior_Analysis
+:Consumer_Spending_Behavior_Analysis rdf:type owl:NamedIndividual ,
+                                              :Skill ;
+                                     rdfs:label "Consumer Spending Behavior Analysis" ;
+                                     rdfs:seeAlso "Analysis of consumer spending behavior" ,
+                                                  "Consumer spending behavior analytical skills" ,
+                                                  "Consumer-spending-behavior analysis" ,
+                                                  "Analysis for consumer spending behavior" ,
+                                                  "Consumer spending behavioral analysis" .
+
+
+###  http://graffl.ai/skills#Contractionary_Policy_Implementation
+:Contractionary_Policy_Implementation rdf:type owl:NamedIndividual ,
+                                               :Skill ,
+                                               :Contractionary_Implementation ,
+                                               :Policy_Implementation ;
+                                      rdfs:label "Contractionary Policy Implementation" ;
+                                      rdfs:seeAlso "Implementation of contractionary policy" ,
+                                                   "Contractionary-policy implementation" ,
+                                                   "Implementation of contractionary-policy" ,
+                                                   "Contractionary policy implementations" .
+
+
+###  http://graffl.ai/skills#Cost_Behavior_Analysis
+:Cost_Behavior_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Cost_Analysis ,
+                                 :Behavior_Analysis ;
+                        rdfs:label "Cost Behavior Analysis" ;
+                        rdfs:seeAlso "Analysis of cost behavior" ,
+                                     "Cost-behavior analysis" ,
+                                     "Behavior analysis for costs" ,
+                                     "Analysis for cost behavior" .
+
+
+###  http://graffl.ai/skills#Cost_Of_Living_Analysis
+:Cost_Of_Living_Analysis rdf:type owl:NamedIndividual ,
+                                  :Skill ;
+                         rdfs:label "Cost Of Living Analysis" ;
+                         rdfs:seeAlso "Analysis of cost of living" ,
+                                      "Cost-of-living analysis" ,
+                                      "Living cost analysis" ,
+                                      "Analysis of living costs" .
+
+
+###  http://graffl.ai/skills#Cost_Structure_Analysis
+:Cost_Structure_Analysis rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Cost_Analysis ,
+                                  :Structure_Analysis ;
+                         rdfs:label "Cost Structure Analysis" ;
+                         rdfs:seeAlso "Analysis of cost structure" ,
+                                      "Cost-structure analysis" ,
+                                      "Cost structure analyses" .
+
+
+###  http://graffl.ai/skills#Cost_Benefit_Analysis
+:Cost_Benefit_Analysis rdf:type owl:NamedIndividual ,
+                                :Skill ,
+                                :Cost_Analysis ,
+                                :Benefit_Analysis ;
+                       rdfs:label "Cost Benefit Analysis" ;
+                       rdfs:seeAlso "Cost-benefit analysis" ,
+                                    "Cost-Benefit Analysis" ,
+                                    "Analysis of Cost-Benefit" ,
+                                    "Cost-Benefit Analyses" ,
+                                    "Analysis of Costs and Benefits" ,
+                                    "Cost and Benefit Analysis" .
+
+
+###  http://graffl.ai/skills#Credit_Availability_Analysis
+:Credit_Availability_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Credit_Analysis ,
+                                       :Availability_Analysis ;
+                              rdfs:label "Credit Availability Analysis" ;
+                              rdfs:seeAlso "Analysis of Credit Availability" ,
+                                           "Credit-Availability Analysis" ,
+                                           "Analysis for Credit Availability" ,
+                                           "Credit Availability Analyses" .
+
+
+###  http://graffl.ai/skills#Currency_Exchange_Analysis
+:Currency_Exchange_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Currency_Analysis ,
+                                     :Exchange_Analysis ;
+                            rdfs:label "Currency Exchange Analysis" ;
+                            rdfs:seeAlso "Analysis of currency exchange" ,
+                                         "Currency-exchange analysis" ,
+                                         "Exchange analysis for currency" ,
+                                         "Analysis for currency exchange" .
+
+
+###  http://graffl.ai/skills#Currency_Risk_Management
+:Currency_Risk_Management rdf:type owl:NamedIndividual ,
+                                   :Skill ,
+                                   :Currency_Management ,
+                                   :Risk_Management ;
+                          rdfs:label "Currency Risk Management" ;
+                          rdfs:seeAlso "Management of currency risk" ,
+                                       "Currency-risk management" ,
+                                       "Risk management for currency" ,
+                                       "Management for currency risk" .
+
+
+###  http://graffl.ai/skills#Data_Visualization_Analysis
+:Data_Visualization_Analysis rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Data_Analysis ,
+                                      :Visualization_Analysis ;
+                             rdfs:label "Data Visualization Analysis" ;
+                             rdfs:seeAlso "Data Visualization Analyses" ,
+                                          "Analysis of Data Visualization" ,
+                                          "Data-Visualization Analysis" ,
+                                          "Visualization Analysis for Data" .
+
+
+###  http://graffl.ai/skills#Debt_To_GDP_Analysis
+:Debt_To_GDP_Analysis rdf:type owl:NamedIndividual ,
+                               :Skill ;
+                      rdfs:label "Debt To GDP Analysis" ;
+                      rdfs:seeAlso "Debt-to-GDP Analysis" ,
+                                   "Analysis of Debt-to-GDP" ,
+                                   "Debt-to-GDP Ratio Analysis" ,
+                                   "Analysis of Debt to GDP" ,
+                                   "Debt to GDP Analysis" ,
+                                   "Debt-to-GDP Analyses" .
+
+
+###  http://graffl.ai/skills#Debt_To_GDP_Ratio_Analysis
+:Debt_To_GDP_Ratio_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ;
+                            rdfs:label "Debt To GDP Ratio Analysis" ;
+                            rdfs:seeAlso "Debt-to-GDP ratio Analysis" ,
+                                         "Analysis of Debt-to-GDP ratio" ,
+                                         "Debt-to-GDP ratio Analyses" ,
+                                         "Analysis of the Debt-to-GDP ratio" ,
+                                         "Debt-to-GDP Ratio Analysis" .
+
+
+###  http://graffl.ai/skills#Deficit_Spending_Analysis
+:Deficit_Spending_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Deficit_Analysis ,
+                                    :Spending_Analysis ;
+                           rdfs:label "Deficit Spending Analysis" ;
+                           rdfs:seeAlso "Analysis of deficit spending" ,
+                                        "Deficit-spending analysis" ,
+                                        "Deficit spending analyses" .
+
+
+###  http://graffl.ai/skills#Diminishing_Returns_Analysis
+:Diminishing_Returns_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Diminishing_Analysis ,
+                                       :Returns_Analysis ;
+                              rdfs:label "Diminishing Returns Analysis" ;
+                              rdfs:seeAlso "Analysis of diminishing returns" ,
+                                           "Diminishing-returns analysis" ,
+                                           "Analysis for diminishing returns" .
+
+
+###  http://graffl.ai/skills#Economic_Crisis_Management
+:Economic_Crisis_Management rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Economic_Management ,
+                                     :Crisis_Management ;
+                            rdfs:label "Economic Crisis Management" ;
+                            rdfs:seeAlso "Management of economic crisis" ,
+                                         "Management of economic crises" ,
+                                         "Economic-crisis management" ,
+                                         "Crisis management in economics" ,
+                                         "Economic crisis managements" .
+
+
+###  http://graffl.ai/skills#Economic_Data_Analysis
+:Economic_Data_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Economic_Analysis ,
+                                 :Data_Analysis ;
+                        rdfs:label "Economic Data Analysis" ;
+                        rdfs:seeAlso "Analysis of Economic Data" ,
+                                     "Economic Data Analyses" ,
+                                     "Economic-Data Analysis" ,
+                                     "Analysis for Economic Data" .
+
+
+###  http://graffl.ai/skills#Economic_Data_Visualization
+:Economic_Data_Visualization rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Economic_Visualization ,
+                                      :Data_Visualization ;
+                             rdfs:label "Economic Data Visualization" ;
+                             rdfs:seeAlso "Visualization of economic data" ,
+                                          "Economic-data visualization" ,
+                                          "Data visualization for economics" ,
+                                          "Visualization for economic data" .
+
+
+###  http://graffl.ai/skills#Economic_Decision_Making
+:Economic_Decision_Making rdf:type owl:NamedIndividual ,
+                                   :Skill ,
+                                   :Economic_Making ,
+                                   :Decision_Making ;
+                          rdfs:label "Economic Decision Making" ;
+                          rdfs:seeAlso "Economic decision-making" ,
+                                       "Decision making in economics" ,
+                                       "Decision-making in economics" ,
+                                       "Economic decision-makings" ,
+                                       "Economics decision making" ,
+                                       "Economics decision-making" .
+
+
+###  http://graffl.ai/skills#Economic_Efficiency_Analysis
+:Economic_Efficiency_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Economic_Analysis ,
+                                       :Efficiency_Analysis ;
+                              rdfs:label "Economic Efficiency Analysis" ;
+                              rdfs:seeAlso "Analysis of economic efficiency" ,
+                                           "Economic-efficiency analysis" ,
+                                           "Analysis for economic efficiency" ,
+                                           "Economic efficiency analyses" .
+
+
+###  http://graffl.ai/skills#Economic_Growth_Forecasting
+:Economic_Growth_Forecasting rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Economic_Forecasting ,
+                                      :Growth_Forecasting ;
+                             rdfs:label "Economic Growth Forecasting" ;
+                             rdfs:seeAlso "Forecasting of economic growth" ,
+                                          "Forecasting economic growth" ,
+                                          "Economic-growth forecasting" ,
+                                          "Economic growth forecasting concepts" ,
+                                          "Forecasting for economic growth" .
+
+
+###  http://graffl.ai/skills#Economic_Growth_Measurement
+:Economic_Growth_Measurement rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Economic_Measurement ,
+                                      :Growth_Measurement ;
+                             rdfs:label "Economic Growth Measurement" ;
+                             rdfs:seeAlso "Measurement of economic growth" ,
+                                          "Economic-growth measurement" ,
+                                          "Measurement for economic growth" ,
+                                          "Economic growth measurements" .
+
+
+###  http://graffl.ai/skills#Economic_Impact_Analysis
+:Economic_Impact_Analysis rdf:type owl:NamedIndividual ,
+                                   :Skill ,
+                                   :Economic_Analysis ,
+                                   :Impact_Analysis ;
+                          rdfs:label "Economic Impact Analysis" ;
+                          rdfs:seeAlso "Analysis of Economic Impact" ,
+                                       "Economic-Impact Analysis" ,
+                                       "Economic Impact Analyses" .
+
+
+###  http://graffl.ai/skills#Economic_Impact_Modeling
+:Economic_Impact_Modeling rdf:type owl:NamedIndividual ,
+                                   :Skill ,
+                                   :Economic_Modeling ,
+                                   :Impact_Modeling ;
+                          rdfs:label "Economic Impact Modeling" ;
+                          rdfs:seeAlso "Economic-impact modeling" ,
+                                       "Modeling of economic impact" ,
+                                       "Economic impact model" ,
+                                       "Economic impact models" .
+
+
+###  http://graffl.ai/skills#Economic_Indicator_Analysis
+:Economic_Indicator_Analysis rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Economic_Analysis ,
+                                      :Indicator_Analysis ;
+                             rdfs:label "Economic Indicator Analysis" ;
+                             rdfs:seeAlso "Analysis of Economic Indicators" ,
+                                          "Economic Indicators Analysis" ,
+                                          "Analysis of Economic Indicator" ,
+                                          "Economic-Indicator Analysis" .
+
+
+###  http://graffl.ai/skills#Economic_Multiplier_Calculation
+:Economic_Multiplier_Calculation rdf:type owl:NamedIndividual ,
+                                          :Skill ,
+                                          :Economic_Calculation ,
+                                          :Multiplier_Calculation ;
+                                 rdfs:label "Economic Multiplier Calculation" ;
+                                 rdfs:seeAlso "Calculation of economic multiplier" ,
+                                              "Economic-multiplier calculation" ,
+                                              "Economic multiplier calculations" .
+
+
+###  http://graffl.ai/skills#Economic_Performance_Measurement
+:Economic_Performance_Measurement rdf:type owl:NamedIndividual ,
+                                           :Skill ,
+                                           :Economic_Measurement ,
+                                           :Performance_Measurement ;
+                                  rdfs:label "Economic Performance Measurement" ;
+                                  rdfs:seeAlso "Measurement of economic performance" ,
+                                               "Economic-performance measurement" ,
+                                               "Measurement for economic performance" ,
+                                               "Economic performance measurements" .
+
+
+###  http://graffl.ai/skills#Economic_Policy_Analysis
+:Economic_Policy_Analysis rdf:type owl:NamedIndividual ,
+                                   :Skill ,
+                                   :Economic_Analysis ,
+                                   :Policy_Analysis ;
+                          rdfs:label "Economic Policy Analysis" ;
+                          rdfs:seeAlso "Analysis of Economic Policy" ,
+                                       "Economic-Policy Analysis" ,
+                                       "Economic Policy Analyses" ,
+                                       "Analysis for Economic Policy" .
+
+
+###  http://graffl.ai/skills#Economic_Profit_Calculation
+:Economic_Profit_Calculation rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Economic_Calculation ,
+                                      :Profit_Calculation ;
+                             rdfs:label "Economic Profit Calculation" ;
+                             rdfs:seeAlso "Calculation of economic profit" ,
+                                          "Economic-profit calculation" ,
+                                          "Economic profit calculations" .
+
+
+###  http://graffl.ai/skills#Economic_Reasoning
+:Economic_Reasoning rdf:type owl:NamedIndividual ,
+                             :Skill ;
+                    rdfs:label "Economic Reasoning" ;
+                    rdfs:seeAlso "Reasoning about economics" ,
+                                 "Economic-reasoning" ,
+                                 "Reasoning in economics" ,
+                                 "Economics reasoning" .
+
+
+###  http://graffl.ai/skills#Economic_Recession_Strategy
+:Economic_Recession_Strategy rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Economic_Strategy ,
+                                      :Recession_Strategy ;
+                             rdfs:label "Economic Recession Strategy" ;
+                             rdfs:seeAlso "Strategy for Economic Recession" ,
+                                          "Strategy of Economic Recession" ,
+                                          "Economic-Recession Strategy" ,
+                                          "Economic Recession Strategies" .
+
+
+###  http://graffl.ai/skills#Economic_Specialization_Analysis
+:Economic_Specialization_Analysis rdf:type owl:NamedIndividual ,
+                                           :Skill ,
+                                           :Economic_Analysis ,
+                                           :Specialization_Analysis ;
+                                  rdfs:label "Economic Specialization Analysis" ;
+                                  rdfs:seeAlso "Analysis of economic specialization" ,
+                                               "Economic-specialization analysis" ,
+                                               "Specialization analysis for economics" ,
+                                               "Analysis for economic specialization" .
+
+
+###  http://graffl.ai/skills#Economic_Stability_Analysis
+:Economic_Stability_Analysis rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Economic_Analysis ,
+                                      :Stability_Analysis ;
+                             rdfs:label "Economic Stability Analysis" ;
+                             rdfs:seeAlso "Analysis of Economic Stability" ,
+                                          "Economic-Stability Analysis" ,
+                                          "Economic Stability Analyses" .
+
+
+###  http://graffl.ai/skills#Economic_Stabilization_Strategy
+:Economic_Stabilization_Strategy rdf:type owl:NamedIndividual ,
+                                          :Skill ,
+                                          :Economic_Strategy ,
+                                          :Stabilization_Strategy ;
+                                 rdfs:label "Economic Stabilization Strategy" ;
+                                 rdfs:seeAlso "Strategy for Economic Stabilization" ,
+                                              "Strategy of Economic Stabilization" ,
+                                              "Economic-Stabilization Strategy" ,
+                                              "Economic Stabilization Strategies" .
+
+
+###  http://graffl.ai/skills#Economic_Systems_Analysis
+:Economic_Systems_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Economic_Analysis ,
+                                    :Systems_Analysis ;
+                           rdfs:label "Economic Systems Analysis" ;
+                           rdfs:seeAlso "Analysis of economic systems" ,
+                                        "Economic-systems analysis" ,
+                                        "Analysis of economic-systems" ,
+                                        "Economic systems analyses" .
+
+
+###  http://graffl.ai/skills#Economic_Theory_Application
+:Economic_Theory_Application rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Economic_Application ,
+                                      :Theory_Application ;
+                             rdfs:label "Economic Theory Application" ;
+                             rdfs:seeAlso "Application of economic theory" ,
+                                          "Economic-theory application" ,
+                                          "Application of Economic Theory" ,
+                                          "Economic Theory Application" .
+
+
+###  http://graffl.ai/skills#Economic_Trend_Analysis
+:Economic_Trend_Analysis rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Economic_Analysis ,
+                                  :Trend_Analysis ;
+                         rdfs:label "Economic Trend Analysis" ;
+                         rdfs:seeAlso "Analysis of economic trends" ,
+                                      "Economic trends analysis" ,
+                                      "Trend analysis for economics" ,
+                                      "Analysis for economic trends" ,
+                                      "Economic-trend analysis" .
+
+
+###  http://graffl.ai/skills#Economic_Variable_Analysis
+:Economic_Variable_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Economic_Analysis ,
+                                     :Variable_Analysis ;
+                            rdfs:label "Economic Variable Analysis" ;
+                            rdfs:seeAlso "Analysis of economic variables" ,
+                                         "Economic-variable analysis" ,
+                                         "Analysis of economic variable" ,
+                                         "Economic variables analysis" .
+
+
+###  http://graffl.ai/skills#Entrepreneurial_Risk_Analysis
+:Entrepreneurial_Risk_Analysis rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Entrepreneurial_Analysis ,
+                                        :Risk_Analysis ;
+                               rdfs:label "Entrepreneurial Risk Analysis" ;
+                               rdfs:seeAlso "Risk Analysis for Entrepreneurial Ventures" ,
+                                            "Entrepreneurial Risk-Analysis" ,
+                                            "Analysis of Entrepreneurial Risk" ,
+                                            "Risk Analysis in Entrepreneurship" ,
+                                            "Entrepreneurial-Risk Analysis" .
+
+
+###  http://graffl.ai/skills#Expansionary_Policy_Implementation
+:Expansionary_Policy_Implementation rdf:type owl:NamedIndividual ,
+                                             :Skill ,
+                                             :Expansionary_Implementation ,
+                                             :Policy_Implementation ;
+                                    rdfs:label "Expansionary Policy Implementation" ;
+                                    rdfs:seeAlso "Implementation of expansionary policy" ,
+                                                 "Expansionary-policy implementation" ,
+                                                 "Implementation of expansionary policies" ,
+                                                 "Expansionary-policy implementations" .
+
+
+###  http://graffl.ai/skills#Externality_Management
+:Externality_Management rdf:type owl:NamedIndividual ,
+                                 :Skill ;
+                        rdfs:label "Externality Management" ;
+                        rdfs:seeAlso "Management of externality" ,
+                                     "Management of externalities" ,
+                                     "Externality-management" ,
+                                     "Externalities management" .
+
+
+###  http://graffl.ai/skills#Factor_Market_Analysis
+:Factor_Market_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Factor_Analysis ,
+                                 :Market_Analysis ;
+                        rdfs:label "Factor Market Analysis" ;
+                        rdfs:seeAlso "Analysis of factor markets" ,
+                                     "Factor-market analysis" ,
+                                     "Market analysis for factors" ,
+                                     "Analysis for factor markets" .
+
+
+###  http://graffl.ai/skills#Factors_Of_Production_Management
+:Factors_Of_Production_Management rdf:type owl:NamedIndividual ,
+                                           :Skill ;
+                                  rdfs:label "Factors Of Production Management" ;
+                                  rdfs:seeAlso "Management of factors of production" ,
+                                               "Factors-of-production management" ,
+                                               "Production factors management" ,
+                                               "Management of production factors" .
+
+
+###  http://graffl.ai/skills#Federal_Budget_Analysis
+:Federal_Budget_Analysis rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Federal_Analysis ,
+                                  :Budget_Analysis ;
+                         rdfs:label "Federal Budget Analysis" ;
+                         rdfs:seeAlso "Analysis of federal budget" ,
+                                      "Federal budget analysis concept" ,
+                                      "Federal-budget analysis" ,
+                                      "Analysis for federal budget" ,
+                                      "Budget analysis, federal" .
+
+
+###  http://graffl.ai/skills#Financial_Market_Analysis
+:Financial_Market_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Financial_Analysis ,
+                                    :Market_Analysis ;
+                           rdfs:label "Financial Market Analysis" ;
+                           rdfs:seeAlso "Analysis of financial markets" ,
+                                        "Financial markets analysis" ,
+                                        "Market analysis, financial" ,
+                                        "Financial-market analysis" .
+
+
+###  http://graffl.ai/skills#Financial_System_Management
+:Financial_System_Management rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Financial_Management ,
+                                      :System_Management ;
+                             rdfs:label "Financial System Management" ;
+                             rdfs:seeAlso "Management of Financial System" ,
+                                          "Financial System Management Concept" ,
+                                          "Financial-System Management" ,
+                                          "Management for Financial System" .
+
+
+###  http://graffl.ai/skills#Financial_System_Analysis
+:Financial_System_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Financial_Analysis ,
+                                    :System_Analysis ;
+                           rdfs:label "Financial System Analysis" ;
+                           rdfs:seeAlso "Analysis of financial systems" ,
+                                        "Financial-system analysis" ,
+                                        "Analysis of the financial system" ,
+                                        "Financial system analyses" .
+
+
+###  http://graffl.ai/skills#Fiscal_Multiplier_Calculation
+:Fiscal_Multiplier_Calculation rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Fiscal_Calculation ,
+                                        :Multiplier_Calculation ;
+                               rdfs:label "Fiscal Multiplier Calculation" ;
+                               rdfs:seeAlso "Fiscal-multiplier calculation" ,
+                                            "Calculation of fiscal multiplier" ,
+                                            "Fiscal multiplier calculations" .
+
+
+###  http://graffl.ai/skills#Fiscal_Policy_Analysis
+:Fiscal_Policy_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Fiscal_Analysis ,
+                                 :Policy_Analysis ;
+                        rdfs:label "Fiscal Policy Analysis" ;
+                        rdfs:seeAlso "Analysis of Fiscal Policy" ,
+                                     "Fiscal-Policy Analysis" ,
+                                     "Fiscal Policy Analyses" .
+
+
+###  http://graffl.ai/skills#Fiscal_Policy_Development
+:Fiscal_Policy_Development rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Fiscal_Development ,
+                                    :Policy_Development ;
+                           rdfs:label "Fiscal Policy Development" ;
+                           rdfs:seeAlso "Development of fiscal policy" ,
+                                        "Fiscal-policy development" ,
+                                        "Development of fiscal policies" ,
+                                        "Fiscal policies development" .
+
+
+###  http://graffl.ai/skills#Fixed_And_Variable_Cost_Management
+:Fixed_And_Variable_Cost_Management rdf:type owl:NamedIndividual ,
+                                             :Skill ;
+                                    rdfs:label "Fixed And Variable Cost Management" ;
+                                    rdfs:seeAlso "Management of fixed and variable costs" ,
+                                                 "Fixed and variable cost management concepts" ,
+                                                 "Fixed-and-variable-cost management" ,
+                                                 "Management of fixed and variable cost" ,
+                                                 "Cost management for fixed and variable expenses" .
+
+
+###  http://graffl.ai/skills#Foreign_Exchange_Analysis
+:Foreign_Exchange_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Foreign_Analysis ,
+                                    :Exchange_Analysis ;
+                           rdfs:label "Foreign Exchange Analysis" ;
+                           rdfs:seeAlso "Foreign-exchange analysis" ,
+                                        "Analysis of foreign exchange" ,
+                                        "Foreign exchange analyses" .
+
+
+###  http://graffl.ai/skills#Foreign_Exchange_Risk_Analysis
+:Foreign_Exchange_Risk_Analysis rdf:type owl:NamedIndividual ,
+                                         :Skill ;
+                                rdfs:label "Foreign Exchange Risk Analysis" ;
+                                rdfs:seeAlso "Foreign exchange risk Analyses" ,
+                                             "Analysis of Foreign exchange risk" ,
+                                             "Foreign-exchange risk Analysis" ,
+                                             "Risk Analysis for Foreign exchange" ,
+                                             "Analysis for Foreign exchange risk" .
+
+
+###  http://graffl.ai/skills#Fractional_Reserve_Banking
+:Fractional_Reserve_Banking rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Fractional_Banking ,
+                                     :Reserve_Banking ;
+                            rdfs:label "Fractional Reserve Banking" ;
+                            rdfs:seeAlso "Fractional-reserve banking" ,
+                                         "Banking with fractional reserves" ,
+                                         "Fractional reserve banking system" ,
+                                         "Banking system of fractional reserves" .
+
+
+###  http://graffl.ai/skills#GDP_Analysis_And_Analysis
+:GDP_Analysis_And_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ;
+                           rdfs:label "GDP Analysis And Analysis" ;
+                           rdfs:seeAlso "Analysis of GDP and Analysis" ,
+                                        "GDP-Analysis and Analysis" ,
+                                        "GDP Analysis and Analyses" .
+
+
+###  http://graffl.ai/skills#GDP_Calculation_And_Analysis
+:GDP_Calculation_And_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ;
+                              rdfs:label "GDP Calculation And Analysis" ;
+                              rdfs:seeAlso "Calculation and analysis of GDP" ,
+                                           "GDP calculation and analyses" ,
+                                           "Analysis and calculation of GDP" ,
+                                           "Calculation of GDP and analysis" ,
+                                           "GDP-calculation and analysis" .
+
+
+###  http://graffl.ai/skills#GDP_Data_Analysis
+:GDP_Data_Analysis rdf:type owl:NamedIndividual ,
+                            :Skill ;
+                   rdfs:label "GDP Data Analysis" ;
+                   rdfs:seeAlso "GDP Data Analysis" ,
+                                "Analysis of GDP Data" ,
+                                "GDP-Data Analysis" ,
+                                "Data Analysis for GDP" ,
+                                "Analysis for GDP Data" .
+
+
+###  http://graffl.ai/skills#Global_Economic_Comparison
+:Global_Economic_Comparison rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Global_Comparison ,
+                                     :Economic_Comparison ;
+                            rdfs:label "Global Economic Comparison" ;
+                            rdfs:seeAlso "Comparison of global economics" ,
+                                         "Economic comparison on a global scale" ,
+                                         "Global-economic comparison" ,
+                                         "Comparison of global economic systems" ,
+                                         "Global economic comparisons" .
+
+
+###  http://graffl.ai/skills#Global_Economic_Strategy
+:Global_Economic_Strategy rdf:type owl:NamedIndividual ,
+                                   :Skill ,
+                                   :Global_Strategy ,
+                                   :Economic_Strategy ;
+                          rdfs:label "Global Economic Strategy" ;
+                          rdfs:seeAlso "Strategy for global economics" ,
+                                       "Strategy of global economics" ,
+                                       "Global-economic strategy" ,
+                                       "Economic strategy, global" ,
+                                       "Strategy for global economic issues" ,
+                                       "Global economics strategy" .
+
+
+###  http://graffl.ai/skills#Global_Supply_Chain_Dynamic
+:Global_Supply_Chain_Dynamic rdf:type owl:NamedIndividual ,
+                                      :Skill ;
+                             rdfs:label "Global Supply Chain Dynamic" ;
+                             rdfs:seeAlso "Dynamic of Global Supply Chain" ,
+                                          "Dynamic Global Supply Chain" ,
+                                          "Global-Supply-Chain Dynamic" ,
+                                          "Supply Chain Dynamic Global" ,
+                                          "Global Supply Chain Dynamics" .
+
+
+###  http://graffl.ai/skills#Globalization_Impact_Analysis
+:Globalization_Impact_Analysis rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Globalization_Analysis ,
+                                        :Impact_Analysis ;
+                               rdfs:label "Globalization Impact Analysis" ;
+                               rdfs:seeAlso "Analysis of Globalization Impact" ,
+                                            "Impact Analysis of Globalization" ,
+                                            "Globalization-Impact Analysis" ,
+                                            "Analysis for Globalization Impact" ,
+                                            "Globalization Impact Analyses" .
+
+
+###  http://graffl.ai/skills#Government_Budget_Analysis
+:Government_Budget_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Government_Analysis ,
+                                     :Budget_Analysis ;
+                            rdfs:label "Government Budget Analysis" ;
+                            rdfs:seeAlso "Analysis of government budget" ,
+                                         "Government budget analyses" ,
+                                         "Government-budget analysis" ,
+                                         "Budget analysis for government" ,
+                                         "Analysis for government budget" .
+
+
+###  http://graffl.ai/skills#Government_Intervention_Strategy
+:Government_Intervention_Strategy rdf:type owl:NamedIndividual ,
+                                           :Skill ,
+                                           :Government_Strategy ,
+                                           :Intervention_Strategy ;
+                                  rdfs:label "Government Intervention Strategy" ;
+                                  rdfs:seeAlso "Strategy for government intervention" ,
+                                               "Strategy of government intervention" ,
+                                               "Government-intervention strategy" ,
+                                               "Intervention strategy for government" ,
+                                               "Government intervention strategies" .
+
+
+###  http://graffl.ai/skills#Government_Spending_Analysis
+:Government_Spending_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Government_Analysis ,
+                                       :Spending_Analysis ;
+                              rdfs:label "Government Spending Analysis" ;
+                              rdfs:seeAlso "Analysis of Government Spending" ,
+                                           "Government-Spending Analysis" ,
+                                           "Analysis for Government Spending" ,
+                                           "Government Spending Analyses" .
+
+
+###  http://graffl.ai/skills#Graphical_Data_Analysis
+:Graphical_Data_Analysis rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Graphical_Analysis ,
+                                  :Data_Analysis ;
+                         rdfs:label "Graphical Data Analysis" ;
+                         rdfs:seeAlso "Data Analysis, Graphical" ,
+                                      "Graphical Analysis of Data" ,
+                                      "Analysis of Data, Graphical" ,
+                                      "Graphical-Data Analysis" ,
+                                      "Data Analysis Using Graphics" ,
+                                      "Graphical Data Analyses" .
+
+
+###  http://graffl.ai/skills#Human_Capital_Valuation
+:Human_Capital_Valuation rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Human_Valuation ,
+                                  :Capital_Valuation ;
+                         rdfs:label "Human Capital Valuation" ;
+                         rdfs:seeAlso "Valuation of human capital" ,
+                                      "Human-capital valuation" ,
+                                      "Valuation for human capital" ,
+                                      "Human capital valuations" .
+
+
+###  http://graffl.ai/skills#Import_And_Export_Strategy
+:Import_And_Export_Strategy rdf:type owl:NamedIndividual ,
+                                     :Skill ;
+                            rdfs:label "Import And Export Strategy" ;
+                            rdfs:seeAlso "Strategy for import and export" ,
+                                         "Import and export strategies" ,
+                                         "Strategy of import and export" ,
+                                         "Import-and-export strategy" .
+
+
+###  http://graffl.ai/skills#Incentive_Structure_Design
+:Incentive_Structure_Design rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Incentive_Design ,
+                                     :Structure_Design ;
+                            rdfs:label "Incentive Structure Design" ;
+                            rdfs:seeAlso "Design of incentive structures" ,
+                                         "Design for incentive structures" ,
+                                         "Incentive structure design concepts" ,
+                                         "Incentive-structure design" ,
+                                         "Designing incentive structures" .
+
+
+###  http://graffl.ai/skills#Income_Distribution_Analysis
+:Income_Distribution_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Income_Analysis ,
+                                       :Distribution_Analysis ;
+                              rdfs:label "Income Distribution Analysis" ;
+                              rdfs:seeAlso "Analysis of Income Distribution" ,
+                                           "Income-Distribution Analysis" ,
+                                           "Income Distribution Analyses" .
+
+
+###  http://graffl.ai/skills#Income_Inequality_Analysis
+:Income_Inequality_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Income_Analysis ,
+                                     :Inequality_Analysis ;
+                            rdfs:label "Income Inequality Analysis" ;
+                            rdfs:seeAlso "Analysis of Income Inequality" ,
+                                         "Income-Inequality Analysis" ,
+                                         "Income Inequality Analyses" .
+
+
+###  http://graffl.ai/skills#Inflation_Adjustment_Analysis
+:Inflation_Adjustment_Analysis rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Inflation_Analysis ,
+                                        :Adjustment_Analysis ;
+                               rdfs:label "Inflation Adjustment Analysis" ;
+                               rdfs:seeAlso "Analysis of inflation adjustment" ,
+                                            "Inflation-adjustment analysis" ,
+                                            "Analysis for inflation adjustment" ,
+                                            "Inflation adjustment analyses" .
+
+
+###  http://graffl.ai/skills#Inflation_Control_Strategy
+:Inflation_Control_Strategy rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Inflation_Strategy ,
+                                     :Control_Strategy ;
+                            rdfs:label "Inflation Control Strategy" ;
+                            rdfs:seeAlso "Strategy for Inflation Control" ,
+                                         "Strategy of Inflation Control" ,
+                                         "Inflation-Control Strategy" ,
+                                         "Control Strategy for Inflation" ,
+                                         "Inflation Control Strategies" .
+
+
+###  http://graffl.ai/skills#Inflation_Impact_Analysis
+:Inflation_Impact_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Inflation_Analysis ,
+                                    :Impact_Analysis ;
+                           rdfs:label "Inflation Impact Analysis" ;
+                           rdfs:seeAlso "Analysis of Inflation Impact" ,
+                                        "Inflation-Impact Analysis" ,
+                                        "Impact Analysis for Inflation" ,
+                                        "Analysis for Inflation Impact" .
+
+
+###  http://graffl.ai/skills#Inflation_Rate_Management
+:Inflation_Rate_Management rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Inflation_Management ,
+                                    :Rate_Management ;
+                           rdfs:label "Inflation Rate Management" ;
+                           rdfs:seeAlso "Management of Inflation rate" ,
+                                        "Inflation rate Management Concept" ,
+                                        "Inflation-rate Management" ,
+                                        "Management for Inflation rate" .
+
+
+###  http://graffl.ai/skills#Inflation_Rate_Measurement
+:Inflation_Rate_Measurement rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Inflation_Measurement ,
+                                     :Rate_Measurement ;
+                            rdfs:label "Inflation Rate Measurement" ;
+                            rdfs:seeAlso "Measurement of inflation rate" ,
+                                         "Inflation-rate measurement" ,
+                                         "Measurement of inflation rates" ,
+                                         "Inflation rate measurements" .
+
+
+###  http://graffl.ai/skills#Interest_Rate_Analysis
+:Interest_Rate_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Interest_Analysis ,
+                                 :Rate_Analysis ;
+                        rdfs:label "Interest Rate Analysis" ;
+                        rdfs:seeAlso "Analysis of interest rates" ,
+                                     "Interest-rate analysis" ,
+                                     "Rate analysis for interest" ,
+                                     "Interest rate analyses" .
+
+
+###  http://graffl.ai/skills#International_Trade_Analysis
+:International_Trade_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :International_Analysis ,
+                                       :Trade_Analysis ;
+                              rdfs:label "International Trade Analysis" ;
+                              rdfs:seeAlso "Analysis of international trade" ,
+                                           "International-trade analysis" ,
+                                           "Analysis for international trade" ,
+                                           "International trade analyses" .
+
+
+###  http://graffl.ai/skills#Inventory_Control_Concept
+:Inventory_Control_Concept rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Inventory_Concept ,
+                                    :Control_Concept ;
+                           rdfs:label "Inventory Control Concept" ;
+                           rdfs:seeAlso "Concept of Inventory control" ,
+                                        "Concept for Inventory control" ,
+                                        "Inventory control Concepts" ,
+                                        "Inventory-control Concept" ,
+                                        "Control Concept for Inventory" .
+
+
+###  http://graffl.ai/skills#Investment_Decision_Making
+:Investment_Decision_Making rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Investment_Making ,
+                                     :Decision_Making ;
+                            rdfs:label "Investment Decision Making" ;
+                            rdfs:seeAlso "Investment decision-making" ,
+                                         "Decision making for investment" ,
+                                         "Decision-making for investment" ,
+                                         "Investment-decision making" ,
+                                         "Making investment decisions" ,
+                                         "Decision making in investment" .
+
+
+###  http://graffl.ai/skills#Keynesian_Economic_Application
+:Keynesian_Economic_Application rdf:type owl:NamedIndividual ,
+                                         :Skill ,
+                                         :Keynesian_Application ,
+                                         :Economic_Application ;
+                                rdfs:label "Keynesian Economic Application" ;
+                                rdfs:seeAlso "Application of Keynesian economics" ,
+                                             "Keynesian-economic application" ,
+                                             "Application of Keynesian-economic principles" ,
+                                             "Keynesian economic applications" .
+
+
+###  http://graffl.ai/skills#Labor_Market_Analysis
+:Labor_Market_Analysis rdf:type owl:NamedIndividual ,
+                                :Skill ,
+                                :Labor_Analysis ,
+                                :Market_Analysis ;
+                       rdfs:label "Labor Market Analysis" ;
+                       rdfs:seeAlso "Analysis of the labor market" ,
+                                    "Labor-market analysis" ,
+                                    "Market analysis for labor" ,
+                                    "Analysis for the labor market" .
+
+
+###  http://graffl.ai/skills#Labor_Market_Productivity_Analysis
+:Labor_Market_Productivity_Analysis rdf:type owl:NamedIndividual ,
+                                             :Skill ;
+                                    rdfs:label "Labor Market Productivity Analysis" ;
+                                    rdfs:seeAlso "Analysis of labor market productivity" ,
+                                                 "Labor-market productivity analysis" ,
+                                                 "Productivity analysis for the labor market" ,
+                                                 "Labor market productivity analyses" .
+
+
+###  http://graffl.ai/skills#Macroeconomic_Conceptualization
+:Macroeconomic_Conceptualization rdf:type owl:NamedIndividual ,
+                                          :Skill ;
+                                 rdfs:label "Macroeconomic Conceptualization" ;
+                                 rdfs:seeAlso "Macroeconomic Conceptualizations" ,
+                                              "Conceptualization of Macroeconomics" ,
+                                              "Macroeconomic Conceptual Understanding" ,
+                                              "Conceptual Understanding of Macroeconomics" .
+
+
+###  http://graffl.ai/skills#Macroeconomic_Modeling
+:Macroeconomic_Modeling rdf:type owl:NamedIndividual ,
+                                 :Skill ;
+                        rdfs:label "Macroeconomic Modeling" ;
+                        rdfs:seeAlso "Macroeconomic Modeling Concept" ,
+                                     "Modeling of Macroeconomic Systems" ,
+                                     "Macroeconomic-Modeling Skills" ,
+                                     "Macroeconomic Models" ,
+                                     "Modeling Macroeconomic Systems" .
+
+
+###  http://graffl.ai/skills#Macroeconomic_Performance_Measurement
+:Macroeconomic_Performance_Measurement rdf:type owl:NamedIndividual ,
+                                                :Skill ,
+                                                :Macroeconomic_Measurement ,
+                                                :Performance_Measurement ;
+                                       rdfs:label "Macroeconomic Performance Measurement" ;
+                                       rdfs:seeAlso "Measurement of macroeconomic performance" ,
+                                                    "Macroeconomic-performance measurement" ,
+                                                    "Performance measurement for macroeconomics" ,
+                                                    "Measurement for macroeconomic performance" .
+
+
+###  http://graffl.ai/skills#Macroeconomic_Stabilization
+:Macroeconomic_Stabilization rdf:type owl:NamedIndividual ,
+                                      :Skill ;
+                             rdfs:label "Macroeconomic Stabilization" ;
+                             rdfs:seeAlso "Stabilization of macroeconomic conditions" ,
+                                          "Macroeconomic-stabilization" ,
+                                          "Stabilization in macroeconomics" ,
+                                          "Macroeconomic stabilizations" .
+
+
+###  http://graffl.ai/skills#Macroeconomic_Trend_Analysis
+:Macroeconomic_Trend_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Macroeconomic_Analysis ,
+                                       :Trend_Analysis ;
+                              rdfs:label "Macroeconomic Trend Analysis" ;
+                              rdfs:seeAlso "Analysis of macroeconomic trends" ,
+                                           "Macroeconomic-trend analysis" ,
+                                           "Trend analysis for macroeconomic conditions" ,
+                                           "Macroeconomic trend analyses" .
+
+
+###  http://graffl.ai/skills#Marginal_Cost_Analysis
+:Marginal_Cost_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Marginal_Analysis ,
+                                 :Cost_Analysis ;
+                        rdfs:label "Marginal Cost Analysis" ;
+                        rdfs:seeAlso "Analysis of marginal cost" ,
+                                     "Marginal-cost analysis" ,
+                                     "Marginal cost analyses" .
+
+
+###  http://graffl.ai/skills#Marginal_Propensity_Analysis
+:Marginal_Propensity_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Marginal_Analysis ,
+                                       :Propensity_Analysis ;
+                              rdfs:label "Marginal Propensity Analysis" ;
+                              rdfs:seeAlso "Analysis of marginal propensity" ,
+                                           "Marginal-propensity analysis" ,
+                                           "Marginal propensity analyses" .
+
+
+###  http://graffl.ai/skills#Market_Disequilibrium_Management
+:Market_Disequilibrium_Management rdf:type owl:NamedIndividual ,
+                                           :Skill ,
+                                           :Market_Management ,
+                                           :Disequilibrium_Management ;
+                                  rdfs:label "Market Disequilibrium Management" ;
+                                  rdfs:seeAlso "Management of market disequilibrium" ,
+                                               "Market-disequilibrium management" ,
+                                               "Disequilibrium management for markets" ,
+                                               "Management for market disequilibrium" .
+
+
+###  http://graffl.ai/skills#Market_Economy_Analysis
+:Market_Economy_Analysis rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Market_Analysis ,
+                                  :Economy_Analysis ;
+                         rdfs:label "Market Economy Analysis" ;
+                         rdfs:seeAlso "Analysis of market economy" ,
+                                      "Market-economy analysis" ,
+                                      "Market economy analyses" .
+
+
+###  http://graffl.ai/skills#Market_Entry_Barrier_Analysis
+:Market_Entry_Barrier_Analysis rdf:type owl:NamedIndividual ,
+                                        :Skill ;
+                               rdfs:label "Market Entry Barrier Analysis" ;
+                               rdfs:seeAlso "Analysis of market entry barriers" ,
+                                            "Market entry barrier analysis concept" ,
+                                            "Entry barrier analysis for markets" ,
+                                            "Market-entry barrier analysis" ,
+                                            "Analysis for market entry barriers" .
+
+
+###  http://graffl.ai/skills#Market_Equilibrium_Analysis
+:Market_Equilibrium_Analysis rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Market_Analysis ,
+                                      :Equilibrium_Analysis ;
+                             rdfs:label "Market Equilibrium Analysis" ;
+                             rdfs:seeAlso "Analysis of Market Equilibrium" ,
+                                          "Market-Equilibrium Analysis" ,
+                                          "Analysis for Market Equilibrium" ,
+                                          "Market Equilibrium Analyses" .
+
+
+###  http://graffl.ai/skills#Market_Equilibrium_Determination
+:Market_Equilibrium_Determination rdf:type owl:NamedIndividual ,
+                                           :Skill ,
+                                           :Market_Determination ,
+                                           :Equilibrium_Determination ;
+                                  rdfs:label "Market Equilibrium Determination" ;
+                                  rdfs:seeAlso "Determination of market equilibrium" ,
+                                               "Market-equilibrium determination" ,
+                                               "Equilibrium determination for markets" ,
+                                               "Determination for market equilibrium" .
+
+
+###  http://graffl.ai/skills#Market_Failure_Analysis
+:Market_Failure_Analysis rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Market_Analysis ,
+                                  :Failure_Analysis ;
+                         rdfs:label "Market Failure Analysis" ;
+                         rdfs:seeAlso "Analysis of Market Failure" ,
+                                      "Market-Failure Analysis" ,
+                                      "Market Failure Analyses" .
+
+
+###  http://graffl.ai/skills#Market_Mechanism_Analysis
+:Market_Mechanism_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Market_Analysis ,
+                                    :Mechanism_Analysis ;
+                           rdfs:label "Market Mechanism Analysis" ;
+                           rdfs:seeAlso "Analysis of market mechanisms" ,
+                                        "Market-mechanism analysis" ,
+                                        "Mechanism analysis for markets" ,
+                                        "Analysis for market mechanisms" .
+
+
+###  http://graffl.ai/skills#Market_Shortage_Analysis
+:Market_Shortage_Analysis rdf:type owl:NamedIndividual ,
+                                   :Skill ,
+                                   :Market_Analysis ,
+                                   :Shortage_Analysis ;
+                          rdfs:label "Market Shortage Analysis" ;
+                          rdfs:seeAlso "Analysis of Market Shortage" ,
+                                       "Market-Shortage Analysis" ,
+                                       "Market Shortage Analyses" .
+
+
+###  http://graffl.ai/skills#Market_Structure_Analysis
+:Market_Structure_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Market_Analysis ,
+                                    :Structure_Analysis ;
+                           rdfs:label "Market Structure Analysis" ;
+                           rdfs:seeAlso "Analysis of Market Structure" ,
+                                        "Market-Structure Analysis" ,
+                                        "Market Structure Analyses" .
+
+
+###  http://graffl.ai/skills#Market_Surplus_Management
+:Market_Surplus_Management rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Market_Management ,
+                                    :Surplus_Management ;
+                           rdfs:label "Market Surplus Management" ;
+                           rdfs:seeAlso "Management of market surplus" ,
+                                        "Market-surplus management" ,
+                                        "Surplus management for markets" ,
+                                        "Management for market surplus" .
+
+
+###  http://graffl.ai/skills#Microeconomic_Analysis
+:Microeconomic_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ;
+                        rdfs:label "Microeconomic Analysis" ;
+                        rdfs:seeAlso "Microeconomic analyses" ,
+                                     "Analysis of microeconomics" ,
+                                     "Microeconomic-analysis" ,
+                                     "Microeconomics analysis" .
+
+
+###  http://graffl.ai/skills#Microeconomic_Theory_Application
+:Microeconomic_Theory_Application rdf:type owl:NamedIndividual ,
+                                           :Skill ,
+                                           :Microeconomic_Application ,
+                                           :Theory_Application ;
+                                  rdfs:label "Microeconomic Theory Application" ;
+                                  rdfs:seeAlso "Application of microeconomic theory" ,
+                                               "Microeconomic-theory application" ,
+                                               "Application of microeconomic-theory" ,
+                                               "Microeconomic theory applications" .
+
+
+###  http://graffl.ai/skills#Mixed_Economy_Analysis
+:Mixed_Economy_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Mixed_Analysis ,
+                                 :Economy_Analysis ;
+                        rdfs:label "Mixed Economy Analysis" ;
+                        rdfs:seeAlso "Analysis of Mixed Economy" ,
+                                     "Mixed-Economy Analysis" ,
+                                     "Mixed Economy Analyses" .
+
+
+###  http://graffl.ai/skills#Monetary_Policy_Analysis
+:Monetary_Policy_Analysis rdf:type owl:NamedIndividual ,
+                                   :Skill ,
+                                   :Monetary_Analysis ,
+                                   :Policy_Analysis ;
+                          rdfs:label "Monetary Policy Analysis" ;
+                          rdfs:seeAlso "Analysis of Monetary Policy" ,
+                                       "Monetary-Policy Analysis" ,
+                                       "Monetary Policy Analyses" .
+
+
+###  http://graffl.ai/skills#Monetary_Policy_Implementation
+:Monetary_Policy_Implementation rdf:type owl:NamedIndividual ,
+                                         :Skill ,
+                                         :Monetary_Implementation ,
+                                         :Policy_Implementation ;
+                                rdfs:label "Monetary Policy Implementation" ;
+                                rdfs:seeAlso "Implementation of monetary policy" ,
+                                             "Monetary-policy implementation" ,
+                                             "Implementation of monetary-policy" .
+
+
+###  http://graffl.ai/skills#Money_Supply_Management
+:Money_Supply_Management rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Money_Management ,
+                                  :Supply_Management ;
+                         rdfs:label "Money Supply Management" ;
+                         rdfs:seeAlso "Management of money supply" ,
+                                      "Money-supply management" ,
+                                      "Management of the money supply" .
+
+
+###  http://graffl.ai/skills#Monopoly_And_Antitrust_Analysis
+:Monopoly_And_Antitrust_Analysis rdf:type owl:NamedIndividual ,
+                                          :Skill ;
+                                 rdfs:label "Monopoly And Antitrust Analysis" ;
+                                 rdfs:seeAlso "Analysis of monopoly and antitrust" ,
+                                              "Monopoly and antitrust analysis concepts" ,
+                                              "Antitrust and monopoly analysis" ,
+                                              "Analysis of antitrust and monopoly" ,
+                                              "Monopoly-and-antitrust analysis" .
+
+
+###  http://graffl.ai/skills#Monopoly_Pricing_Strategy
+:Monopoly_Pricing_Strategy rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Monopoly_Strategy ,
+                                    :Pricing_Strategy ;
+                           rdfs:label "Monopoly Pricing Strategy" ;
+                           rdfs:seeAlso "Monopoly Pricing Strategies" ,
+                                        "Pricing Strategy for Monopoly" ,
+                                        "Strategy for Monopoly Pricing" ,
+                                        "Monopoly-Pricing Strategy" .
+
+
+###  http://graffl.ai/skills#Monopsony_Power_Analysis
+:Monopsony_Power_Analysis rdf:type owl:NamedIndividual ,
+                                   :Skill ,
+                                   :Monopsony_Analysis ,
+                                   :Power_Analysis ;
+                          rdfs:label "Monopsony Power Analysis" ;
+                          rdfs:seeAlso "Analysis of Monopsony Power" ,
+                                       "Monopsony-Power Analysis" ,
+                                       "Analysis for Monopsony Power" .
+
+
+###  http://graffl.ai/skills#National_Debt_Analysis
+:National_Debt_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :National_Analysis ,
+                                 :Debt_Analysis ;
+                        rdfs:label "National Debt Analysis" ;
+                        rdfs:seeAlso "Analysis of national debt" ,
+                                     "National-debt analysis" ,
+                                     "Debt analysis, national" ,
+                                     "Analysis of the national debt" .
+
+
+###  http://graffl.ai/skills#Operational_Efficiency_Analysis
+:Operational_Efficiency_Analysis rdf:type owl:NamedIndividual ,
+                                          :Skill ,
+                                          :Operational_Analysis ,
+                                          :Efficiency_Analysis ;
+                                 rdfs:label "Operational Efficiency Analysis" ;
+                                 rdfs:seeAlso "Analysis of operational efficiency" ,
+                                              "Operational-efficiency analysis" ,
+                                              "Operational efficiency analyses" .
+
+
+###  http://graffl.ai/skills#Opportunity_Cost_Analysis
+:Opportunity_Cost_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Opportunity_Analysis ,
+                                    :Cost_Analysis ;
+                           rdfs:label "Opportunity Cost Analysis" ;
+                           rdfs:seeAlso "Analysis of Opportunity Cost" ,
+                                        "Opportunity-Cost Analysis" ,
+                                        "Opportunity Cost Analyses" .
+
+
+###  http://graffl.ai/skills#Opportunity_Cost_Calculation
+:Opportunity_Cost_Calculation rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Opportunity_Calculation ,
+                                       :Cost_Calculation ;
+                              rdfs:label "Opportunity Cost Calculation" ;
+                              rdfs:seeAlso "Opportunity-cost calculation" ,
+                                           "Calculation of opportunity cost" ,
+                                           "Opportunity cost calculations" .
+
+
+###  http://graffl.ai/skills#Output_Optimization
+:Output_Optimization rdf:type owl:NamedIndividual ,
+                              :Skill ;
+                     rdfs:label "Output Optimization" ;
+                     rdfs:seeAlso "Optimization of output" ,
+                                  "Output-optimization" ,
+                                  "Optimizations of output" .
+
+
+###  http://graffl.ai/skills#Policy_Impact_Analysis
+:Policy_Impact_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Policy_Analysis ,
+                                 :Impact_Analysis ;
+                        rdfs:label "Policy Impact Analysis" ;
+                        rdfs:seeAlso "Analysis of Policy Impact" ,
+                                     "Policy-Impact Analysis" ,
+                                     "Impact Analysis for Policy" ,
+                                     "Analysis for Policy Impact" .
+
+
+###  http://graffl.ai/skills#Policy_Outcome_Analysis
+:Policy_Outcome_Analysis rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Policy_Analysis ,
+                                  :Outcome_Analysis ;
+                         rdfs:label "Policy Outcome Analysis" ;
+                         rdfs:seeAlso "Analysis of Policy Outcome" ,
+                                      "Policy Outcome Analyses" ,
+                                      "Policy-Outcome Analysis" ,
+                                      "Outcome Analysis for Policy" ,
+                                      "Analysis for Policy Outcome" .
+
+
+###  http://graffl.ai/skills#Price_Elasticity_Analysis
+:Price_Elasticity_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Price_Analysis ,
+                                    :Elasticity_Analysis ;
+                           rdfs:label "Price Elasticity Analysis" ;
+                           rdfs:seeAlso "Analysis of price elasticity" ,
+                                        "Price-elasticity analysis" ,
+                                        "Elasticity analysis for price" ,
+                                        "Analysis for price elasticity" .
+
+
+###  http://graffl.ai/skills#Price_Elasticity_Modeling
+:Price_Elasticity_Modeling rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Price_Modeling ,
+                                    :Elasticity_Modeling ;
+                           rdfs:label "Price Elasticity Modeling" ;
+                           rdfs:seeAlso "Price-elasticity modeling" ,
+                                        "Modeling of price elasticity" ,
+                                        "Price elasticity model development" ,
+                                        "Modeling price elasticity" .
+
+
+###  http://graffl.ai/skills#Price_Stability_Analysis
+:Price_Stability_Analysis rdf:type owl:NamedIndividual ,
+                                   :Skill ,
+                                   :Price_Analysis ,
+                                   :Stability_Analysis ;
+                          rdfs:label "Price Stability Analysis" ;
+                          rdfs:seeAlso "Analysis of Price Stability" ,
+                                       "Price-Stability Analysis" ,
+                                       "Price Stability Analyses" .
+
+
+###  http://graffl.ai/skills#Pricing_Strategy_Development
+:Pricing_Strategy_Development rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Pricing_Development ,
+                                       :Strategy_Development ;
+                              rdfs:label "Pricing Strategy Development" ;
+                              rdfs:seeAlso "Development of pricing strategy" ,
+                                           "Pricing-strategy development" ,
+                                           "Development of pricing strategies" ,
+                                           "Pricing strategies development" ,
+                                           "Pricing strategy developments" .
+
+
+###  http://graffl.ai/skills#Product_Differentiation_Strategy
+:Product_Differentiation_Strategy rdf:type owl:NamedIndividual ,
+                                           :Skill ,
+                                           :Product_Strategy ,
+                                           :Differentiation_Strategy ;
+                                  rdfs:label "Product Differentiation Strategy" ;
+                                  rdfs:seeAlso "Strategy for product differentiation" ,
+                                               "Product-differentiation strategy" ,
+                                               "Differentiation strategy for products" ,
+                                               "Strategy of product differentiation" .
+
+
+###  http://graffl.ai/skills#Production_Capacity_Strategy
+:Production_Capacity_Strategy rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Production_Strategy ,
+                                       :Capacity_Strategy ;
+                              rdfs:label "Production Capacity Strategy" ;
+                              rdfs:seeAlso "Strategy for Production Capacity" ,
+                                           "Production-Capacity Strategy" ,
+                                           "Strategy of Production Capacity" ,
+                                           "Production Capacity Strategies" .
+
+
+###  http://graffl.ai/skills#Production_Efficiency_Analysis
+:Production_Efficiency_Analysis rdf:type owl:NamedIndividual ,
+                                         :Skill ,
+                                         :Production_Analysis ,
+                                         :Efficiency_Analysis ;
+                                rdfs:label "Production Efficiency Analysis" ;
+                                rdfs:seeAlso "Analysis of production efficiency" ,
+                                             "Production-efficiency analysis" ,
+                                             "Efficiency analysis for production" ,
+                                             "Analysis for production efficiency" .
+
+
+###  http://graffl.ai/skills#Production_Function_Analysis
+:Production_Function_Analysis rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Production_Analysis ,
+                                       :Function_Analysis ;
+                              rdfs:label "Production Function Analysis" ;
+                              rdfs:seeAlso "Analysis of production function" ,
+                                           "Production-function analysis" ,
+                                           "Analysis of the production function" ,
+                                           "Production function analyses" .
+
+
+###  http://graffl.ai/skills#Production_Possibility_Analysis
+:Production_Possibility_Analysis rdf:type owl:NamedIndividual ,
+                                          :Skill ,
+                                          :Production_Analysis ,
+                                          :Possibility_Analysis ;
+                                 rdfs:label "Production Possibility Analysis" ;
+                                 rdfs:seeAlso "Analysis of production possibility" ,
+                                              "Production-possibility analysis" ,
+                                              "Possibility analysis for production" ,
+                                              "Analysis for production possibility" .
+
+
+###  http://graffl.ai/skills#Profit_Maximization_Strategy
+:Profit_Maximization_Strategy rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Profit_Strategy ,
+                                       :Maximization_Strategy ;
+                              rdfs:label "Profit Maximization Strategy" ;
+                              rdfs:seeAlso "Strategy for Profit Maximization" ,
+                                           "Profit-Maximization Strategy" ,
+                                           "Strategy of Profit Maximization" ,
+                                           "Profit Maximization Strategies" .
+
+
+###  http://graffl.ai/skills#Public_Expenditure_Management
+:Public_Expenditure_Management rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Public_Management ,
+                                        :Expenditure_Management ;
+                               rdfs:label "Public Expenditure Management" ;
+                               rdfs:seeAlso "Management of public expenditure" ,
+                                            "Public-expenditure management" ,
+                                            "Expenditure management, public" ,
+                                            "Management of public expenditures" .
+
+
+###  http://graffl.ai/skills#Public_Finance_Management
+:Public_Finance_Management rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Public_Management ,
+                                    :Finance_Management ;
+                           rdfs:label "Public Finance Management" ;
+                           rdfs:seeAlso "Management of public finance" ,
+                                        "Public-finance management" ,
+                                        "Management of public finances" ,
+                                        "Public finances management" .
+
+
+###  http://graffl.ai/skills#Public_Policy_Analysis
+:Public_Policy_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Public_Analysis ,
+                                 :Policy_Analysis ;
+                        rdfs:label "Public Policy Analysis" ;
+                        rdfs:seeAlso "Analysis of public policy" ,
+                                     "Public-policy analysis" ,
+                                     "Analysis of public policies" ,
+                                     "Public policies analysis" .
+
+
+###  http://graffl.ai/skills#Public_Sector_Spending_Analysis
+:Public_Sector_Spending_Analysis rdf:type owl:NamedIndividual ,
+                                          :Skill ;
+                                 rdfs:label "Public Sector Spending Analysis" ;
+                                 rdfs:seeAlso "Analysis of public sector spending" ,
+                                              "Public-sector spending analysis" ,
+                                              "Spending analysis for the public sector" ,
+                                              "Public sector spending analyses" .
+
+
+###  http://graffl.ai/skills#Purchasing_Power_Analysis
+:Purchasing_Power_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Purchasing_Analysis ,
+                                    :Power_Analysis ;
+                           rdfs:label "Purchasing Power Analysis" ;
+                           rdfs:seeAlso "Analysis of Purchasing Power" ,
+                                        "Purchasing-Power Analysis" ,
+                                        "Analysis for Purchasing Power" ,
+                                        "Purchasing Power Analyses" .
+
+
+###  http://graffl.ai/skills#Quantitative_Data_Analysis
+:Quantitative_Data_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Quantitative_Analysis ,
+                                     :Data_Analysis ;
+                            rdfs:label "Quantitative Data Analysis" ;
+                            rdfs:seeAlso "Quantitative Data Analysis Concepts" ,
+                                         "Analysis of Quantitative Data" ,
+                                         "Quantitative-Data Analysis" ,
+                                         "Data Analysis, Quantitative" .
+
+
+###  http://graffl.ai/skills#Quantitative_Economic_Analysis
+:Quantitative_Economic_Analysis rdf:type owl:NamedIndividual ,
+                                         :Skill ,
+                                         :Quantitative_Analysis ,
+                                         :Economic_Analysis ;
+                                rdfs:label "Quantitative Economic Analysis" ;
+                                rdfs:seeAlso "Economic analysis, quantitative" ,
+                                             "Quantitative analysis of economics" ,
+                                             "Analysis of quantitative economics" ,
+                                             "Quantitative-economic analysis" ,
+                                             "Economic analysis (quantitative)" ,
+                                             "Quantitative economic analyses" .
+
+
+###  http://graffl.ai/skills#Quantitative_Reasoning
+:Quantitative_Reasoning rdf:type owl:NamedIndividual ,
+                                 :Skill ;
+                        rdfs:label "Quantitative Reasoning" ;
+                        rdfs:seeAlso "Reasoning, quantitative" ,
+                                     "Quantitative-reasoning" ,
+                                     "Reasoning that is quantitative" .
+
+
+###  http://graffl.ai/skills#Real_Vs_Nominal_GDP_Distinction
+:Real_Vs_Nominal_GDP_Distinction rdf:type owl:NamedIndividual ,
+                                          :Skill ;
+                                 rdfs:label "Real Vs. Nominal GDP Distinction" ;
+                                 rdfs:seeAlso "Distinction between Real and Nominal GDP" ,
+                                              "Real and Nominal GDP Distinction" ,
+                                              "Distinction of Real vs. Nominal GDP" ,
+                                              "Real vs. Nominal GDP Distinctions" ,
+                                              "Real-vs.-Nominal GDP Distinction" .
+
+
+###  http://graffl.ai/skills#Real_Vs_Nominal_Analysis
+:Real_Vs_Nominal_Analysis rdf:type owl:NamedIndividual ,
+                                   :Skill ;
+                          rdfs:label "Real Vs. Nominal Analysis" ;
+                          rdfs:seeAlso "Real vs. Nominal Analyses" ,
+                                       "Analysis of Real vs. Nominal" ,
+                                       "Real versus Nominal Analysis" ,
+                                       "Real-vs.-Nominal Analysis" .
+
+
+###  http://graffl.ai/skills#Recession_Management_Strategy
+:Recession_Management_Strategy rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Recession_Strategy ,
+                                        :Management_Strategy ;
+                               rdfs:label "Recession Management Strategy" ;
+                               rdfs:seeAlso "Strategy for Recession Management" ,
+                                            "Recession-Management Strategy" ,
+                                            "Strategy of Recession Management" ,
+                                            "Recession Management Strategies" .
+
+
+###  http://graffl.ai/skills#Regulatory_Impact_Analysis
+:Regulatory_Impact_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Regulatory_Analysis ,
+                                     :Impact_Analysis ;
+                            rdfs:label "Regulatory Impact Analysis" ;
+                            rdfs:seeAlso "Regulatory Impact Analyses" ,
+                                         "Analysis of Regulatory Impact" ,
+                                         "Impact Analysis for Regulatory" ,
+                                         "Regulatory-Impact Analysis" .
+
+
+###  http://graffl.ai/skills#Resource_Allocation_Strategy
+:Resource_Allocation_Strategy rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Resource_Strategy ,
+                                       :Allocation_Strategy ;
+                              rdfs:label "Resource Allocation Strategy" ;
+                              rdfs:seeAlso "Strategy for Resource Allocation" ,
+                                           "Resource-Allocation Strategy" ,
+                                           "Allocation Strategy for Resources" ,
+                                           "Strategy of Resource Allocation" ,
+                                           "Resource Allocation Strategies" .
+
+
+###  http://graffl.ai/skills#Resource_Allocation_Efficiency
+:Resource_Allocation_Efficiency rdf:type owl:NamedIndividual ,
+                                         :Skill ,
+                                         :Resource_Efficiency ,
+                                         :Allocation_Efficiency ;
+                                rdfs:label "Resource Allocation Efficiency" ;
+                                rdfs:seeAlso "Efficiency of resource allocation" ,
+                                             "Resource-allocation efficiency" ,
+                                             "Efficiency in resource allocation" ,
+                                             "Resource allocation efficiencies" .
+
+
+###  http://graffl.ai/skills#Resource_Allocation_Optimization
+:Resource_Allocation_Optimization rdf:type owl:NamedIndividual ,
+                                           :Skill ,
+                                           :Resource_Optimization ,
+                                           :Allocation_Optimization ;
+                                  rdfs:label "Resource Allocation Optimization" ;
+                                  rdfs:seeAlso "Optimization of resource allocation" ,
+                                               "Resource-allocation optimization" ,
+                                               "Optimization for resource allocation" ,
+                                               "Resource allocation optimizations" .
+
+
+###  http://graffl.ai/skills#Resource_Efficiency_Optimization
+:Resource_Efficiency_Optimization rdf:type owl:NamedIndividual ,
+                                           :Skill ,
+                                           :Resource_Optimization ,
+                                           :Efficiency_Optimization ;
+                                  rdfs:label "Resource Efficiency Optimization" ;
+                                  rdfs:seeAlso "Optimization of resource efficiency" ,
+                                               "Resource-efficiency optimization" ,
+                                               "Efficiency optimization for resources" ,
+                                               "Optimization for resource efficiency" ,
+                                               "Resource efficiency optimizations" .
+
+
+###  http://graffl.ai/skills#Revenue_Forecasting
+:Revenue_Forecasting rdf:type owl:NamedIndividual ,
+                              :Skill ;
+                     rdfs:label "Revenue Forecasting" ;
+                     rdfs:seeAlso "Forecasting of revenue" ,
+                                  "Revenue-forecasting" ,
+                                  "Forecasting revenue" ,
+                                  "Revenue forecasting concepts" ,
+                                  "Revenue forecasting strategies" .
+
+
+###  http://graffl.ai/skills#Revenue_Management_Strategy
+:Revenue_Management_Strategy rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Revenue_Strategy ,
+                                      :Management_Strategy ;
+                             rdfs:label "Revenue Management Strategy" ;
+                             rdfs:seeAlso "Strategy for Revenue Management" ,
+                                          "Revenue-Management Strategy" ,
+                                          "Revenue Management Strategies" .
+
+
+###  http://graffl.ai/skills#Revenue_Optimization_Strategy
+:Revenue_Optimization_Strategy rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Revenue_Strategy ,
+                                        :Optimization_Strategy ;
+                               rdfs:label "Revenue Optimization Strategy" ;
+                               rdfs:seeAlso "Strategy for Revenue Optimization" ,
+                                            "Revenue-Optimization Strategy" ,
+                                            "Strategy of Revenue Optimization" ,
+                                            "Revenue Optimization Strategies" .
+
+
+###  http://graffl.ai/skills#Scarcity_Management
+:Scarcity_Management rdf:type owl:NamedIndividual ,
+                              :Skill ;
+                     rdfs:label "Scarcity Management" ;
+                     rdfs:seeAlso "Management of scarcity" ,
+                                  "Scarcity-management" ,
+                                  "Management for scarcity" .
+
+
+###  http://graffl.ai/skills#Socioeconomic_Equity_Analysis
+:Socioeconomic_Equity_Analysis rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Socioeconomic_Analysis ,
+                                        :Equity_Analysis ;
+                               rdfs:label "Socioeconomic Equity Analysis" ;
+                               rdfs:seeAlso "Analysis of Socioeconomic Equity" ,
+                                            "Socioeconomic-Equity Analysis" ,
+                                            "Analysis for Socioeconomic Equity" ,
+                                            "Socioeconomic Equity Analyses" .
+
+
+###  http://graffl.ai/skills#Sovereign_Debt_Analysis
+:Sovereign_Debt_Analysis rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Sovereign_Analysis ,
+                                  :Debt_Analysis ;
+                         rdfs:label "Sovereign Debt Analysis" ;
+                         rdfs:seeAlso "Analysis of sovereign debt" ,
+                                      "Sovereign-debt analysis" ,
+                                      "Sovereign debt analyses" .
+
+
+###  http://graffl.ai/skills#Stakeholder_Impact_Analysis
+:Stakeholder_Impact_Analysis rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Stakeholder_Analysis ,
+                                      :Impact_Analysis ;
+                             rdfs:label "Stakeholder Impact Analysis" ;
+                             rdfs:seeAlso "Impact analysis of stakeholders" ,
+                                          "Analysis of stakeholder impact" ,
+                                          "Stakeholder-impact analysis" ,
+                                          "Impact analysis for stakeholders" .
+
+
+###  http://graffl.ai/skills#Standard_Of_Living_Analysis
+:Standard_Of_Living_Analysis rdf:type owl:NamedIndividual ,
+                                      :Skill ;
+                             rdfs:label "Standard Of Living Analysis" ;
+                             rdfs:seeAlso "Analysis of Standard of Living" ,
+                                          "Standard-of-Living Analysis" ,
+                                          "Analysis of the Standard of Living" ,
+                                          "Standard of Living Analyses" .
+
+
+###  http://graffl.ai/skills#Strategic_Decision_Making
+:Strategic_Decision_Making rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Strategic_Making ,
+                                    :Decision_Making ;
+                           rdfs:label "Strategic Decision Making" ;
+                           rdfs:seeAlso "Strategic decision-making" ,
+                                        "Decision making, strategic" ,
+                                        "Making strategic decisions" ,
+                                        "Strategic decisions, making of" ,
+                                        "Decision-making, strategic" .
+
+
+###  http://graffl.ai/skills#Strategic_Market_Positioning
+:Strategic_Market_Positioning rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Strategic_Positioning ,
+                                       :Market_Positioning ;
+                              rdfs:label "Strategic Market Positioning" ;
+                              rdfs:seeAlso "Market positioning strategy" ,
+                                           "Positioning of strategic markets" ,
+                                           "Strategic positioning in markets" ,
+                                           "Strategic market-positioning" ,
+                                           "Market-positioning strategy" .
+
+
+###  http://graffl.ai/skills#Strategic_Pricing_Model
+:Strategic_Pricing_Model rdf:type owl:NamedIndividual ,
+                                  :Skill ,
+                                  :Strategic_Model ,
+                                  :Pricing_Model ;
+                         rdfs:label "Strategic Pricing Model" ;
+                         rdfs:seeAlso "Strategic Pricing Models" ,
+                                      "Pricing Model, Strategic" ,
+                                      "Model for Strategic Pricing" ,
+                                      "Strategic-Pricing Model" .
+
+
+###  http://graffl.ai/skills#Strategic_Production_Strategy
+:Strategic_Production_Strategy rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Strategic_Strategy ,
+                                        :Production_Strategy ;
+                               rdfs:label "Strategic Production Strategy" ;
+                               rdfs:seeAlso "Strategic Production Strategies" ,
+                                            "Production Strategy, Strategic" ,
+                                            "Strategy for Strategic Production" ,
+                                            "Strategic-Production Strategy" .
+
+
+###  http://graffl.ai/skills#Strategic_Resource_Allocation
+:Strategic_Resource_Allocation rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Strategic_Allocation ,
+                                        :Resource_Allocation ;
+                               rdfs:label "Strategic Resource Allocation" ;
+                               rdfs:seeAlso "Resource allocation strategy" ,
+                                            "Strategic allocation of resources" ,
+                                            "Allocation of resources strategically" ,
+                                            "Strategic-resource allocation" ,
+                                            "Resource-allocation strategy" .
+
+
+###  http://graffl.ai/skills#Structural_Unemployment_Analysis
+:Structural_Unemployment_Analysis rdf:type owl:NamedIndividual ,
+                                           :Skill ,
+                                           :Structural_Analysis ,
+                                           :Unemployment_Analysis ;
+                                  rdfs:label "Structural Unemployment Analysis" ;
+                                  rdfs:seeAlso "Analysis of structural unemployment" ,
+                                               "Structural-unemployment analysis" ,
+                                               "Structural unemployment analyses" .
+
+
+###  http://graffl.ai/skills#Supply_And_Demand_Analysis
+:Supply_And_Demand_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ;
+                            rdfs:label "Supply And Demand Analysis" ;
+                            rdfs:seeAlso "Analysis of supply and demand" ,
+                                         "Supply-and-demand analysis" ,
+                                         "Demand and supply analysis" ,
+                                         "Analysis of demand and supply" .
+
+
+###  http://graffl.ai/skills#Supply_And_Demand_Modeling
+:Supply_And_Demand_Modeling rdf:type owl:NamedIndividual ,
+                                     :Skill ;
+                            rdfs:label "Supply And Demand Modeling" ;
+                            rdfs:seeAlso "Supply-and-demand modeling" ,
+                                         "Modeling of supply and demand" ,
+                                         "Supply and demand model development" ,
+                                         "Demand and supply modeling" .
+
+
+###  http://graffl.ai/skills#Supply_Chain_Economic
+:Supply_Chain_Economic rdf:type owl:NamedIndividual ,
+                                :Skill ,
+                                :Supply_Economic ,
+                                :Chain_Economic ;
+                       rdfs:label "Supply Chain Economic" ;
+                       rdfs:seeAlso "Economic Supply Chain" ,
+                                    "Supply-Chain Economic" ,
+                                    "Economic of Supply Chain" ,
+                                    "Supply Chain Economics" .
+
+
+###  http://graffl.ai/skills#Systemic_Risk_Analysis
+:Systemic_Risk_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Systemic_Analysis ,
+                                 :Risk_Analysis ;
+                        rdfs:label "Systemic Risk Analysis" ;
+                        rdfs:seeAlso "Analysis of Systemic Risk" ,
+                                     "Systemic-Risk Analysis" ,
+                                     "Risk Analysis, Systemic" ,
+                                     "Systemic Risk Analyses" .
+
+
+###  http://graffl.ai/skills#Tariff_And_Quota_Analysis
+:Tariff_And_Quota_Analysis rdf:type owl:NamedIndividual ,
+                                    :Skill ;
+                           rdfs:label "Tariff And Quota Analysis" ;
+                           rdfs:seeAlso "Analysis of Tariff and Quota" ,
+                                        "Tariff and Quota Analysis Concept" ,
+                                        "Tariff-and-Quota Analysis" ,
+                                        "Analysis of Tariffs and Quotas" ,
+                                        "Tariffs and Quotas Analysis" .
+
+
+###  http://graffl.ai/skills#Tax_Policy_Analysis
+:Tax_Policy_Analysis rdf:type owl:NamedIndividual ,
+                              :Skill ,
+                              :Tax_Analysis ,
+                              :Policy_Analysis ;
+                     rdfs:label "Tax Policy Analysis" ;
+                     rdfs:seeAlso "Analysis of Tax Policy" ,
+                                  "Tax-Policy Analysis" ,
+                                  "Tax Policy Analyses" .
+
+
+###  http://graffl.ai/skills#Trade_Balance_Analysis
+:Trade_Balance_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Trade_Analysis ,
+                                 :Balance_Analysis ;
+                        rdfs:label "Trade Balance Analysis" ;
+                        rdfs:seeAlso "Analysis of Trade Balance" ,
+                                     "Trade-Balance Analysis" ,
+                                     "Trade Balance Analyses" .
+
+
+###  http://graffl.ai/skills#Trade_Barrier_Analysis
+:Trade_Barrier_Analysis rdf:type owl:NamedIndividual ,
+                                 :Skill ,
+                                 :Trade_Analysis ,
+                                 :Barrier_Analysis ;
+                        rdfs:label "Trade Barrier Analysis" ;
+                        rdfs:seeAlso "Analysis of trade barriers" ,
+                                     "Trade-barrier analysis" ,
+                                     "Barrier analysis for trade" ,
+                                     "Analysis for trade barriers" .
+
+
+###  http://graffl.ai/skills#Unemployment_Data_Analysis
+:Unemployment_Data_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Unemployment_Analysis ,
+                                     :Data_Analysis ;
+                            rdfs:label "Unemployment Data Analysis" ;
+                            rdfs:seeAlso "Analysis of Unemployment Data" ,
+                                         "Unemployment Data Analyses" ,
+                                         "Unemployment-Data Analysis" ,
+                                         "Data Analysis for Unemployment" ,
+                                         "Analysis for Unemployment Data" .
+
+
+###  http://graffl.ai/skills#Unemployment_Rate_Analysis
+:Unemployment_Rate_Analysis rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Unemployment_Analysis ,
+                                     :Rate_Analysis ;
+                            rdfs:label "Unemployment Rate Analysis" ;
+                            rdfs:seeAlso "Analysis of unemployment rate" ,
+                                         "Unemployment-rate analysis" ,
+                                         "Analysis of the unemployment rate" ,
+                                         "Unemployment rate analyses" .
+
+
+###  http://graffl.ai/skills#Unemployment_Rate_Calculation
+:Unemployment_Rate_Calculation rdf:type owl:NamedIndividual ,
+                                        :Skill ,
+                                        :Unemployment_Calculation ,
+                                        :Rate_Calculation ;
+                               rdfs:label "Unemployment Rate Calculation" ;
+                               rdfs:seeAlso "Calculation of unemployment rate" ,
+                                            "Unemployment-rate calculation" ,
+                                            "Rate calculation for unemployment" ,
+                                            "Unemployment rate calculations" .
+
+
+###  http://graffl.ai/skills#Utility_Maximization_Framework
+:Utility_Maximization_Framework rdf:type owl:NamedIndividual ,
+                                         :Skill ,
+                                         :Utility_Framework ,
+                                         :Maximization_Framework ;
+                                rdfs:label "Utility Maximization Framework" ;
+                                rdfs:seeAlso "Framework for Utility Maximization" ,
+                                             "Framework of Utility Maximization" ,
+                                             "Utility-Maximization Framework" ,
+                                             "Utility Maximization Frameworks" .
+
+
+###  http://graffl.ai/skills#Utility_Theory_Application
+:Utility_Theory_Application rdf:type owl:NamedIndividual ,
+                                     :Skill ,
+                                     :Utility_Application ,
+                                     :Theory_Application ;
+                            rdfs:label "Utility Theory Application" ;
+                            rdfs:seeAlso "Application of utility theory" ,
+                                         "Utility-theory application" ,
+                                         "Utility theory applications" .
+
+
+###  http://graffl.ai/skills#Variable_Relationship_Modeling
+:Variable_Relationship_Modeling rdf:type owl:NamedIndividual ,
+                                         :Skill ,
+                                         :Variable_Modeling ,
+                                         :Relationship_Modeling ;
+                                rdfs:label "Variable Relationship Modeling" ;
+                                rdfs:seeAlso "Modeling of variable relationships" ,
+                                             "Variable-relationship modeling" ,
+                                             "Modeling variable relationships" ,
+                                             "Variable relationship model" ,
+                                             "Variable relationships modeling" .
+
+
+###  http://graffl.ai/skills#Wage_Determination_Factor
+:Wage_Determination_Factor rdf:type owl:NamedIndividual ,
+                                    :Skill ,
+                                    :Wage_Factor ,
+                                    :Determination_Factor ;
+                           rdfs:label "Wage Determination Factor" ;
+                           rdfs:seeAlso "Factor of Wage Determination" ,
+                                        "Wage-Determination Factor" ,
+                                        "Wage Determination Factors" ,
+                                        "Factor for Wage Determination" .
+
+
+###  http://graffl.ai/skills#Wage_Determination_Strategy
+:Wage_Determination_Strategy rdf:type owl:NamedIndividual ,
+                                      :Skill ,
+                                      :Wage_Strategy ,
+                                      :Determination_Strategy ;
+                             rdfs:label "Wage Determination Strategy" ;
+                             rdfs:seeAlso "Strategy for Wage Determination" ,
+                                          "Wage-Determination Strategy" ,
+                                          "Strategy of Wage Determination" ,
+                                          "Wage Determination Strategies" .
+
+
+###  http://graffl.ai/skills#Workforce_Demand_Forecasting
+:Workforce_Demand_Forecasting rdf:type owl:NamedIndividual ,
+                                       :Skill ,
+                                       :Workforce_Forecasting ,
+                                       :Demand_Forecasting ;
+                              rdfs:label "Workforce Demand Forecasting" ;
+                              rdfs:seeAlso "Demand forecasting for workforce" ,
+                                           "Forecasting of workforce demand" ,
+                                           "Workforce-demand forecasting" ,
+                                           "Demand forecasting for the workforce" ,
+                                           "Forecasting workforce demand" .
+
+
+###  http://graffl.ai/skills#Workforce_Demographics_Analysis
+:Workforce_Demographics_Analysis rdf:type owl:NamedIndividual ,
+                                          :Skill ,
+                                          :Workforce_Analysis ,
+                                          :Demographics_Analysis ;
+                                 rdfs:label "Workforce Demographics Analysis" ;
+                                 rdfs:seeAlso "Analysis of Workforce Demographics" ,
+                                              "Workforce-Demographics Analysis" ,
+                                              "Demographics Analysis for Workforce" ,
+                                              "Workforce Demographics Analyses" .

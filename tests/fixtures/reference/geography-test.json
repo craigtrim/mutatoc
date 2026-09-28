@@ -1,0 +1,1839 @@
+{
+  "children": {
+    "Ocean": [
+      "Pacific_Ocean",
+      "Atlantic_Ocean",
+      "Indian_Ocean",
+      "Arctic_Ocean"
+    ],
+    "Mountain": [
+      "Mount_Everest",
+      "Mont_Blanc",
+      "Kilimanjaro"
+    ],
+    "Landmark": [
+      "Eiffel_Tower",
+      "Great_Wall",
+      "Statue_of_Liberty",
+      "Big_Ben",
+      "Colosseum",
+      "Mount_Fuji"
+    ],
+    "Geographic_Region": [
+      "Continent",
+      "Country",
+      "City",
+      "Landmark",
+      "Ocean",
+      "Mountain"
+    ],
+    "Country": [
+      "United_States",
+      "Canada",
+      "Mexico",
+      "United_Kingdom",
+      "France",
+      "Germany",
+      "Italy",
+      "Spain",
+      "Japan",
+      "China",
+      "India",
+      "Brazil",
+      "Argentina",
+      "South_Africa"
+    ],
+    "Continent": [
+      "North_America",
+      "South_America",
+      "Europe",
+      "Asia",
+      "Africa",
+      "Australia_Continent",
+      "Antarctica"
+    ],
+    "City": [
+      "New_York",
+      "Los_Angeles",
+      "Chicago",
+      "London",
+      "Paris",
+      "Tokyo",
+      "Beijing",
+      "Sydney",
+      "Mumbai",
+      "Berlin",
+      "Rome"
+    ]
+  },
+  "parents": {
+    "United_States": [
+      "Country"
+    ],
+    "United_Kingdom": [
+      "Country"
+    ],
+    "Tokyo": [
+      "City"
+    ],
+    "Sydney": [
+      "City"
+    ],
+    "Statue_of_Liberty": [
+      "Landmark"
+    ],
+    "Spain": [
+      "Country"
+    ],
+    "South_America": [
+      "Continent"
+    ],
+    "South_Africa": [
+      "Country"
+    ],
+    "Rome": [
+      "City"
+    ],
+    "Paris": [
+      "City"
+    ],
+    "Pacific_Ocean": [
+      "Ocean"
+    ],
+    "Ocean": [
+      "Geographic_Region"
+    ],
+    "North_America": [
+      "Continent"
+    ],
+    "New_York": [
+      "City"
+    ],
+    "Mumbai": [
+      "City"
+    ],
+    "Mountain": [
+      "Geographic_Region"
+    ],
+    "Mount_Fuji": [
+      "Landmark"
+    ],
+    "Mount_Everest": [
+      "Mountain"
+    ],
+    "Mont_Blanc": [
+      "Mountain"
+    ],
+    "Mexico": [
+      "Country"
+    ],
+    "Los_Angeles": [
+      "City"
+    ],
+    "London": [
+      "City"
+    ],
+    "Landmark": [
+      "Geographic_Region"
+    ],
+    "Kilimanjaro": [
+      "Mountain"
+    ],
+    "Japan": [
+      "Country"
+    ],
+    "Italy": [
+      "Country"
+    ],
+    "Indian_Ocean": [
+      "Ocean"
+    ],
+    "India": [
+      "Country"
+    ],
+    "Great_Wall": [
+      "Landmark"
+    ],
+    "Germany": [
+      "Country"
+    ],
+    "France": [
+      "Country"
+    ],
+    "Europe": [
+      "Continent"
+    ],
+    "Eiffel_Tower": [
+      "Landmark"
+    ],
+    "Country": [
+      "Geographic_Region"
+    ],
+    "Continent": [
+      "Geographic_Region"
+    ],
+    "Colosseum": [
+      "Landmark"
+    ],
+    "City": [
+      "Geographic_Region"
+    ],
+    "China": [
+      "Country"
+    ],
+    "Chicago": [
+      "City"
+    ],
+    "Canada": [
+      "Country"
+    ],
+    "Brazil": [
+      "Country"
+    ],
+    "Big_Ben": [
+      "Landmark"
+    ],
+    "Berlin": [
+      "City"
+    ],
+    "Beijing": [
+      "City"
+    ],
+    "Australia_Continent": [
+      "Continent"
+    ],
+    "Atlantic_Ocean": [
+      "Ocean"
+    ],
+    "Asia": [
+      "Continent"
+    ],
+    "Argentina": [
+      "Country"
+    ],
+    "Arctic_Ocean": [
+      "Ocean"
+    ],
+    "Antarctica": [
+      "Continent"
+    ],
+    "Africa": [
+      "Continent"
+    ]
+  },
+  "trie": {
+    "1": [
+      "kilimanjaro",
+      "antarctica",
+      "colosseum",
+      "argentina",
+      "continent",
+      "landmark",
+      "mountain",
+      "chicago",
+      "country",
+      "beijing",
+      "germany",
+      "mumbai",
+      "berlin",
+      "europe",
+      "london",
+      "france",
+      "canada",
+      "sydney",
+      "africa",
+      "brazil",
+      "mexico",
+      "japan",
+      "tokyo",
+      "spain",
+      "india",
+      "paris",
+      "china",
+      "italy",
+      "ocean",
+      "city",
+      "asia",
+      "rome"
+    ],
+    "2": {
+      "north": [
+        "america"
+      ],
+      "south": [
+        "america",
+        "africa"
+      ],
+      "australia": [
+        "continent"
+      ],
+      "united": [
+        "kingdom",
+        "states"
+      ],
+      "new": [
+        "york"
+      ],
+      "los": [
+        "angeles"
+      ],
+      "eiffel": [
+        "tower"
+      ],
+      "great": [
+        "wall"
+      ],
+      "big": [
+        "ben"
+      ],
+      "mount": [
+        "everest",
+        "fuji"
+      ],
+      "pacific": [
+        "ocean"
+      ],
+      "atlantic": [
+        "ocean"
+      ],
+      "indian": [
+        "ocean"
+      ],
+      "arctic": [
+        "ocean"
+      ],
+      "mont": [
+        "blanc"
+      ]
+    },
+    "3": {
+      "statue": {
+        "of": [
+          "liberty"
+        ]
+      }
+    },
+    "4": {},
+    "5": {},
+    "6": {}
+  },
+  "ngrams": {
+    "1": [
+      "continent",
+      "country",
+      "city",
+      "landmark",
+      "ocean",
+      "mountain",
+      "europe",
+      "asia",
+      "africa",
+      "antarctica",
+      "canada",
+      "mexico",
+      "france",
+      "germany",
+      "italy",
+      "spain",
+      "japan",
+      "china",
+      "india",
+      "brazil",
+      "argentina",
+      "chicago",
+      "london",
+      "paris",
+      "tokyo",
+      "beijing",
+      "sydney",
+      "mumbai",
+      "berlin",
+      "rome",
+      "colosseum",
+      "kilimanjaro"
+    ],
+    "2": [
+      "north_america",
+      "south_america",
+      "australia_continent",
+      "united_states",
+      "united_kingdom",
+      "south_africa",
+      "new_york",
+      "los_angeles",
+      "eiffel_tower",
+      "great_wall",
+      "big_ben",
+      "mount_fuji",
+      "pacific_ocean",
+      "atlantic_ocean",
+      "indian_ocean",
+      "arctic_ocean",
+      "mount_everest",
+      "mont_blanc"
+    ],
+    "3": [
+      "statue_of_liberty"
+    ],
+    "4": [],
+    "5": [],
+    "6": [],
+    "7": [],
+    "8": [],
+    "9": []
+  },
+  "spans": {
+    "great_wall": [
+      {
+        "content": [
+          "of china"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "great_wall"
+      }
+    ],
+    "geographic": [
+      {
+        "content": [
+          "region"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "geographic_region"
+      }
+    ],
+    "north": [
+      {
+        "content": [
+          "america"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "north_america"
+      }
+    ],
+    "south": [
+      {
+        "content": [
+          "america"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "south_america"
+      },
+      {
+        "content": [
+          "africa"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "south_africa"
+      }
+    ],
+    "australia": [
+      {
+        "content": [
+          "continent"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "australia_continent"
+      }
+    ],
+    "united": [
+      {
+        "content": [
+          "states"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "united_states"
+      },
+      {
+        "content": [
+          "kingdom"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "united_kingdom"
+      }
+    ],
+    "new": [
+      {
+        "content": [
+          "york"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "new_york"
+      }
+    ],
+    "the": [
+      {
+        "content": [
+          "apple",
+          "big"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "new_york"
+      }
+    ],
+    "los": [
+      {
+        "content": [
+          "angeles"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "los_angeles"
+      }
+    ],
+    "eiffel": [
+      {
+        "content": [
+          "tower"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "eiffel_tower"
+      }
+    ],
+    "great": [
+      {
+        "content": [
+          "wall"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "great_wall"
+      },
+      {
+        "content": [
+          "china",
+          "wall"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "great_wall"
+      }
+    ],
+    "statue": [
+      {
+        "content": [
+          "liberty"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "statue_of_liberty"
+      }
+    ],
+    "big": [
+      {
+        "content": [
+          "ben"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "big_ben"
+      }
+    ],
+    "mount": [
+      {
+        "content": [
+          "fuji"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "mount_fuji"
+      },
+      {
+        "content": [
+          "everest"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "mount_everest"
+      }
+    ],
+    "pacific": [
+      {
+        "content": [
+          "ocean"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "pacific_ocean"
+      }
+    ],
+    "atlantic": [
+      {
+        "content": [
+          "ocean"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "atlantic_ocean"
+      }
+    ],
+    "indian": [
+      {
+        "content": [
+          "ocean"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "indian_ocean"
+      }
+    ],
+    "arctic": [
+      {
+        "content": [
+          "ocean"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "arctic_ocean"
+      }
+    ],
+    "mont": [
+      {
+        "content": [
+          "blanc"
+        ],
+        "distance": 4,
+        "forward": true,
+        "reverse": true,
+        "canon": "mont_blanc"
+      }
+    ]
+  },
+  "labels": {
+    "inflection": "inflection",
+    "Geographic_Region": "Geographic Region",
+    "Continent": "Continent",
+    "Country": "Country",
+    "City": "City",
+    "Landmark": "Landmark",
+    "Ocean": "Ocean",
+    "Mountain": "Mountain",
+    "North_America": "North America",
+    "South_America": "South America",
+    "Europe": "Europe",
+    "Asia": "Asia",
+    "Africa": "Africa",
+    "Australia_Continent": "Australia Continent",
+    "Antarctica": "Antarctica",
+    "United_States": "United States",
+    "Canada": "Canada",
+    "Mexico": "Mexico",
+    "United_Kingdom": "United Kingdom",
+    "France": "France",
+    "Germany": "Germany",
+    "Italy": "Italy",
+    "Spain": "Spain",
+    "Japan": "Japan",
+    "China": "China",
+    "India": "India",
+    "Brazil": "Brazil",
+    "Argentina": "Argentina",
+    "South_Africa": "South Africa",
+    "New_York": "New York",
+    "Los_Angeles": "Los Angeles",
+    "Chicago": "Chicago",
+    "London": "London",
+    "Paris": "Paris",
+    "Tokyo": "Tokyo",
+    "Beijing": "Beijing",
+    "Sydney": "Sydney",
+    "Mumbai": "Mumbai",
+    "Berlin": "Berlin",
+    "Rome": "Rome",
+    "Eiffel_Tower": "Eiffel Tower",
+    "Great_Wall": "Great Wall",
+    "Statue_of_Liberty": "Statue of Liberty",
+    "Big_Ben": "Big Ben",
+    "Colosseum": "Colosseum",
+    "Mount_Fuji": "Mount Fuji",
+    "Pacific_Ocean": "Pacific Ocean",
+    "Atlantic_Ocean": "Atlantic Ocean",
+    "Indian_Ocean": "Indian Ocean",
+    "Arctic_Ocean": "Arctic Ocean",
+    "Mount_Everest": "Mount Everest",
+    "Mont_Blanc": "Mont Blanc",
+    "Kilimanjaro": "Kilimanjaro"
+  },
+  "equivalents": null,
+  "predicates": [
+    ":locatedIn"
+  ],
+  "by_predicate": {
+    "rdfs:label": {
+      "inflection": [],
+      "geographic_region": [
+        "geographic region"
+      ],
+      "continent": [],
+      "country": [],
+      "city": [],
+      "landmark": [],
+      "ocean": [],
+      "mountain": [],
+      "north_america": [
+        "north america"
+      ],
+      "south_america": [
+        "south america"
+      ],
+      "europe": [],
+      "asia": [],
+      "africa": [],
+      "australia_continent": [
+        "australia continent"
+      ],
+      "antarctica": [],
+      "united_states": [
+        "united states"
+      ],
+      "canada": [],
+      "mexico": [],
+      "united_kingdom": [
+        "united kingdom"
+      ],
+      "france": [],
+      "germany": [],
+      "italy": [],
+      "spain": [],
+      "japan": [],
+      "china": [],
+      "india": [],
+      "brazil": [],
+      "argentina": [],
+      "south_africa": [
+        "south africa"
+      ],
+      "new_york": [
+        "new york"
+      ],
+      "los_angeles": [
+        "los angeles"
+      ],
+      "chicago": [],
+      "london": [],
+      "paris": [],
+      "tokyo": [],
+      "beijing": [],
+      "sydney": [],
+      "mumbai": [],
+      "berlin": [],
+      "rome": [],
+      "eiffel_tower": [
+        "eiffel tower"
+      ],
+      "great_wall": [
+        "great wall"
+      ],
+      "statue_of_liberty": [
+        "statue of liberty"
+      ],
+      "big_ben": [
+        "big ben"
+      ],
+      "colosseum": [],
+      "mount_fuji": [
+        "mount fuji"
+      ],
+      "pacific_ocean": [
+        "pacific ocean"
+      ],
+      "atlantic_ocean": [
+        "atlantic ocean"
+      ],
+      "indian_ocean": [
+        "indian ocean"
+      ],
+      "arctic_ocean": [
+        "arctic ocean"
+      ],
+      "mount_everest": [
+        "mount everest"
+      ],
+      "mont_blanc": [
+        "mont blanc"
+      ],
+      "kilimanjaro": []
+    },
+    "rdfs:subClassOf": {
+      "continent": [
+        "geographic_region"
+      ],
+      "country": [
+        "geographic_region"
+      ],
+      "city": [
+        "geographic_region"
+      ],
+      "landmark": [
+        "geographic_region"
+      ],
+      "ocean": [
+        "geographic_region"
+      ],
+      "mountain": [
+        "geographic_region"
+      ],
+      "north_america": [
+        "continent"
+      ],
+      "south_america": [
+        "continent"
+      ],
+      "europe": [
+        "continent"
+      ],
+      "asia": [
+        "continent"
+      ],
+      "africa": [
+        "continent"
+      ],
+      "australia_continent": [
+        "continent"
+      ],
+      "antarctica": [
+        "continent"
+      ],
+      "united_states": [
+        "country"
+      ],
+      "canada": [
+        "country"
+      ],
+      "mexico": [
+        "country"
+      ],
+      "united_kingdom": [
+        "country"
+      ],
+      "france": [
+        "country"
+      ],
+      "germany": [
+        "country"
+      ],
+      "italy": [
+        "country"
+      ],
+      "spain": [
+        "country"
+      ],
+      "japan": [
+        "country"
+      ],
+      "china": [
+        "country"
+      ],
+      "india": [
+        "country"
+      ],
+      "brazil": [
+        "country"
+      ],
+      "argentina": [
+        "country"
+      ],
+      "south_africa": [
+        "country"
+      ],
+      "new_york": [
+        "city"
+      ],
+      "los_angeles": [
+        "city"
+      ],
+      "chicago": [
+        "city"
+      ],
+      "london": [
+        "city"
+      ],
+      "paris": [
+        "city"
+      ],
+      "tokyo": [
+        "city"
+      ],
+      "beijing": [
+        "city"
+      ],
+      "sydney": [
+        "city"
+      ],
+      "mumbai": [
+        "city"
+      ],
+      "berlin": [
+        "city"
+      ],
+      "rome": [
+        "city"
+      ],
+      "eiffel_tower": [
+        "landmark"
+      ],
+      "great_wall": [
+        "landmark"
+      ],
+      "statue_of_liberty": [
+        "landmark"
+      ],
+      "big_ben": [
+        "landmark"
+      ],
+      "colosseum": [
+        "landmark"
+      ],
+      "mount_fuji": [
+        "landmark"
+      ],
+      "pacific_ocean": [
+        "ocean"
+      ],
+      "atlantic_ocean": [
+        "ocean"
+      ],
+      "indian_ocean": [
+        "ocean"
+      ],
+      "arctic_ocean": [
+        "ocean"
+      ],
+      "mount_everest": [
+        "mountain"
+      ],
+      "mont_blanc": [
+        "mountain"
+      ],
+      "kilimanjaro": [
+        "mountain"
+      ]
+    },
+    "rdfs:subPropertyOf": {
+      "inflection": [
+        "altlabel"
+      ]
+    },
+    "skos:altLabel": {
+      "country": [
+        "nation"
+      ],
+      "city": [
+        "town"
+      ],
+      "australia_continent": [
+        "down under",
+        "oceania"
+      ],
+      "united_states": [
+        "america",
+        "us",
+        "usa"
+      ],
+      "united_kingdom": [
+        "britain",
+        "england",
+        "uk"
+      ],
+      "france": [
+        "french republic"
+      ],
+      "germany": [
+        "deutschland"
+      ],
+      "china": [
+        "prc"
+      ],
+      "new_york": [
+        "nyc",
+        "the big apple"
+      ],
+      "los_angeles": [
+        "la"
+      ],
+      "beijing": [
+        "peking"
+      ],
+      "mumbai": [
+        "bombay"
+      ],
+      "great_wall": [
+        "great wall of china"
+      ],
+      "mount_everest": [
+        "everest"
+      ],
+      "kilimanjaro": [
+        "mount kilimanjaro"
+      ]
+    },
+    "rdf:type": {
+      "http://test.ai/geography": [
+        "ontology"
+      ],
+      "implies": [
+        "annotationproperty"
+      ],
+      "inflection": [
+        "annotationproperty"
+      ],
+      "locatedin": [
+        "annotationproperty"
+      ],
+      "requires": [
+        "annotationproperty"
+      ],
+      "similarto": [
+        "annotationproperty"
+      ],
+      "uses": [
+        "annotationproperty"
+      ],
+      "altlabel": [
+        "annotationproperty"
+      ],
+      "definition": [
+        "annotationproperty"
+      ],
+      "geographic_region": [
+        "class"
+      ],
+      "continent": [
+        "class"
+      ],
+      "country": [
+        "class"
+      ],
+      "city": [
+        "class"
+      ],
+      "landmark": [
+        "class"
+      ],
+      "ocean": [
+        "class"
+      ],
+      "mountain": [
+        "class"
+      ],
+      "north_america": [
+        "class"
+      ],
+      "south_america": [
+        "class"
+      ],
+      "europe": [
+        "class"
+      ],
+      "asia": [
+        "class"
+      ],
+      "africa": [
+        "class"
+      ],
+      "australia_continent": [
+        "class"
+      ],
+      "antarctica": [
+        "class"
+      ],
+      "united_states": [
+        "class"
+      ],
+      "canada": [
+        "class"
+      ],
+      "mexico": [
+        "class"
+      ],
+      "united_kingdom": [
+        "class"
+      ],
+      "france": [
+        "class"
+      ],
+      "germany": [
+        "class"
+      ],
+      "italy": [
+        "class"
+      ],
+      "spain": [
+        "class"
+      ],
+      "japan": [
+        "class"
+      ],
+      "china": [
+        "class"
+      ],
+      "india": [
+        "class"
+      ],
+      "brazil": [
+        "class"
+      ],
+      "argentina": [
+        "class"
+      ],
+      "south_africa": [
+        "class"
+      ],
+      "new_york": [
+        "class"
+      ],
+      "los_angeles": [
+        "class"
+      ],
+      "chicago": [
+        "class"
+      ],
+      "london": [
+        "class"
+      ],
+      "paris": [
+        "class"
+      ],
+      "tokyo": [
+        "class"
+      ],
+      "beijing": [
+        "class"
+      ],
+      "sydney": [
+        "class"
+      ],
+      "mumbai": [
+        "class"
+      ],
+      "berlin": [
+        "class"
+      ],
+      "rome": [
+        "class"
+      ],
+      "eiffel_tower": [
+        "class"
+      ],
+      "great_wall": [
+        "class"
+      ],
+      "statue_of_liberty": [
+        "class"
+      ],
+      "big_ben": [
+        "class"
+      ],
+      "colosseum": [
+        "class"
+      ],
+      "mount_fuji": [
+        "class"
+      ],
+      "pacific_ocean": [
+        "class"
+      ],
+      "atlantic_ocean": [
+        "class"
+      ],
+      "indian_ocean": [
+        "class"
+      ],
+      "arctic_ocean": [
+        "class"
+      ],
+      "mount_everest": [
+        "class"
+      ],
+      "mont_blanc": [
+        "class"
+      ],
+      "kilimanjaro": [
+        "class"
+      ]
+    },
+    ":locatedIn": {
+      "united_states": [
+        "north_america"
+      ],
+      "canada": [
+        "north_america"
+      ],
+      "mexico": [
+        "north_america"
+      ],
+      "united_kingdom": [
+        "europe"
+      ],
+      "france": [
+        "europe"
+      ],
+      "germany": [
+        "europe"
+      ],
+      "italy": [
+        "europe"
+      ],
+      "spain": [
+        "europe"
+      ],
+      "mont_blanc": [
+        "europe"
+      ],
+      "japan": [
+        "asia"
+      ],
+      "china": [
+        "asia"
+      ],
+      "india": [
+        "asia"
+      ],
+      "mount_everest": [
+        "asia"
+      ],
+      "brazil": [
+        "south_america"
+      ],
+      "argentina": [
+        "south_america"
+      ],
+      "south_africa": [
+        "africa"
+      ],
+      "kilimanjaro": [
+        "africa"
+      ],
+      "new_york": [
+        "united_states"
+      ],
+      "los_angeles": [
+        "united_states"
+      ],
+      "chicago": [
+        "united_states"
+      ],
+      "london": [
+        "united_kingdom"
+      ],
+      "paris": [
+        "france"
+      ],
+      "tokyo": [
+        "japan"
+      ],
+      "mount_fuji": [
+        "japan"
+      ],
+      "beijing": [
+        "china"
+      ],
+      "great_wall": [
+        "china"
+      ],
+      "mumbai": [
+        "india"
+      ],
+      "berlin": [
+        "germany"
+      ],
+      "rome": [
+        "italy"
+      ],
+      "eiffel_tower": [
+        "paris"
+      ],
+      "statue_of_liberty": [
+        "new_york"
+      ],
+      "big_ben": [
+        "london"
+      ],
+      "colosseum": [
+        "rome"
+      ]
+    }
+  },
+  "ner": {
+    "inflection": "NER",
+    "Geographic Region": "NER",
+    "Continent": "NER",
+    "Country": "NER",
+    "City": "NER",
+    "Landmark": "NER",
+    "Ocean": "NER",
+    "Mountain": "NER",
+    "North America": "NER",
+    "South America": "NER",
+    "Europe": "NER",
+    "Asia": "NER",
+    "Africa": "NER",
+    "Australia Continent": "NER",
+    "Antarctica": "NER",
+    "United States": "NER",
+    "Canada": "NER",
+    "Mexico": "NER",
+    "United Kingdom": "NER",
+    "France": "NER",
+    "Germany": "NER",
+    "Italy": "NER",
+    "Spain": "NER",
+    "Japan": "NER",
+    "China": "NER",
+    "India": "NER",
+    "Brazil": "NER",
+    "Argentina": "NER",
+    "South Africa": "NER",
+    "New York": "NER",
+    "Los Angeles": "NER",
+    "Chicago": "NER",
+    "London": "NER",
+    "Paris": "NER",
+    "Tokyo": "NER",
+    "Beijing": "NER",
+    "Sydney": "NER",
+    "Mumbai": "NER",
+    "Berlin": "NER",
+    "Rome": "NER",
+    "Eiffel Tower": "NER",
+    "Great Wall": "NER",
+    "Statue of Liberty": "NER",
+    "Big Ben": "NER",
+    "Colosseum": "NER",
+    "Mount Fuji": "NER",
+    "Pacific Ocean": "NER",
+    "Atlantic Ocean": "NER",
+    "Indian Ocean": "NER",
+    "Arctic Ocean": "NER",
+    "Mount Everest": "NER",
+    "Mont Blanc": "NER",
+    "Kilimanjaro": "NER"
+  },
+  "synonyms": {
+    "lookup": {
+      "1": [
+        "kilimanjaro",
+        "deutschland",
+        "inflection",
+        "antarctica",
+        "colosseum",
+        "argentina",
+        "continent",
+        "landmark",
+        "mountain",
+        "oceania",
+        "england",
+        "chicago",
+        "everest",
+        "america",
+        "country",
+        "beijing",
+        "britain",
+        "germany",
+        "mumbai",
+        "berlin",
+        "bombay",
+        "nation",
+        "europe",
+        "peking",
+        "london",
+        "france",
+        "canada",
+        "sydney",
+        "africa",
+        "brazil",
+        "mexico",
+        "japan",
+        "tokyo",
+        "spain",
+        "india",
+        "paris",
+        "china",
+        "italy",
+        "ocean",
+        "town",
+        "city",
+        "asia",
+        "rome",
+        "usa",
+        "prc",
+        "nyc",
+        "la",
+        "uk",
+        "us"
+      ],
+      "2": [
+        "australia continent",
+        "mount kilimanjaro",
+        "geographic region",
+        "french republic",
+        "atlantic ocean",
+        "united kingdom",
+        "united states",
+        "north america",
+        "mount everest",
+        "south america",
+        "pacific ocean",
+        "the_big apple",
+        "indian ocean",
+        "south africa",
+        "eiffel tower",
+        "arctic ocean",
+        "los angeles",
+        "mount fuji",
+        "down under",
+        "mont blanc",
+        "great wall",
+        "new york",
+        "big ben"
+      ],
+      "3": [
+        "statue of liberty",
+        "the big apple"
+      ],
+      "4": [
+        "great wall of china"
+      ],
+      "5": [],
+      "6": []
+    },
+    "fwd": {
+      "inflection": [
+        "inflection"
+      ],
+      "geographic_region": [
+        "geographic region"
+      ],
+      "continent": [
+        "continent"
+      ],
+      "country": [
+        "nation",
+        "country"
+      ],
+      "city": [
+        "city",
+        "town"
+      ],
+      "landmark": [
+        "landmark"
+      ],
+      "ocean": [
+        "ocean"
+      ],
+      "mountain": [
+        "mountain"
+      ],
+      "north_america": [
+        "north america"
+      ],
+      "south_america": [
+        "south america"
+      ],
+      "europe": [
+        "europe"
+      ],
+      "asia": [
+        "asia"
+      ],
+      "africa": [
+        "africa"
+      ],
+      "australia_continent": [
+        "oceania",
+        "down under",
+        "australia continent"
+      ],
+      "antarctica": [
+        "antarctica"
+      ],
+      "united_states": [
+        "us",
+        "usa",
+        "america",
+        "united states"
+      ],
+      "canada": [
+        "canada"
+      ],
+      "mexico": [
+        "mexico"
+      ],
+      "united_kingdom": [
+        "uk",
+        "england",
+        "britain",
+        "united kingdom"
+      ],
+      "france": [
+        "france",
+        "french republic"
+      ],
+      "germany": [
+        "germany",
+        "deutschland"
+      ],
+      "italy": [
+        "italy"
+      ],
+      "spain": [
+        "spain"
+      ],
+      "japan": [
+        "japan"
+      ],
+      "china": [
+        "prc",
+        "china"
+      ],
+      "india": [
+        "india"
+      ],
+      "brazil": [
+        "brazil"
+      ],
+      "argentina": [
+        "argentina"
+      ],
+      "south_africa": [
+        "south africa"
+      ],
+      "new_york": [
+        "nyc",
+        "new york",
+        "the big apple"
+      ],
+      "los_angeles": [
+        "la",
+        "los angeles"
+      ],
+      "chicago": [
+        "chicago"
+      ],
+      "london": [
+        "london"
+      ],
+      "paris": [
+        "paris"
+      ],
+      "tokyo": [
+        "tokyo"
+      ],
+      "beijing": [
+        "peking",
+        "beijing"
+      ],
+      "sydney": [
+        "sydney"
+      ],
+      "mumbai": [
+        "bombay",
+        "mumbai"
+      ],
+      "berlin": [
+        "berlin"
+      ],
+      "rome": [
+        "rome"
+      ],
+      "eiffel_tower": [
+        "eiffel tower"
+      ],
+      "great_wall": [
+        "great wall",
+        "great wall of china"
+      ],
+      "statue_of_liberty": [
+        "statue of liberty"
+      ],
+      "big_ben": [
+        "big ben"
+      ],
+      "colosseum": [
+        "colosseum"
+      ],
+      "mount_fuji": [
+        "mount fuji"
+      ],
+      "pacific_ocean": [
+        "pacific ocean"
+      ],
+      "atlantic_ocean": [
+        "atlantic ocean"
+      ],
+      "indian_ocean": [
+        "indian ocean"
+      ],
+      "arctic_ocean": [
+        "arctic ocean"
+      ],
+      "mount_everest": [
+        "everest",
+        "mount everest"
+      ],
+      "mont_blanc": [
+        "mont blanc"
+      ],
+      "kilimanjaro": [
+        "kilimanjaro",
+        "mount kilimanjaro"
+      ]
+    },
+    "rev": {
+      "inflection": [
+        "inflection"
+      ],
+      "geographic region": [
+        "geographic_region"
+      ],
+      "continent": [
+        "continent"
+      ],
+      "nation": [
+        "country"
+      ],
+      "country": [
+        "country"
+      ],
+      "city": [
+        "city"
+      ],
+      "town": [
+        "city"
+      ],
+      "landmark": [
+        "landmark"
+      ],
+      "ocean": [
+        "ocean"
+      ],
+      "mountain": [
+        "mountain"
+      ],
+      "north america": [
+        "north_america"
+      ],
+      "south america": [
+        "south_america"
+      ],
+      "europe": [
+        "europe"
+      ],
+      "asia": [
+        "asia"
+      ],
+      "africa": [
+        "africa"
+      ],
+      "oceania": [
+        "australia_continent"
+      ],
+      "down under": [
+        "australia_continent"
+      ],
+      "australia continent": [
+        "australia_continent"
+      ],
+      "antarctica": [
+        "antarctica"
+      ],
+      "us": [
+        "united_states"
+      ],
+      "usa": [
+        "united_states"
+      ],
+      "america": [
+        "united_states"
+      ],
+      "united states": [
+        "united_states"
+      ],
+      "canada": [
+        "canada"
+      ],
+      "mexico": [
+        "mexico"
+      ],
+      "uk": [
+        "united_kingdom"
+      ],
+      "england": [
+        "united_kingdom"
+      ],
+      "britain": [
+        "united_kingdom"
+      ],
+      "united kingdom": [
+        "united_kingdom"
+      ],
+      "france": [
+        "france"
+      ],
+      "french republic": [
+        "france"
+      ],
+      "germany": [
+        "germany"
+      ],
+      "deutschland": [
+        "germany"
+      ],
+      "italy": [
+        "italy"
+      ],
+      "spain": [
+        "spain"
+      ],
+      "japan": [
+        "japan"
+      ],
+      "prc": [
+        "china"
+      ],
+      "china": [
+        "china"
+      ],
+      "india": [
+        "india"
+      ],
+      "brazil": [
+        "brazil"
+      ],
+      "argentina": [
+        "argentina"
+      ],
+      "south africa": [
+        "south_africa"
+      ],
+      "nyc": [
+        "new_york"
+      ],
+      "new york": [
+        "new_york"
+      ],
+      "the big apple": [
+        "new_york"
+      ],
+      "la": [
+        "los_angeles"
+      ],
+      "los angeles": [
+        "los_angeles"
+      ],
+      "chicago": [
+        "chicago"
+      ],
+      "london": [
+        "london"
+      ],
+      "paris": [
+        "paris"
+      ],
+      "tokyo": [
+        "tokyo"
+      ],
+      "peking": [
+        "beijing"
+      ],
+      "beijing": [
+        "beijing"
+      ],
+      "sydney": [
+        "sydney"
+      ],
+      "bombay": [
+        "mumbai"
+      ],
+      "mumbai": [
+        "mumbai"
+      ],
+      "berlin": [
+        "berlin"
+      ],
+      "rome": [
+        "rome"
+      ],
+      "eiffel tower": [
+        "eiffel_tower"
+      ],
+      "great wall": [
+        "great_wall"
+      ],
+      "great wall of china": [
+        "great_wall"
+      ],
+      "statue of liberty": [
+        "statue_of_liberty"
+      ],
+      "big ben": [
+        "big_ben"
+      ],
+      "colosseum": [
+        "colosseum"
+      ],
+      "mount fuji": [
+        "mount_fuji"
+      ],
+      "pacific ocean": [
+        "pacific_ocean"
+      ],
+      "atlantic ocean": [
+        "atlantic_ocean"
+      ],
+      "indian ocean": [
+        "indian_ocean"
+      ],
+      "arctic ocean": [
+        "arctic_ocean"
+      ],
+      "everest": [
+        "mount_everest"
+      ],
+      "mount everest": [
+        "mount_everest"
+      ],
+      "mont blanc": [
+        "mont_blanc"
+      ],
+      "kilimanjaro": [
+        "kilimanjaro"
+      ],
+      "mount kilimanjaro": [
+        "kilimanjaro"
+      ]
+    }
+  }
+}

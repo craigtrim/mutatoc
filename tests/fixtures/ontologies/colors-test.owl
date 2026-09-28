@@ -1,0 +1,225 @@
+@prefix : <http://test.ai/colors#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <http://test.ai/colors#> .
+
+<http://test.ai/colors> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://test.ai/colors#implies
+:implies rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/colors#inflection
+:inflection rdf:type owl:AnnotationProperty ;
+            rdfs:label "inflection"@en ;
+            rdfs:subPropertyOf skos:altLabel .
+
+###  http://test.ai/colors#requires
+:requires rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/colors#similarTo
+:similarTo rdf:type owl:AnnotationProperty .
+
+###  http://test.ai/colors#uses
+:uses rdf:type owl:AnnotationProperty .
+
+###  http://www.w3.org/2004/02/skos/core#altLabel
+skos:altLabel rdf:type owl:AnnotationProperty .
+
+###  http://www.w3.org/2004/02/skos/core#definition
+skos:definition rdf:type owl:AnnotationProperty .
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://test.ai/colors#Color
+:Color rdf:type owl:Class ;
+       rdfs:label "Color" ;
+       skos:altLabel "colour" .
+
+###  http://test.ai/colors#Primary_Color
+:Primary_Color rdf:type owl:Class ;
+               rdfs:subClassOf :Color ;
+               rdfs:label "Primary Color" .
+
+###  http://test.ai/colors#Secondary_Color
+:Secondary_Color rdf:type owl:Class ;
+                 rdfs:subClassOf :Color ;
+                 rdfs:label "Secondary Color" .
+
+###  http://test.ai/colors#Neutral_Color
+:Neutral_Color rdf:type owl:Class ;
+               rdfs:subClassOf :Color ;
+               rdfs:label "Neutral Color" .
+
+###  http://test.ai/colors#Warm_Color
+:Warm_Color rdf:type owl:Class ;
+            rdfs:subClassOf :Color ;
+            rdfs:label "Warm Color" .
+
+###  http://test.ai/colors#Cool_Color
+:Cool_Color rdf:type owl:Class ;
+            rdfs:subClassOf :Color ;
+            rdfs:label "Cool Color" .
+
+###  http://test.ai/colors#Metallic_Color
+:Metallic_Color rdf:type owl:Class ;
+                rdfs:subClassOf :Color ;
+                rdfs:label "Metallic Color" .
+
+### ---- Primary Colors ----
+
+###  http://test.ai/colors#Red
+:Red rdf:type owl:Class ;
+     rdfs:subClassOf :Primary_Color ;
+     rdfs:label "Red" ;
+     skos:altLabel "crimson" ;
+     skos:altLabel "scarlet" ;
+     :inflection "reds" .
+
+###  http://test.ai/colors#Blue
+:Blue rdf:type owl:Class ;
+      rdfs:subClassOf :Primary_Color ;
+      rdfs:label "Blue" ;
+      skos:altLabel "azure" ;
+      skos:altLabel "cobalt" ;
+      :inflection "blues" .
+
+###  http://test.ai/colors#Yellow
+:Yellow rdf:type owl:Class ;
+        rdfs:subClassOf :Primary_Color ;
+        rdfs:label "Yellow" ;
+        skos:altLabel "gold" ;
+        skos:altLabel "amber" .
+
+### ---- Secondary Colors ----
+
+###  http://test.ai/colors#Orange
+:Orange rdf:type owl:Class ;
+        rdfs:subClassOf :Secondary_Color ;
+        rdfs:label "Orange" ;
+        skos:altLabel "tangerine" .
+
+###  http://test.ai/colors#Green
+:Green rdf:type owl:Class ;
+       rdfs:subClassOf :Secondary_Color ;
+       rdfs:label "Green" ;
+       skos:altLabel "emerald" ;
+       skos:altLabel "lime" ;
+       :inflection "greens" .
+
+###  http://test.ai/colors#Purple
+:Purple rdf:type owl:Class ;
+        rdfs:subClassOf :Secondary_Color ;
+        rdfs:label "Purple" ;
+        skos:altLabel "violet" ;
+        skos:altLabel "lavender" .
+
+###  http://test.ai/colors#Indigo
+:Indigo rdf:type owl:Class ;
+        rdfs:subClassOf :Secondary_Color ;
+        rdfs:label "Indigo" .
+
+### ---- Neutral Colors ----
+
+###  http://test.ai/colors#Black
+:Black rdf:type owl:Class ;
+       rdfs:subClassOf :Neutral_Color ;
+       rdfs:label "Black" .
+
+###  http://test.ai/colors#White
+:White rdf:type owl:Class ;
+       rdfs:subClassOf :Neutral_Color ;
+       rdfs:label "White" .
+
+###  http://test.ai/colors#Gray
+:Gray rdf:type owl:Class ;
+      rdfs:subClassOf :Neutral_Color ;
+      rdfs:label "Gray" ;
+      skos:altLabel "grey" .
+
+###  http://test.ai/colors#Brown
+:Brown rdf:type owl:Class ;
+       rdfs:subClassOf :Neutral_Color ;
+       rdfs:label "Brown" ;
+       skos:altLabel "tan" ;
+       skos:altLabel "beige" ;
+       skos:altLabel "chocolate" .
+
+###  http://test.ai/colors#Beige
+:Beige rdf:type owl:Class ;
+       rdfs:subClassOf :Neutral_Color ;
+       rdfs:label "Beige" ;
+       :similarTo :Brown .
+
+### ---- Warm Colors ----
+
+###  http://test.ai/colors#Coral
+:Coral rdf:type owl:Class ;
+       rdfs:subClassOf :Warm_Color ;
+       rdfs:label "Coral" .
+
+###  http://test.ai/colors#Pink
+:Pink rdf:type owl:Class ;
+      rdfs:subClassOf :Warm_Color ;
+      rdfs:label "Pink" ;
+      skos:altLabel "rose" ;
+      skos:altLabel "magenta" .
+
+###  http://test.ai/colors#Maroon
+:Maroon rdf:type owl:Class ;
+        rdfs:subClassOf :Warm_Color ;
+        rdfs:label "Maroon" ;
+        skos:altLabel "burgundy" .
+
+### ---- Cool Colors ----
+
+###  http://test.ai/colors#Teal
+:Teal rdf:type owl:Class ;
+      rdfs:subClassOf :Cool_Color ;
+      rdfs:label "Teal" ;
+      skos:altLabel "cyan" .
+
+###  http://test.ai/colors#Turquoise
+:Turquoise rdf:type owl:Class ;
+           rdfs:subClassOf :Cool_Color ;
+           rdfs:label "Turquoise" .
+
+###  http://test.ai/colors#Navy
+:Navy rdf:type owl:Class ;
+      rdfs:subClassOf :Cool_Color ;
+      rdfs:label "Navy" ;
+      skos:altLabel "navy blue" .
+
+###  http://test.ai/colors#Mint
+:Mint rdf:type owl:Class ;
+      rdfs:subClassOf :Cool_Color ;
+      rdfs:label "Mint" ;
+      skos:altLabel "mint green" .
+
+### ---- Metallic Colors ----
+
+###  http://test.ai/colors#Gold_Metallic
+:Gold_Metallic rdf:type owl:Class ;
+               rdfs:subClassOf :Metallic_Color ;
+               rdfs:label "Gold Metallic" ;
+               skos:altLabel "golden" .
+
+###  http://test.ai/colors#Silver
+:Silver rdf:type owl:Class ;
+        rdfs:subClassOf :Metallic_Color ;
+        rdfs:label "Silver" ;
+        skos:altLabel "chrome" .
+
+###  http://test.ai/colors#Bronze
+:Bronze rdf:type owl:Class ;
+        rdfs:subClassOf :Metallic_Color ;
+        rdfs:label "Bronze" .

@@ -1,0 +1,4077 @@
+@prefix : <http://graffl.ai/courses#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <http://graffl.ai/courses#> .
+
+<http://graffl.ai/courses> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://graffl.ai/courses#hasLevel
+:hasLevel rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/courses#implies
+:implies rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/courses#inflection
+:inflection rdf:type owl:AnnotationProperty ;
+            rdfs:label "inflection"@en ;
+            skos:definition "An inflectional form of a concept"@en ;
+            rdfs:subPropertyOf skos:altLabel .
+
+
+###  http://graffl.ai/courses#locatedIn
+:locatedIn rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/courses#meansOf
+:meansOf rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/courses#measures
+:measures rdf:type owl:AnnotationProperty ;
+          rdfs:subPropertyOf :uses .
+
+
+###  http://graffl.ai/courses#partOf
+:partOf rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/courses#requires
+:requires rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/courses#similarTo
+:similarTo rdf:type owl:AnnotationProperty .
+
+
+###  http://graffl.ai/courses#uses
+:uses rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#altLabel
+skos:altLabel rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#definition
+skos:definition rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#example
+skos:example rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#prefLabel
+skos:prefLabel rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://graffl.ai/courses#condition
+:condition rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://graffl.ai/courses#Adult_Health
+:Adult_Health rdf:type owl:Class ;
+              rdfs:subClassOf :Health ;
+              rdfs:label "Adult Health" .
+
+
+###  http://graffl.ai/courses#Behavioral_Psychology
+:Behavioral_Psychology rdf:type owl:Class ;
+                       rdfs:subClassOf :Psychology ;
+                       rdfs:label "Behavioral Psychology" ;
+                       rdfs:seeAlso "Social and Behavrl Trans" ,
+                                    "Social and Behavrl Trans LD" .
+
+
+###  http://graffl.ai/courses#English_Mythology
+:English_Mythology rdf:type owl:Class ;
+                   rdfs:subClassOf :English_Literature ;
+                   rdfs:label "English Mythology" ;
+                   rdfs:seeAlso "English+Myth" .
+
+
+###  http://graffl.ai/courses#Health_Services
+:Health_Services rdf:type owl:Class ;
+                 rdfs:subClassOf :Services ;
+                 rdfs:label "Health Services" .
+
+
+###  http://graffl.ai/courses#Healthcare_Delivery
+:Healthcare_Delivery rdf:type owl:Class ;
+                     rdfs:subClassOf :Health_Administration ;
+                     rdfs:label "Healthcare Delivery" ;
+                     rdfs:seeAlso "Context of Healthcare Delivery" .
+
+
+###  http://graffl.ai/courses#Human_Services
+:Human_Services rdf:type owl:Class ;
+                rdfs:subClassOf :Health_Services ;
+                rdfs:label "Human Services" ;
+                rdfs:seeAlso "Human Services Prof Practitner" .
+
+
+###  http://graffl.ai/courses#Services
+:Services rdf:type owl:Class ;
+          rdfs:subClassOf :Course ;
+          rdfs:label "Services" .
+
+
+###  http://graffl.ai/courses#3d_Art
+<http://graffl.ai/courses#3d_Art> rdf:type owl:Class ;
+                                rdfs:subClassOf :Fine_Arts ;
+                                rdfs:label "3-D Art" ,
+                                           "3d Art" .
+
+
+###  http://graffl.ai/courses#Accounting
+:Accounting rdf:type owl:Class ;
+            rdfs:subClassOf :Business ;
+            rdfs:label "Accounting" .
+
+
+###  http://graffl.ai/courses#Act_Math_Preparation
+:Act_Math_Preparation rdf:type owl:Class ;
+                      rdfs:subClassOf :Math_Preparation ;
+                      rdfs:label "ACT Math Preparation" .
+
+
+###  http://graffl.ai/courses#Acting
+:Acting rdf:type owl:Class ;
+        rdfs:subClassOf :Drama ;
+        rdfs:label "Acting" .
+
+
+###  http://graffl.ai/courses#Adult_Dentistry
+:Adult_Dentistry rdf:type owl:Class ;
+                 rdfs:subClassOf :Dentistry ;
+                 rdfs:label "Adult Dentistry" .
+
+
+###  http://graffl.ai/courses#Advanced
+:Advanced rdf:type owl:Class ;
+          rdfs:subClassOf :Course_Level ;
+          rdfs:label "Advanced" ;
+          rdfs:seeAlso "AP" ,
+                       "Advanced Placement" .
+
+
+###  http://graffl.ai/courses#Advanced_Acting
+:Advanced_Acting rdf:type owl:Class ;
+                 rdfs:subClassOf :Acting ;
+                 rdfs:label "Advanced Acting" .
+
+
+###  http://graffl.ai/courses#Advanced_Algebra
+:Advanced_Algebra rdf:type owl:Class ;
+                  rdfs:subClassOf :Algebra ;
+                  rdfs:label "Advanced Algebra" .
+
+
+###  http://graffl.ai/courses#Advanced_American_Government
+:Advanced_American_Government rdf:type owl:Class ;
+                              rdfs:subClassOf :American_Government ;
+                              rdfs:label "Advanced American Government" ;
+                              rdfs:seeAlso "AG:AP UNITED STATES GO" ,
+                                           "AP UNITED STATES GO" .
+
+
+###  http://graffl.ai/courses#Advanced_American_History
+:Advanced_American_History rdf:type owl:Class ;
+                           rdfs:subClassOf :American_History ;
+                           :hasLevel :Advanced ;
+                           rdfs:label "Advanced American History" ;
+                           rdfs:seeAlso "AP US History" .
+
+
+###  http://graffl.ai/courses#Advanced_Culinary_Art
+:Advanced_Culinary_Art rdf:type owl:Class ;
+                       rdfs:subClassOf :Culinary_Art ;
+                       rdfs:label "Advanced Culinary Art" .
+
+
+###  http://graffl.ai/courses#Advanced_Economics
+:Advanced_Economics rdf:type owl:Class ;
+                    rdfs:subClassOf :Economics ;
+                    :hasLevel :Advanced ;
+                    rdfs:label "Advanced Economics" ;
+                    rdfs:seeAlso "AP Economics" ,
+                                 "Economics AP" .
+
+
+###  http://graffl.ai/courses#Advanced_English
+:Advanced_English rdf:type owl:Class ;
+                  owl:equivalentClass :Advanced_English_Language ;
+                  rdfs:subClassOf :English ;
+                  rdfs:label "Advanced English" ;
+                  rdfs:seeAlso "AP English" ,
+                               "EN:ADVANCED ENGLISH II" .
+
+
+
+###  http://graffl.ai/courses#Advanced_English_Language
+:Advanced_English_Language rdf:type owl:Class ;
+                           rdfs:subClassOf :English_Language ;
+                           rdfs:label "Advanced English Language" ;
+                           rdfs:seeAlso "AP ENGLISH LANG" .
+
+
+###  http://graffl.ai/courses#Advanced_European_History
+:Advanced_European_History rdf:type owl:Class ;
+                           rdfs:subClassOf :European_History ;
+                           rdfs:label "Advanced European History" ;
+                           rdfs:seeAlso "AP European History" .
+
+
+###  http://graffl.ai/courses#Advanced_Formal_Algebra
+:Advanced_Formal_Algebra rdf:type owl:Class ;
+                         rdfs:subClassOf :Formal_Algebra ;
+                         rdfs:label "Advanced Formal Algebra" ;
+                         rdfs:seeAlso "FORMAL ALGEBRA III" .
+
+
+###  http://graffl.ai/courses#Advanced_French
+:Advanced_French rdf:type owl:Class ;
+                 rdfs:subClassOf :French_Language ;
+                 rdfs:label "Advanced French" ;
+                 rdfs:seeAlso "ADV FRENCH" ,
+                              "FRENCH 3" ,
+                              "FRENCH III" .
+
+
+###  http://graffl.ai/courses#Advanced_German
+:Advanced_German rdf:type owl:Class ;
+                 rdfs:subClassOf :German_Language ;
+                 rdfs:label "Advanced German" ;
+                 rdfs:seeAlso "ADV GERMAN" ,
+                              "GERMAN 3" ,
+                              "GERMAN III" .
+
+
+###  http://graffl.ai/courses#Advanced_History
+:Advanced_History rdf:type owl:Class ;
+                  rdfs:subClassOf :History ;
+                  rdfs:label "Advanced History" ;
+                  rdfs:seeAlso "Advanced Placement History" .
+
+
+###  http://graffl.ai/courses#Advanced_Italian
+:Advanced_Italian rdf:type owl:Class ;
+                  rdfs:subClassOf :Italian_Language ;
+                  rdfs:label "Advanced Italian" ;
+                  rdfs:seeAlso "ADV ITALIAN" ,
+                               "ITALIAN 3" ,
+                               "ITALIAN III" .
+
+
+###  http://graffl.ai/courses#Advanced_Lathe
+:Advanced_Lathe rdf:type owl:Class ;
+                rdfs:subClassOf :Lathe ;
+                rdfs:label "Advanced Lathe" .
+
+
+###  http://graffl.ai/courses#Advanced_Marketing
+:Advanced_Marketing rdf:type owl:Class ;
+                    rdfs:subClassOf :Marketing ;
+                    rdfs:label "Advanced Marketing" .
+
+
+###  http://graffl.ai/courses#Advanced_Millwork
+:Advanced_Millwork rdf:type owl:Class ;
+                   rdfs:subClassOf :Millwork ;
+                   rdfs:label "Advanced Millwork" ;
+                   rdfs:seeAlso "Advanced Mill" ,
+                                "Advanced Mill Work" .
+
+
+###  http://graffl.ai/courses#Advanced_Natural_and_Physical_Science
+:Advanced_Natural_and_Physical_Science rdf:type owl:Class ;
+                                       rdfs:subClassOf :Natural_and_Physical_Science ;
+                                       rdfs:label "Advanced Natural and Physical Science" .
+
+
+###  http://graffl.ai/courses#Advanced_Physics
+:Advanced_Physics rdf:type owl:Class ;
+                  rdfs:subClassOf :Physics ;
+                  rdfs:label "Advanced Physics" ;
+                  rdfs:seeAlso "AP PHYSICS" ,
+                               "SC:AP PHYSICS" ,
+                               "SC:AP PHYSICS I" .
+
+
+###  http://graffl.ai/courses#Advanced_Portuguese
+:Advanced_Portuguese rdf:type owl:Class ;
+                     rdfs:subClassOf :Portuguese_Language ;
+                     rdfs:label "Advanced Portuguese" ;
+                     rdfs:seeAlso "ADV PORTUGUESE" ,
+                                  "PORTUGUESE 3" ,
+                                  "PORTUGUESE III" .
+
+
+###  http://graffl.ai/courses#Advanced_Psychology
+:Advanced_Psychology rdf:type owl:Class ;
+                     rdfs:subClassOf :Psychology ;
+                     rdfs:label "Advanced Psychology" ;
+                     rdfs:seeAlso "AP PSYCHOLOGY" ,
+                                  "SS:AP PSYCHOLOGY" .
+
+
+###  http://graffl.ai/courses#Advanced_Spanish
+:Advanced_Spanish rdf:type owl:Class ;
+                  rdfs:subClassOf :Spanish ;
+                  rdfs:label "Advanced Spanish" ;
+                  rdfs:seeAlso "ADV SPANISH" ,
+                               "Advanced Spanish Language" .
+
+
+###  http://graffl.ai/courses#Advanced_Statistics
+:Advanced_Statistics rdf:type owl:Class ;
+                     rdfs:subClassOf :Statistics ;
+                     :hasLevel :Advanced ;
+                     rdfs:label "Advanced Statistics" ;
+                     rdfs:seeAlso "AP Statistics" .
+
+
+###  http://graffl.ai/courses#Advanced_Western_Civilization
+:Advanced_Western_Civilization rdf:type owl:Class ;
+                               rdfs:subClassOf :Western_Civilization ;
+                               rdfs:label "Advanced Western Civilization" .
+
+
+###  http://graffl.ai/courses#Aerobics
+:Aerobics rdf:type owl:Class ;
+          rdfs:subClassOf :Physical_Education ;
+          rdfs:label "Aerobics" .
+
+
+###  http://graffl.ai/courses#African_American_Studies
+:African_American_Studies rdf:type owl:Class ;
+                          rdfs:subClassOf :History ;
+                          rdfs:label "African-American Studies" ;
+                          rdfs:seeAlso "African American Studies" .
+
+
+###  http://graffl.ai/courses#African_Civilization
+:African_Civilization rdf:type owl:Class ;
+                      rdfs:subClassOf :History ;
+                      rdfs:label "African Civilization" .
+
+
+###  http://graffl.ai/courses#African_Language
+:African_Language rdf:type owl:Class ;
+                  rdfs:subClassOf :Language ;
+                  rdfs:label "African Language" .
+
+
+###  http://graffl.ai/courses#Africana_Studies
+:Africana_Studies rdf:type owl:Class ;
+                  rdfs:subClassOf :Cultural_Studies ;
+                  rdfs:label "Africana Studies" .
+
+
+###  http://graffl.ai/courses#Agriculture
+:Agriculture rdf:type owl:Class ;
+             rdfs:subClassOf :Science ;
+             rdfs:label "Agriculture" ;
+             rdfs:seeAlso "Ag Science" ,
+                          "Agric Science" ,
+                          "Agricultural Science" ,
+                          "Agriculture Science" .
+
+
+###  http://graffl.ai/courses#Akkadian
+:Akkadian rdf:type owl:Class ;
+          rdfs:subClassOf :Language ;
+          rdfs:label "Akkadian" .
+
+
+###  http://graffl.ai/courses#Algebra
+:Algebra rdf:type owl:Class ;
+         rdfs:subClassOf :Math ;
+         rdfs:label "Algebra" ;
+         rdfs:seeAlso "Alg" .
+
+
+###  http://graffl.ai/courses#Alternative_Medicine
+:Alternative_Medicine rdf:type owl:Class ;
+                      rdfs:subClassOf :Medicine ;
+                      rdfs:label "Alternative Medicine" .
+
+
+###  http://graffl.ai/courses#American_Experience
+:American_Experience rdf:type owl:Class ;
+                     rdfs:subClassOf :Social_Studies ;
+                     rdfs:label "American Experience" .
+
+
+###  http://graffl.ai/courses#American_Government
+:American_Government rdf:type owl:Class ;
+                     rdfs:subClassOf :Government ;
+                     rdfs:label "American Government" ;
+                     rdfs:seeAlso "Amer Govt" ,
+                                  "UNITED STATES GO" ,
+                                  "US Government" ,
+                                  "US Government and Politics" ,
+                                  "United States Government" ,
+                                  "United States Government and Politics" .
+
+
+###  http://graffl.ai/courses#American_History
+:American_History rdf:type owl:Class ;
+                  rdfs:subClassOf :History ;
+                  rdfs:label "American History" ;
+                  rdfs:seeAlso "AM Hist" ,
+                               "AM History" ,
+                               "UNITED STATES HI" ,
+                               "US His" ,
+                               "US Hist" ,
+                               "US History" ,
+                               "United States History" .
+
+
+###  http://graffl.ai/courses#American_Studies
+:American_Studies rdf:type owl:Class ;
+                  rdfs:subClassOf :Social_Studies ;
+                  rdfs:label "American Studies" .
+
+
+###  http://graffl.ai/courses#Anatomy
+:Anatomy rdf:type owl:Class ;
+         rdfs:subClassOf :Science ;
+         rdfs:label "Anatomy" .
+
+
+###  http://graffl.ai/courses#Anatomy_and_Physiology
+:Anatomy_and_Physiology rdf:type owl:Class ;
+                        rdfs:subClassOf :Anatomy ;
+                        rdfs:label "Anatomy and Physiology" .
+
+
+###  http://graffl.ai/courses#Anatomy_and_Physiology_Body
+:Anatomy_and_Physiology_Body rdf:type owl:Class ;
+                             rdfs:subClassOf :Anatomy_and_Physiology ;
+                             rdfs:label "Anatomy and Physiology Body" .
+
+
+###  http://graffl.ai/courses#Anatomy_and_Physiology_Organs
+:Anatomy_and_Physiology_Organs rdf:type owl:Class ;
+                               rdfs:subClassOf :Anatomy_and_Physiology ;
+                               rdfs:label "Anatomy and Physiology Organs" .
+
+
+###  http://graffl.ai/courses#Ancient_Studies
+:Ancient_Studies rdf:type owl:Class ;
+                 rdfs:subClassOf :History ;
+                 rdfs:label "Ancient Studies" .
+
+
+###  http://graffl.ai/courses#Anesthesiology
+:Anesthesiology rdf:type owl:Class ;
+                rdfs:subClassOf :Medicine ;
+                rdfs:label "Anesthesiology" .
+
+
+###  http://graffl.ai/courses#Animal_Science
+:Animal_Science rdf:type owl:Class ;
+                rdfs:subClassOf :Science ;
+                rdfs:label "Animal Science" ;
+                rdfs:seeAlso "Animal Sciences" .
+
+
+###  http://graffl.ai/courses#Anthropology
+:Anthropology rdf:type owl:Class ;
+              rdfs:subClassOf :Humanities ,
+                              :Social_Science ,
+                              :Social_Studies ;
+              rdfs:label "Anthropology" ;
+              rdfs:seeAlso "Cultural Anthropology" ,
+                           "Social/Cultural Studies" .
+
+
+###  http://graffl.ai/courses#Applied_Analytics
+:Applied_Analytics rdf:type owl:Class ;
+                   rdfs:subClassOf :Course ;
+                   rdfs:label "Applied Analytics" .
+
+
+###  http://graffl.ai/courses#Aramaic
+:Aramaic rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Aramaic" .
+
+
+###  http://graffl.ai/courses#Archaeology
+:Archaeology rdf:type owl:Class ;
+             rdfs:subClassOf :Science ,
+                             :Social_Science ;
+             rdfs:label "Archaeology" ;
+             rdfs:seeAlso "Ancient History" ,
+                          "Archaeological Studies" .
+
+
+###  http://graffl.ai/courses#Architectural_Design
+:Architectural_Design rdf:type owl:Class ;
+                      rdfs:subClassOf :Architecture ,
+                                      :Design ;
+                      rdfs:label "Architectural Design" ;
+                      rdfs:seeAlso "Building Design" .
+
+
+###  http://graffl.ai/courses#Architecture
+:Architecture rdf:type owl:Class ;
+              rdfs:subClassOf :Art ,
+                              :Course ,
+                              :Design ;
+              rdfs:label "Architecture" ;
+              rdfs:seeAlso "Architectural Studies" ,
+                           "Building Design" .
+
+
+###  http://graffl.ai/courses#Art
+:Art rdf:type owl:Class ;
+     rdfs:subClassOf :Course ;
+     rdfs:label "Art" .
+
+
+###  http://graffl.ai/courses#Art_History
+:Art_History rdf:type owl:Class ;
+             rdfs:subClassOf :History ,
+                             :Humanities ;
+             rdfs:label "Art History" ;
+             rdfs:seeAlso "Art Historical Studies" ,
+                          "Visual Art History" .
+
+
+###  http://graffl.ai/courses#Asian_Humanities
+:Asian_Humanities rdf:type owl:Class ;
+                  rdfs:subClassOf :Social_Studies ;
+                  rdfs:label "Asian Humanities" .
+
+
+###  http://graffl.ai/courses#Asian_Studies
+:Asian_Studies rdf:type owl:Class ;
+               rdfs:subClassOf :Social_Studies ;
+               rdfs:label "Asian Studies" .
+
+
+###  http://graffl.ai/courses#Astrobiology
+:Astrobiology rdf:type owl:Class ;
+              rdfs:subClassOf :Astronomy ,
+                              :Biology ;
+              rdfs:label "Astrobiology" ;
+              rdfs:seeAlso "Exobiology" .
+
+
+###  http://graffl.ai/courses#Astronomy
+:Astronomy rdf:type owl:Class ;
+           rdfs:subClassOf :Science ;
+           rdfs:label "Astronomy" ;
+           rdfs:seeAlso "Celestial Science" .
+
+
+###  http://graffl.ai/courses#Astrophysics
+:Astrophysics rdf:type owl:Class ;
+              rdfs:subClassOf :Physics ;
+              rdfs:label "Astrophysics" ;
+              rdfs:seeAlso "Astronomy Physics" ,
+                           "Cosmology Science" .
+
+
+###  http://graffl.ai/courses#Auto_Body_Repair
+:Auto_Body_Repair rdf:type owl:Class ;
+                  rdfs:subClassOf :Auto_Shop_Class ;
+                  rdfs:label "Auto Body Repair" .
+
+
+###  http://graffl.ai/courses#Auto_Mechanics
+:Auto_Mechanics rdf:type owl:Class ;
+                rdfs:subClassOf :Auto_Shop_Class ;
+                rdfs:label "Auto Mechanics" ;
+                rdfs:seeAlso "Auto Elec I" ,
+                             "Auto Engine Repa" ,
+                             "Auto Engine Repair" .
+
+
+###  http://graffl.ai/courses#Auto_Shop_Class
+:Auto_Shop_Class rdf:type owl:Class ;
+                 rdfs:subClassOf :Shop_Class ;
+                 rdfs:label "Auto Shop Class" .
+
+
+###  http://graffl.ai/courses#Band
+:Band rdf:type owl:Class ;
+      rdfs:subClassOf :Music ;
+      rdfs:label "Band" .
+
+
+###  http://graffl.ai/courses#Bench_Work
+:Bench_Work rdf:type owl:Class ;
+            rdfs:subClassOf :Shop_Class ;
+            rdfs:label "Bench Work" .
+
+
+###  http://graffl.ai/courses#Bengali
+:Bengali rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Bengali" .
+
+
+###  http://graffl.ai/courses#Biochemistry
+:Biochemistry rdf:type owl:Class ;
+              rdfs:subClassOf :Science ;
+              rdfs:label "Biochemistry" .
+
+
+###  http://graffl.ai/courses#Bioethics
+:Bioethics rdf:type owl:Class ;
+           rdfs:subClassOf :Science ;
+           rdfs:label "Bioethics" .
+
+
+###  http://graffl.ai/courses#Biological_Sciences
+:Biological_Sciences rdf:type owl:Class ;
+                     rdfs:subClassOf :Biology ,
+                                     :Science ;
+                     rdfs:label "Biological Sciences" ;
+                     rdfs:seeAlso "Life Sciences" .
+
+
+###  http://graffl.ai/courses#Biology
+:Biology rdf:type owl:Class ;
+         rdfs:subClassOf :Science ;
+         rdfs:label "Biology" ;
+         rdfs:seeAlso "BIO" .
+
+
+###  http://graffl.ai/courses#Biomedical_Engineering
+:Biomedical_Engineering rdf:type owl:Class ;
+                        rdfs:subClassOf :Engineering ,
+                                        :Medical_Engineering ,
+                                        :Science ;
+                        rdfs:label "Biomedical Engineering" ;
+                        rdfs:seeAlso "Bioengineering" .
+
+
+###  http://graffl.ai/courses#Biomedical_Informatics
+:Biomedical_Informatics rdf:type owl:Class ;
+                        rdfs:subClassOf :Medical_Engineering ;
+                        rdfs:label "Biomedical Informatics" .
+
+
+###  http://graffl.ai/courses#Biomedical_Science
+:Biomedical_Science rdf:type owl:Class ;
+                    rdfs:subClassOf :Health ,
+                                    :Science ;
+                    rdfs:label "Biomedical Science" ;
+                    rdfs:seeAlso "Biomedical Research" .
+
+
+###  http://graffl.ai/courses#Biophysics
+:Biophysics rdf:type owl:Class ;
+            rdfs:subClassOf :Science ;
+            rdfs:label "Biophysics" .
+
+
+###  http://graffl.ai/courses#Biostatistics
+:Biostatistics rdf:type owl:Class ;
+               rdfs:subClassOf :Scientific_Math ;
+               rdfs:label "Biostatistics" .
+
+
+###  http://graffl.ai/courses#Biotechnology
+:Biotechnology rdf:type owl:Class ;
+               rdfs:subClassOf :Biology ,
+                               :Science ,
+                               :Technology ;
+               rdfs:label "Biotechnology" ;
+               rdfs:seeAlso "Biotech" ,
+                            "Genetic Engineering" .
+
+
+###  http://graffl.ai/courses#Botany
+:Botany rdf:type owl:Class ;
+        rdfs:subClassOf :Science ;
+        rdfs:label "Botany" .
+
+
+###  http://graffl.ai/courses#Building_Construction
+:Building_Construction rdf:type owl:Class ;
+                       rdfs:subClassOf :Construction ;
+                       rdfs:label "Building Construction" .
+
+
+###  http://graffl.ai/courses#Burmese
+:Burmese rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Burmese" .
+
+
+###  http://graffl.ai/courses#Business
+:Business rdf:type owl:Class ;
+          rdfs:subClassOf :Course ;
+          rdfs:label "Business" .
+
+
+###  http://graffl.ai/courses#Business_Administration
+:Business_Administration rdf:type owl:Class ;
+                         rdfs:subClassOf :Business ,
+                                         :Management ;
+                         rdfs:label "Business Administration" ;
+                         rdfs:seeAlso "MBA" ,
+                                      "Management Studies" .
+
+
+###  http://graffl.ai/courses#Business_Ethics
+:Business_Ethics rdf:type owl:Class ;
+                 rdfs:subClassOf :Business ,
+                                 :Ethics ;
+                 rdfs:label "Business Ethics" ;
+                 rdfs:seeAlso "Legal and Ethical Environment of Business" .
+
+
+###  http://graffl.ai/courses#Business_French
+:Business_French rdf:type owl:Class ;
+                 rdfs:subClassOf :French_Language ;
+                 rdfs:label "Business French" ;
+                 rdfs:seeAlso "BUS FRENCH" ,
+                              "FRENCH FOR BUSINESS" .
+
+
+###  http://graffl.ai/courses#Business_German
+:Business_German rdf:type owl:Class ;
+                 rdfs:subClassOf :German_Language ;
+                 rdfs:label "Business German" ;
+                 rdfs:seeAlso "BUS GERMAN" ,
+                              "GERMAN FOR BUSINESS" .
+
+
+###  http://graffl.ai/courses#Business_Italian
+:Business_Italian rdf:type owl:Class ;
+                  rdfs:subClassOf :Italian_Language ;
+                  rdfs:label "Business Italian" ;
+                  rdfs:seeAlso "BUS ITALIAN" ,
+                               "ITALIAN FOR BUSINESS" .
+
+
+###  http://graffl.ai/courses#Business_Law
+:Business_Law rdf:type owl:Class ;
+              rdfs:subClassOf :Law ;
+              rdfs:label "Business Law" ;
+              rdfs:seeAlso "BUS LAW" .
+
+
+###  http://graffl.ai/courses#Business_Portuguese
+:Business_Portuguese rdf:type owl:Class ;
+                     rdfs:subClassOf :Portuguese_Language ;
+                     rdfs:label "Business Portuguese" ;
+                     rdfs:seeAlso "BUS PORTUGUESE" ,
+                                  "PORTUGUESE FOR BUSINESS" .
+
+
+###  http://graffl.ai/courses#Business_Technology
+:Business_Technology rdf:type owl:Class ;
+                     rdfs:subClassOf :Technology ;
+                     rdfs:label "Business Technology" ;
+                     rdfs:seeAlso "Business Tech ES" .
+
+
+###  http://graffl.ai/courses#Business_and_Personal_Law
+:Business_and_Personal_Law rdf:type owl:Class ;
+                           rdfs:subClassOf :Business_Law ,
+                                           :Personal_Law ;
+                           rdfs:label "Business and Personal Law" ;
+                           rdfs:seeAlso "PA:BUS&PERSONAL LAW" .
+
+
+###  http://graffl.ai/courses#Calculus
+:Calculus rdf:type owl:Class ;
+          rdfs:subClassOf :Math ;
+          rdfs:label "Calculus" ;
+          rdfs:seeAlso "AP CALCULUS" ,
+                       "AP CALCULUS AB" ,
+                       "CALCULUS AB" ,
+                       "MA:AP CALCULUS AB" .
+
+
+###  http://graffl.ai/courses#Cantonese
+:Cantonese rdf:type owl:Class ;
+           rdfs:subClassOf :Chinese ;
+           rdfs:label "Cantonese" .
+
+
+###  http://graffl.ai/courses#Cardiology
+:Cardiology rdf:type owl:Class ;
+            rdfs:subClassOf :Medicine ;
+            rdfs:label "Cardiology" .
+
+
+###  http://graffl.ai/courses#Career_Planning
+:Career_Planning rdf:type owl:Class ;
+                 rdfs:subClassOf :Business ;
+                 rdfs:label "Career Planning" ;
+                 rdfs:seeAlso "CAREER EXPLORATION" ,
+                              "CAREER EXPLORATION / PLANNING" .
+
+
+###  http://graffl.ai/courses#Catalan
+:Catalan rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Catalan" .
+
+
+###  http://graffl.ai/courses#Celluar_Biology
+:Celluar_Biology rdf:type owl:Class ;
+                 rdfs:subClassOf :Biology ;
+                 rdfs:label "Celluar Biology" .
+
+
+###  http://graffl.ai/courses#Celluar_Biophysics
+:Celluar_Biophysics rdf:type owl:Class ;
+                    rdfs:subClassOf :Biophysics ;
+                    rdfs:label "Celluar Biophysics" .
+
+
+###  http://graffl.ai/courses#Cellular_Molecular_Biophysics
+:Cellular_Molecular_Biophysics rdf:type owl:Class ;
+                               rdfs:subClassOf :Celluar_Biophysics ,
+                                               :Molecular_Biophysics ;
+                               rdfs:label "Cellular Molecular Biophysics" .
+
+
+###  http://graffl.ai/courses#Ceramics
+:Ceramics rdf:type owl:Class ;
+          rdfs:subClassOf :Art ;
+          rdfs:label "Ceramics" .
+
+
+###  http://graffl.ai/courses#Chemical_Biology
+:Chemical_Biology rdf:type owl:Class ;
+                  rdfs:subClassOf :Biology ,
+                                  :Chemistry ;
+                  rdfs:label "Chemical Biology" ;
+                  rdfs:seeAlso "Chemical Life Sciences" .
+
+
+###  http://graffl.ai/courses#Chemical_Engineering
+:Chemical_Engineering rdf:type owl:Class ;
+                      rdfs:subClassOf :Engineering ;
+                      rdfs:label "Chemical Engineering" ;
+                      rdfs:seeAlso "Chem Eng" ,
+                                   "Chemical Eng" ,
+                                   "Process Engineering" .
+
+
+###  http://graffl.ai/courses#Chemistry
+:Chemistry rdf:type owl:Class ;
+           rdfs:subClassOf :Science ;
+           rdfs:label "Chemistry" ;
+           rdfs:seeAlso "CHEM" ,
+                        "Chemical Science" .
+
+
+###  http://graffl.ai/courses#Child_Development
+:Child_Development rdf:type owl:Class ;
+                   rdfs:subClassOf :Practical_Art ,
+                                   :Psychology ;
+                   rdfs:label "Child Development" ;
+                   rdfs:seeAlso "Child Dev" .
+
+
+###  http://graffl.ai/courses#Chinese
+:Chinese rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Chinese" ;
+         rdfs:seeAlso "Chinese Language" .
+
+
+###  http://graffl.ai/courses#Chinese_Literature
+:Chinese_Literature rdf:type owl:Class ;
+                    rdfs:subClassOf :Literature ;
+                    :implies :Chinese ;
+                    rdfs:label "Chinese Literature" .
+
+
+###  http://graffl.ai/courses#Choir
+:Choir rdf:type owl:Class ;
+       rdfs:subClassOf :Music ;
+       rdfs:label "Choir" .
+
+
+###  http://graffl.ai/courses#Christian_Religion
+:Christian_Religion rdf:type owl:Class ;
+                    rdfs:subClassOf :Religion ;
+                    rdfs:label "Christian Religion" ;
+                    rdfs:seeAlso "Christian Religion Studies" ,
+                                 "Christianity" .
+
+
+###  http://graffl.ai/courses#Civics
+:Civics rdf:type owl:Class ;
+        rdfs:subClassOf :Course ;
+        rdfs:label "Civics" ;
+        rdfs:seeAlso "Civic Education" ,
+                     "Moral Education" ,
+                     "National Value Education" .
+
+
+###  http://graffl.ai/courses#Civil_Engineering
+:Civil_Engineering rdf:type owl:Class ;
+                   rdfs:subClassOf :Engineering ;
+                   rdfs:label "Civil Engineering" ;
+                   rdfs:seeAlso "Infrastructure Engineering" ,
+                                "Structural Engineering" .
+
+
+###  http://graffl.ai/courses#Classical_Civilization
+:Classical_Civilization rdf:type owl:Class ;
+                        rdfs:subClassOf :History ;
+                        rdfs:label "Classical Civilization" .
+
+
+###  http://graffl.ai/courses#Classical_Philology
+:Classical_Philology rdf:type owl:Class ;
+                     rdfs:subClassOf :Classical_Studies ,
+                                     :Philology ;
+                     rdfs:label "Classical Philology" .
+
+
+###  http://graffl.ai/courses#Classical_Studies
+:Classical_Studies rdf:type owl:Class ;
+                   rdfs:subClassOf :History ;
+                   rdfs:label "Classical Studies" .
+
+
+###  http://graffl.ai/courses#Climate_School
+:Climate_School rdf:type owl:Class ;
+                rdfs:subClassOf :Climate_Studies ;
+                rdfs:label "Climate School" .
+
+
+###  http://graffl.ai/courses#Climate_Studies
+:Climate_Studies rdf:type owl:Class ;
+                 rdfs:subClassOf :Course ;
+                 rdfs:label "Climate Studies" .
+
+
+###  http://graffl.ai/courses#Climate_and_Society
+:Climate_and_Society rdf:type owl:Class ;
+                     rdfs:subClassOf :Climate_Studies ;
+                     rdfs:label "Climate and Society" .
+
+
+###  http://graffl.ai/courses#Clinical_Office_Procedures
+:Clinical_Office_Procedures rdf:type owl:Class ;
+                            rdfs:subClassOf :Health_Administration ;
+                            rdfs:label "Clinical Office Procedures" .
+
+
+###  http://graffl.ai/courses#Cnc_Machine
+:Cnc_Machine rdf:type owl:Class ;
+             rdfs:subClassOf :Shop_Class ,
+                             :Shop_Technology ;
+             rdfs:label "CNC Machine" ;
+             rdfs:seeAlso "Comp Numerical Control" .
+
+
+###  http://graffl.ai/courses#Cognitive_Science
+:Cognitive_Science rdf:type owl:Class ;
+                   rdfs:subClassOf :Psychology ,
+                                   :Science ;
+                   rdfs:label "Cognitive Science" ;
+                   rdfs:seeAlso "Cognition Studies" .
+
+
+###  http://graffl.ai/courses#Committee_on_Global_Thought
+:Committee_on_Global_Thought rdf:type owl:Class ;
+                             rdfs:subClassOf :Social_Studies ;
+                             rdfs:label "Committee on Global Thought" .
+
+
+###  http://graffl.ai/courses#Communication_Studies
+:Communication_Studies rdf:type owl:Class ;
+                       rdfs:subClassOf :Communications ,
+                                       :Social_Science ;
+                       rdfs:label "Communication Studies" ;
+                       rdfs:seeAlso "Media and Communication" .
+
+
+###  http://graffl.ai/courses#Communications
+:Communications rdf:type owl:Class ;
+                rdfs:subClassOf :Course ;
+                rdfs:label "Communications" ;
+                rdfs:seeAlso "COMM" ,
+                             "Communication" .
+
+
+###  http://graffl.ai/courses#Comparative_Government
+:Comparative_Government rdf:type owl:Class ;
+                        rdfs:subClassOf :Government ;
+                        rdfs:label "Comparative Government" .
+
+
+###  http://graffl.ai/courses#Comparative_Government_and_Politics
+:Comparative_Government_and_Politics rdf:type owl:Class ;
+                                     rdfs:subClassOf :Comparative_Government ,
+                                                     :Politics ;
+                                     rdfs:label "Comparative Government and Politics" .
+
+
+###  http://graffl.ai/courses#Comparative_Media
+:Comparative_Media rdf:type owl:Class ;
+                   rdfs:subClassOf :Course ;
+                   rdfs:label "Comparative Media" .
+
+
+###  http://graffl.ai/courses#Composition
+:Composition rdf:type owl:Class ;
+             rdfs:subClassOf :Language_Art ;
+             :similarTo :Writing ;
+             rdfs:label "Composition" .
+
+
+###  http://graffl.ai/courses#Computer_Applications
+:Computer_Applications rdf:type owl:Class ;
+                       rdfs:subClassOf :Technology ;
+                       rdfs:label "Computer Applications" ;
+                       rdfs:seeAlso "Living Learning in Tech World" .
+
+
+###  http://graffl.ai/courses#Computer_Engineering
+:Computer_Engineering rdf:type owl:Class ;
+                      rdfs:subClassOf :Engineering ,
+                                      :Technology ;
+                      rdfs:label "Computer Engineering" ;
+                      rdfs:seeAlso "Comp Eng" ,
+                                   "Computer Systems Engineering" .
+
+
+###  http://graffl.ai/courses#Computer_Math
+:Computer_Math rdf:type owl:Class ;
+               rdfs:subClassOf :Computer_Science ,
+                               :Math ;
+               rdfs:label "Computer Math" .
+
+
+###  http://graffl.ai/courses#Computer_Science
+:Computer_Science rdf:type owl:Class ;
+                  rdfs:subClassOf :Science ,
+                                  :Technology ;
+                  rdfs:label "Computer Science" ;
+                  rdfs:seeAlso "Computer Science Classes" .
+
+
+###  http://graffl.ai/courses#Concert_Band
+:Concert_Band rdf:type owl:Class ;
+              rdfs:subClassOf :Band ;
+              rdfs:label "Concert Band" .
+
+
+###  http://graffl.ai/courses#Conservation
+:Conservation rdf:type owl:Class ;
+              rdfs:subClassOf :Environmental_Science ;
+              rdfs:label "Conservation" .
+
+
+###  http://graffl.ai/courses#Construction
+:Construction rdf:type owl:Class ;
+              rdfs:subClassOf :Course ;
+              rdfs:label "Construction" .
+
+
+###  http://graffl.ai/courses#Construction_Management
+:Construction_Management rdf:type owl:Class ;
+                         rdfs:subClassOf :Construction ,
+                                         :Management ;
+                         rdfs:label "Construction Management" .
+
+
+###  http://graffl.ai/courses#Consumer_Math
+:Consumer_Math rdf:type owl:Class ;
+               rdfs:subClassOf :Math ;
+               rdfs:label "Consumer Math" .
+
+
+###  http://graffl.ai/courses#Contemporary_Civilization
+:Contemporary_Civilization rdf:type owl:Class ;
+                           rdfs:subClassOf :History ;
+                           rdfs:label "Contemporary Civilization" .
+
+
+###  http://graffl.ai/courses#Contemporary_Literature
+:Contemporary_Literature rdf:type owl:Class ;
+                         rdfs:subClassOf :Literature ;
+                         :implies :English_Literature ;
+                         rdfs:label "Contemporary Literature" .
+
+
+###  http://graffl.ai/courses#Conversational_French
+:Conversational_French rdf:type owl:Class ;
+                       rdfs:subClassOf :French_Language ;
+                       rdfs:label "Conversational French" ;
+                       rdfs:seeAlso "CONV FRENCH" ,
+                                    "FRENCH CONVERSATION" .
+
+
+###  http://graffl.ai/courses#Conversational_German
+:Conversational_German rdf:type owl:Class ;
+                       rdfs:subClassOf :German_Language ;
+                       rdfs:label "Conversational German" ;
+                       rdfs:seeAlso "CONV GERMAN" ,
+                                    "GERMAN CONVERSATION" .
+
+
+###  http://graffl.ai/courses#Conversational_Italian
+:Conversational_Italian rdf:type owl:Class ;
+                        rdfs:subClassOf :Italian_Language ;
+                        rdfs:label "Conversational Italian" ;
+                        rdfs:seeAlso "CONV ITALIAN" ,
+                                     "ITALIAN CONVERSATION" .
+
+
+###  http://graffl.ai/courses#Conversational_Portuguese
+:Conversational_Portuguese rdf:type owl:Class ;
+                           rdfs:subClassOf :Portuguese_Language ;
+                           rdfs:label "Conversational Portuguese" ;
+                           rdfs:seeAlso "CONV PORTUGUESE" ,
+                                        "PORTUGUESE CONVERSATION" .
+
+
+###  http://graffl.ai/courses#Cosmetology
+:Cosmetology rdf:type owl:Class ;
+             rdfs:subClassOf :Course ;
+             rdfs:label "Cosmetology" .
+
+
+###  http://graffl.ai/courses#Course
+:Course rdf:type owl:Class ;
+        rdfs:label "Course" .
+
+
+###  http://graffl.ai/courses#Course_Level
+:Course_Level rdf:type owl:Class ;
+              rdfs:label "Course Level" .
+
+
+###  http://graffl.ai/courses#Creative_Arts
+:Creative_Arts rdf:type owl:Class ;
+               rdfs:subClassOf :Art ;
+               rdfs:label "Creative Arts" ;
+               rdfs:seeAlso "Creative Art" .
+
+
+###  http://graffl.ai/courses#Criminal_Justice
+:Criminal_Justice rdf:type owl:Class ;
+                  rdfs:subClassOf :Law ,
+                                  :Social_Science ;
+                  rdfs:label "Criminal Justice" ;
+                  rdfs:seeAlso "Criminology" ,
+                               "Law Enforcement" .
+
+
+###  http://graffl.ai/courses#Criminology
+:Criminology rdf:type owl:Class ;
+             rdfs:subClassOf :Social_Science ;
+             rdfs:label "Criminology" ;
+             rdfs:seeAlso "Criminal Behavior Studies" .
+
+
+###  http://graffl.ai/courses#Critical_Thinking
+:Critical_Thinking rdf:type owl:Class ;
+                   rdfs:subClassOf :Course ;
+                   rdfs:label "Critical Thinking" .
+
+
+###  http://graffl.ai/courses#Culinary_Art
+:Culinary_Art rdf:type owl:Class ;
+              rdfs:subClassOf :Practical_Art ;
+              rdfs:label "Culinary Art" ;
+              rdfs:seeAlso "Cul Arts" ,
+                           "Culinary Arts" .
+
+
+###  http://graffl.ai/courses#Cultural_Arts
+:Cultural_Arts rdf:type owl:Class ;
+               rdfs:subClassOf :Art ;
+               :similarTo :Cultural_Geography ;
+               rdfs:label "Cultural Arts" ;
+               rdfs:seeAlso "Cultural Art" .
+
+
+###  http://graffl.ai/courses#Cultural_Geography
+:Cultural_Geography rdf:type owl:Class ;
+                    rdfs:subClassOf :Geography ;
+                    rdfs:label "Cultural Geography" ;
+                    rdfs:seeAlso "SS:CULTURAL GEOGRAPHY" .
+
+
+###  http://graffl.ai/courses#Cultural_Studies
+:Cultural_Studies rdf:type owl:Class ;
+                  rdfs:subClassOf :Course ;
+                  rdfs:label "Cultural Studies" .
+
+
+###  http://graffl.ai/courses#Czech
+:Czech rdf:type owl:Class ;
+       rdfs:subClassOf :Language ;
+       rdfs:label "Czech" .
+
+
+###  http://graffl.ai/courses#Dance
+:Dance rdf:type owl:Class ;
+       rdfs:subClassOf :Physical_Education ;
+       rdfs:label "Dance" ;
+       rdfs:seeAlso "Dance Elec" .
+
+
+###  http://graffl.ai/courses#Data_Processing
+:Data_Processing rdf:type owl:Class ;
+                 rdfs:subClassOf :Business_Technology ,
+                                 :Information_Technology ;
+                 rdfs:label "Data Processing" .
+
+
+###  http://graffl.ai/courses#Data_Science
+:Data_Science rdf:type owl:Class ;
+              rdfs:subClassOf :Science ,
+                              :Technology ;
+              rdfs:label "Data Science" ;
+              rdfs:seeAlso "Big Data Science" ,
+                           "Data Analytics" .
+
+
+###  http://graffl.ai/courses#Dental_Science
+:Dental_Science rdf:type owl:Class ;
+                rdfs:subClassOf :Health ,
+                                :Science ;
+                rdfs:label "Dental Science" ;
+                rdfs:seeAlso "Dentistry" .
+
+
+###  http://graffl.ai/courses#Dentistry
+:Dentistry rdf:type owl:Class ;
+           rdfs:subClassOf :Medicine ;
+           rdfs:label "Dentistry" .
+
+
+###  http://graffl.ai/courses#Design
+:Design rdf:type owl:Class ;
+        rdfs:label "Design" .
+
+
+###  http://graffl.ai/courses#Development_Studies
+:Development_Studies rdf:type owl:Class ;
+                     rdfs:subClassOf :Humanities ,
+                                     :Social_Science ;
+                     rdfs:label "Development Studies" ;
+                     rdfs:seeAlso "Global Development" .
+
+
+###  http://graffl.ai/courses#Digital_Art
+:Digital_Art rdf:type owl:Class ;
+             rdfs:subClassOf :Creative_Arts ,
+                             :Technology ;
+             rdfs:label "Digital Art" ;
+             rdfs:seeAlso "3-D Art" ,
+                          "Cmptr Art" ,
+                          "Cmptr Art Studio" ,
+                          "Computer Art" ,
+                          "Computer Art Studio" .
+
+
+###  http://graffl.ai/courses#Digital_Marketing
+:Digital_Marketing rdf:type owl:Class ;
+                   rdfs:subClassOf :Business ,
+                                   :Marketing ;
+                   rdfs:label "Digital Marketing" ;
+                   rdfs:seeAlso "Online Marketing" .
+
+
+###  http://graffl.ai/courses#Digital_Media
+:Digital_Media rdf:type owl:Class ;
+               rdfs:subClassOf :Art ;
+               rdfs:label "Digital Media" .
+
+
+###  http://graffl.ai/courses#Digital_Video
+:Digital_Video rdf:type owl:Class ;
+               rdfs:subClassOf :Technology ;
+               rdfs:label "Digital Video" .
+
+
+###  http://graffl.ai/courses#Drama
+:Drama rdf:type owl:Class ;
+       rdfs:subClassOf :Art ;
+       rdfs:label "Drama" .
+
+
+###  http://graffl.ai/courses#Drawing
+:Drawing rdf:type owl:Class ;
+         rdfs:subClassOf :Creative_Arts ;
+         rdfs:label "Drawing" .
+
+
+###  http://graffl.ai/courses#Drill_Press
+:Drill_Press rdf:type owl:Class ;
+             rdfs:subClassOf :Shop_Class ;
+             rdfs:label "Drill Press" .
+
+
+###  http://graffl.ai/courses#Driver_Education
+:Driver_Education rdf:type owl:Class ;
+                  rdfs:subClassOf :Course ;
+                  rdfs:label "Driver Education" ;
+                  rdfs:seeAlso "DRIVER ED" ,
+                               "DRIVERS ED" .
+
+
+###  http://graffl.ai/courses#Dutch
+:Dutch rdf:type owl:Class ;
+       rdfs:subClassOf :Language ;
+       rdfs:label "Dutch" .
+
+
+###  http://graffl.ai/courses#Earth_Science
+:Earth_Science rdf:type owl:Class ;
+               rdfs:subClassOf :Science ;
+               rdfs:label "Earth Science" .
+
+
+###  http://graffl.ai/courses#Economics
+:Economics rdf:type owl:Class ;
+           rdfs:subClassOf :Course ,
+                           :Social_Science ;
+           rdfs:label "Economics" ;
+           rdfs:seeAlso "Economic Studies" ,
+                        "Economical Science" .
+
+
+###  http://graffl.ai/courses#Education
+:Education rdf:type owl:Class ;
+           rdfs:subClassOf :Social_Science ;
+           rdfs:label "Education" ;
+           rdfs:seeAlso "Teaching Studies" .
+
+
+###  http://graffl.ai/courses#Effective_Speaking
+:Effective_Speaking rdf:type owl:Class ;
+                    rdfs:subClassOf :Public_Speaking ;
+                    rdfs:label "Effective Speaking" .
+
+
+###  http://graffl.ai/courses#Egyptian
+:Egyptian rdf:type owl:Class ;
+          rdfs:subClassOf :Language ;
+          rdfs:label "Egyptian" .
+
+
+###  http://graffl.ai/courses#Electrical_Engineering
+:Electrical_Engineering rdf:type owl:Class ;
+                        rdfs:subClassOf :Engineering ,
+                                        :Technology ;
+                        rdfs:label "Electrical Engineering" ;
+                        rdfs:seeAlso "Electrical Eng" .
+
+
+###  http://graffl.ai/courses#Electrical_and_Mechanical_Engineering
+:Electrical_and_Mechanical_Engineering rdf:type owl:Class ;
+                                       rdfs:subClassOf :Course ;
+                                       rdfs:label "Electrical and Mechanical Engineering" .
+
+
+###  http://graffl.ai/courses#Electronics
+:Electronics rdf:type owl:Class ;
+             rdfs:subClassOf :Science ;
+             rdfs:label "Electronics" .
+
+
+###  http://graffl.ai/courses#Electronics_and_Robotics
+:Electronics_and_Robotics rdf:type owl:Class ;
+                          rdfs:subClassOf :Electronics ,
+                                          :Robotics ;
+                          rdfs:label "Electronics and Robotics" .
+
+
+###  http://graffl.ai/courses#Emergency_Medicine
+:Emergency_Medicine rdf:type owl:Class ;
+                    rdfs:subClassOf :Medicine ;
+                    rdfs:label "Emergency Medicine" .
+
+
+###  http://graffl.ai/courses#Endocrinology_and_Metabolism
+:Endocrinology_and_Metabolism rdf:type owl:Class ;
+                              rdfs:subClassOf :Course ;
+                              rdfs:label "Endocrinology and Metabolism" .
+
+
+###  http://graffl.ai/courses#Engineering
+:Engineering rdf:type owl:Class ;
+             rdfs:subClassOf :Course ;
+             rdfs:label "Engineering" .
+
+
+###  http://graffl.ai/courses#Engineering_Management
+:Engineering_Management rdf:type owl:Class ;
+                        rdfs:subClassOf :Engineering ,
+                                        :Management ;
+                        rdfs:label "Engineering Management" ;
+                        rdfs:seeAlso "Engineering Business" .
+
+
+###  http://graffl.ai/courses#English
+:English rdf:type owl:Class ;
+         rdfs:subClassOf :English_Language ,
+                         :Language ;
+         rdfs:label "English" ;
+         rdfs:seeAlso "English Language" ;
+         skos:altLabel "ENG" ,
+                       "ENGL" .
+
+
+
+###  http://graffl.ai/courses#English_Composition
+:English_Composition rdf:type owl:Class ;
+                     rdfs:subClassOf :Composition ,
+                                     :English_Language_Arts ;
+                     :implies :English ;
+                     rdfs:label "English Composition" ;
+                     rdfs:seeAlso "Writing w / Confi dence" ,
+                                  "Writing w Confi dence" ,
+                                  "Writing w/ Confi dence" ,
+                                  "Writing w/ Confidence" ,
+                                  "Writing with Confidence" .
+
+
+
+
+###  http://graffl.ai/courses#English_Language
+:English_Language rdf:type owl:Class ;
+                  rdfs:subClassOf :English_Language_Arts ,
+                                  :IndoEuropean_Language ;
+                  rdfs:label "English Language" ;
+                  rdfs:seeAlso "ADV ENGLISH" ,
+                               "ENGLISH" ,
+                               "ENGLISH LANG" .
+
+
+###  http://graffl.ai/courses#English_Language_Arts
+:English_Language_Arts rdf:type owl:Class ;
+                       rdfs:subClassOf :Language_Art ;
+                       rdfs:label "English Language Arts" .
+
+
+###  http://graffl.ai/courses#English_Language_and_Communication
+:English_Language_and_Communication rdf:type owl:Class ;
+                                    rdfs:subClassOf :Communications ,
+                                                    :English_Language ;
+                                    rdfs:label "English Language and Communication" ;
+                                    rdfs:seeAlso "ENGLISH LANG/COM" .
+
+
+###  http://graffl.ai/courses#English_Listening
+:English_Listening rdf:type owl:Class ;
+                   rdfs:subClassOf :English_Language_Arts ,
+                                   :Speech ;
+                   :implies :English ;
+                   rdfs:label "English Listening" .
+
+
+###  http://graffl.ai/courses#English_Literature
+:English_Literature rdf:type owl:Class ;
+                    rdfs:subClassOf :Humanities ,
+                                    :Literature ;
+                    :implies :English ;
+                    rdfs:label "English Literature" ;
+                    rdfs:seeAlso "British Literature" ,
+                                 "English Literary Studies" .
+
+
+###  http://graffl.ai/courses#English_Reading
+:English_Reading rdf:type owl:Class ;
+                 rdfs:subClassOf :English_Language_Arts ,
+                                 :Reading ;
+                 :implies :English ;
+                 rdfs:label "English Reading" .
+
+
+###  http://graffl.ai/courses#English_Speaking
+:English_Speaking rdf:type owl:Class ;
+                  rdfs:subClassOf :English_Language_Arts ,
+                                  :Speech ;
+                  :implies :English ;
+                  rdfs:label "English Speaking" .
+
+
+###  http://graffl.ai/courses#English_Writing
+:English_Writing rdf:type owl:Class ;
+                 rdfs:subClassOf :English_Language_Arts ,
+                                 :Writing ;
+                 :implies :English ;
+                 rdfs:label "English Writing" .
+
+
+###  http://graffl.ai/courses#Entrepreneurship
+:Entrepreneurship rdf:type owl:Class ;
+                  rdfs:subClassOf :Business ;
+                  rdfs:label "Entrepreneurship" .
+
+
+###  http://graffl.ai/courses#Environment
+:Environment rdf:type owl:Class .
+
+
+###  http://graffl.ai/courses#Environmental_Chemistry
+:Environmental_Chemistry rdf:type owl:Class ;
+                         rdfs:subClassOf :Chemistry ,
+                                         :Environment ;
+                         rdfs:label "Environmental Chemistry" ;
+                         rdfs:seeAlso "Eco Chemistry" .
+
+
+###  http://graffl.ai/courses#Environmental_Economics
+:Environmental_Economics rdf:type owl:Class ;
+                         rdfs:subClassOf :Economics ,
+                                         :Environment ;
+                         rdfs:label "Environmental Economics" ;
+                         rdfs:seeAlso "Eco Economics" .
+
+
+###  http://graffl.ai/courses#Environmental_Engineering
+:Environmental_Engineering rdf:type owl:Class ;
+                           rdfs:subClassOf :Engineering ;
+                           rdfs:label "Environmental Engineering" ;
+                           rdfs:seeAlso "Environmental Tech" .
+
+
+###  http://graffl.ai/courses#Environmental_Engineering_and_Sustainability
+:Environmental_Engineering_and_Sustainability rdf:type owl:Class ;
+                                              rdfs:subClassOf :Environmental_Engineering ,
+                                                              :Sustainable_Development ;
+                                              rdfs:label "Environmental Engineering and Sustainability" ;
+                                              rdfs:seeAlso "Green Engineering" .
+
+
+###  http://graffl.ai/courses#Environmental_Policy
+:Environmental_Policy rdf:type owl:Class ;
+                      rdfs:subClassOf :Course ,
+                                      :Environment ,
+                                      :Social_Science ;
+                      rdfs:label "Environmental Policy" ;
+                      rdfs:seeAlso "Sustainability Policy" .
+
+
+###  http://graffl.ai/courses#Environmental_Science
+:Environmental_Science rdf:type owl:Class ;
+                       rdfs:subClassOf :Science ;
+                       rdfs:label "Environmental Science" ;
+                       rdfs:seeAlso "Environmental Studies" .
+
+
+###  http://graffl.ai/courses#Environmental_Studies
+:Environmental_Studies rdf:type owl:Class ;
+                       rdfs:subClassOf :Environmental_Science ;
+                       rdfs:label "Environmental Studies" ;
+                       rdfs:seeAlso "Eco Studies" ,
+                                    "Nature Studies" .
+
+
+###  http://graffl.ai/courses#Epidemiology
+:Epidemiology rdf:type owl:Class ;
+              rdfs:subClassOf :Course ;
+              rdfs:label "Epidemiology" .
+
+
+###  http://graffl.ai/courses#Ethics
+:Ethics rdf:type owl:Class ;
+        rdfs:subClassOf :Course ;
+        rdfs:label "Ethics" .
+
+
+###  http://graffl.ai/courses#European_History
+:European_History rdf:type owl:Class ;
+                  rdfs:subClassOf :History ;
+                  rdfs:label "European History" .
+
+
+###  http://graffl.ai/courses#European_Language
+:European_Language rdf:type owl:Class ;
+                   rdfs:subClassOf :Language ;
+                   rdfs:label "European Language" .
+
+
+###  http://graffl.ai/courses#Executive_MPA_Program
+:Executive_MPA_Program rdf:type owl:Class ;
+                       rdfs:subClassOf :Course ;
+                       rdfs:label "Executive MPA Program" .
+
+
+###  http://graffl.ai/courses#Family_Medicine
+:Family_Medicine rdf:type owl:Class ;
+                 rdfs:subClassOf :Course ;
+                 rdfs:label "Family Medicine" .
+
+
+###  http://graffl.ai/courses#Fashion
+:Fashion rdf:type owl:Class ;
+         rdfs:subClassOf :Course ;
+         rdfs:label "Fashion" .
+
+
+###  http://graffl.ai/courses#Fashion_Communication
+:Fashion_Communication rdf:type owl:Class ;
+                       rdfs:subClassOf :Communications ,
+                                       :Fashion ;
+                       rdfs:label "Fashion Communication" ;
+                       rdfs:seeAlso "Fashion Media" .
+
+
+###  http://graffl.ai/courses#Fashion_Design
+:Fashion_Design rdf:type owl:Class ;
+                rdfs:subClassOf :Art ,
+                                :Design ;
+                rdfs:label "Fashion Design" ;
+                rdfs:seeAlso "Apparel Design" .
+
+
+###  http://graffl.ai/courses#Fashion_Design_and_Merchandising
+:Fashion_Design_and_Merchandising rdf:type owl:Class ;
+                                  rdfs:subClassOf :Business ,
+                                                  :Design ,
+                                                  :Fashion ;
+                                  rdfs:label "Fashion Design and Merchandising" ;
+                                  rdfs:seeAlso "Fashion Business" .
+
+
+###  http://graffl.ai/courses#Fashion_Marketing
+:Fashion_Marketing rdf:type owl:Class ;
+                   rdfs:subClassOf :Fashion ,
+                                   :Marketing ;
+                   rdfs:label "Fashion Marketing" ;
+                   rdfs:seeAlso "Fashion Merchandising" .
+
+
+###  http://graffl.ai/courses#Fashion_Merchandising
+:Fashion_Merchandising rdf:type owl:Class ;
+                       rdfs:subClassOf :Business ,
+                                       :Fashion ;
+                       rdfs:label "Fashion Merchandising" ;
+                       rdfs:seeAlso "Fashion Retailing" .
+
+
+###  http://graffl.ai/courses#Fashion_Merchandising_and_Management
+:Fashion_Merchandising_and_Management rdf:type owl:Class ;
+                                      rdfs:subClassOf :Business ,
+                                                      :Fashion ,
+                                                      :Management ;
+                                      rdfs:label "Fashion Merchandising and Management" ;
+                                      rdfs:seeAlso "Fashion Business" .
+
+
+###  http://graffl.ai/courses#Fashion_Styling
+:Fashion_Styling rdf:type owl:Class ;
+                 rdfs:subClassOf :Art ,
+                                 :Fashion ;
+                 rdfs:label "Fashion Styling" ;
+                 rdfs:seeAlso "Fashion Image Consulting" .
+
+
+###  http://graffl.ai/courses#Fashion_Technology
+:Fashion_Technology rdf:type owl:Class ;
+                    rdfs:subClassOf :Fashion ,
+                                    :Technology ;
+                    rdfs:label "Fashion Technology" ;
+                    rdfs:seeAlso "Fashion Tech" .
+
+
+###  http://graffl.ai/courses#Filipino
+:Filipino rdf:type owl:Class ;
+          rdfs:subClassOf :Language ;
+          rdfs:label "Filipino" .
+
+
+###  http://graffl.ai/courses#Film
+:Film rdf:type owl:Class ;
+      rdfs:subClassOf :Course ;
+      rdfs:label "Film" .
+
+
+###  http://graffl.ai/courses#Film_Production
+:Film_Production rdf:type owl:Class ;
+                 rdfs:subClassOf :Art ,
+                                 :Film_Studies ,
+                                 :Media_Studies ;
+                 rdfs:label "Film Production" ;
+                 rdfs:seeAlso "Movie Making" .
+
+
+###  http://graffl.ai/courses#Film_Studies
+:Film_Studies rdf:type owl:Class ;
+              rdfs:subClassOf :Humanities ;
+              rdfs:label "Film Studies" ;
+              rdfs:seeAlso "Cinema Studies" ,
+                           "Movie Analysis" .
+
+
+###  http://graffl.ai/courses#Film_and_Media_Studies
+:Film_and_Media_Studies rdf:type owl:Class ;
+                        rdfs:subClassOf :Communications ,
+                                        :Film_Studies ,
+                                        :Media_Studies ;
+                        rdfs:label "Film and Media Studies" ;
+                        rdfs:seeAlso "Cinema and Media Studies" .
+
+
+###  http://graffl.ai/courses#Finance
+:Finance rdf:type owl:Class ;
+         rdfs:subClassOf :Business ,
+                         :Course ;
+         rdfs:label "Finance" ;
+         rdfs:seeAlso "Financial Studies" .
+
+
+###  http://graffl.ai/courses#Fine_Arts
+:Fine_Arts rdf:type owl:Class ;
+           rdfs:subClassOf :Creative_Arts ;
+           rdfs:label "Fine Arts" .
+
+
+###  http://graffl.ai/courses#Finnish
+:Finnish rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Finnish" .
+
+
+###  http://graffl.ai/courses#Food_Preparation
+:Food_Preparation rdf:type owl:Class ;
+                  rdfs:subClassOf :Culinary_Art ;
+                  rdfs:label "Food Preparation" ;
+                  rdfs:seeAlso "Food" ,
+                               "Foods" ,
+                               "PA:FOODS" .
+
+
+###  http://graffl.ai/courses#Football
+:Football rdf:type owl:Class ;
+          rdfs:subClassOf :Sports ;
+          rdfs:label "Football" ;
+          rdfs:seeAlso "Intercollegiate Football" ,
+                       "Intercollegiate Football - Men" .
+
+
+###  http://graffl.ai/courses#Foreign_Language
+:Foreign_Language rdf:type owl:Class ;
+                  rdfs:subClassOf :Humanities ;
+                  rdfs:label "Foreign Language" ;
+                  rdfs:seeAlso "Second Language" ,
+                               "World Language" .
+
+
+###  http://graffl.ai/courses#Forensic_Science
+:Forensic_Science rdf:type owl:Class ;
+                  rdfs:subClassOf :Science ;
+                  rdfs:label "Forensic Science" ;
+                  rdfs:seeAlso "Forensics" .
+
+
+###  http://graffl.ai/courses#Forestry
+:Forestry rdf:type owl:Class ;
+          rdfs:subClassOf :Science ;
+          rdfs:label "Forestry" .
+
+
+###  http://graffl.ai/courses#Formal_Algebra
+:Formal_Algebra rdf:type owl:Class ;
+                rdfs:subClassOf :Algebra ;
+                rdfs:label "Formal Algebra" .
+
+
+###  http://graffl.ai/courses#Formal_Geometry
+:Formal_Geometry rdf:type owl:Class ;
+                 rdfs:subClassOf :Geometry ;
+                 rdfs:label "Formal Geometry" .
+
+
+###  http://graffl.ai/courses#Fossils
+:Fossils rdf:type owl:Class ;
+         rdfs:subClassOf :Science ;
+         rdfs:label "Fossils" .
+
+
+###  http://graffl.ai/courses#French
+:French rdf:type owl:Class ;
+        owl:equivalentClass :French_Language ;
+        rdfs:subClassOf :European_Language ;
+        rdfs:label "French" ;
+        rdfs:seeAlso "French Language" .
+
+
+###  http://graffl.ai/courses#French_Culture
+:French_Culture rdf:type owl:Class ;
+                rdfs:subClassOf :French_Language ;
+                rdfs:label "French Culture" ;
+                rdfs:seeAlso "FRENCH CULTURE" ,
+                             "FRENCH SOCIETY" .
+
+
+###  http://graffl.ai/courses#French_Language
+:French_Language rdf:type owl:Class ;
+                 rdfs:subClassOf :IndoEuropean_Language ;
+                 rdfs:label "French Language" ;
+                 rdfs:seeAlso "ADV FRENCH" ,
+                              "FRENCH" ,
+                              "FRENCH LANG" .
+
+
+###  http://graffl.ai/courses#Gastroenterology
+:Gastroenterology rdf:type owl:Class ;
+                  rdfs:subClassOf :Course ;
+                  rdfs:label "Gastroenterology" .
+
+
+###  http://graffl.ai/courses#Gender_Studies
+:Gender_Studies rdf:type owl:Class ;
+                rdfs:subClassOf :Humanities ,
+                                :Social_Science ;
+                rdfs:label "Gender Studies" ;
+                rdfs:seeAlso "Feminist Studies" ,
+                             "Women's Studies" .
+
+
+###  http://graffl.ai/courses#General_Business
+:General_Business rdf:type owl:Class ;
+                  rdfs:subClassOf :Business ,
+                                  :Practical_Art ;
+                  rdfs:label "General Business" ;
+                  rdfs:seeAlso "Intro Bus" .
+
+
+###  http://graffl.ai/courses#General_Mathematics
+:General_Mathematics rdf:type owl:Class ;
+                     rdfs:subClassOf :Math ;
+                     :hasLevel :Introductory ;
+                     rdfs:label "General Mathematics" ;
+                     rdfs:seeAlso "College Mathematics" ,
+                                  "College Prep Math" ,
+                                  "Fundamentals of Math" ,
+                                  "General College Mathematics" ,
+                                  "Mathematics Success Support" .
+
+
+###  http://graffl.ai/courses#Genetics
+:Genetics rdf:type owl:Class ;
+          rdfs:subClassOf :Science ;
+          rdfs:label "Genetics" .
+
+
+###  http://graffl.ai/courses#Genetics_and_Development
+:Genetics_and_Development rdf:type owl:Class ;
+                          rdfs:subClassOf :Course ;
+                          rdfs:label "Genetics and Development" .
+
+
+###  http://graffl.ai/courses#Geochemical_Science
+:Geochemical_Science rdf:type owl:Class ;
+                     rdfs:subClassOf :Science ;
+                     rdfs:label "Geochemical Science" .
+
+
+###  http://graffl.ai/courses#Geography
+:Geography rdf:type owl:Class ;
+           rdfs:subClassOf :Course ;
+           rdfs:label "Geography" .
+
+
+###  http://graffl.ai/courses#Geology
+:Geology rdf:type owl:Class ;
+         rdfs:subClassOf :Science ;
+         rdfs:label "Geology" ;
+         rdfs:seeAlso "Earth Science" .
+
+
+###  http://graffl.ai/courses#Geometry
+:Geometry rdf:type owl:Class ;
+          rdfs:subClassOf :Math ;
+          rdfs:label "Geometry" .
+
+
+###  http://graffl.ai/courses#Georgian
+:Georgian rdf:type owl:Class ;
+          rdfs:subClassOf :Language ;
+          rdfs:label "Georgian" .
+
+
+###  http://graffl.ai/courses#German
+:German rdf:type owl:Class ;
+        owl:equivalentClass :German_Language ;
+        rdfs:subClassOf :European_Language ;
+        rdfs:label "German" ;
+        rdfs:seeAlso "German Language" .
+
+
+###  http://graffl.ai/courses#German_Culture
+:German_Culture rdf:type owl:Class ;
+                rdfs:subClassOf :German_Language ;
+                rdfs:label "German Culture" ;
+                rdfs:seeAlso "GERMAN CULTURE" ,
+                             "GERMAN SOCIETY" .
+
+
+###  http://graffl.ai/courses#German_Language
+:German_Language rdf:type owl:Class ;
+                 rdfs:subClassOf :IndoEuropean_Language ;
+                 rdfs:label "German Language" ;
+                 rdfs:seeAlso "ADV GERMAN" ,
+                              "GERMAN" ,
+                              "GERMAN LANG" .
+
+
+###  http://graffl.ai/courses#Government
+:Government rdf:type owl:Class ;
+            rdfs:subClassOf :Course ;
+            rdfs:label "Government" ;
+            rdfs:seeAlso "Govt" .
+
+
+###  http://graffl.ai/courses#Graphic_Design
+:Graphic_Design rdf:type owl:Class ;
+                rdfs:subClassOf :Design ;
+                rdfs:label "Graphic Design" ;
+                rdfs:seeAlso "Visual Communication" .
+
+
+###  http://graffl.ai/courses#Graphics
+:Graphics rdf:type owl:Class ;
+          rdfs:subClassOf :Course ;
+          rdfs:label "Graphics" .
+
+
+###  http://graffl.ai/courses#Greek_Language
+:Greek_Language rdf:type owl:Class ;
+                rdfs:subClassOf :IndoEuropean_Language ;
+                rdfs:label "Greek Language" ;
+                rdfs:seeAlso "ADV GREEK" ,
+                             "GREEK" ,
+                             "GREEK LANG" .
+
+
+###  http://graffl.ai/courses#Guitar
+:Guitar rdf:type owl:Class ;
+        rdfs:subClassOf :Music ;
+        rdfs:label "Guitar" .
+
+
+###  http://graffl.ai/courses#Gymnastics
+:Gymnastics rdf:type owl:Class ;
+            rdfs:subClassOf :Physical_Education ;
+            rdfs:label "Gymnastics" .
+
+
+###  http://graffl.ai/courses#Haitian_Kreyol
+:Haitian_Kreyol rdf:type owl:Class ;
+                rdfs:subClassOf :Language ;
+                rdfs:label "Haitian Kreyol" .
+
+
+###  http://graffl.ai/courses#Health
+:Health rdf:type owl:Class ;
+        rdfs:subClassOf :Course ;
+        rdfs:label "Health" ;
+        rdfs:seeAlso "Fnd Hlth Sci" ,
+                     "Hlth" ,
+                     "Hlth Sci" ,
+                     "Per Well" .
+
+
+###  http://graffl.ai/courses#Health_Administration
+:Health_Administration rdf:type owl:Class ;
+                       rdfs:subClassOf :Health ,
+                                       :Management ;
+                       rdfs:label "Health Administration" ;
+                       rdfs:seeAlso "Healthcare Management" .
+
+
+###  http://graffl.ai/courses#Health_Science
+:Health_Science rdf:type owl:Class ;
+                rdfs:subClassOf :Science ;
+                rdfs:label "Health Science" .
+
+
+###  http://graffl.ai/courses#Hematology
+:Hematology rdf:type owl:Class ;
+            rdfs:subClassOf :Course ;
+            rdfs:label "Hematology" .
+
+
+###  http://graffl.ai/courses#Hindi_Language
+:Hindi_Language rdf:type owl:Class ;
+                rdfs:subClassOf :IndoEuropean_Language ;
+                rdfs:label "Hindi Language" ;
+                rdfs:seeAlso "ADV HINDI" ,
+                             "HINDI" ,
+                             "HINDI LANG" .
+
+
+###  http://graffl.ai/courses#History
+:History rdf:type owl:Class ;
+         rdfs:subClassOf :Course ,
+                         :Social_Studies ;
+         rdfs:label "History" ;
+         rdfs:seeAlso "Hist" .
+
+
+###  http://graffl.ai/courses#Horticulture
+:Horticulture rdf:type owl:Class ;
+              rdfs:subClassOf :Science ;
+              rdfs:label "Horticulture" .
+
+
+###  http://graffl.ai/courses#Human_Geography
+:Human_Geography rdf:type owl:Class ;
+                 rdfs:subClassOf :Geography ;
+                 rdfs:label "Human Geography" .
+
+
+###  http://graffl.ai/courses#Human_Nutrition
+:Human_Nutrition rdf:type owl:Class ;
+                 rdfs:subClassOf :Health ,
+                                 :Nutrition ,
+                                 :Nutrition_and_Dietetics ;
+                 rdfs:label "Human Nutrition" ;
+                 rdfs:seeAlso "Diet and Human Health" .
+
+
+###  http://graffl.ai/courses#Human_Nutrition_and_Biology
+:Human_Nutrition_and_Biology rdf:type owl:Class ;
+                             rdfs:subClassOf :Biology ,
+                                             :Human_Nutrition ;
+                             rdfs:label "Human Nutrition and Biology" ;
+                             rdfs:seeAlso "Human Nutrition & Biology" .
+
+
+###  http://graffl.ai/courses#Human_Relations
+:Human_Relations rdf:type owl:Class ;
+                 rdfs:subClassOf :Communications ,
+                                 :Practical_Art ;
+                 rdfs:label "Human Relations" ;
+                 rdfs:seeAlso "Human Relat" .
+
+
+###  http://graffl.ai/courses#Human_Resource_Management
+:Human_Resource_Management rdf:type owl:Class ;
+                           rdfs:subClassOf :Business ,
+                                           :Management ;
+                           rdfs:label "Human Resource Management" ;
+                           rdfs:seeAlso "HR Management" .
+
+
+###  http://graffl.ai/courses#Humanities
+:Humanities rdf:type owl:Class ;
+            rdfs:subClassOf :Course ;
+            rdfs:label "Humanities" ;
+            rdfs:seeAlso "Humanistic Studies" ,
+                         "Liberal Arts" .
+
+
+###  http://graffl.ai/courses#Hungarian
+:Hungarian rdf:type owl:Class ;
+           rdfs:subClassOf :Language ;
+           rdfs:label "Hungarian" .
+
+
+###  http://graffl.ai/courses#Igbo
+:Igbo rdf:type owl:Class ;
+      rdfs:subClassOf :African_Language ;
+      rdfs:label "Igbo" ;
+      rdfs:seeAlso "Igbo Language" .
+
+
+###  http://graffl.ai/courses#Immunology
+:Immunology rdf:type owl:Class ;
+            rdfs:subClassOf :Medicine ;
+            rdfs:label "Immunology" .
+
+
+###  http://graffl.ai/courses#IndoEuropean_Language
+:IndoEuropean_Language rdf:type owl:Class ;
+                       rdfs:subClassOf :Language ;
+                       rdfs:label "Indo European Language" .
+
+
+###  http://graffl.ai/courses#Indonesian
+:Indonesian rdf:type owl:Class ;
+            rdfs:subClassOf :Language ;
+            rdfs:label "Indonesian" .
+
+
+###  http://graffl.ai/courses#Industrial_Engineering
+:Industrial_Engineering rdf:type owl:Class ;
+                        rdfs:subClassOf :Course ;
+                        rdfs:label "Industrial Engineering" .
+
+
+###  http://graffl.ai/courses#Industrial_Engineering_and_Operations_Research
+:Industrial_Engineering_and_Operations_Research rdf:type owl:Class ;
+                                                rdfs:subClassOf :Industrial_Engineering ;
+                                                rdfs:label "Industrial Engineering and Operations Research" .
+
+
+###  http://graffl.ai/courses#Industrial_and_Mechanical_Engineering
+:Industrial_and_Mechanical_Engineering rdf:type owl:Class ;
+                                       rdfs:subClassOf :Industrial_Engineering ,
+                                                       :Mechanical_Engineering ;
+                                       rdfs:label "Industrial and Mechanical Engineering" .
+
+
+###  http://graffl.ai/courses#Information_Technology
+:Information_Technology rdf:type owl:Class ;
+                        rdfs:subClassOf :Computer_Science ,
+                                        :Technology ;
+                        rdfs:label "Information Technology" ;
+                        rdfs:seeAlso "Computing" ,
+                                     "IT" ,
+                                     "Info Tech" ,
+                                     "Informatics and IT" .
+
+
+###  http://graffl.ai/courses#Integrated_Math
+:Integrated_Math rdf:type owl:Class ;
+                 rdfs:subClassOf :Math ;
+                 rdfs:label "Integrated Math" .
+
+
+###  http://graffl.ai/courses#Intermediate
+:Intermediate rdf:type owl:Class ;
+              rdfs:subClassOf :Course_Level ;
+              rdfs:label "Intermediate" .
+
+
+###  http://graffl.ai/courses#Intermediate_Algebra
+:Intermediate_Algebra rdf:type owl:Class ;
+                      rdfs:subClassOf :Algebra ;
+                      rdfs:label "Algebra 2" ,
+                                 "Algebra II" ,
+                                 "Intermediate Algebra" ;
+                      rdfs:seeAlso "Alg II" .
+
+
+###  http://graffl.ai/courses#Intermediate_American_Government
+:Intermediate_American_Government rdf:type owl:Class ;
+                                  rdfs:subClassOf :American_Government ;
+                                  rdfs:label "Intermediate American Government" .
+
+
+###  http://graffl.ai/courses#Intermediate_American_History
+:Intermediate_American_History rdf:type owl:Class ;
+                               rdfs:subClassOf :American_History ;
+                               rdfs:label "Intermediate American History" ;
+                               rdfs:seeAlso "US Hist II" .
+
+
+###  http://graffl.ai/courses#Intermediate_Culinary_Art
+:Intermediate_Culinary_Art rdf:type owl:Class ;
+                           rdfs:subClassOf :Culinary_Art ;
+                           rdfs:label "Intermediate Culinary Art" ;
+                           rdfs:seeAlso "CULINARY ARTS II" ,
+                                        "PA:CULINARY ARTS II" .
+
+
+###  http://graffl.ai/courses#Intermediate_English
+:Intermediate_English rdf:type owl:Class ;
+                      owl:equivalentClass :Intermediate_English_Language ;
+                      rdfs:subClassOf :English ;
+                      rdfs:label "Intermediate English" .
+
+
+###  http://graffl.ai/courses#Intermediate_English_Language
+:Intermediate_English_Language rdf:type owl:Class ;
+                               rdfs:subClassOf :English_Language ;
+                               rdfs:label "Intermediate English Language" .
+
+
+###  http://graffl.ai/courses#Intermediate_Formal_Algebra
+:Intermediate_Formal_Algebra rdf:type owl:Class ;
+                             rdfs:subClassOf :Formal_Algebra ;
+                             rdfs:label "Intermediate Formal Algebra" ;
+                             rdfs:seeAlso "FORMAL ALGEBRA II" .
+
+
+###  http://graffl.ai/courses#Intermediate_French
+:Intermediate_French rdf:type owl:Class ;
+                     rdfs:subClassOf :French_Language ;
+                     rdfs:label "Intermediate French" ;
+                     rdfs:seeAlso "FRENCH 2" ,
+                                  "FRENCH II" ,
+                                  "INTER FRENCH" .
+
+
+###  http://graffl.ai/courses#Intermediate_German
+:Intermediate_German rdf:type owl:Class ;
+                     rdfs:subClassOf :German_Language ;
+                     rdfs:label "Intermediate German" ;
+                     rdfs:seeAlso "GERMAN 2" ,
+                                  "GERMAN II" ,
+                                  "INTER GERMAN" .
+
+
+###  http://graffl.ai/courses#Intermediate_Italian
+:Intermediate_Italian rdf:type owl:Class ;
+                      rdfs:subClassOf :Italian_Language ;
+                      rdfs:label "Intermediate Italian" ;
+                      rdfs:seeAlso "INTER ITALIAN" ,
+                                   "ITALIAN 2" ,
+                                   "ITALIAN II" .
+
+
+###  http://graffl.ai/courses#Intermediate_Lathe
+:Intermediate_Lathe rdf:type owl:Class ;
+                    rdfs:subClassOf :Lathe ;
+                    rdfs:label "Intermediate Lathe" ;
+                    rdfs:seeAlso "Basic Lathe II" ,
+                                 "Lathe II" .
+
+
+###  http://graffl.ai/courses#Intermediate_Marketing
+:Intermediate_Marketing rdf:type owl:Class ;
+                        rdfs:subClassOf :Marketing ;
+                        rdfs:label "Intermediate Marketing" ;
+                        rdfs:seeAlso "MARKETING II" ,
+                                     "PA:MARKETING II" .
+
+
+###  http://graffl.ai/courses#Intermediate_Natural_and_Physical_Science
+:Intermediate_Natural_and_Physical_Science rdf:type owl:Class ;
+                                           rdfs:subClassOf :Natural_and_Physical_Science ;
+                                           rdfs:label "Intermediate Natural and Physical Science" .
+
+
+###  http://graffl.ai/courses#Intermediate_Physics
+:Intermediate_Physics rdf:type owl:Class ;
+                      rdfs:subClassOf :Physics ;
+                      rdfs:label "Intermediate Physics" .
+
+
+###  http://graffl.ai/courses#Intermediate_Portuguese
+:Intermediate_Portuguese rdf:type owl:Class ;
+                         rdfs:subClassOf :Portuguese_Language ;
+                         rdfs:label "Intermediate Portuguese" ;
+                         rdfs:seeAlso "INTER PORTUGUESE" ,
+                                      "PORTUGUESE 2" ,
+                                      "PORTUGUESE II" .
+
+
+###  http://graffl.ai/courses#Intermediate_Psychology
+:Intermediate_Psychology rdf:type owl:Class ;
+                         rdfs:subClassOf :Psychology ;
+                         rdfs:label "Intermediate Psychology" .
+
+
+###  http://graffl.ai/courses#Intermediate_Spanish
+:Intermediate_Spanish rdf:type owl:Class ;
+                      rdfs:subClassOf :Spanish ;
+                      rdfs:label "Intermediate Spanish" ;
+                      rdfs:seeAlso "Intermediate Spanish Language" .
+
+
+###  http://graffl.ai/courses#Intermediate_Western_Civilization
+:Intermediate_Western_Civilization rdf:type owl:Class ;
+                                   rdfs:subClassOf :Western_Civilization ;
+                                   rdfs:label "Intermediate Western Civilization" ;
+                                   rdfs:seeAlso "Intro to Western Civ II" .
+
+
+###  http://graffl.ai/courses#International_Affairs
+:International_Affairs rdf:type owl:Class ;
+                       rdfs:subClassOf :Course ;
+                       rdfs:label "International Affairs" .
+
+
+###  http://graffl.ai/courses#International_Business
+:International_Business rdf:type owl:Class ;
+                        rdfs:subClassOf :Business ;
+                        rdfs:label "International Business" ;
+                        rdfs:seeAlso "Global Business" ,
+                                     "INT Business" .
+
+
+###  http://graffl.ai/courses#International_Relations
+:International_Relations rdf:type owl:Class ;
+                         rdfs:subClassOf :Social_Science ;
+                         rdfs:label "International Relations" ;
+                         rdfs:seeAlso "Global Studies" .
+
+
+###  http://graffl.ai/courses#Internship
+:Internship rdf:type owl:Class ;
+            rdfs:subClassOf :Course ;
+            rdfs:label "Internship" .
+
+
+###  http://graffl.ai/courses#Introductory
+:Introductory rdf:type owl:Class ;
+              rdfs:subClassOf :Course_Level ;
+              rdfs:label "Introductory" ;
+              rdfs:seeAlso "Basic" ,
+                           "Basics of" ,
+                           "Elementary" ,
+                           "Int to" ,
+                           "Intro to" ,
+                           "Introduction" ,
+                           "Introduction to" .
+
+
+###  http://graffl.ai/courses#Introductory_Algebra
+:Introductory_Algebra rdf:type owl:Class ;
+                      rdfs:subClassOf :Algebra ;
+                      :hasLevel :Introductory ;
+                      rdfs:label "Introductory Algebra" ;
+                      rdfs:seeAlso "Algebra 1" ,
+                                   "Algebra I" ,
+                                   "Algebra IA" ,
+                                   "Elementary Algebra" ,
+                                   "Pre Algebra" ,
+                                   "Pre-Algebra" ,
+                                   "PreAlgebra" .
+
+
+###  http://graffl.ai/courses#Introductory_American_Government
+:Introductory_American_Government rdf:type owl:Class ;
+                                  rdfs:subClassOf :American_Government ;
+                                  rdfs:label "Introductory American Government" .
+
+
+###  http://graffl.ai/courses#Introductory_American_History
+:Introductory_American_History rdf:type owl:Class ;
+                               rdfs:subClassOf :American_History ;
+                               rdfs:label "Introductory American History" ;
+                               rdfs:seeAlso "U S Hist I" ,
+                                            "US Hist I" .
+
+
+###  http://graffl.ai/courses#Introductory_Biology
+:Introductory_Biology rdf:type owl:Class ;
+                      rdfs:subClassOf :Biology ;
+                      :hasLevel :Introductory ;
+                      rdfs:label "Introductory Biology" ;
+                      rdfs:seeAlso "Biology Concepts" .
+
+
+###  http://graffl.ai/courses#Introductory_Business
+:Introductory_Business rdf:type owl:Class ;
+                       rdfs:subClassOf :Business ;
+                       rdfs:label "Introductory Business" ;
+                       rdfs:seeAlso "ACADEMIC STRATEGIE FOR THE BUS" ,
+                                    "Introduction to Business" .
+
+
+###  http://graffl.ai/courses#Introductory_Composition
+:Introductory_Composition rdf:type owl:Class ;
+                          rdfs:subClassOf :Composition ;
+                          rdfs:label "Introductory Composition" ;
+                          rdfs:seeAlso "College Composition I" ,
+                                       "Effective Writing Techniques" .
+
+
+###  http://graffl.ai/courses#Introductory_Computer_Science
+:Introductory_Computer_Science rdf:type owl:Class ;
+                               rdfs:subClassOf :Computer_Science ;
+                               :hasLevel :Introductory ;
+                               rdfs:label "Introductory Computer Science" ;
+                               rdfs:seeAlso "Computer Science Principles" .
+
+
+###  http://graffl.ai/courses#Introductory_Creative_Arts
+:Introductory_Creative_Arts rdf:type owl:Class ;
+                            rdfs:subClassOf :Creative_Arts ;
+                            rdfs:label "Introductory Creative Arts" ;
+                            rdfs:seeAlso "ART FUNDAMENTALS" .
+
+
+###  http://graffl.ai/courses#Introductory_Culinary_Art
+:Introductory_Culinary_Art rdf:type owl:Class ;
+                           rdfs:subClassOf :Culinary_Art ;
+                           rdfs:label "Introductory Culinary Art" ;
+                           rdfs:seeAlso "CULINARY ARTS I" ,
+                                        "PA:CULINARY ARTS I" .
+
+
+###  http://graffl.ai/courses#Introductory_Economics
+:Introductory_Economics rdf:type owl:Class ;
+                        rdfs:subClassOf :Economics ;
+                        rdfs:label "Introductory Economics" ;
+                        rdfs:seeAlso "Basics of Economics" .
+
+
+###  http://graffl.ai/courses#Introductory_English
+:Introductory_English rdf:type owl:Class ;
+                      owl:equivalentClass :Introductory_English_Language ;
+                      rdfs:subClassOf :English ;
+                      rdfs:label "Introductory English" ;
+                      rdfs:seeAlso "ENG 101" .
+
+
+###  http://graffl.ai/courses#Introductory_English_Composition
+:Introductory_English_Composition rdf:type owl:Class ;
+                                  rdfs:subClassOf :English_Composition ,
+                                                  :Introductory_Composition ;
+                                  rdfs:label "Introductory English Composition" .
+
+
+###  http://graffl.ai/courses#Introductory_English_Language
+:Introductory_English_Language rdf:type owl:Class ;
+                               rdfs:subClassOf :English_Language ;
+                               rdfs:label "Introductory English Language" .
+
+
+###  http://graffl.ai/courses#Introductory_Formal_Algebra
+:Introductory_Formal_Algebra rdf:type owl:Class ;
+                             rdfs:subClassOf :Formal_Algebra ;
+                             rdfs:label "Introductory Formal Algebra" ;
+                             rdfs:seeAlso "FORMAL ALGEBRA I" .
+
+
+###  http://graffl.ai/courses#Introductory_French
+:Introductory_French rdf:type owl:Class ;
+                     rdfs:subClassOf :French_Language ;
+                     rdfs:label "Introductory French" ;
+                     rdfs:seeAlso "FRENCH 1" ,
+                                  "FRENCH I" ,
+                                  "INTRO FRENCH" .
+
+
+###  http://graffl.ai/courses#Introductory_German
+:Introductory_German rdf:type owl:Class ;
+                     rdfs:subClassOf :German ,
+                                     :German_Language ;
+                     :hasLevel :Introductory ;
+                     rdfs:label "Introductory German" ;
+                     rdfs:seeAlso "GERMAN 1" ,
+                                  "GERMAN I" ,
+                                  "German I" ,
+                                  "INTRO GERMAN" .
+
+
+###  http://graffl.ai/courses#Introductory_Health_Science
+:Introductory_Health_Science rdf:type owl:Class ;
+                             rdfs:subClassOf :Health_Science ;
+                             rdfs:label "Introductory Health Science" ;
+                             rdfs:seeAlso "INTRO TO HEALTH SCIENCE" .
+
+
+###  http://graffl.ai/courses#Introductory_Italian
+:Introductory_Italian rdf:type owl:Class ;
+                      rdfs:subClassOf :Italian_Language ;
+                      rdfs:label "Introductory Italian" ;
+                      rdfs:seeAlso "INTRO ITALIAN" ,
+                                   "ITALIAN 1" ,
+                                   "ITALIAN I" .
+
+
+###  http://graffl.ai/courses#Introductory_Lathe
+:Introductory_Lathe rdf:type owl:Class ;
+                    rdfs:subClassOf :Lathe ;
+                    :hasLevel :Introductory ;
+                    rdfs:label "Introductory Lathe" ;
+                    rdfs:seeAlso "Basic Lathe" ,
+                                 "Basic Lathe I" ,
+                                 "Lathe I" .
+
+
+###  http://graffl.ai/courses#Introductory_Machine_Tooling
+:Introductory_Machine_Tooling rdf:type owl:Class ;
+                              rdfs:subClassOf :Machine_Tooling ;
+                              rdfs:label "Introductory Machine Tooling" ;
+                              rdfs:seeAlso "Introductory Machine Tool" .
+
+
+###  http://graffl.ai/courses#Introductory_Marketing
+:Introductory_Marketing rdf:type owl:Class ;
+                        rdfs:subClassOf :Marketing ;
+                        rdfs:label "Introductory Marketing" ;
+                        rdfs:seeAlso "MARKETING PRINCIPLE" ,
+                                     "MARKETING PRINCIPLES" ,
+                                     "Principles of Marketing" .
+
+
+###  http://graffl.ai/courses#Introductory_Millwork
+:Introductory_Millwork rdf:type owl:Class ;
+                       rdfs:subClassOf :Millwork ;
+                       rdfs:label "Introductory Millwork" ;
+                       rdfs:seeAlso "Basic Mills" .
+
+
+###  http://graffl.ai/courses#Introductory_Natural_and_Physical_Science
+:Introductory_Natural_and_Physical_Science rdf:type owl:Class ;
+                                           rdfs:subClassOf :Natural_and_Physical_Science ;
+                                           rdfs:label "Introductory Natural and Physical Science" .
+
+
+###  http://graffl.ai/courses#Introductory_Nutrition
+:Introductory_Nutrition rdf:type owl:Class ;
+                        rdfs:subClassOf :Nutrition ;
+                        rdfs:label "Introductory Nutrition" ;
+                        rdfs:seeAlso "PRINCIPLES OF NUTRITION" .
+
+
+###  http://graffl.ai/courses#Introductory_Physics
+:Introductory_Physics rdf:type owl:Class ;
+                      rdfs:subClassOf :Physics ;
+                      rdfs:label "Introductory Physics" ;
+                      rdfs:seeAlso "PHYSICS I" ,
+                                   "PRIN PHY" ,
+                                   "SC:PHYSICS I" .
+
+
+###  http://graffl.ai/courses#Introductory_Portuguese
+:Introductory_Portuguese rdf:type owl:Class ;
+                         rdfs:subClassOf :Portuguese_Language ;
+                         rdfs:label "Introductory Portuguese" ;
+                         rdfs:seeAlso "INTRO PORTUGUESE" ,
+                                      "PORTUGUESE 1" ,
+                                      "PORTUGUESE I" .
+
+
+###  http://graffl.ai/courses#Introductory_Psychology
+:Introductory_Psychology rdf:type owl:Class ;
+                         rdfs:subClassOf :Psychology ;
+                         rdfs:label "Introductory Psychology" ;
+                         rdfs:seeAlso "General Psychology" .
+
+
+###  http://graffl.ai/courses#Introductory_Public_Speaking
+:Introductory_Public_Speaking rdf:type owl:Class ;
+                              rdfs:subClassOf :Public_Speaking ;
+                              rdfs:label "Introductory Public Speaking" ;
+                              rdfs:seeAlso "Int to Speech Communication" ,
+                                           "Oral Comm I" .
+
+
+###  http://graffl.ai/courses#Introductory_Science
+:Introductory_Science rdf:type owl:Class ;
+                      rdfs:subClassOf :Science ;
+                      rdfs:label "Introductory Science" .
+
+
+###  http://graffl.ai/courses#Introductory_Sociology
+:Introductory_Sociology rdf:type owl:Class ;
+                        rdfs:subClassOf :Sociology ;
+                        rdfs:label "Introductory Sociology" ;
+                        rdfs:seeAlso "Introduction to Psychology" .
+
+
+###  http://graffl.ai/courses#Introductory_Spanish
+:Introductory_Spanish rdf:type owl:Class ;
+                      rdfs:subClassOf :Spanish ;
+                      rdfs:label "Introductory Spanish" .
+
+
+###  http://graffl.ai/courses#Introductory_Western_Civilization
+:Introductory_Western_Civilization rdf:type owl:Class ;
+                                   rdfs:subClassOf :Western_Civilization ;
+                                   rdfs:label "Introductory Western Civilization" ;
+                                   rdfs:seeAlso "Intro to Western Civ" ,
+                                                "Intro to Western Civ I" .
+
+
+###  http://graffl.ai/courses#Introductory_World_History
+:Introductory_World_History rdf:type owl:Class ;
+                            rdfs:subClassOf :World_History ;
+                            rdfs:label "Introductory World History" ;
+                            rdfs:seeAlso "World History I" .
+
+
+###  http://graffl.ai/courses#Irish
+:Irish rdf:type owl:Class ;
+       rdfs:subClassOf :Language ;
+       rdfs:label "Irish" .
+
+
+###  http://graffl.ai/courses#Islamic_Culture_Studies
+:Islamic_Culture_Studies rdf:type owl:Class ;
+                         rdfs:subClassOf :Social_Studies ;
+                         rdfs:label "Islamic Culture Studies" .
+
+
+###  http://graffl.ai/courses#Italian
+:Italian rdf:type owl:Class ;
+         owl:equivalentClass :Italian_Language ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Italian" .
+
+
+###  http://graffl.ai/courses#Italian_Culture
+:Italian_Culture rdf:type owl:Class ;
+                 rdfs:subClassOf :Italian_Language ;
+                 rdfs:label "Italian Culture" ;
+                 rdfs:seeAlso "ITALIAN CULTURE" ,
+                              "ITALIAN SOCIETY" .
+
+
+###  http://graffl.ai/courses#Italian_Language
+:Italian_Language rdf:type owl:Class ;
+                  rdfs:subClassOf :IndoEuropean_Language ;
+                  rdfs:label "Italian Language" ;
+                  rdfs:seeAlso "ADV ITALIAN" ,
+                               "ITALIAN" ,
+                               "ITALIAN LANG" .
+
+
+###  http://graffl.ai/courses#Japanese
+:Japanese rdf:type owl:Class ;
+          rdfs:subClassOf :Language ;
+          rdfs:label "Japanese" .
+
+
+###  http://graffl.ai/courses#Jazz_Band
+:Jazz_Band rdf:type owl:Class ;
+           rdfs:subClassOf :Band ;
+           rdfs:label "Jazz Band" .
+
+
+###  http://graffl.ai/courses#Jewelry_Design
+:Jewelry_Design rdf:type owl:Class ;
+                rdfs:subClassOf :Course ;
+                rdfs:label "Jewelry Design" .
+
+
+###  http://graffl.ai/courses#Jewish_Studies
+:Jewish_Studies rdf:type owl:Class ;
+                rdfs:subClassOf :Social_Studies ;
+                rdfs:label "Jewish Studies" .
+
+
+###  http://graffl.ai/courses#Journalism
+:Journalism rdf:type owl:Class ;
+            rdfs:subClassOf :Communications ;
+            rdfs:label "Journalism" ;
+            rdfs:seeAlso "News Reporting" .
+
+
+###  http://graffl.ai/courses#Journalism_and_Broadcasting
+:Journalism_and_Broadcasting rdf:type owl:Class ;
+                             rdfs:subClassOf :Journalism ;
+                             rdfs:label "Journalism and Broadcasting" ;
+                             rdfs:seeAlso "Broadcast Journalism" .
+
+
+###  http://graffl.ai/courses#Journalism_and_Mass_Communication
+:Journalism_and_Mass_Communication rdf:type owl:Class ;
+                                   rdfs:subClassOf :Journalism ;
+                                   rdfs:label "Journalism and Mass Communication" ;
+                                   rdfs:seeAlso "Media Studies" .
+
+
+###  http://graffl.ai/courses#Khmer
+:Khmer rdf:type owl:Class ;
+       rdfs:subClassOf :Language ;
+       rdfs:label "Khmer" .
+
+
+###  http://graffl.ai/courses#Korean
+:Korean rdf:type owl:Class ;
+        rdfs:subClassOf :Language ;
+        rdfs:label "Korean" .
+
+
+###  http://graffl.ai/courses#Kyoto
+:Kyoto rdf:type owl:Class ;
+       rdfs:subClassOf :Language ;
+       rdfs:label "Kyoto" .
+
+
+###  http://graffl.ai/courses#Laboratory_Procedures
+:Laboratory_Procedures rdf:type owl:Class ;
+                       rdfs:label "Laboratory Procedures" .
+
+
+###  http://graffl.ai/courses#Language
+:Language rdf:type owl:Class ;
+          rdfs:subClassOf :Course ;
+          rdfs:label "Language" .
+
+
+###  http://graffl.ai/courses#Language_Art
+:Language_Art rdf:type owl:Class ;
+              rdfs:subClassOf :Art ;
+              rdfs:label "Language Arts" ;
+              rdfs:seeAlso "Language Art" .
+
+
+###  http://graffl.ai/courses#Lathe
+:Lathe rdf:type owl:Class ;
+       rdfs:subClassOf :Shop_Class ;
+       rdfs:label "Lathe" .
+
+
+###  http://graffl.ai/courses#Latin
+:Latin rdf:type owl:Class ;
+       rdfs:subClassOf :Language ;
+       rdfs:label "Latin" .
+
+
+###  http://graffl.ai/courses#Law
+:Law rdf:type owl:Class ;
+     rdfs:subClassOf :Course ,
+                     :Social_Science ;
+     rdfs:label "Law" ;
+     rdfs:seeAlso "Legal Studies" .
+
+
+###  http://graffl.ai/courses#Legal_Ethics
+:Legal_Ethics rdf:type owl:Class ;
+              rdfs:subClassOf :Ethics ;
+              rdfs:label "Legal Ethics" .
+
+
+###  http://graffl.ai/courses#Linear_Algebra
+:Linear_Algebra rdf:type owl:Class ;
+                rdfs:subClassOf :Algebra ;
+                rdfs:label "Linear Algebra" .
+
+
+###  http://graffl.ai/courses#Linguistics
+:Linguistics rdf:type owl:Class ;
+             rdfs:subClassOf :Course ,
+                             :Humanities ;
+             rdfs:label "Linguistics" ;
+             rdfs:seeAlso "Grammar Science" ,
+                          "Language Studies" .
+
+
+###  http://graffl.ai/courses#Literature
+:Literature rdf:type owl:Class ;
+            rdfs:subClassOf :Course ;
+            rdfs:label "Literature" .
+
+
+###  http://graffl.ai/courses#Machine_Tooling
+:Machine_Tooling rdf:type owl:Class ;
+                 rdfs:subClassOf :Shop_Class ;
+                 rdfs:label "Machine Tooling" ;
+                 rdfs:seeAlso "Machine Tool" .
+
+
+###  http://graffl.ai/courses#Macroeconomics
+:Macroeconomics rdf:type owl:Class ;
+                rdfs:subClassOf :Economics ;
+                rdfs:label "Macroeconomics" .
+
+
+###  http://graffl.ai/courses#Management
+:Management rdf:type owl:Class ;
+            rdfs:subClassOf :Course ;
+            rdfs:label "Management" .
+
+
+###  http://graffl.ai/courses#Mandarin
+:Mandarin rdf:type owl:Class ;
+          rdfs:subClassOf :Chinese ;
+          rdfs:label "Mandarin" .
+
+
+###  http://graffl.ai/courses#Marching_Band
+:Marching_Band rdf:type owl:Class ;
+               rdfs:subClassOf :Band ;
+               rdfs:label "Marching Band" .
+
+
+###  http://graffl.ai/courses#Marine_Biology
+:Marine_Biology rdf:type owl:Class ;
+                rdfs:subClassOf :Biology ;
+                rdfs:label "Marine Biology" .
+
+
+###  http://graffl.ai/courses#Marketing
+:Marketing rdf:type owl:Class ;
+           rdfs:subClassOf :Business ;
+           rdfs:label "Marketing" ;
+           rdfs:seeAlso "Advertising and Promotion" .
+
+
+###  http://graffl.ai/courses#Math
+:Math rdf:type owl:Class ;
+      rdfs:subClassOf :Course ;
+      rdfs:label "Math" ;
+      rdfs:seeAlso "Mathematics" ,
+                   "Maths" ;
+      skos:prefLabel "Math" .
+
+
+###  http://graffl.ai/courses#Math_Preparation
+:Math_Preparation rdf:type owl:Class ;
+                  rdfs:subClassOf :General_Mathematics ;
+                  rdfs:label "Math Preparation" ;
+                  rdfs:seeAlso "Math Applications" .
+
+
+###  http://graffl.ai/courses#Mechanical_Engineering
+:Mechanical_Engineering rdf:type owl:Class ;
+                        rdfs:subClassOf :Course ,
+                                        :Engineering ;
+                        rdfs:label "Mechanical Engineering" ;
+                        rdfs:seeAlso "Mech Eng" ,
+                                     "Mechanical Eng" .
+
+
+###  http://graffl.ai/courses#Mechanical_and_Biomedical_Engineering
+:Mechanical_and_Biomedical_Engineering rdf:type owl:Class ;
+                                       rdfs:subClassOf :Biomedical_Engineering ,
+                                                       :Mechanical_Engineering ;
+                                       rdfs:label "Mechanical and Biomedical Engineering" .
+
+
+###  http://graffl.ai/courses#Media_Studies
+:Media_Studies rdf:type owl:Class ;
+               rdfs:subClassOf :Communications ;
+               rdfs:label "Media Studies" ;
+               rdfs:seeAlso "Media and Communication" .
+
+
+###  http://graffl.ai/courses#Medical_Assistance
+:Medical_Assistance rdf:type owl:Class ;
+                    rdfs:subClassOf :Medical_Internship ;
+                    rdfs:label "Medical Assistance" ;
+                    rdfs:seeAlso "MEDICAL ASSISTING CERTIFICATIO" ,
+                                 "MEDICAL ASSISTING CERTIFICATION" ,
+                                 "MEDICAL ASSISTING EXTERNSHIP" .
+
+
+###  http://graffl.ai/courses#Medical_Engineering
+:Medical_Engineering rdf:type owl:Class ;
+                     rdfs:subClassOf :Engineering ,
+                                     :Medicine ;
+                     rdfs:label "Medical Engineering" .
+
+
+###  http://graffl.ai/courses#Medical_Informatics
+:Medical_Informatics rdf:type owl:Class ;
+                     rdfs:subClassOf :Course ;
+                     rdfs:label "Medical Informatics" .
+
+
+###  http://graffl.ai/courses#Medical_Insurance
+:Medical_Insurance rdf:type owl:Class ;
+                   rdfs:subClassOf :Health_Administration ;
+                   rdfs:label "Medical Insurance" ;
+                   rdfs:seeAlso "Medical Insurance Applications" .
+
+
+###  http://graffl.ai/courses#Medical_Internship
+:Medical_Internship rdf:type owl:Class ;
+                    rdfs:subClassOf :Internship ;
+                    rdfs:label "Medical Internship" .
+
+
+###  http://graffl.ai/courses#Medical_Laboratory_Procedures
+:Medical_Laboratory_Procedures rdf:type owl:Class ;
+                               rdfs:subClassOf :Laboratory_Procedures ,
+                                               :Medical_Studies ;
+                               rdfs:label "Medical Laboratory Procedures" .
+
+
+###  http://graffl.ai/courses#Medical_Law
+:Medical_Law rdf:type owl:Class ;
+             rdfs:subClassOf :Law ;
+             rdfs:label "Medical Law" .
+
+
+###  http://graffl.ai/courses#Medical_Law_and_Ethics
+:Medical_Law_and_Ethics rdf:type owl:Class ;
+                        rdfs:subClassOf :Legal_Ethics ,
+                                        :Medical_Law ;
+                        rdfs:label "Medical Law and Ethics" .
+
+
+###  http://graffl.ai/courses#Medical_Math
+:Medical_Math rdf:type owl:Class ;
+              rdfs:subClassOf :Math ;
+              rdfs:label "Medical Math" ;
+              rdfs:seeAlso "MATH FOR HEALTHCARE" ,
+                           "MATH FOR HEALTHCARE PROFESSION" .
+
+
+###  http://graffl.ai/courses#Medical_Studies
+:Medical_Studies rdf:type owl:Class ;
+                 rdfs:subClassOf :Health_Science ;
+                 rdfs:label "Medical Studies" .
+
+
+###  http://graffl.ai/courses#Medical_Terminology
+:Medical_Terminology rdf:type owl:Class ;
+                     rdfs:subClassOf :Communications ,
+                                     :Medical_Studies ;
+                     rdfs:label "Medical Terminology" .
+
+
+###  http://graffl.ai/courses#Medicine
+:Medicine rdf:type owl:Class ;
+          rdfs:subClassOf :Course ;
+          rdfs:label "Medicine" .
+
+
+###  http://graffl.ai/courses#Medieval_and_Renaissance_Studies
+:Medieval_and_Renaissance_Studies rdf:type owl:Class ;
+                                  rdfs:subClassOf :Course ;
+                                  rdfs:label "Medieval and Renaissance Studies" .
+
+
+###  http://graffl.ai/courses#Metalworking
+:Metalworking rdf:type owl:Class ;
+              rdfs:subClassOf :Shop_Class ;
+              rdfs:label "Metalworking" .
+
+
+###  http://graffl.ai/courses#Microbiology
+:Microbiology rdf:type owl:Class ;
+              rdfs:subClassOf :Biology ,
+                              :Course ;
+              rdfs:label "Microbiology" ;
+              rdfs:seeAlso "Microbial Science" ,
+                           "Microorganism Studies" .
+
+
+###  http://graffl.ai/courses#Microeconomics
+:Microeconomics rdf:type owl:Class ;
+                rdfs:subClassOf :Economics ;
+                rdfs:label "Microeconomics" .
+
+
+###  http://graffl.ai/courses#Millwork
+:Millwork rdf:type owl:Class ;
+          rdfs:subClassOf :Shop_Class ;
+          rdfs:label "Millwork" ;
+          rdfs:seeAlso "Mill" ,
+                       "Mill Work" .
+
+
+###  http://graffl.ai/courses#Modern_European_Studies
+:Modern_European_Studies rdf:type owl:Class ;
+                         rdfs:subClassOf :Course ;
+                         rdfs:label "Modern European Studies" .
+
+
+###  http://graffl.ai/courses#Modern_History
+:Modern_History rdf:type owl:Class ;
+                rdfs:subClassOf :History ;
+                rdfs:label "Modern History" .
+
+
+###  http://graffl.ai/courses#Modern_World_History
+:Modern_World_History rdf:type owl:Class ;
+                      rdfs:subClassOf :Modern_History ,
+                                      :World_History ;
+                      rdfs:label "Modern World History" .
+
+
+###  http://graffl.ai/courses#Molecular_Biophysics
+:Molecular_Biophysics rdf:type owl:Class ;
+                      rdfs:subClassOf :Biophysics ;
+                      rdfs:label "Molecular Biophysics" .
+
+
+###  http://graffl.ai/courses#Multivariable_Calculus
+:Multivariable_Calculus rdf:type owl:Class ;
+                        rdfs:subClassOf :Calculus ;
+                        rdfs:label "Multivariable Calculus" .
+
+
+###  http://graffl.ai/courses#Music
+:Music rdf:type owl:Class ;
+       rdfs:subClassOf :Art ,
+                       :Course ,
+                       :Performing_Arts ;
+       rdfs:label "Music" ;
+       rdfs:seeAlso "Musical Studies" .
+
+
+###  http://graffl.ai/courses#Music_Appreciation
+:Music_Appreciation rdf:type owl:Class ;
+                    rdfs:subClassOf :Music ;
+                    :hasLevel :Introductory ;
+                    rdfs:label "Music Appreciation" ;
+                    rdfs:seeAlso "Music Appr" ,
+                                 "Music Appre" .
+
+
+###  http://graffl.ai/courses#Music_Education
+:Music_Education rdf:type owl:Class ;
+                 rdfs:subClassOf :Education ,
+                                 :Music ;
+                 rdfs:label "Music Education" ;
+                 rdfs:seeAlso "Music Teaching" .
+
+
+###  http://graffl.ai/courses#Music_Theory
+:Music_Theory rdf:type owl:Class ;
+              rdfs:subClassOf :Music ;
+              rdfs:label "Music Theory" .
+
+
+###  http://graffl.ai/courses#Narrative_Medicine
+:Narrative_Medicine rdf:type owl:Class ;
+                    rdfs:subClassOf :Medicine ;
+                    rdfs:label "Narrative Medicine" .
+
+
+###  http://graffl.ai/courses#Native_American_Language
+:Native_American_Language rdf:type owl:Class ;
+                          rdfs:subClassOf :Language ;
+                          rdfs:label "Native American Language" ;
+                          rdfs:seeAlso "Native American Languages" .
+
+
+###  http://graffl.ai/courses#Natural_Science
+:Natural_Science rdf:type owl:Class ;
+                 rdfs:subClassOf :Science ;
+                 rdfs:label "Natural Science" .
+
+
+###  http://graffl.ai/courses#Natural_and_Physical_Science
+:Natural_and_Physical_Science rdf:type owl:Class ;
+                              rdfs:subClassOf :Introductory_Science ;
+                              rdfs:label "Natural and Physical Science" ;
+                              rdfs:seeAlso "NAT PHYS SCI" ,
+                                           "PRINC NAT PHYS SCI" ,
+                                           "SC:PRINC NAT PHYS SCI" .
+
+
+###  http://graffl.ai/courses#Neurobiology
+:Neurobiology rdf:type owl:Class ;
+              rdfs:subClassOf :Course ;
+              rdfs:label "Neurobiology" .
+
+
+###  http://graffl.ai/courses#Neurobiology_and_Behavior
+:Neurobiology_and_Behavior rdf:type owl:Class ;
+                           rdfs:subClassOf :Course ;
+                           rdfs:label "Neurobiology and Behavior" .
+
+
+###  http://graffl.ai/courses#Neurology
+:Neurology rdf:type owl:Class ;
+           rdfs:subClassOf :Course ;
+           rdfs:label "Neurology" .
+
+
+###  http://graffl.ai/courses#Neuroradiology
+:Neuroradiology rdf:type owl:Class ;
+                rdfs:subClassOf :Course ;
+                rdfs:label "Neuroradiology" .
+
+
+###  http://graffl.ai/courses#Neuroscience
+:Neuroscience rdf:type owl:Class ;
+              rdfs:subClassOf :Biology ;
+              rdfs:label "Neuroscience" ;
+              rdfs:seeAlso "Brain Studies" ,
+                           "Neurobiological Science" .
+
+
+###  http://graffl.ai/courses#Neuroscience_and_Behavior
+:Neuroscience_and_Behavior rdf:type owl:Class ;
+                           rdfs:subClassOf :Course ;
+                           rdfs:label "Neuroscience and Behavior" .
+
+
+###  http://graffl.ai/courses#Nursing
+:Nursing rdf:type owl:Class ;
+         rdfs:subClassOf :Course ;
+         rdfs:label "Nursing" .
+
+
+###  http://graffl.ai/courses#Nutrition
+:Nutrition rdf:type owl:Class ;
+           rdfs:subClassOf :Science ;
+           rdfs:label "Nutrition" .
+
+
+###  http://graffl.ai/courses#Nutrition_and_Dietetics
+:Nutrition_and_Dietetics rdf:type owl:Class ;
+                         rdfs:subClassOf :Health ,
+                                         :Science ;
+                         rdfs:label "Nutrition and Dietetics" ;
+                         rdfs:seeAlso "Diet and Food Science" .
+
+
+###  http://graffl.ai/courses#Occupational_Therapy
+:Occupational_Therapy rdf:type owl:Class ;
+                      rdfs:subClassOf :Course ;
+                      rdfs:label "Occupational Therapy" .
+
+
+###  http://graffl.ai/courses#Oceanography
+:Oceanography rdf:type owl:Class ;
+              rdfs:subClassOf :Science ;
+              rdfs:label "Oceanography" .
+
+
+###  http://graffl.ai/courses#Oil_Painting
+:Oil_Painting rdf:type owl:Class ;
+              rdfs:subClassOf :Painting ;
+              rdfs:label "Oil Painting" .
+
+
+###  http://graffl.ai/courses#Oncology
+:Oncology rdf:type owl:Class ;
+          rdfs:subClassOf :Course ;
+          rdfs:label "Oncology" .
+
+
+###  http://graffl.ai/courses#Operative_Dentistry
+:Operative_Dentistry rdf:type owl:Class ;
+                     rdfs:subClassOf :Course ;
+                     rdfs:label "Operative Dentistry" .
+
+
+###  http://graffl.ai/courses#Ophthalmology
+:Ophthalmology rdf:type owl:Class ;
+               rdfs:subClassOf :Course ;
+               rdfs:label "Ophthalmology" .
+
+
+###  http://graffl.ai/courses#Oral_Surgery
+:Oral_Surgery rdf:type owl:Class ;
+              rdfs:subClassOf :Course ;
+              rdfs:label "Oral Surgery" .
+
+
+###  http://graffl.ai/courses#Orchestra
+:Orchestra rdf:type owl:Class ;
+           rdfs:subClassOf :Music ;
+           rdfs:label "Orchestra" .
+
+
+###  http://graffl.ai/courses#Orthodontics
+:Orthodontics rdf:type owl:Class ;
+              rdfs:subClassOf :Course ;
+              rdfs:label "Orthodontics" .
+
+
+###  http://graffl.ai/courses#Otolaryngology
+:Otolaryngology rdf:type owl:Class ;
+                rdfs:subClassOf :Course ;
+                rdfs:label "Otolaryngology" .
+
+
+###  http://graffl.ai/courses#Painting
+:Painting rdf:type owl:Class ;
+          rdfs:subClassOf :Creative_Arts ;
+          rdfs:label "Painting" .
+
+
+###  http://graffl.ai/courses#Pathophysiology
+:Pathophysiology rdf:type owl:Class ;
+                 rdfs:subClassOf :Health_Science ;
+                 rdfs:label "Pathophysiology" .
+
+
+###  http://graffl.ai/courses#Pediatric_Dentistry
+:Pediatric_Dentistry rdf:type owl:Class ;
+                     rdfs:subClassOf :Course ;
+                     rdfs:label "Pediatric Dentistry" .
+
+
+###  http://graffl.ai/courses#Pediatrics
+:Pediatrics rdf:type owl:Class ;
+            rdfs:subClassOf :Course ;
+            rdfs:label "Pediatrics" .
+
+
+###  http://graffl.ai/courses#Percussion
+:Percussion rdf:type owl:Class ;
+            rdfs:subClassOf :Music ;
+            rdfs:label "Percussion" .
+
+
+###  http://graffl.ai/courses#Performing_Arts
+:Performing_Arts rdf:type owl:Class .
+
+
+###  http://graffl.ai/courses#Personal_Finance
+:Personal_Finance rdf:type owl:Class ;
+                  rdfs:subClassOf :Finance ;
+                  rdfs:label "Personal Finance" ;
+                  rdfs:seeAlso "Pers Fin" .
+
+
+###  http://graffl.ai/courses#Personal_Law
+:Personal_Law rdf:type owl:Class ;
+              rdfs:subClassOf :Law ;
+              rdfs:label "Personal Law" .
+
+
+###  http://graffl.ai/courses#Pharamacology
+:Pharamacology rdf:type owl:Class ;
+               rdfs:subClassOf :Health_Science ;
+               rdfs:label "Pharamacology" ;
+               rdfs:seeAlso "DRUG ADMINIST" ,
+                            "DRUG ADMINISTRATION" .
+
+
+###  http://graffl.ai/courses#Philology
+:Philology rdf:type owl:Class ;
+           rdfs:subClassOf :Language ;
+           rdfs:label "Philology" .
+
+
+###  http://graffl.ai/courses#Philosophy
+:Philosophy rdf:type owl:Class ;
+            rdfs:subClassOf :Course ,
+                            :Humanities ;
+            rdfs:label "Philosophy" ;
+            rdfs:seeAlso "Philosophical Studies" .
+
+
+###  http://graffl.ai/courses#Photography
+:Photography rdf:type owl:Class ;
+             rdfs:subClassOf :Art ;
+             rdfs:label "Photography" ;
+             rdfs:seeAlso "PHOTO" .
+
+
+###  http://graffl.ai/courses#Physical_Education
+:Physical_Education rdf:type owl:Class ;
+                    rdfs:subClassOf :Course ,
+                                    :Education ,
+                                    :Health ;
+                    rdfs:label "Physical Education" ;
+                    rdfs:seeAlso "Fitness" ,
+                                 "Gym Class" ,
+                                 "PE" ,
+                                 "PE:PE" ,
+                                 "Per Well" ,
+                                 "Physical Sci" ,
+                                 "Physical Science" ,
+                                 "Physical Training" ,
+                                 "PhysicalSci" ,
+                                 "PhysicalScience" .
+
+
+###  http://graffl.ai/courses#Physical_Science
+:Physical_Science rdf:type owl:Class ;
+                  rdfs:subClassOf :Science ;
+                  rdfs:label "Physical Science" ;
+                  rdfs:seeAlso "PHYS SCI" .
+
+
+###  http://graffl.ai/courses#Physical_Therapy
+:Physical_Therapy rdf:type owl:Class ;
+                  rdfs:subClassOf :Course ;
+                  rdfs:label "Physical Therapy" .
+
+
+###  http://graffl.ai/courses#Physics
+:Physics rdf:type owl:Class ;
+         rdfs:subClassOf :Science ;
+         rdfs:label "Physics" .
+
+
+###  http://graffl.ai/courses#Physics_and_Astronomy
+:Physics_and_Astronomy rdf:type owl:Class ;
+                       rdfs:subClassOf :Astronomy ,
+                                       :Physics ;
+                       rdfs:label "Physics and Astronomy" ;
+                       rdfs:seeAlso "Astrophysics" .
+
+
+###  http://graffl.ai/courses#Physiology
+:Physiology rdf:type owl:Class ;
+            rdfs:subClassOf :Science ;
+            rdfs:label "Physiology" .
+
+
+###  http://graffl.ai/courses#Piano
+:Piano rdf:type owl:Class ;
+       rdfs:subClassOf :Music .
+
+
+###  http://graffl.ai/courses#Pilates
+:Pilates rdf:type owl:Class ;
+         rdfs:subClassOf :Physical_Education ;
+         rdfs:label "Pilates" .
+
+
+###  http://graffl.ai/courses#Plant_Sciences
+:Plant_Sciences rdf:type owl:Class ;
+                rdfs:subClassOf :Botany ;
+                rdfs:label "Plant Sciences" ;
+                rdfs:seeAlso "Plant Science" .
+
+
+###  http://graffl.ai/courses#Poetry
+:Poetry rdf:type owl:Class ;
+        rdfs:subClassOf :Course ;
+        rdfs:label "Poetry" .
+
+
+###  http://graffl.ai/courses#Polish
+:Polish rdf:type owl:Class ;
+        rdfs:subClassOf :Language ;
+        rdfs:label "Polish" .
+
+
+###  http://graffl.ai/courses#Political_Analytics
+:Political_Analytics rdf:type owl:Class ;
+                     rdfs:subClassOf :Course ;
+                     rdfs:label "Political Analytics" .
+
+
+###  http://graffl.ai/courses#Political_Science
+:Political_Science rdf:type owl:Class ;
+                   rdfs:subClassOf :Social_Science ;
+                   rdfs:label "Political Science" ;
+                   rdfs:seeAlso "Government Science" ,
+                                "Politics Studies" .
+
+
+###  http://graffl.ai/courses#Political_Science_and_International_Relations
+:Political_Science_and_International_Relations rdf:type owl:Class ;
+                                               rdfs:subClassOf :International_Relations ,
+                                                               :Political_Science ,
+                                                               :Social_Science ;
+                                               rdfs:label "Political Science and International Relations" ;
+                                               rdfs:seeAlso "Politics and Global Affairs" .
+
+
+###  http://graffl.ai/courses#Politics
+:Politics rdf:type owl:Class ;
+          rdfs:subClassOf :Government ;
+          rdfs:label "Politics" .
+
+
+###  http://graffl.ai/courses#Portuguese
+:Portuguese rdf:type owl:Class ;
+            rdfs:subClassOf :European_Language ,
+                            :Physiology ;
+            rdfs:label "Portuguese" .
+
+
+###  http://graffl.ai/courses#Portuguese_Language
+:Portuguese_Language rdf:type owl:Class ;
+                     rdfs:subClassOf :IndoEuropean_Language ,
+                                     :Portuguese ;
+                     rdfs:label "Portuguese Language" ;
+                     rdfs:seeAlso "ADV PORTUGUESE" ,
+                                  "PORTUGUESE" ,
+                                  "PORTUGUESE LANG" .
+
+
+###  http://graffl.ai/courses#Practical_Art
+:Practical_Art rdf:type owl:Class ;
+               rdfs:subClassOf :Art ;
+               rdfs:label "Practical Art" ;
+               rdfs:seeAlso "Practical Arts" .
+
+
+###  http://graffl.ai/courses#Practical_Math
+:Practical_Math rdf:type owl:Class ;
+                rdfs:subClassOf :General_Mathematics ;
+                rdfs:label "Practical Math" .
+
+
+###  http://graffl.ai/courses#Precalculus
+:Precalculus rdf:type owl:Class ;
+             rdfs:subClassOf :Calculus ;
+             rdfs:label "PreCalculus" ;
+             rdfs:seeAlso "MA:PRECALCULUS" ,
+                          "Pre Cal" ,
+                          "Pre Calc" ,
+                          "Pre Calculus" ,
+                          "PreCal" ,
+                          "PreCalc" .
+
+
+###  http://graffl.ai/courses#Precision_Grinding
+:Precision_Grinding rdf:type owl:Class ;
+                    rdfs:subClassOf :Shop_Class ;
+                    rdfs:label "Precision Grinding" ;
+                    rdfs:seeAlso "Precision Grindin" .
+
+
+###  http://graffl.ai/courses#Principles_of_Engineering
+:Principles_of_Engineering rdf:type owl:Class ;
+                           rdfs:subClassOf :Engineering ;
+                           rdfs:label "Principles of Engineering" ;
+                           rdfs:seeAlso "PA:PRINCIPLES OF ENGIN" ,
+                                        "PRINCIPLES OF ENGIN" .
+
+
+###  http://graffl.ai/courses#Printmaking
+:Printmaking rdf:type owl:Class ;
+             rdfs:subClassOf :Shop_Class ;
+             rdfs:label "Printmaking" .
+
+
+###  http://graffl.ai/courses#Probability
+:Probability rdf:type owl:Class ;
+             rdfs:subClassOf :Statistics ;
+             rdfs:label "Probability" .
+
+
+###  http://graffl.ai/courses#Programming
+:Programming rdf:type owl:Class ;
+             rdfs:subClassOf :Technology ;
+             rdfs:label "Programming" .
+
+
+###  http://graffl.ai/courses#Prosthodontics
+:Prosthodontics rdf:type owl:Class ;
+                rdfs:subClassOf :Course ;
+                rdfs:label "Prosthodontics" .
+
+
+###  http://graffl.ai/courses#Psychology
+:Psychology rdf:type owl:Class ;
+            rdfs:subClassOf :Course ;
+            rdfs:label "Psychology" .
+
+
+###  http://graffl.ai/courses#Public_Administration
+:Public_Administration rdf:type owl:Class ;
+                       rdfs:subClassOf :Management ,
+                                       :Social_Science ;
+                       rdfs:label "Public Administration" ;
+                       rdfs:seeAlso "Government Administration" .
+
+
+###  http://graffl.ai/courses#Public_Affairs
+:Public_Affairs rdf:type owl:Class ;
+                rdfs:subClassOf :Course ;
+                rdfs:label "Public Affairs" .
+
+
+###  http://graffl.ai/courses#Public_Health
+:Public_Health rdf:type owl:Class ;
+               rdfs:subClassOf :Health ,
+                               :Social_Science ;
+               rdfs:label "Public Health" ;
+               rdfs:seeAlso "Community Health" .
+
+
+###  http://graffl.ai/courses#Public_Health_Administration
+:Public_Health_Administration rdf:type owl:Class ;
+                              rdfs:subClassOf :Health ,
+                                              :Management ;
+                              rdfs:label "Public Health Administration" ;
+                              rdfs:seeAlso "Healthcare Administration" .
+
+
+###  http://graffl.ai/courses#Public_Policy
+:Public_Policy rdf:type owl:Class ;
+               rdfs:subClassOf :Social_Science ;
+               rdfs:label "Public Policy" ;
+               rdfs:seeAlso "Policy Studies" .
+
+
+###  http://graffl.ai/courses#Public_Relations
+:Public_Relations rdf:type owl:Class ;
+                  rdfs:subClassOf :Business ,
+                                  :Communications ;
+                  rdfs:label "Public Relations" ;
+                  rdfs:seeAlso "Corporate Communication" ,
+                               "PR" .
+
+
+###  http://graffl.ai/courses#Public_Speaking
+:Public_Speaking rdf:type owl:Class ;
+                 rdfs:subClassOf :Communications ;
+                 rdfs:label "Public Speaking" ;
+                 rdfs:seeAlso "Oral Comm" ,
+                              "Oral Comms" ,
+                              "Oral Communication" ,
+                              "Oral Communications" .
+
+
+###  http://graffl.ai/courses#Pulmonary_Diseases
+:Pulmonary_Diseases rdf:type owl:Class ;
+                    rdfs:subClassOf :Course ;
+                    rdfs:label "Pulmonary Diseases" .
+
+
+###  http://graffl.ai/courses#Punjabi
+:Punjabi rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Punjabi" .
+
+
+###  http://graffl.ai/courses#ROTC
+:ROTC rdf:type owl:Class ;
+      rdfs:subClassOf :Course ;
+      rdfs:label "ROTC" ;
+      rdfs:seeAlso "Basic Military training" ,
+                   "Military Education" .
+
+
+###  http://graffl.ai/courses#Radiation_Oncology
+:Radiation_Oncology rdf:type owl:Class ;
+                    rdfs:subClassOf :Course ;
+                    rdfs:label "Radiation Oncology" .
+
+
+###  http://graffl.ai/courses#Radiology
+:Radiology rdf:type owl:Class ;
+           rdfs:subClassOf :Course ;
+           rdfs:label "Radiology" .
+
+
+###  http://graffl.ai/courses#Reading
+:Reading rdf:type owl:Class ;
+         rdfs:subClassOf :Language_Art ;
+         rdfs:label "Reading" .
+
+
+###  http://graffl.ai/courses#Rehabilitation_Medicine
+:Rehabilitation_Medicine rdf:type owl:Class ;
+                         rdfs:subClassOf :Course ;
+                         rdfs:label "Rehabilitation Medicine" .
+
+
+###  http://graffl.ai/courses#Religion
+:Religion rdf:type owl:Class ;
+          rdfs:subClassOf :Course ;
+          rdfs:label "Religion" ;
+          rdfs:seeAlso "Religion Study" ,
+                       "Religious Studies" .
+
+
+###  http://graffl.ai/courses#Renal_Diseases
+:Renal_Diseases rdf:type owl:Class ;
+                rdfs:subClassOf :Course ;
+                rdfs:label "Renal Diseases" .
+
+
+###  http://graffl.ai/courses#Report_Writing
+:Report_Writing rdf:type owl:Class ;
+                rdfs:subClassOf :Technical_Writing ;
+                rdfs:label "Report Writing" ;
+                rdfs:seeAlso "Reporting/Writing I" .
+
+
+###  http://graffl.ai/courses#Residence_Unit
+:Residence_Unit rdf:type owl:Class ;
+                rdfs:subClassOf :Course ;
+                rdfs:label "Residence Unit" .
+
+
+###  http://graffl.ai/courses#Robotics
+:Robotics rdf:type owl:Class ;
+          rdfs:subClassOf :Science ;
+          rdfs:label "Robotics" .
+
+
+###  http://graffl.ai/courses#Russian
+:Russian rdf:type owl:Class ;
+         owl:equivalentClass :Russian_Language ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Russian" ;
+         rdfs:seeAlso "Russian Language" .
+
+
+###  http://graffl.ai/courses#Russian_Language
+:Russian_Language rdf:type owl:Class ;
+                  rdfs:subClassOf :IndoEuropean_Language ;
+                  rdfs:label "Russian Language" ;
+                  rdfs:seeAlso "ADV RUSSIAN" ,
+                               "RUSSIAN" ,
+                               "RUSSIAN LANG" .
+
+
+###  http://graffl.ai/courses#Science
+:Science rdf:type owl:Class ;
+         rdfs:subClassOf :Course ;
+         rdfs:label "Science" ;
+         skos:prefLabel "Science" .
+
+
+###  http://graffl.ai/courses#Scientific_Math
+:Scientific_Math rdf:type owl:Class ;
+                 rdfs:subClassOf :Math ;
+                 rdfs:label "Scientific Math" .
+
+
+###  http://graffl.ai/courses#Sculpture
+:Sculpture rdf:type owl:Class ;
+           rdfs:subClassOf :Art ;
+           rdfs:label "Sculpture" .
+
+
+###  http://graffl.ai/courses#Shop_Class
+:Shop_Class rdf:type owl:Class ;
+            rdfs:subClassOf :Course ;
+            rdfs:label "Shop Class" .
+
+
+###  http://graffl.ai/courses#Shop_Technology
+:Shop_Technology rdf:type owl:Class ;
+                 rdfs:subClassOf :Technology ;
+                 rdfs:label "Shop Technology" .
+
+
+###  http://graffl.ai/courses#Sinhala
+:Sinhala rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Sinhala" .
+
+
+###  http://graffl.ai/courses#Slavic_Cultures
+:Slavic_Cultures rdf:type owl:Class ;
+                 rdfs:subClassOf :Course ;
+                 rdfs:label "Slavic Cultures" .
+
+
+###  http://graffl.ai/courses#Slavic_Literatures
+:Slavic_Literatures rdf:type owl:Class ;
+                    rdfs:subClassOf :Course ;
+                    rdfs:label "Slavic Literatures" .
+
+
+###  http://graffl.ai/courses#Social_Anthropology
+:Social_Anthropology rdf:type owl:Class ;
+                     rdfs:subClassOf :Anthropology ,
+                                     :Social_Science ;
+                     rdfs:label "Social Anthropology" ;
+                     rdfs:seeAlso "Sociocultural Anthropology" .
+
+
+###  http://graffl.ai/courses#Social_Psychology
+:Social_Psychology rdf:type owl:Class ;
+                   rdfs:subClassOf :Psychology ,
+                                   :Social_Science ;
+                   rdfs:label "Social Psychology" ;
+                   rdfs:seeAlso "Social Behavioral Science" .
+
+
+###  http://graffl.ai/courses#Social_Science
+:Social_Science rdf:type owl:Class ;
+                rdfs:label "Social Science" .
+
+
+###  http://graffl.ai/courses#Social_Studies
+:Social_Studies rdf:type owl:Class ;
+                rdfs:subClassOf :Course ;
+                rdfs:label "Social Studies" ;
+                rdfs:seeAlso "Cultural Studies" ,
+                             "SOC STUDIES" ,
+                             "Social Science" ,
+                             "Social Science classes" ,
+                             "Social Sciences" .
+
+
+###  http://graffl.ai/courses#Social_Work
+:Social_Work rdf:type owl:Class ;
+             rdfs:subClassOf :Course ,
+                             :Social_Science ;
+             rdfs:label "Social Work" ;
+             rdfs:seeAlso "Social Welfare" .
+
+
+###  http://graffl.ai/courses#Sociology
+:Sociology rdf:type owl:Class ;
+           rdfs:subClassOf :Course ;
+           rdfs:label "Sociology" .
+
+
+###  http://graffl.ai/courses#Sociomedical_Sciences
+:Sociomedical_Sciences rdf:type owl:Class ;
+                       rdfs:subClassOf :Course ;
+                       rdfs:label "Sociomedical Sciences" .
+
+
+###  http://graffl.ai/courses#Software_Engineering
+:Software_Engineering rdf:type owl:Class ;
+                      rdfs:subClassOf :Engineering ,
+                                      :Technology ;
+                      rdfs:label "Software Engineering" ;
+                      rdfs:seeAlso "Software Development" .
+
+
+###  http://graffl.ai/courses#Sound_Arts
+:Sound_Arts rdf:type owl:Class ;
+            rdfs:subClassOf :Course ;
+            rdfs:label "Sound Arts" .
+
+
+###  http://graffl.ai/courses#South_Asian_Studies
+:South_Asian_Studies rdf:type owl:Class ;
+                     rdfs:subClassOf :Course ;
+                     rdfs:label "South Asian Studies" .
+
+
+###  http://graffl.ai/courses#South_Slavic
+:South_Slavic rdf:type owl:Class ;
+              rdfs:subClassOf :Language ;
+              rdfs:label "South Slavic" .
+
+
+###  http://graffl.ai/courses#Spanish
+:Spanish rdf:type owl:Class ;
+         rdfs:subClassOf :European_Language ;
+         rdfs:label "Spanish" ;
+         rdfs:seeAlso "SPANISH LANG" ,
+                      "Spanish Language" .
+
+
+
+###  http://graffl.ai/courses#Spanish_Language
+:Spanish_Language rdf:type owl:Class ;
+                  rdfs:subClassOf :Spanish ;
+                  rdfs:label "Spanish Language" ;
+                  rdfs:seeAlso "AP SPANISH LANG" ,
+                               "AP SPANISH LANG & C" ,
+                               "SPANISH LANG" .
+
+
+###  http://graffl.ai/courses#Speech
+:Speech rdf:type owl:Class ;
+        rdfs:subClassOf :Language_Art ;
+        :similarTo :Communications ;
+        rdfs:label "Speech" .
+
+
+###  http://graffl.ai/courses#Sports
+:Sports rdf:type owl:Class ;
+        rdfs:subClassOf :Physical_Education ;
+        rdfs:label "Sports" ;
+        rdfs:seeAlso "Athletes" ,
+                     "Athletics" .
+
+
+###  http://graffl.ai/courses#Sports_Management
+:Sports_Management rdf:type owl:Class ;
+                   rdfs:subClassOf :Business ,
+                                   :Management ;
+                   rdfs:label "Sports Management" ;
+                   rdfs:seeAlso "Sports Business" .
+
+
+###  http://graffl.ai/courses#Sports_Management_and_Marketing
+:Sports_Management_and_Marketing rdf:type owl:Class ;
+                                 rdfs:subClassOf :Business ,
+                                                 :Sports_Management ;
+                                 rdfs:label "Sports Management and Marketing" ;
+                                 rdfs:seeAlso "Sports Business" .
+
+
+###  http://graffl.ai/courses#Sports_Medicine
+:Sports_Medicine rdf:type owl:Class ;
+                 rdfs:subClassOf :Health ,
+                                 :Sports_Science ;
+                 rdfs:label "Sports Medicine" ;
+                 rdfs:seeAlso "Sports Injury Treatment" .
+
+
+###  http://graffl.ai/courses#Sports_Science
+:Sports_Science rdf:type owl:Class ;
+                rdfs:subClassOf :Health ,
+                                :Science ;
+                rdfs:label "Sports Science" ;
+                rdfs:seeAlso "Sports Medicine" .
+
+
+###  http://graffl.ai/courses#Statistics
+:Statistics rdf:type owl:Class ;
+            rdfs:subClassOf :Math ;
+            rdfs:label "Statistics" .
+
+
+###  http://graffl.ai/courses#Stomatology
+:Stomatology rdf:type owl:Class ;
+             rdfs:subClassOf :Course ;
+             rdfs:label "Stomatology" .
+
+
+###  http://graffl.ai/courses#Surgery
+:Surgery rdf:type owl:Class ;
+         rdfs:subClassOf :Course ;
+         rdfs:label "Surgery" .
+
+
+###  http://graffl.ai/courses#Sustainability_Studies
+:Sustainability_Studies rdf:type owl:Class ;
+                        rdfs:subClassOf :Environment ,
+                                        :Social_Science ;
+                        rdfs:label "Sustainability Studies" ;
+                        rdfs:seeAlso "Sustainable Development" .
+
+
+###  http://graffl.ai/courses#Sustainable_Development
+:Sustainable_Development rdf:type owl:Class ;
+                         rdfs:subClassOf :Course ,
+                                         :Environment ,
+                                         :Social_Science ;
+                         rdfs:label "Sustainable Development" ;
+                         rdfs:seeAlso "Green Development" ,
+                                      "Sustainability Studies" .
+
+
+###  http://graffl.ai/courses#Swahili
+:Swahili rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Swahili" .
+
+
+###  http://graffl.ai/courses#Swedish
+:Swedish rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Swedish" .
+
+
+###  http://graffl.ai/courses#Swimming
+:Swimming rdf:type owl:Class ;
+          rdfs:subClassOf :Physical_Education ;
+          rdfs:label "Swimming" ;
+          rdfs:seeAlso "Swim" .
+
+
+###  http://graffl.ai/courses#Team_Sports
+:Team_Sports rdf:type owl:Class ;
+             rdfs:subClassOf :Sports ;
+             rdfs:label "Team Sports" .
+
+
+###  http://graffl.ai/courses#Technical_Writing
+:Technical_Writing rdf:type owl:Class ;
+                   rdfs:subClassOf :Writing ;
+                   rdfs:label "Technical Writing" .
+
+
+###  http://graffl.ai/courses#Technology
+:Technology rdf:type owl:Class ;
+            rdfs:subClassOf :Course ;
+            rdfs:label "Technology" .
+
+
+###  http://graffl.ai/courses#Technology_and_Culture
+:Technology_and_Culture rdf:type owl:Class ;
+                        rdfs:subClassOf :Social_Studies ,
+                                        :Technology ;
+                        rdfs:label "Technology and Culture" .
+
+
+###  http://graffl.ai/courses#Theater
+:Theater rdf:type owl:Class ;
+         rdfs:subClassOf :Art ,
+                         :Drama ,
+                         :Performing_Arts ;
+         rdfs:label "Theater" ;
+         rdfs:seeAlso "Drama Studies" ,
+                      "Stage Craft" ,
+                      "Stagecr" ,
+                      "Stagecraft" ,
+                      "Theater Technology" ,
+                      "Theatr" ,
+                      "Theatr Stagecr" ,
+                      "Theatre" .
+
+
+###  http://graffl.ai/courses#Tibetan
+:Tibetan rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Tibetan" .
+
+
+###  http://graffl.ai/courses#Tourism_and_Hospitality_Management
+:Tourism_and_Hospitality_Management rdf:type owl:Class ;
+                                    rdfs:subClassOf :Business ,
+                                                    :Management ;
+                                    rdfs:label "Tourism and Hospitality Management" ;
+                                    rdfs:seeAlso "Hospitality Business" .
+
+
+###  http://graffl.ai/courses#Trigonometry
+:Trigonometry rdf:type owl:Class ;
+              rdfs:subClassOf :Math ;
+              rdfs:label "Trigonometry" ;
+              rdfs:seeAlso "Trig" .
+
+
+###  http://graffl.ai/courses#Ukrainian
+:Ukrainian rdf:type owl:Class ;
+           rdfs:subClassOf :Language ;
+           rdfs:label "Ukrainian" .
+
+
+###  http://graffl.ai/courses#Urban_Studies
+:Urban_Studies rdf:type owl:Class ;
+               rdfs:subClassOf :Course ;
+               rdfs:label "Urban Studies" .
+
+
+###  http://graffl.ai/courses#Urology
+:Urology rdf:type owl:Class ;
+         rdfs:subClassOf :Course ;
+         rdfs:label "Urology" .
+
+
+###  http://graffl.ai/courses#Uzbekistan_History
+:Uzbekistan_History rdf:type owl:Class ;
+                    rdfs:subClassOf :History ;
+                    rdfs:label "Uzbekistan History" ;
+                    rdfs:seeAlso "History of Uzbekistan" .
+
+
+###  http://graffl.ai/courses#Vietnamese
+:Vietnamese rdf:type owl:Class ;
+            rdfs:subClassOf :Language ;
+            rdfs:label "Vietnamese" .
+
+
+###  http://graffl.ai/courses#Visual_Arts
+:Visual_Arts rdf:type owl:Class ;
+             rdfs:subClassOf :Art ,
+                             :Course ,
+                             :Humanities ;
+             rdfs:label "Visual Arts" ;
+             rdfs:seeAlso "Fine Arts" ,
+                          "Studio Arts" .
+
+
+###  http://graffl.ai/courses#Web_Design
+:Web_Design rdf:type owl:Class ;
+            rdfs:subClassOf :Technology ;
+            rdfs:label "Web Design" ;
+            rdfs:seeAlso "Web Design with HTML" .
+
+
+###  http://graffl.ai/courses#Weight_Training
+:Weight_Training rdf:type owl:Class ;
+                 rdfs:subClassOf :Physical_Education ;
+                 rdfs:label "Weight Training" ;
+                 rdfs:seeAlso "Weight train" .
+
+
+###  http://graffl.ai/courses#Western_Civilization
+:Western_Civilization rdf:type owl:Class ;
+                      rdfs:subClassOf :Western_History ;
+                      rdfs:label "Western Civilization" ;
+                      rdfs:seeAlso "SS:WESTERN CIVILIZATIO" ,
+                                   "WESTERN CIVILIZATIO" .
+
+
+###  http://graffl.ai/courses#Western_History
+:Western_History rdf:type owl:Class ;
+                 rdfs:subClassOf :History ;
+                 rdfs:label "Western History" ;
+                 rdfs:seeAlso "WESTERN CIVILIZATIO" ,
+                              "Western Civ" ,
+                              "Western Civilization" .
+
+
+###  http://graffl.ai/courses#Wildlife_Management
+:Wildlife_Management rdf:type owl:Class ;
+                     rdfs:subClassOf :Animal_Science ;
+                     rdfs:label "Wildlife Management" .
+
+
+###  http://graffl.ai/courses#Wolof
+:Wolof rdf:type owl:Class ;
+       rdfs:subClassOf :Language ;
+       rdfs:label "Wolof" .
+
+
+###  http://graffl.ai/courses#Womens_Studies
+:Womens_Studies rdf:type owl:Class ;
+                rdfs:subClassOf :Social_Studies ;
+                rdfs:label "Womens Studies" ;
+                rdfs:seeAlso "Women's Studies" ,
+                             "Women’s Studies" .
+
+
+###  http://graffl.ai/courses#World_Geography
+:World_Geography rdf:type owl:Class ;
+                 rdfs:subClassOf :Geography ;
+                 rdfs:label "World Geography" .
+
+
+###  http://graffl.ai/courses#World_History
+:World_History rdf:type owl:Class ;
+               rdfs:subClassOf :History ;
+               rdfs:label "World History" ;
+               rdfs:seeAlso "W H" ,
+                            "World Hist" ,
+                            "Wrld Hist" ,
+                            "Wrld History" .
+
+
+###  http://graffl.ai/courses#World_Languages
+:World_Languages rdf:type owl:Class ;
+                 rdfs:subClassOf :Language_Art ;
+                 rdfs:label "World Languages" .
+
+
+###  http://graffl.ai/courses#World_Literature
+:World_Literature rdf:type owl:Class ;
+                  rdfs:subClassOf :Literature ;
+                  rdfs:label "World Literature" .
+
+
+###  http://graffl.ai/courses#World_Music
+:World_Music rdf:type owl:Class ;
+             rdfs:subClassOf :Music ;
+             rdfs:label "World Music" .
+
+
+###  http://graffl.ai/courses#World_Politics
+:World_Politics rdf:type owl:Class ;
+                rdfs:subClassOf :Politics ;
+                rdfs:label "World Politics" .
+
+
+###  http://graffl.ai/courses#World_Religion
+:World_Religion rdf:type owl:Class ;
+                rdfs:subClassOf :Religion ;
+                rdfs:label "World Religion" ;
+                rdfs:seeAlso "World Religions" .
+
+
+###  http://graffl.ai/courses#Writing
+:Writing rdf:type owl:Class ;
+         rdfs:subClassOf :Language_Art ;
+         rdfs:label "Writing" .
+
+
+###  http://graffl.ai/courses#Yiddish
+:Yiddish rdf:type owl:Class ;
+         rdfs:subClassOf :Language ;
+         rdfs:label "Yiddish" .
+
+
+###  http://graffl.ai/courses#Yoga
+:Yoga rdf:type owl:Class ;
+      rdfs:subClassOf :Physical_Education ;
+      rdfs:label "Yoga" .
+
+
+###  http://graffl.ai/courses#Yoruba
+:Yoruba rdf:type owl:Class ;
+        rdfs:subClassOf :African_Language ;
+        rdfs:label "Yoruba" ;
+        rdfs:seeAlso "Yoruba Language" .
+
+
+###  http://graffl.ai/courses#Zoology
+:Zoology rdf:type owl:Class ;
+         rdfs:subClassOf :Animal_Science ;
+         rdfs:label "Zoology" .
+
+
+###  http://graffl.ai/courses#Zulu
+:Zulu rdf:type owl:Class ;
+      rdfs:subClassOf :Language ;
+      rdfs:label "Zulu" .
+
+
+###  Generated by the OWL API (version 4.5.25.2023-02-15T19:15:49Z) https://github.com/owlcs/owlapi
