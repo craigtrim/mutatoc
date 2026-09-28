@@ -16,6 +16,8 @@ The index holds the synonym sets for each word count, forward and reverse canoni
 
 The engine owns one index and builds it at the end of every successful `load`. With `interface: "data"`, that includes building the live view, which 0.2.2 deferred to the first parse. Every path that replaces the snapshot or live view frees the index first, so an index is never used with a view other than the one it was built from. A view that cannot be built during load reports its error from the first parse, as before.
 
+Exact matching also stops extending a window once its text cannot begin any synonym. The index records every synonym prefix that ends before a whitespace character. `norm()` only lowercases and trims, and the final-sigma rule does not look past the space that joins tokens, so a window's text is always such a prefix of every longer window from the same token. Before this, each token built and normalized windows up to the longest synonym length in the ontology.
+
 Construction of the whole-ontology entity, subentity and lookup lists also uses hashed membership instead of scanning the list on each insert. Their contents and order are unchanged.
 
 | Measurement on Windows | 0.2.2 | 0.2.3 |
@@ -25,5 +27,8 @@ Construction of the whole-ontology entity, subentity and lookup lists also uses 
 | courses-20251028, 33 prepared-token requests | 266 ms | 9.0 ms |
 | econ-20160218, 92 prepared-token requests | 136 ms | 44 ms |
 | One unmatched token, any fixture | 0.11 to 1.38 ms | 0.1 to 0.2 ms |
+| Axiom courses ontology, 439 prepared tokens (2,429 characters) | 49 ms | 16 ms |
+
+About 11 ms of the last row is JSON transport of the 219 KB token array in each direction.
 
 Token results are unchanged. The CTest suite, including byte-equivalent snapshot parity and 1,665 public API cases, all 961 upstream Mutato tests, and the Linux address/undefined-behavior sanitizer suite with leak detection passed. `tests/test_api.c` adds checks that a reload replaces the index in snapshot and live mode and that malformed view members do not break matching. The [speed comparison with Mutato](mutato-comparison.md) covers the full measurements.

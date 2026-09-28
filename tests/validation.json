@@ -272,8 +272,8 @@
     ]
   },
   "match_index_0_2_3": {
-    "validated_at": "2026-09-28T20:25:59.738927+00:00",
-    "change": "Per-view match index built at load; hashed whole-ontology list construction",
+    "validated_at": "2026-09-28T20:43:03.033293+00:00",
+    "change": "Per-view match index built at load; exact-window prefix pruning; tokens owned instead of copied; hashed whole-ontology list construction",
     "token_results_changed": false,
     "windows_ctest_suites_passed": 11,
     "linux_asan_ubsan_ctest_suites_passed": 11,
@@ -302,18 +302,23 @@
       "econ_20160218_parity_cases_parse_tokens": {
         "0.2.2": 136.4,
         "0.2.3": 44.3
+      },
+      "axiom_courses_439_prepared_tokens": {
+        "0.2.2": 91.1,
+        "0.2.3_before_prefix_pruning": 49.1,
+        "0.2.3": 16.1
       }
     },
     "source_sha256": {
-      "src/match.c": "b1c71a259fa0e30d41851afcbff17210503b6208ff0212234a5303693bdb96d9",
-      "src/api.c": "2b0073a2e1f0381a721fd91d072fe0e806fd9fe99069884c3e5fcca5622eea19",
+      "src/match.c": "160f212f1c230e2c8d7ad1c958f9004f98b0b3ec1f186fbb3094967dd697b84b",
+      "src/api.c": "b4f9573efde191bcc58d6f3e61cb649ed4bcc417694c578fcd28d269c654c69c",
       "src/ontology.c": "31976e79bf80e90a2c237e5a4d895227952aed1c99d0952cac63769656c3304a",
       "src/views.c": "23e96af7321ded9dd7f7f99ea263bb879b7c1c97d9057107540e48495f12b43c",
       "src/util.c": "da614d8df9e095e2775ed3318bd577d493b8916b835df59e9b4f5496f5d11bc0",
-      "src/mc.h": "5e64821d4bfffa819d6f1623e19cb4d06ea7550047cc323efcee37d655fe6628",
+      "src/mc.h": "645331ebc96de476c5558dcf7c1ee4880dd9163a03cf60ca53f7e633caf1d02b",
       "tests/test_api.c": "22f50d1b4b9e7baf51537667b16710dc8e8c3a5acf6eb563a6f11625cbafff23"
     },
-    "executable_sha256": "f73d54478695f74762ca651e91b7a860e82ec109ba374b8f086081300c453a50",
+    "executable_sha256": "01fd4d0229ac914e063b10c16955c2aa9ef8941011f19685a7939986da89a973",
     "comparison": "docs/mutato-comparison.md",
     "logs": [
       "artifacts/index-ctest.log",
