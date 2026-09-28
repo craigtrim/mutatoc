@@ -67,7 +67,7 @@ source = root / ".reference/lingpatlab/lingpatlab/tokenizer/svc/tokenize_use_gra
 report = {
     "reason": "Preserve literal punctuation instead of emitting temporary tilde markers.",
     "reference_revision": "2ed920f1bc7e57d8c74b5b35a54e90f2b7f8ed71",
-    "baseline_sha256": hashlib.sha256(baseline.read_bytes()).hexdigest(),
+    "baseline_sha256": hashlib.sha256(baseline.read_bytes().replace(b"\r\n", b"\n")).hexdigest(),
     "reference_tokenizer_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
     "generator_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
     "corrections": corrections,

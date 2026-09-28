@@ -14,7 +14,7 @@ class LingPatLabTests(unittest.TestCase):
   baseline=(ROOT/'tests/lingpatlab/parity.json').read_bytes()
   rows=json.loads(baseline);failures=[]
   corrected=json.loads((ROOT/'tests/lingpatlab/punctuation-corrections.json').read_text(encoding='utf-8'))
-  self.assertEqual(hashlib.sha256(baseline).hexdigest(),corrected['baseline_sha256'])
+  self.assertEqual(hashlib.sha256(baseline.replace(b'\r\n',b'\n')).hexdigest(),corrected['baseline_sha256'])
   seen=set()
   for correction in corrected['corrections']:
    index=correction['index'];self.assertNotIn(index,seen);seen.add(index)
