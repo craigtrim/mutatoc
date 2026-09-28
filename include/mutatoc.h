@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define MUTATOC_VERSION "0.2.2"
+#define MUTATOC_VERSION "0.2.3"
 typedef struct mc_engine mc_engine;
 typedef struct {
     int code;

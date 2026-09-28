@@ -1,7 +1,9 @@
 """Build a relocatable Windows distribution from the verified native builds and venv."""
-import argparse,hashlib,json,os,shutil,subprocess,sys,zipfile
+import argparse,hashlib,json,os,re,shutil,subprocess,sys,zipfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
+# The manifest version comes from the header the executable was built with.
+VERSION=re.search(r'#define MUTATOC_VERSION "([^"]+)"',(ROOT/'include/mutatoc.h').read_text()).group(1)
 def main():
  p=argparse.ArgumentParser()
  p.add_argument('--static-build',type=Path,default=ROOT/'build-msvc/Release')
@@ -55,8 +57,10 @@ def main():
  fixture=ROOT/'tests/fixtures/ontologies/animals-test.owl'
  result=subprocess.run([str(target/'mutatoc.exe'),'--ontology',str(fixture),'--input-text','Poodle'],cwd=target,env=smoke_env,check=True,capture_output=True,text=True)
  if not result.stdout.strip():raise RuntimeError('Packaged parse produced no text')
+ version=subprocess.run([str(target/'mutatoc.exe'),'--version'],env=smoke_env,check=True,capture_output=True,text=True).stdout.strip()
+ if VERSION not in version:raise RuntimeError(f'Packaged executable reports {version}, expected {VERSION}')
  files={str(f.relative_to(target)).replace('\\','/'):{'bytes':f.stat().st_size,'sha256':hashlib.sha256(f.read_bytes()).hexdigest()} for f in sorted(target.rglob('*')) if f.is_file()}
- (target/'package-manifest.json').write_text(json.dumps({'version':'0.2.2','python':sys.version.split()[0],'files':files},indent=2))
+ (target/'package-manifest.json').write_text(json.dumps({'version':VERSION,'python':sys.version.split()[0],'files':files},indent=2))
  if a.zip:
   with zipfile.ZipFile(target.parent/(target.name+'.zip'),'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
    for f in target.rglob('*'):
