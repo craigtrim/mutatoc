@@ -1,0 +1,28 @@
+{
+  "repository": "https://github.com/craigtrim/lingpatlab",
+  "revision": "2ed920f1bc7e57d8c74b5b35a54e90f2b7f8ed71",
+  "version": "1.1.1",
+  "files": {
+    "extract_people_01_test.py": "6f95597216b93db1c7d0e8338c716fd86da2bb67353f410935a0358a6c173a94",
+    "extract_people_02_test.py": "ca576d2cb600c245a099e0c39b469bf00566fdbdd3cb3628cd777af4ffbc725f",
+    "extract_people_03_test.py": "268226b7f7375c212e33dc70ed5031c3e8b026c15618e61ae26fe69f20f711cc",
+    "extract_people_04_test.py": "942c1d4cdcbbb68211e04a71b307e04d2988d166bc6b3527cd0b8dc2cd61681f",
+    "extract_people_05_test.py": "4f4df4a501d1182d2412a45e0cff538e844da929d89d65e2e6b6c271ffd1b6b3",
+    "extract_people_06_test.py": "728513d7a042326dae14efc0458dfe551b9bf75cdaf4acdc9e7de9dbbffc496d",
+    "extract_people_07_test.py": "f62c8329ca03abe7dfae805dd9975eb5c8170a0f379b2f50f9390dd760e13878",
+    "extract_people_08_test.py": "d8c510f646aa13ca4215f7237eb1674798f0d135bb25a341ae929a1672582434",
+    "extract_schools_01_test.py": "4ebb0b2de2546b1af02a0fb28d4c3c7da9997249cafbbfb6c06e496938c5b57a",
+    "extract_schools_02_test.py": "7a80561a04e90e3e788e2ce5e7cf40d9919cd44d0e1b6d779fff1c24bd8866da",
+    "extract_sequences_test.py": "83f0c528ef72123f0bef5c815c62fd4c1853e37a3f39fd5989645116f153df0f",
+    "extract_topics_01_test.py": "310b1ca1ed3037e294174fa7d1aaeff23a6095decdbc78f8d9c416da1af7ae64",
+    "parse_input_text_01_test.py": "454914effa06e546d7b88a36705a4db5a33dbc946f23ba5559a15cf9802b2d93",
+    "parse_input_text_02_test.py": "88dcf5847021671b7403b37c483061511b192cd1c789c36355be29364569e941",
+    "parse_results_to_sentences_test.py": "182a0838fb19f22047911095caf90e801ac7cdbe80e79b9d55630844931e6085",
+    "porter_stemmer_test.py": "00d19d1406caab200b8173e3446d13bd434282fe2aa312991523a1ba551d5f52",
+    "spacy_core_api_01_test.py": "df5b2f569500c39d50695911abb28bb7012a8dd387b44c4da14fe9e8aae52f70",
+    "__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "support/CH03_001.json": "c52e29f9633c0be23e007aae9cd05f13a0de3d14b0a184348d77a4bc54da913c",
+    "support/extract-people-09-test.json": "15ccaa759838c9d3f42461c5da0fefee00f26feca8945442b0bc7487b6e23b1e",
+    "support/nimitz_at_war_summaries.txt": "40f3a90eff76f165134d481aec8bead959f3cbd54ed3b5d22370bc8030a29feb"
+  }
+}
