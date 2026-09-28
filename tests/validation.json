@@ -1,0 +1,274 @@
+{
+  "reference_revision": "da6bfa5df80b208a3271e111f2921ad281d0da98",
+  "validation_date": "2026-09-26",
+  "upstream": {
+    "passed": 961,
+    "subtests_passed": 4,
+    "failed": 0,
+    "elapsed_seconds": 268.82,
+    "test_modules": 54,
+    "command": "python scripts/run_upstream.py",
+    "log": "artifacts/lingpatlab-mutato-upstream.log",
+    "runtime": "Native LingPatLab rules with spaCy model access; no LingPatLab Python package"
+  },
+  "platforms": [
+    {
+      "platform": "Windows x64",
+      "compiler": "MSVC 19.29.30141",
+      "configuration": "Release, static C runtime",
+      "ctest_passed": 10,
+      "ctest_failed": 0,
+      "elapsed_seconds": 52.36,
+      "log": "artifacts/lingpatlab-ctest.log"
+    },
+    {
+      "platform": "Linux x64, Ubuntu 20.04 under WSL",
+      "compiler": "GCC 9.4",
+      "configuration": "Debug, AddressSanitizer and UndefinedBehaviorSanitizer",
+      "ctest_passed": 10,
+      "ctest_failed": 0,
+      "elapsed_seconds": 85.4,
+      "log": "artifacts/lingpatlab-linux-ctest.log"
+    },
+    {
+      "platform": "Windows x64",
+      "compiler": "GCC 16.1.0",
+      "configuration": "Native build and tests validated during development"
+    }
+  ],
+  "prepared_token_corpus": {
+    "passed": 393,
+    "comparison": "Complete JSON token objects, including exact large integer identifiers"
+  },
+  "raw_text_corpus": {
+    "passed": 393,
+    "comparison": "Complete preprocessing tokens, final tokens, nested histories and canonical text"
+  },
+  "public_api_corpus": {
+    "passed": 1665,
+    "methods": 142,
+    "interfaces": [
+      "owl",
+      "data",
+      "json",
+      "ask_json"
+    ]
+  },
+  "optional_stage_corpus": {
+    "passed": 90,
+    "includes": [
+      "exact",
+      "span",
+      "hierarchy",
+      "spaCy entity matching",
+      "augmentation",
+      "live matching"
+    ]
+  },
+  "extension_tests": {
+    "passed": 6,
+    "includes": [
+      "collection merge",
+      "external synonyms",
+      "per-document blank nodes",
+      "canonical tie order",
+      "namespace binding",
+      "optional stages"
+    ]
+  },
+  "sparql": {
+    "reference_calls_passed": 315,
+    "test_methods_passed": 5,
+    "includes": [
+      "SELECT",
+      "ASK",
+      "CONSTRUCT",
+      "DESCRIBE",
+      "property paths",
+      "aggregates",
+      "subqueries",
+      "row transformations",
+      "errors",
+      "typed literal normalization",
+      "graph reload",
+      "collections",
+      "independence from spaCy",
+      "cyclic graph-only loading"
+    ]
+  },
+  "rdf_graphs": {
+    "passed": 19,
+    "reference_triples": 223091,
+    "native_triples": 223091,
+    "comparison": "RDF graph isomorphism modulo blank-node identifiers",
+    "report": "tests/rdf-validation.json"
+  },
+  "w3c_turtle": {
+    "passed": 313,
+    "failed": 0,
+    "report": "tests/turtle-validation.json"
+  },
+  "bridge_tests": {
+    "passed": 6,
+    "blocked_write_cleanup_repeat_passed": 5,
+    "includes": [
+      "persistent model reuse",
+      "shutdown",
+      "crash and restart",
+      "missing model errors",
+      "startup timeout",
+      "malformed response",
+      "Unicode paths",
+      "argument quoting",
+      "large JSON messages",
+      "large integer identifiers",
+      "blocked-write timeout and process-tree cleanup"
+    ]
+  },
+  "shared_library_abi": {
+    "engines": 24,
+    "threads": 8,
+    "prepared_requests_passed": 480,
+    "raw_text_requests_passed": 1,
+    "log": "artifacts/lingpatlab-ffi.log"
+  },
+  "retained_runtime": {
+    "python": "3.11",
+    "spacy": "3.8.2",
+    "en_core_web_sm": "3.8.0",
+    "rdflib": "7.1.4",
+    "pyparsing": "3.2.3",
+    "model_sha256": "14a2f31bc476af87019819ea8c9948fabdfd473a442edd6b1cba62bf0c2c0f55",
+    "pip_check": "passed",
+    "removed_packages": [
+      "lingpatlab",
+      "wordnet-lookup",
+      "unicodedata2"
+    ]
+  },
+  "native_artifacts": {
+    "build-final/Release/mutatoc.exe": {
+      "sha256": "209f8cb4727aa754aa6528f4fbb54f3f701afb1b11a65fae3cce3b7b170e5bae",
+      "bytes": 3357184
+    },
+    "build-final/Release/mutatoc.lib": {
+      "sha256": "0abf9427dd6a5adcd242fd0e3f80d6f28514ee8c5ab105eee2a41a0361b76830",
+      "bytes": 3801732
+    },
+    "build-shared/Release/mutatoc.dll": {
+      "sha256": "a8a4e6e4a590def62c838d360d273cc95a590eb5ab12571df894234b45f292d3",
+      "bytes": 3352576
+    },
+    "build-shared/Release/mutatoc.lib": {
+      "sha256": "57be0ff7a6fe5b7cff03908ea251a89e333f3582bc45dced15a8e889bc890c98",
+      "bytes": 36322
+    }
+  },
+  "contract": "docs/compatibility.md",
+  "implementation_map": "docs/implementation-map.json",
+  "limitations": "Evidence covers the retained upstream assertions and checked-in differential corpora. It is not a proof of equivalence for every ontology or sentence. Language adaptations and repaired source defects are documented. GitHub Actions has not been run; platform results above are local. macOS and other architectures are unvalidated.",
+  "version": "0.2.0",
+  "native_lingpatlab": {
+    "reference_revision": "2ed920f1bc7e57d8c74b5b35a54e90f2b7f8ed71",
+    "reference_version": "1.1.1",
+    "source_modules": 69,
+    "upstream_passed": 17,
+    "upstream_baseline_passed": 17,
+    "upstream_elapsed_seconds": 9.63,
+    "differential_cases_passed": 8287,
+    "methods": 60,
+    "source_error_outcomes": 204,
+    "test_methods_passed": 3,
+    "wordnet_hashes": 88013,
+    "clean_runtime_verified": true,
+    "contract": "docs/lingpatlab.md",
+    "module_map": "docs/lingpatlab-map.json",
+    "fixture_manifest": "tests/lingpatlab/parity-manifest.json",
+    "logs": [
+      "artifacts/lingpatlab-upstream-final.log",
+      "artifacts/lingpatlab-parity.log",
+      "artifacts/lingpatlab-runtime-final.log"
+    ]
+  },
+  "windows_package": {
+    "directory": "dist/mutatoc-win-x64-0.2.0",
+    "architecture": "x64",
+    "python": "3.11.0",
+    "pip_check": "passed",
+    "parse_without_python_on_path": "passed",
+    "removed_packages_absent": true,
+    "lingpatlab_cases_passed": 8287,
+    "lingpatlab_test_methods_passed": 3,
+    "raw_text_cases_passed": 393,
+    "bridge_test_methods_passed": 6,
+    "sparql_calls_passed": 315,
+    "sparql_test_methods_passed": 5,
+    "abi_engines": 24,
+    "abi_prepared_requests_passed": 480,
+    "abi_raw_text_requests_passed": 1,
+    "logs": [
+      "artifacts/lingpatlab-package.log",
+      "artifacts/lingpatlab-package-lingpatlab.log",
+      "artifacts/lingpatlab-package-bridge.log",
+      "artifacts/lingpatlab-package-sparql.log",
+      "artifacts/lingpatlab-package-ffi.log"
+    ]
+  },
+  "performance_0_2_1": {
+    "date": "2026-09-26",
+    "windows_ctest_passed": 10,
+    "linux_asan_ubsan_ctest_passed": 10,
+    "exact_window_python_cases_passed": 266,
+    "ordered_ontology_snapshots_unchanged": 19,
+    "courses_triples": 23836,
+    "initial_measurements_ms": {
+      "ontology_load_before": 3788.46,
+      "ontology_load_after": 895.55,
+      "full_parse_2429_characters_before": 6457.24,
+      "full_parse_2429_characters_after": 219.38
+    },
+    "complete_benchmark_token_and_span_outputs_equal": true,
+    "logs": [
+      "artifacts/analysis-native-tests.log",
+      "artifacts/analysis-sanitizer-tests.log",
+      "artifacts/analysis-ontology-comparison.json",
+      "artifacts/analysis-regressions.log",
+      "artifacts/analysis-upstream-tests.log"
+    ],
+    "upstream_passed": 961,
+    "upstream_subtests_passed": 4,
+    "upstream_elapsed_seconds": 198.69
+  },
+  "punctuation_0_2_2": {
+    "validated_at": "2026-09-27T22:44:24.916703+00:00",
+    "cases": 16165,
+    "assertions": 29981,
+    "failed_assertions": 0,
+    "windows_ctest_suites_passed": 11,
+    "linux_asan_ubsan_ctest_suites_passed": 11,
+    "upstream_mutato_passed": 961,
+    "upstream_mutato_subtests_passed": 4,
+    "upstream_lingpatlab_passed": 17,
+    "lingpatlab_reference_cases": 8287,
+    "explicit_python_reference_corrections": 274,
+    "axiom_highlight_cases": 1512,
+    "source_sha256": {
+      "src/lingpatlab_parse.c": "a308433132ed88f687884056aaa3e00beb2b33c3657a15f34fb8abbc05433d02",
+      "src/match.c": "4b3e273e702a754e99f05df7a163b8e44d95cef8c539bdbd25b218e0402bf06b",
+      "tests/test_punctuation.py": "ad0e3fa403797f44162aba624adc656d754d6e694ad89c51b4eebd23e2022e6d"
+    },
+    "executable_sha256": "138cffc94eea014ad3053de319615a69dee75eaf9c34efa59f495028473b2871",
+    "report": "tests/punctuation-validation.json",
+    "logs_root": "D:/git/axiom/artifacts",
+    "logs": [
+      "punctuation-final-ctest.log",
+      "punctuation-ctest-rerun.log",
+      "punctuation-sanitizers.log",
+      "punctuation-sanitizer-rerun.log",
+      "punctuation-mutato-upstream.log",
+      "punctuation-lingpatlab-upstream.log",
+      "punctuation-axiom-tests.log",
+      "punctuation-desktop.log"
+    ]
+  }
+}
