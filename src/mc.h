@@ -72,6 +72,7 @@ typedef struct {
 void *map_get(Map *, const char *);
 void map_put(Map *, const char *, void *);
 void map_free(Map *);
+void unique_indexed(J *, Map *, const char *);
 typedef struct {
     char *value, *datatype, *language;
     int kind;
@@ -112,8 +113,12 @@ int normalize_special_literals(mc_engine *, Graph *, mc_error *);
 J *sparql_transform(mc_engine *, const J *, J *, mc_error *);
 J *spacy_tokens(mc_engine *, const char *, mc_error *);
 J *spacy_info(mc_engine *, mc_error *);
-J *match_tokens(J *, const J *, const J *, int, int, mc_error *);
-J *transform_tokens(J *, const J *, const J *, const char *, mc_error *);
+typedef struct MatchIndex MatchIndex;
+MatchIndex *match_index_build(const J *);
+const J *match_index_view(const MatchIndex *);
+void match_index_free(MatchIndex *);
+J *match_tokens(const MatchIndex *, const J *, const J *, int, mc_error *);
+J *transform_tokens(J *, const MatchIndex *, const J *, const J *, const char *, mc_error *);
 char *render(const J *);
 struct mc_engine {
     J *snapshot;
@@ -130,5 +135,6 @@ struct mc_engine {
     mc_spacy *sparql;
     mc_engine **parts;
     size_t part_count;
+    MatchIndex *index; /* hash index of the view matching last used; owned */
 };
 #endif

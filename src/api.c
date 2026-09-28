@@ -10,6 +10,8 @@ mc_engine *mc_create(void) {
 }
 static void clear_ontology(mc_engine *e) {
     sparql_invalidate(e->sparql);
+    match_index_free(e->index);
+    e->index = NULL;
     DEL(e->snapshot);
     e->snapshot = NULL;
     DEL(e->live);
@@ -42,6 +44,17 @@ void mc_destroy(mc_engine *e) {
 void mc_free(void *p) {
     free(p);
 }
+/* Every path that replaces the snapshot or live view frees the index first, so a
+   matching view pointer always identifies the view the index was built from. */
+static MatchIndex *view_index(mc_engine *e, J *view, mc_error *err) {
+    if (e->index && match_index_view(e->index) == view)
+        return e->index;
+    match_index_free(e->index);
+    e->index = match_index_build(view);
+    if (!e->index)
+        fail(err, 1, "Cannot allocate match index");
+    return e->index;
+}
 static const char *schema(Graph *g) {
     int skos = 0, individual = 0, subclass = 0;
     for (size_t i = 0; i < g->n; i++) {
@@ -70,6 +83,8 @@ static J *materialize(mc_engine *e, mc_error *err) {
             DEL(next);
             return NULL;
         }
+        match_index_free(e->index);
+        e->index = NULL;
         DEL(e->snapshot);
         e->snapshot = next;
         e->graph_only = 0;
@@ -623,18 +638,24 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err) {
     }
     if (!strcmp(op, "transform_tokens")) {
         J *view = e->live_mode ? live_view(e, err) : e->snapshot;
-        return view ? transform_tokens(view, GET(q, "tokens"), e->names, S(GET(q, "stage")), err)
-                    : NULL;
+        MatchIndex *index = view ? view_index(e, view, err) : NULL;
+        return index ? transform_tokens(view, index, GET(q, "tokens"), e->names,
+                                        S(GET(q, "stage")), err)
+                     : NULL;
     }
     if (!strcmp(op, "parse") || !strcmp(op, "parse_tokens")) {
         J *view = e->live_mode ? live_view(e, err) : e->snapshot;
         if (!view)
             return NULL;
-        if (!SIZE(GET(GET(view, "synonyms"), "lookup")) ||
-            !SIZE(GET(GET(view, "synonyms"), "fwd"))) {
+        J *synonyms = GET(view, "synonyms"), *lookup = GET(synonyms, "lookup"),
+          *fwd = GET(synonyms, "fwd");
+        if (!lookup || !lookup->child || !fwd || !fwd->child) {
             fail(err, 4, "Empty ontology");
             return NULL;
         }
+        MatchIndex *index = view_index(e, view, err);
+        if (!index)
+            return NULL;
         J *tokens;
         if (!strcmp(op, "parse_tokens"))
             tokens = DUP(GET(q, "tokens"));
@@ -647,8 +668,8 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err) {
         }
         if (!tokens)
             return NULL;
-        J *out = match_tokens(view, tokens, e->names, GET(q, "ctr") ? GET(q, "ctr")->valueint : 0,
-                              cJSON_IsTrue(GET(q, "blacklist")), err);
+        J *out = match_tokens(index, tokens, e->names, GET(q, "ctr") ? GET(q, "ctr")->valueint : 0,
+                              err);
         DEL(tokens);
         if (!out)
             return NULL;
@@ -662,6 +683,16 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err) {
     fail(err, 4, "Unknown operation: %s", op);
     return NULL;
 }
+static void warm_index(mc_engine *e) {
+    /* Pay for the match index during load so parsing starts with it. A view that
+       cannot be built yet reports its error from the first parse, as before. */
+    if (!e->snapshot || e->graph_only)
+        return;
+    mc_error ignored = {0};
+    J *view = e->live_mode ? live_view(e, &ignored) : e->snapshot;
+    if (view && !ignored.code)
+        view_index(e, view, &ignored);
+}
 char *mc_request(mc_engine *engine, const char *request, mc_error *error) {
     mc_error local_error = {0};
     mc_error *err = error ? error : &local_error;
@@ -672,6 +703,8 @@ char *mc_request(mc_engine *engine, const char *request, mc_error *error) {
     if (q && !cJSON_IsObject(q))
         fail(err, 2, "Request must be a JSON object");
     J *result = err->code ? NULL : dispatch(engine, q, err);
+    if (!err->code && !strcmp(S(GET(q, "op")), "load"))
+        warm_index(engine);
     DEL(q);
     J *r = OBJ();
     PUT(r, "ok", BOOL(!err->code));

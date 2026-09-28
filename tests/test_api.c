@@ -65,9 +65,76 @@ static char *path(const char *root, const char *folder, const char *name, const 
     buf_put(&b, suffix);
     return buf_take(&b);
 }
+/* Whether a one-token parse_tokens request matched the loaded ontology. */
+static int matches(mc_engine *engine, const char *text) {
+    J *q = OBJ(), *tokens = ARR(), *token = OBJ();
+    char *normal = lower(text);
+    PUT(token, "id", STR("1"));
+    PUT(token, "x", NUM(0));
+    PUT(token, "y", NUM((double)strlen(text)));
+    PUT(token, "text", STR(text));
+    PUT(token, "normal", STR(normal));
+    free(normal);
+    ADD(tokens, token);
+    PUT(q, "op", STR("parse_tokens"));
+    PUT(q, "tokens", tokens);
+    J *response = call(engine, q);
+    DEL(q);
+    J *result_tokens = GET(GET(response, "result"), "tokens");
+    J *first = result_tokens ? result_tokens->child : NULL;
+    int result = !cJSON_IsTrue(GET(response, "ok")) ? -1 : GET(first, "swaps") != NULL;
+    DEL(response);
+    return result;
+}
+static int load_path(mc_engine *engine, const char *root, const char *name, const char *interface) {
+    J *q = OBJ();
+    char *file = path(root, "/tests/fixtures/ontologies/", name, ".owl");
+    PUT(q, "op", STR("load"));
+    PUT(q, "path", STR(file));
+    free(file);
+    if (*interface)
+        PUT(q, "interface", STR(interface));
+    J *response = call(engine, q);
+    DEL(q);
+    int ok = cJSON_IsTrue(GET(response, "ok"));
+    DEL(response);
+    return ok;
+}
+/* Matching uses an index built from the loaded view. A reload must replace it,
+   and malformed view members must be ignored exactly as direct lookups ignore them. */
+static int index_lifecycle(const char *root) {
+    int failed = 0;
+    const char *interfaces[] = {"", "data"};
+    for (size_t i = 0; i < 2; i++) {
+        mc_engine *engine = mc_create();
+        if (!load_path(engine, root, "animals-test", interfaces[i]) || matches(engine, "Dog") != 1 ||
+            !load_path(engine, root, "colors-test", interfaces[i]) || matches(engine, "Dog") != 0 ||
+            matches(engine, "Red") != 1) {
+            fprintf(stderr, "Match index was not replaced on reload (%s)\n",
+                    *interfaces[i] ? interfaces[i] : "snapshot");
+            failed++;
+        }
+        mc_destroy(engine);
+    }
+    mc_engine *engine = mc_create();
+    const char *malformed = "{\"op\":\"load\",\"name\":\"malformed\",\"snapshot\":{\"synonyms\":"
+                            "{\"fwd\":{\"dog\":[\"dog\"]},\"rev\":[\"dog\"],\"lookup\":{\"1\":[\"dog\"]}},"
+                            "\"spans\":[{\"canon\":\"dog\"}],\"ner\":[\"NER\"],\"entities\":[\"dog\"]}}";
+    mc_error err;
+    char *response = mc_request(engine, malformed, &err);
+    mc_free(response);
+    if (err.code || matches(engine, "Dog") != 1) {
+        fprintf(stderr, "Malformed view members broke matching\n");
+        failed++;
+    }
+    mc_destroy(engine);
+    printf("Match index lifecycle: %d/3 passed.\n", 3 - failed);
+    return failed;
+}
 int main(int argc, char **argv) {
     if (argc != 2)
         return 2;
+    int lifecycle_failed = index_lifecycle(argv[1]);
     char *corpus_path = path(argv[1], "/tests/fixtures/api/", "queries", ".json");
     J *rows = read_json(corpus_path);
     free(corpus_path);
@@ -134,5 +201,5 @@ int main(int argc, char **argv) {
     free(current);
     free(directory);
     printf("Public query API parity: %d/%d passed.\n", total - failed, total);
-    return failed ? 1 : 0;
+    return failed || lifecycle_failed ? 1 : 0;
 }
