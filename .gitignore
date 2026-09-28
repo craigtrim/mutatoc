@@ -1,0 +1,12 @@
+build*/
+.reference/
+__pycache__/
+.pytest_cache/
+*.pyc
+artifacts/
+
+.runtime/
+
+dist/
+
+.runtime-c/
