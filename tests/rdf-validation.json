@@ -1,0 +1,116 @@
+[
+  {
+    "file": "animals-test.owl",
+    "reference_triples": 208,
+    "native_triples": 208,
+    "isomorphic": true
+  },
+  {
+    "file": "colors-test.owl",
+    "reference_triples": 124,
+    "native_triples": 124,
+    "isomorphic": true
+  },
+  {
+    "file": "courses-20240709.owl",
+    "reference_triples": 2327,
+    "native_triples": 2327,
+    "isomorphic": true
+  },
+  {
+    "file": "courses-20241023.owl",
+    "reference_triples": 13580,
+    "native_triples": 13580,
+    "isomorphic": true
+  },
+  {
+    "file": "courses-20241129.owl",
+    "reference_triples": 22933,
+    "native_triples": 22933,
+    "isomorphic": true
+  },
+  {
+    "file": "courses-20241213.owl",
+    "reference_triples": 23590,
+    "native_triples": 23590,
+    "isomorphic": true
+  },
+  {
+    "file": "courses-20250122.owl",
+    "reference_triples": 24329,
+    "native_triples": 24329,
+    "isomorphic": true
+  },
+  {
+    "file": "courses-20250131.owl",
+    "reference_triples": 26479,
+    "native_triples": 26479,
+    "isomorphic": true
+  },
+  {
+    "file": "courses-20251013.owl",
+    "reference_triples": 28147,
+    "native_triples": 28147,
+    "isomorphic": true
+  },
+  {
+    "file": "courses-20251028.owl",
+    "reference_triples": 28241,
+    "native_triples": 28241,
+    "isomorphic": true
+  },
+  {
+    "file": "econ-20160218.owl",
+    "reference_triples": 2520,
+    "native_triples": 2520,
+    "isomorphic": true
+  },
+  {
+    "file": "geography-test.owl",
+    "reference_triples": 220,
+    "native_triples": 220,
+    "isomorphic": true
+  },
+  {
+    "file": "medic-copilot-20230726.owl",
+    "reference_triples": 4512,
+    "native_triples": 4512,
+    "isomorphic": true
+  },
+  {
+    "file": "medic-copilot-20230801.owl",
+    "reference_triples": 6862,
+    "native_triples": 6862,
+    "isomorphic": true
+  },
+  {
+    "file": "medic-copilot-20230802.owl",
+    "reference_triples": 6858,
+    "native_triples": 6858,
+    "isomorphic": true
+  },
+  {
+    "file": "medic-copilot-20230816.owl",
+    "reference_triples": 13417,
+    "native_triples": 13417,
+    "isomorphic": true
+  },
+  {
+    "file": "medic-copilot-20230818.owl",
+    "reference_triples": 13988,
+    "native_triples": 13988,
+    "isomorphic": true
+  },
+  {
+    "file": "medicopilot.owl",
+    "reference_triples": 4512,
+    "native_triples": 4512,
+    "isomorphic": true
+  },
+  {
+    "file": "music-test.owl",
+    "reference_triples": 244,
+    "native_triples": 244,
+    "isomorphic": true
+  }
+]
