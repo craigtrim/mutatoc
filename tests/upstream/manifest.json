@@ -1,0 +1,4923 @@
+{
+  "repository": "https://github.com/craigtrim/mutato",
+  "revision": "da6bfa5df80b208a3271e111f2921ad281d0da98",
+  "tests": [
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_parser_is_not_none",
+      "line": 35,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_parser_has_parse_method",
+      "line": 38,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_parser_has_to_dict_method",
+      "line": 41,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_to_dict_returns_dict",
+      "line": 48,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_to_dict_is_non_empty",
+      "line": 51,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_to_dict_contains_synonyms",
+      "line": 54,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_to_dict_contains_ngrams",
+      "line": 57,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_to_dict_contains_spans",
+      "line": 60,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_to_dict_is_json_serialisable",
+      "line": 63,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_parse_returns_string",
+      "line": 72,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_parse_returns_non_empty_string_for_non_empty_input",
+      "line": 75,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_parse_empty_string_returns_empty",
+      "line": 79,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_geometry_normalises_to_canonical",
+      "line": 87,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_geometry_case_insensitive",
+      "line": 91,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_anova_normalises_to_canonical",
+      "line": 94,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_inflection_normalises_to_canonical",
+      "line": 98,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_abstract_algebra_normalises",
+      "line": 106,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_abnormal_psychology_normalises",
+      "line": 110,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_academic_english_normalises",
+      "line": 114,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_mixed_sentence_preserves_unmatched_tokens",
+      "line": 122,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_mixed_sentence_with_multiword",
+      "line": 127,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_unmatched_text_returned_unchanged",
+      "line": 133,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_parse_is_idempotent_on_canonical_form",
+      "line": 143,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_parse_called_twice_gives_same_result",
+      "line": 148,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_two_matched_terms_in_one_sentence",
+      "line": 157,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserRoundTrip::test_round_trip_produces_same_parse_result",
+      "line": 166,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_dict.py::TestOntologyParserRoundTrip::test_to_dict_output_equals_input",
+      "line": 180,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_owl.py::TestOntologyParserFromOwl::test_parser_is_not_none",
+      "line": 29,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_owl.py::TestOntologyParserFromOwl::test_to_dict_returns_dict",
+      "line": 36,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_owl.py::TestOntologyParserFromOwl::test_to_dict_is_non_empty",
+      "line": 39,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_owl.py::TestOntologyParserFromOwl::test_to_dict_contains_synonyms",
+      "line": 42,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_owl.py::TestOntologyParserFromOwl::test_to_dict_is_json_serialisable",
+      "line": 45,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_owl.py::TestOntologyParserFromOwl::test_parse_returns_string",
+      "line": 53,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_owl.py::TestOntologyParserFromOwl::test_geometry_normalises",
+      "line": 56,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_owl.py::TestOntologyParserFromOwl::test_abstract_algebra_normalises",
+      "line": 59,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/api/test_ontology_parser_from_owl.py::TestOntologyParserFromOwl::test_owl_and_dict_paths_produce_same_result",
+      "line": 67,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_animal_children_includes_mammal",
+      "line": 31,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_animal_children_includes_bird",
+      "line": 34,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_animal_children_includes_reptile",
+      "line": 37,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_animal_children_includes_fish",
+      "line": 40,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_animal_children_includes_insect",
+      "line": 43,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_mammal_children_includes_dog",
+      "line": 46,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_mammal_children_includes_cat",
+      "line": 49,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_mammal_children_includes_horse",
+      "line": 52,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_mammal_children_includes_elephant",
+      "line": 55,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_mammal_children_includes_whale",
+      "line": 58,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_mammal_children_includes_lion",
+      "line": 61,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_mammal_children_includes_tiger",
+      "line": 64,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_mammal_children_includes_bear",
+      "line": 67,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_dog_children_includes_poodle",
+      "line": 70,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_dog_children_includes_labrador",
+      "line": 73,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_dog_children_includes_german_shepherd",
+      "line": 76,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_dog_children_includes_bulldog",
+      "line": 79,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_cat_children_includes_siamese",
+      "line": 82,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_cat_children_includes_persian_cat",
+      "line": 85,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_cat_children_includes_maine_coon",
+      "line": 88,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_whale_children_includes_blue_whale",
+      "line": 91,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_whale_children_includes_humpback_whale",
+      "line": 94,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_bear_children_includes_polar_bear",
+      "line": 97,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_bear_children_includes_brown_bear",
+      "line": 100,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_eagle_children_includes_bald_eagle",
+      "line": 103,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_eagle_children_includes_golden_eagle",
+      "line": 106,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_shark_children_includes_great_white_shark",
+      "line": 109,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_shark_children_includes_hammerhead_shark",
+      "line": 112,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_snake_children_includes_python",
+      "line": 115,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_snake_children_includes_cobra",
+      "line": 118,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_bee_children_includes_honeybee",
+      "line": 121,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_butterfly_children_includes_monarch_butterfly",
+      "line": 124,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_poodle_parent_is_dog",
+      "line": 131,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_labrador_parent_is_dog",
+      "line": 134,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_german_shepherd_parent_is_dog",
+      "line": 137,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_siamese_parent_is_cat",
+      "line": 140,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_blue_whale_parent_is_whale",
+      "line": 143,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_polar_bear_parent_is_bear",
+      "line": 146,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_bald_eagle_parent_is_eagle",
+      "line": 149,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_dog_parent_is_mammal",
+      "line": 152,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_mammal_parent_is_animal",
+      "line": 155,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_poodle_ancestors_includes_dog",
+      "line": 162,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_poodle_ancestors_includes_mammal",
+      "line": 165,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_poodle_ancestors_includes_animal",
+      "line": 168,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_blue_whale_ancestors_includes_whale",
+      "line": 171,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_blue_whale_ancestors_includes_mammal",
+      "line": 174,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_blue_whale_ancestors_includes_animal",
+      "line": 177,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_bald_eagle_ancestors_includes_eagle",
+      "line": 180,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_bald_eagle_ancestors_includes_bird",
+      "line": 183,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_has_parent_poodle_dog",
+      "line": 190,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_has_parent_negative",
+      "line": 193,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_has_ancestor_poodle_animal",
+      "line": 196,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_has_ancestor_blue_whale_mammal",
+      "line": 199,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_has_ancestor_negative",
+      "line": 202,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_dog_descendants_includes_poodle",
+      "line": 209,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_mammal_descendants_includes_poodle",
+      "line": 212,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_animal_descendants_includes_poodle",
+      "line": 215,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_hierarchy.py::TestAnimalsFinderHierarchy::test_whale_descendants_includes_blue_whale",
+      "line": 218,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_has_data_returns_true",
+      "line": 31,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_synonyms_returns_dict",
+      "line": 34,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_synonyms_is_non_empty",
+      "line": 37,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_span_keys_returns_list",
+      "line": 40,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_span_keys_is_non_empty",
+      "line": 43,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_span_keys_include_blue_whale",
+      "line": 47,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_span_keys_include_german_shepherd",
+      "line": 52,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_dog_has_canine_as_synonym",
+      "line": 61,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_cat_has_feline_as_synonym",
+      "line": 69,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_horse_has_equine_as_synonym",
+      "line": 76,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_whale_has_cetacean_as_synonym",
+      "line": 83,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_snake_has_serpent_as_synonym",
+      "line": 90,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_bear_has_grizzly_as_synonym",
+      "line": 97,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_labrador_has_lab_as_synonym",
+      "line": 104,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_parrot_has_macaw_as_synonym",
+      "line": 111,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_crocodile_has_croc_as_synonym",
+      "line": 118,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_turtle_has_tortoise_as_synonym",
+      "line": 125,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_insect_children_includes_bee",
+      "line": 136,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_insect_children_includes_butterfly",
+      "line": 139,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_insect_children_includes_ant",
+      "line": 142,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_bird_children_includes_parrot",
+      "line": 145,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_bird_children_includes_penguin",
+      "line": 148,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_fish_children_includes_salmon",
+      "line": 151,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_fish_children_includes_shark",
+      "line": 154,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_animals_finder_synonyms.py::TestAnimalsFinderSynonyms::test_lizard_children_includes_iguana",
+      "line": 157,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_color_children_includes_primary",
+      "line": 31,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_color_children_includes_secondary",
+      "line": 34,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_color_children_includes_neutral",
+      "line": 37,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_color_children_includes_warm",
+      "line": 40,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_color_children_includes_cool",
+      "line": 43,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_color_children_includes_metallic",
+      "line": 46,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_primary_color_children_includes_red",
+      "line": 53,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_primary_color_children_includes_blue",
+      "line": 56,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_primary_color_children_includes_yellow",
+      "line": 59,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_secondary_color_children_includes_orange",
+      "line": 66,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_secondary_color_children_includes_green",
+      "line": 69,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_secondary_color_children_includes_purple",
+      "line": 72,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_secondary_color_children_includes_indigo",
+      "line": 75,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_neutral_color_children_includes_black",
+      "line": 82,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_neutral_color_children_includes_white",
+      "line": 85,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_neutral_color_children_includes_gray",
+      "line": 88,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_neutral_color_children_includes_brown",
+      "line": 91,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_warm_color_children_includes_pink",
+      "line": 98,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_warm_color_children_includes_coral",
+      "line": 101,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_warm_color_children_includes_maroon",
+      "line": 104,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_cool_color_children_includes_teal",
+      "line": 107,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_cool_color_children_includes_turquoise",
+      "line": 110,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_cool_color_children_includes_navy",
+      "line": 113,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_cool_color_children_includes_mint",
+      "line": 116,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_metallic_color_children_includes_silver",
+      "line": 119,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_metallic_color_children_includes_bronze",
+      "line": 122,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_metallic_color_children_includes_gold_metallic",
+      "line": 125,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_red_parent_is_primary_color",
+      "line": 132,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_blue_parent_is_primary_color",
+      "line": 135,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_yellow_parent_is_primary_color",
+      "line": 138,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_green_parent_is_secondary_color",
+      "line": 141,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_purple_parent_is_secondary_color",
+      "line": 144,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_gray_parent_is_neutral_color",
+      "line": 147,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_pink_parent_is_warm_color",
+      "line": 150,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_teal_parent_is_cool_color",
+      "line": 153,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_silver_parent_is_metallic_color",
+      "line": 156,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_primary_color_parent_is_color",
+      "line": 159,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_secondary_color_parent_is_color",
+      "line": 162,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_red_ancestors_includes_primary_color",
+      "line": 169,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_red_ancestors_includes_color",
+      "line": 172,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_green_ancestors_includes_secondary_color",
+      "line": 175,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_green_ancestors_includes_color",
+      "line": 178,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_teal_ancestors_includes_cool_color",
+      "line": 181,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_teal_ancestors_includes_color",
+      "line": 184,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_silver_ancestors_includes_metallic_color",
+      "line": 187,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_silver_ancestors_includes_color",
+      "line": 190,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_has_parent_red_primary_color",
+      "line": 197,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_has_parent_negative_red_neutral",
+      "line": 200,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_has_ancestor_red_color",
+      "line": 203,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_has_ancestor_teal_color",
+      "line": 206,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_has_ancestor_negative_red_cool",
+      "line": 209,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_primary_color_descendants_includes_red",
+      "line": 216,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_color_descendants_includes_red",
+      "line": 219,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_color_descendants_includes_teal",
+      "line": 222,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_colors_finder_hierarchy.py::TestColorsFinderHierarchy::test_color_descendants_includes_silver",
+      "line": 225,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_api.py::TestFindOntologyDataAPI::test_ontologies_returns_input_list",
+      "line": 26,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_api.py::TestFindOntologyDataAPI::test_absolute_path_returns_expected_string",
+      "line": 29,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_api.py::TestFindOntologyDataAPI::test_has_data_is_true",
+      "line": 32,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_api.py::TestFindOntologyDataAPI::test_synonyms_returns_non_empty_dict",
+      "line": 35,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_api.py::TestFindOntologyDataAPI::test_synonyms_rev_returns_non_empty_dict",
+      "line": 40,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_api.py::TestFindOntologyDataAPI::test_lookup_returns_dict_with_integer_keys",
+      "line": 45,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_api.py::TestFindOntologyDataAPI::test_predicates_are_sorted_as_expected",
+      "line": 51,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_api.py::TestFindOntologyDataAPI::test_gluconate_children_via_owl_path",
+      "line": 57,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_api.py::TestFindOntologyDataAPI::test_gluconate_ancestors_via_owl_path",
+      "line": 61,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_api.py::TestFindOntologyDataAPI::test_entity_exists_for_known_entity",
+      "line": 66,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_api.py::TestFindOntologyDataAPI::test_entity_exists_false_for_unknown",
+      "line": 69,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_data_exact_match.py::TestFindOntologyJSON::test_swap_input_text",
+      "line": 34,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_canon_ops.py::TestFindOntologyJSONCanonOps::test_canon_entity_is_recognized_as_canon",
+      "line": 39,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_canon_ops.py::TestFindOntologyJSONCanonOps::test_known_variant_is_recognized_as_variant",
+      "line": 43,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_canon_ops.py::TestFindOntologyJSONCanonOps::test_find_variants_returns_list_for_canon",
+      "line": 47,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_canon_ops.py::TestFindOntologyJSONCanonOps::test_known_variant_appears_in_find_variants",
+      "line": 53,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_canon_ops.py::TestFindOntologyJSONCanonOps::test_nonexistent_entity_is_not_canon",
+      "line": 58,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_canon_ops.py::TestFindOntologyJSONCanonOps::test_nonexistent_entity_is_not_variant",
+      "line": 61,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_canon_ops.py::TestFindOntologyJSONCanonOps::test_find_canon_returns_string_or_none",
+      "line": 64,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_from_file.py::TestFindOntologyJSON::test_swap_input_text",
+      "line": 40,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy.py::TestFindOntologyJSON::test_functions",
+      "line": 39,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy.py::TestFindOntologyJSON::test_children",
+      "line": 75,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy.py::TestFindOntologyJSON::test_descendants",
+      "line": 81,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy.py::TestFindOntologyJSON::test_descendants_and_self",
+      "line": 91,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy.py::TestFindOntologyJSON::test_parents",
+      "line": 100,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy.py::TestFindOntologyJSON::test_ancestors",
+      "line": 103,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy_ops.py::TestFindOntologyJSONHierarchyOps::test_gluconate_direct_children",
+      "line": 28,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy_ops.py::TestFindOntologyJSONHierarchyOps::test_gluconate_direct_parent",
+      "line": 35,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy_ops.py::TestFindOntologyJSONHierarchyOps::test_gluconate_full_ancestry",
+      "line": 39,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy_ops.py::TestFindOntologyJSONHierarchyOps::test_ancestors_and_self_includes_entity",
+      "line": 45,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy_ops.py::TestFindOntologyJSONHierarchyOps::test_children_and_self_includes_entity",
+      "line": 51,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy_ops.py::TestFindOntologyJSONHierarchyOps::test_descendants_includes_deep_children",
+      "line": 56,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy_ops.py::TestFindOntologyJSONHierarchyOps::test_has_parent_gluconate_medication",
+      "line": 62,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy_ops.py::TestFindOntologyJSONHierarchyOps::test_has_parent_negative_case",
+      "line": 65,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy_ops.py::TestFindOntologyJSONHierarchyOps::test_has_ancestor_event",
+      "line": 69,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_hierarchy_ops.py::TestFindOntologyJSONHierarchyOps::test_calcium_gluconate_has_ancestor_gluconate",
+      "line": 73,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_structure.py::TestFindOntologyJSONStructure::test_has_data_is_true",
+      "line": 27,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_structure.py::TestFindOntologyJSONStructure::test_synonyms_returns_non_empty_dict",
+      "line": 30,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_structure.py::TestFindOntologyJSONStructure::test_synonyms_rev_returns_non_empty_dict",
+      "line": 35,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_structure.py::TestFindOntologyJSONStructure::test_lookup_returns_dict",
+      "line": 40,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_structure.py::TestFindOntologyJSONStructure::test_ontologies_returns_expected_name",
+      "line": 44,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_structure.py::TestFindOntologyJSONStructure::test_trie_returns_dict",
+      "line": 47,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_structure.py::TestFindOntologyJSONStructure::test_predicates_returns_expected_sorted_list",
+      "line": 51,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_find_ontology_json_structure.py::TestFindOntologyJSONStructure::test_span_keys_are_sorted_by_length_if_present",
+      "line": 55,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_generate_plus_spans_complex.py::TestSpanGeneration::test_generate",
+      "line": 21,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_generate_plus_spans_overlap.py::TestSpanGeneration::test_generate",
+      "line": 18,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_generate_plus_spans_single.py::TestSpanGeneration::test_generate",
+      "line": 18,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_region_children_includes_continent",
+      "line": 31,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_region_children_includes_country",
+      "line": 34,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_region_children_includes_city",
+      "line": 37,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_region_children_includes_landmark",
+      "line": 40,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_region_children_includes_ocean",
+      "line": 43,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_region_children_includes_mountain",
+      "line": 46,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_continent_children_includes_north_america",
+      "line": 53,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_continent_children_includes_south_america",
+      "line": 56,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_continent_children_includes_europe",
+      "line": 59,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_continent_children_includes_asia",
+      "line": 62,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_continent_children_includes_africa",
+      "line": 65,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_continent_children_includes_antarctica",
+      "line": 68,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_country_children_includes_united_states",
+      "line": 75,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_country_children_includes_united_kingdom",
+      "line": 78,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_country_children_includes_france",
+      "line": 81,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_country_children_includes_germany",
+      "line": 84,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_country_children_includes_japan",
+      "line": 87,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_country_children_includes_china",
+      "line": 90,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_country_children_includes_brazil",
+      "line": 93,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_city_children_includes_new_york",
+      "line": 100,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_city_children_includes_los_angeles",
+      "line": 103,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_city_children_includes_london",
+      "line": 106,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_city_children_includes_paris",
+      "line": 109,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_city_children_includes_tokyo",
+      "line": 112,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_city_children_includes_beijing",
+      "line": 115,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_landmark_children_includes_eiffel_tower",
+      "line": 122,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_landmark_children_includes_great_wall",
+      "line": 125,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_landmark_children_includes_big_ben",
+      "line": 128,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_ocean_children_includes_pacific_ocean",
+      "line": 131,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_ocean_children_includes_atlantic_ocean",
+      "line": 134,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_mountain_children_includes_mount_everest",
+      "line": 137,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_mountain_children_includes_kilimanjaro",
+      "line": 140,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_europe_parent_is_continent",
+      "line": 147,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_france_parent_is_country",
+      "line": 150,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_paris_parent_is_city",
+      "line": 153,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_eiffel_tower_parent_is_landmark",
+      "line": 156,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_pacific_ocean_parent_is_ocean",
+      "line": 159,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_mount_everest_parent_is_mountain",
+      "line": 162,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_continent_parent_is_geographic_region",
+      "line": 165,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_country_parent_is_geographic_region",
+      "line": 168,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_france_ancestors_includes_country",
+      "line": 175,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_france_ancestors_includes_geographic_region",
+      "line": 178,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_new_york_ancestors_includes_city",
+      "line": 181,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_new_york_ancestors_includes_geographic_region",
+      "line": 184,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_eiffel_tower_ancestors_includes_landmark",
+      "line": 187,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_eiffel_tower_ancestors_includes_geographic_region",
+      "line": 190,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_mount_everest_ancestors_includes_mountain",
+      "line": 193,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_mount_everest_ancestors_includes_geographic_region",
+      "line": 196,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_has_parent_europe_continent",
+      "line": 203,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_has_parent_negative_france_city",
+      "line": 206,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_has_ancestor_france_geographic_region",
+      "line": 209,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_has_ancestor_pacific_ocean_geographic_region",
+      "line": 212,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_has_ancestor_negative_france_mountain",
+      "line": 215,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_country_descendants_includes_france",
+      "line": 222,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_geographic_region_descendants_includes_france",
+      "line": 225,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_geographic_region_descendants_includes_pacific_ocean",
+      "line": 228,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_geographic_region_descendants_includes_mount_everest",
+      "line": 231,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_synonyms_is_non_empty",
+      "line": 238,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_united_states_has_usa_as_synonym",
+      "line": 241,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_united_kingdom_has_uk_as_synonym",
+      "line": 248,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_geography_finder.py::TestGeographyFinder::test_germany_has_deutschland_as_synonym",
+      "line": 255,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_courses.py::TestAddFunction::test_mda_generator",
+      "line": 26,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_hierarchy_consistency.py::TestMDAGeneratorHierarchyConsistency::test_children_values_are_non_empty_lists",
+      "line": 27,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_hierarchy_consistency.py::TestMDAGeneratorHierarchyConsistency::test_parents_values_are_non_empty_lists",
+      "line": 32,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_hierarchy_consistency.py::TestMDAGeneratorHierarchyConsistency::test_no_entity_is_its_own_child",
+      "line": 37,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_hierarchy_consistency.py::TestMDAGeneratorHierarchyConsistency::test_no_entity_is_its_own_parent",
+      "line": 41,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_hierarchy_consistency.py::TestMDAGeneratorHierarchyConsistency::test_children_and_parents_are_reflexive",
+      "line": 45,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_hierarchy_consistency.py::TestMDAGeneratorHierarchyConsistency::test_children_keys_are_all_strings",
+      "line": 55,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_hierarchy_consistency.py::TestMDAGeneratorHierarchyConsistency::test_parents_keys_are_all_strings",
+      "line": 59,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_medicopilot.py::TestFindOntologyJSON::test_generate",
+      "line": 24,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_output_schema.py::TestMDAGeneratorOutputSchema::test_all_required_top_level_keys_present",
+      "line": 30,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_output_schema.py::TestMDAGeneratorOutputSchema::test_synonyms_has_fwd_rev_lookup_subkeys",
+      "line": 34,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_output_schema.py::TestMDAGeneratorOutputSchema::test_ngrams_has_levels_one_through_nine",
+      "line": 40,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_output_schema.py::TestMDAGeneratorOutputSchema::test_ngrams_values_are_lists",
+      "line": 46,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_output_schema.py::TestMDAGeneratorOutputSchema::test_children_is_dict_of_str_to_list",
+      "line": 50,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_output_schema.py::TestMDAGeneratorOutputSchema::test_parents_is_dict_of_str_to_list",
+      "line": 57,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_output_schema.py::TestMDAGeneratorOutputSchema::test_labels_is_non_empty_dict",
+      "line": 64,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_output_schema.py::TestMDAGeneratorOutputSchema::test_ner_values_are_all_strings",
+      "line": 69,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_synonym_consistency.py::TestMDAGeneratorSynonymConsistency::test_fwd_is_non_empty_dict",
+      "line": 28,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_synonym_consistency.py::TestMDAGeneratorSynonymConsistency::test_rev_is_non_empty_dict",
+      "line": 32,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_synonym_consistency.py::TestMDAGeneratorSynonymConsistency::test_lookup_has_integer_keys",
+      "line": 36,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_synonym_consistency.py::TestMDAGeneratorSynonymConsistency::test_fwd_values_are_lists",
+      "line": 41,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_synonym_consistency.py::TestMDAGeneratorSynonymConsistency::test_fwd_variant_lists_contain_strings",
+      "line": 45,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_synonym_consistency.py::TestMDAGeneratorSynonymConsistency::test_unigram_lookup_terms_have_no_spaces",
+      "line": 50,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_mda_generator_synonym_consistency.py::TestMDAGeneratorSynonymConsistency::test_rev_keys_appear_as_fwd_values",
+      "line": 56,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_music_topic_children_includes_instrument",
+      "line": 33,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_music_topic_children_includes_genre",
+      "line": 36,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_music_topic_children_includes_concept",
+      "line": 39,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_instrument_children_includes_string",
+      "line": 46,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_instrument_children_includes_wind",
+      "line": 49,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_instrument_children_includes_percussion",
+      "line": 52,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_instrument_children_includes_keyboard",
+      "line": 55,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_string_instrument_children_includes_guitar",
+      "line": 62,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_string_instrument_children_includes_violin",
+      "line": 65,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_string_instrument_children_includes_cello",
+      "line": 68,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_string_instrument_children_includes_harp",
+      "line": 71,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_guitar_children_includes_electric_guitar",
+      "line": 74,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_guitar_children_includes_acoustic_guitar",
+      "line": 77,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_guitar_children_includes_bass_guitar",
+      "line": 80,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_wind_instrument_children_includes_flute",
+      "line": 87,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_wind_instrument_children_includes_trumpet",
+      "line": 90,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_wind_instrument_children_includes_saxophone",
+      "line": 93,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_saxophone_children_includes_alto_saxophone",
+      "line": 96,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_saxophone_children_includes_tenor_saxophone",
+      "line": 99,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_percussion_children_includes_drum",
+      "line": 106,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_percussion_children_includes_cymbal",
+      "line": 109,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_drum_children_includes_snare_drum",
+      "line": 112,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_drum_children_includes_bass_drum",
+      "line": 115,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_keyboard_children_includes_piano",
+      "line": 122,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_keyboard_children_includes_organ",
+      "line": 125,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_keyboard_children_includes_synthesizer",
+      "line": 128,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_piano_children_includes_grand_piano",
+      "line": 131,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_piano_children_includes_upright_piano",
+      "line": 134,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_genre_children_includes_jazz",
+      "line": 141,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_genre_children_includes_classical_music",
+      "line": 144,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_genre_children_includes_rock_music",
+      "line": 147,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_jazz_children_includes_bebop",
+      "line": 150,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_jazz_children_includes_smooth_jazz",
+      "line": 153,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_classical_music_children_includes_baroque",
+      "line": 156,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_classical_music_children_includes_romantic",
+      "line": 159,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_rock_music_children_includes_heavy_metal",
+      "line": 162,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_rock_music_children_includes_punk_rock",
+      "line": 165,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_concept_children_includes_melody",
+      "line": 172,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_concept_children_includes_rhythm",
+      "line": 175,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_concept_children_includes_harmony",
+      "line": 178,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_guitar_parent_is_string_instrument",
+      "line": 185,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_electric_guitar_parent_is_guitar",
+      "line": 188,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_saxophone_parent_is_wind_instrument",
+      "line": 191,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_alto_saxophone_parent_is_saxophone",
+      "line": 194,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_piano_parent_is_keyboard_instrument",
+      "line": 197,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_grand_piano_parent_is_piano",
+      "line": 200,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_bebop_parent_is_jazz",
+      "line": 203,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_heavy_metal_parent_is_rock_music",
+      "line": 206,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_baroque_parent_is_classical_music",
+      "line": 209,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_jazz_parent_is_genre",
+      "line": 212,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_instrument_parent_is_music_topic",
+      "line": 215,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_electric_guitar_ancestors_includes_guitar",
+      "line": 222,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_electric_guitar_ancestors_includes_string_instrument",
+      "line": 225,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_electric_guitar_ancestors_includes_instrument",
+      "line": 228,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_electric_guitar_ancestors_includes_music_topic",
+      "line": 231,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_alto_saxophone_ancestors_includes_saxophone",
+      "line": 234,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_alto_saxophone_ancestors_includes_wind_instrument",
+      "line": 237,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_bebop_ancestors_includes_jazz",
+      "line": 240,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_bebop_ancestors_includes_genre",
+      "line": 243,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_grand_piano_ancestors_includes_piano",
+      "line": 246,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_grand_piano_ancestors_includes_keyboard_instrument",
+      "line": 249,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_has_parent_guitar_string_instrument",
+      "line": 256,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_has_parent_negative_guitar_wind",
+      "line": 259,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_has_ancestor_electric_guitar_music_topic",
+      "line": 262,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_has_ancestor_bebop_music_topic",
+      "line": 265,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_has_ancestor_negative_bebop_instrument",
+      "line": 268,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_guitar_descendants_includes_electric_guitar",
+      "line": 275,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_string_instrument_descendants_includes_electric_guitar",
+      "line": 278,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_instrument_descendants_includes_grand_piano",
+      "line": 281,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_jazz_descendants_includes_bebop",
+      "line": 284,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/finder/test_music_finder_hierarchy.py::TestMusicFinderHierarchy::test_music_topic_descendants_includes_bebop",
+      "line": 287,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_has_children_key",
+      "line": 30,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_has_parents_key",
+      "line": 33,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_has_trie_key",
+      "line": 36,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_has_ngrams_key",
+      "line": 39,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_has_spans_key",
+      "line": 42,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_has_labels_key",
+      "line": 45,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_has_equivalents_key",
+      "line": 48,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_has_predicates_key",
+      "line": 51,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_has_by_predicate_key",
+      "line": 54,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_has_ner_key",
+      "line": 57,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_has_synonyms_key",
+      "line": 60,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_children_is_dict",
+      "line": 67,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_parents_is_dict",
+      "line": 70,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_ngrams_is_dict",
+      "line": 73,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_spans_is_dict",
+      "line": 76,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_labels_is_dict",
+      "line": 79,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_ner_is_dict",
+      "line": 82,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_synonyms_is_dict",
+      "line": 85,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_predicates_is_list",
+      "line": 88,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_by_predicate_is_dict",
+      "line": 91,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_children_is_non_empty",
+      "line": 98,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_children_values_are_lists",
+      "line": 101,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_children_animal_includes_mammal",
+      "line": 106,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_children_mammal_includes_dog",
+      "line": 111,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_children_dog_includes_poodle",
+      "line": 116,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_parents_is_non_empty",
+      "line": 125,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_parents_values_are_lists",
+      "line": 128,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_parents_poodle_includes_dog",
+      "line": 133,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_parents_dog_includes_mammal",
+      "line": 138,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_ngrams_has_unigrams",
+      "line": 147,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_ngrams_has_bigrams",
+      "line": 150,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_ngrams_unigrams_is_list",
+      "line": 153,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_ngrams_unigrams_includes_dog",
+      "line": 156,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_ngrams_bigrams_includes_german_shepherd",
+      "line": 160,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_spans_is_non_empty",
+      "line": 168,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_spans_contains_german_shepherd",
+      "line": 171,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_spans_contains_blue_whale",
+      "line": 176,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_synonyms_has_fwd_key",
+      "line": 184,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_synonyms_has_rev_key",
+      "line": 187,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_synonyms_has_lookup_key",
+      "line": 190,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_synonyms_fwd_is_dict",
+      "line": 193,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_synonyms_rev_is_dict",
+      "line": 196,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_synonyms_fwd_dog_has_canine",
+      "line": 199,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_ner_is_non_empty",
+      "line": 210,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_ner_values_are_strings",
+      "line": 213,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_ner_all_values_are_ner_label",
+      "line": 218,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_labels_is_non_empty",
+      "line": 226,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_labels_contains_dog",
+      "line": 229,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_animals_mda_schema.py::TestAnimalsMDASchema::test_labels_contains_animal",
+      "line": 233,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_has_all_required_keys",
+      "line": 30,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_children_music_topic_includes_instrument",
+      "line": 41,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_children_instrument_includes_string_instrument",
+      "line": 46,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_children_string_instrument_includes_guitar",
+      "line": 51,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_children_guitar_includes_electric_guitar",
+      "line": 56,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_children_jazz_includes_bebop",
+      "line": 61,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_children_saxophone_includes_alto_saxophone",
+      "line": 66,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_children_piano_includes_grand_piano",
+      "line": 71,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_parents_electric_guitar_includes_guitar",
+      "line": 80,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_parents_guitar_includes_string_instrument",
+      "line": 85,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_parents_bebop_includes_jazz",
+      "line": 90,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_ngrams_bigrams_includes_electric_guitar",
+      "line": 99,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_ngrams_bigrams_includes_smooth_jazz",
+      "line": 103,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_ngrams_bigrams_includes_heavy_metal",
+      "line": 107,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_ngrams_bigrams_includes_classical_music",
+      "line": 111,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_ngrams_bigrams_includes_hip_hop",
+      "line": 115,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_spans_contains_electric_token",
+      "line": 123,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_spans_contains_smooth_token",
+      "line": 127,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_spans_contains_heavy_token",
+      "line": 131,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_synonyms_fwd_guitar_has_axe",
+      "line": 139,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_synonyms_fwd_saxophone_has_sax",
+      "line": 146,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_synonyms_fwd_violin_has_fiddle",
+      "line": 153,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_synonyms_rev_is_non_empty",
+      "line": 160,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_ner_all_values_are_ner_label",
+      "line": 167,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_ner_contains_guitar",
+      "line": 171,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_labels_contains_guitar",
+      "line": 179,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_labels_contains_jazz",
+      "line": 183,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/mda/test_music_mda_schema.py::TestMusicMDASchema::test_labels_contains_melody",
+      "line": 187,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_result_is_a_list",
+      "line": 51,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_each_token_is_a_dict",
+      "line": 55,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_all_tokens_have_normal_field",
+      "line": 60,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_normal_field_is_lowercase",
+      "line": 65,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_dog_exact_match",
+      "line": 74,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_cat_exact_match",
+      "line": 77,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_horse_exact_match",
+      "line": 80,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_elephant_exact_match",
+      "line": 83,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_whale_exact_match",
+      "line": 86,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_lion_exact_match",
+      "line": 89,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_tiger_exact_match",
+      "line": 92,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_bear_exact_match",
+      "line": 95,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_eagle_exact_match",
+      "line": 98,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_parrot_exact_match",
+      "line": 101,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_penguin_exact_match",
+      "line": 104,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_snake_exact_match",
+      "line": 107,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_lizard_exact_match",
+      "line": 110,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_crocodile_exact_match",
+      "line": 113,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_turtle_exact_match",
+      "line": 116,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_salmon_exact_match",
+      "line": 119,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_shark_exact_match",
+      "line": 122,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_bee_exact_match",
+      "line": 125,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_butterfly_exact_match",
+      "line": 128,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_ant_exact_match",
+      "line": 131,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_poodle_exact_match",
+      "line": 134,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_labrador_exact_match",
+      "line": 137,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_cobra_exact_match",
+      "line": 140,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_iguana_exact_match",
+      "line": 143,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_dog_lowercase",
+      "line": 150,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_dog_uppercase",
+      "line": 153,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_cat_lowercase",
+      "line": 156,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_shark_uppercase",
+      "line": 159,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_canine_altlabel_has_swap",
+      "line": 166,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_canine_altlabel_canon_is_dog",
+      "line": 170,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_feline_altlabel_has_swap",
+      "line": 173,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_feline_altlabel_canon_is_cat",
+      "line": 177,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_equine_altlabel_has_swap",
+      "line": 180,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_serpent_altlabel_canon_is_snake",
+      "line": 184,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_cetacean_altlabel_canon_is_whale",
+      "line": 187,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_grizzly_altlabel_canon_is_bear",
+      "line": 190,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_macaw_altlabel_canon_is_parrot",
+      "line": 193,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_croc_altlabel_canon_is_crocodile",
+      "line": 196,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_tortoise_altlabel_canon_is_turtle",
+      "line": 199,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_lab_altlabel_canon_is_labrador",
+      "line": 202,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_unknown_word_returns_list",
+      "line": 209,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_unknown_word_has_no_swaps",
+      "line": 213,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_none_input_returns_none",
+      "line": 217,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_empty_string_returns_none",
+      "line": 220,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_mixed_known_unknown_tokens",
+      "line": 227,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_two_known_entities_both_match",
+      "line": 233,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_swap_type_is_exact_for_single_word",
+      "line": 238,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_basic.py::TestAnimalsParserBasic::test_swap_type_is_a_known_value",
+      "line": 242,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_german_shepherd_produces_swap",
+      "line": 54,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_german_shepherd_canon",
+      "line": 58,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_blue_whale_produces_swap",
+      "line": 61,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_blue_whale_canon",
+      "line": 65,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_maine_coon_produces_swap",
+      "line": 68,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_maine_coon_canon",
+      "line": 72,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_persian_cat_produces_swap",
+      "line": 75,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_polar_bear_produces_swap",
+      "line": 79,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_polar_bear_canon",
+      "line": 83,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_brown_bear_produces_swap",
+      "line": 86,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_african_elephant_produces_swap",
+      "line": 90,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_african_elephant_canon",
+      "line": 94,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_asian_elephant_produces_swap",
+      "line": 97,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_arabian_horse_produces_swap",
+      "line": 101,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_bald_eagle_produces_swap",
+      "line": 105,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_bald_eagle_canon",
+      "line": 109,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_golden_eagle_produces_swap",
+      "line": 112,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_great_white_shark_produces_swap",
+      "line": 116,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_great_white_shark_canon",
+      "line": 120,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_hammerhead_shark_produces_swap",
+      "line": 123,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_humpback_whale_produces_swap",
+      "line": 127,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_monarch_butterfly_produces_swap",
+      "line": 131,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_german_shepherd_in_sentence",
+      "line": 139,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_blue_whale_in_sentence",
+      "line": 143,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_great_white_shark_in_sentence",
+      "line": 147,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_african_elephant_in_sentence",
+      "line": 151,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_polar_bear_in_sentence",
+      "line": 155,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_animals_parser_spans.py::TestAnimalsParserSpans::test_bald_eagle_in_sentence",
+      "line": 159,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_ask_owl_api_equivalents.py::TestMutatoAPI::test_by_predicate",
+      "line": 39,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_red_exact_match",
+      "line": 51,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_blue_exact_match",
+      "line": 54,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_yellow_exact_match",
+      "line": 57,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_orange_exact_match",
+      "line": 64,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_green_exact_match",
+      "line": 67,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_purple_exact_match",
+      "line": 70,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_indigo_exact_match",
+      "line": 73,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_black_exact_match",
+      "line": 80,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_white_exact_match",
+      "line": 83,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_gray_exact_match",
+      "line": 86,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_brown_exact_match",
+      "line": 89,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_beige_exact_match",
+      "line": 92,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_coral_exact_match",
+      "line": 99,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_pink_exact_match",
+      "line": 102,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_maroon_exact_match",
+      "line": 105,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_teal_exact_match",
+      "line": 112,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_turquoise_exact_match",
+      "line": 115,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_navy_exact_match",
+      "line": 118,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_mint_exact_match",
+      "line": 121,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_silver_exact_match",
+      "line": 128,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_bronze_exact_match",
+      "line": 131,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_crimson_maps_to_red",
+      "line": 138,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_scarlet_maps_to_red",
+      "line": 141,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_azure_maps_to_blue",
+      "line": 144,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_cobalt_maps_to_blue",
+      "line": 147,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_emerald_maps_to_green",
+      "line": 150,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_violet_maps_to_purple",
+      "line": 153,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_lavender_maps_to_purple",
+      "line": 156,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_grey_maps_to_gray",
+      "line": 159,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_tan_maps_to_brown",
+      "line": 162,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_chocolate_maps_to_brown",
+      "line": 165,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_rose_maps_to_pink",
+      "line": 168,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_magenta_maps_to_pink",
+      "line": 171,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_cyan_maps_to_teal",
+      "line": 174,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_burgundy_maps_to_maroon",
+      "line": 177,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_tangerine_maps_to_orange",
+      "line": 180,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_chrome_maps_to_silver",
+      "line": 183,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_colour_maps_to_color",
+      "line": 186,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_primary_color_span",
+      "line": 193,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_secondary_color_span",
+      "line": 197,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_neutral_color_span",
+      "line": 201,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_warm_color_span",
+      "line": 205,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_cool_color_span",
+      "line": 209,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_metallic_color_span",
+      "line": 213,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_unknown_color_returns_list",
+      "line": 221,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_unknown_color_no_swaps",
+      "line": 225,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_case_invariant_red",
+      "line": 228,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_swap_type_is_known_value",
+      "line": 233,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_result_is_a_list",
+      "line": 57,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_each_token_is_a_dict",
+      "line": 61,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_all_tokens_have_normal_field",
+      "line": 66,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_normal_field_is_lowercase",
+      "line": 71,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_none_input_returns_none",
+      "line": 76,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_empty_string_returns_none",
+      "line": 79,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_fiscal_policy_analysis_produces_swap",
+      "line": 86,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_fiscal_policy_analysis_canon",
+      "line": 89,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_monetary_policy_analysis_produces_swap",
+      "line": 92,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_monetary_policy_analysis_canon",
+      "line": 95,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_labor_market_analysis_produces_swap",
+      "line": 98,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_labor_market_analysis_canon",
+      "line": 101,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_unemployment_data_analysis_produces_swap",
+      "line": 104,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_unemployment_data_analysis_canon",
+      "line": 107,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_cost_benefit_analysis_produces_swap",
+      "line": 110,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_cost_benefit_analysis_canon",
+      "line": 113,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_market_failure_analysis_produces_swap",
+      "line": 116,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_market_failure_analysis_canon",
+      "line": 119,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_business_cycle_analysis_produces_swap",
+      "line": 122,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_business_cycle_analysis_canon",
+      "line": 125,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_interest_rate_analysis_produces_swap",
+      "line": 128,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_interest_rate_analysis_canon",
+      "line": 131,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_income_inequality_analysis_produces_swap",
+      "line": 134,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_income_inequality_analysis_canon",
+      "line": 137,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_international_trade_analysis_produces_swap",
+      "line": 140,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_international_trade_analysis_canon",
+      "line": 143,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_economic_policy_analysis_produces_swap",
+      "line": 146,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_economic_policy_analysis_canon",
+      "line": 149,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_public_policy_analysis_produces_swap",
+      "line": 152,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_public_policy_analysis_canon",
+      "line": 155,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_price_elasticity_analysis_produces_swap",
+      "line": 158,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_price_elasticity_analysis_canon",
+      "line": 161,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_consumer_behavior_analysis_produces_swap",
+      "line": 164,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_consumer_behavior_analysis_canon",
+      "line": 167,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_market_structure_analysis_produces_swap",
+      "line": 170,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_market_structure_analysis_canon",
+      "line": 173,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_supply_and_demand_analysis_produces_swap",
+      "line": 180,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_supply_and_demand_analysis_canon",
+      "line": 183,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_aggregate_demand_analysis_produces_swap",
+      "line": 186,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_aggregate_demand_analysis_canon",
+      "line": 189,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_fiscal_lowercase",
+      "line": 196,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_fiscal_uppercase",
+      "line": 199,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_monetary_mixed_case",
+      "line": 202,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_labor_lowercase",
+      "line": 205,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_two_skills_both_detected",
+      "line": 212,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_three_skills_all_detected",
+      "line": 217,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_unknown_word_returns_list",
+      "line": 227,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_unknown_word_has_no_swaps",
+      "line": 231,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_partial_skill_name_no_swap",
+      "line": 234,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_basic.py::TestEconSkillsBasic::test_nonsense_words_no_swap",
+      "line": 239,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_fiscal_policy_analysis",
+      "line": 57,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_monetary_policy_analysis",
+      "line": 61,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_labor_market_analysis",
+      "line": 65,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_unemployment_data_analysis",
+      "line": 69,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_cost_benefit_analysis",
+      "line": 73,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_market_failure_analysis",
+      "line": 77,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_business_cycle_analysis",
+      "line": 81,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_interest_rate_analysis",
+      "line": 85,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_income_inequality_analysis",
+      "line": 89,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_international_trade_analysis",
+      "line": 93,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_supply_and_demand_analysis",
+      "line": 97,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_economic_policy_analysis",
+      "line": 101,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_public_policy_analysis",
+      "line": 105,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_price_elasticity_analysis",
+      "line": 109,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_consumer_behavior_analysis",
+      "line": 113,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_market_structure_analysis",
+      "line": 117,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_aggregate_demand_analysis",
+      "line": 121,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_economic_growth_forecasting",
+      "line": 125,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_monetary_policy_implementation",
+      "line": 129,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_fiscal_policy_development",
+      "line": 133,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_fiscal_and_monetary",
+      "line": 141,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_labor_and_unemployment",
+      "line": 148,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_cost_and_market_failure",
+      "line": 155,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_three_skills",
+      "line": 162,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_macro_skill_combination",
+      "line": 171,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_no_skill_no_swaps",
+      "line": 184,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_sentence_irrelevant_domain_no_skill_swap",
+      "line": 188,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_resume_bullet_fiscal",
+      "line": 198,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_resume_bullet_unemployment",
+      "line": 202,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_resume_bullet_supply_demand",
+      "line": 206,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_resume_bullet_cost_benefit",
+      "line": 210,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_resume_bullet_international_trade",
+      "line": 214,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_skill_at_start_of_sentence",
+      "line": 222,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_skill_in_middle_of_sentence",
+      "line": 226,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_sentences.py::TestEconSkillsSentences::test_skill_at_end_of_sentence",
+      "line": 230,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_fiscal_span_last_gap_1",
+      "line": 60,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_fiscal_span_last_gap_2",
+      "line": 64,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_monetary_span_last_gap_1",
+      "line": 72,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_monetary_span_last_gap_2",
+      "line": 75,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_labor_span_last_gap_1",
+      "line": 82,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_labor_span_last_gap_2",
+      "line": 85,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_market_failure_span_last_gap_1",
+      "line": 92,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_market_failure_span_last_gap_2",
+      "line": 95,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_business_cycle_span_last_gap_1",
+      "line": 102,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_business_cycle_span_last_gap_2",
+      "line": 105,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_interest_rate_span_last_gap_1",
+      "line": 112,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_interest_rate_span_last_gap_2",
+      "line": 115,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_income_inequality_span_last_gap_1",
+      "line": 122,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_income_inequality_span_last_gap_2",
+      "line": 125,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_cost_benefit_span_last_gap_1",
+      "line": 132,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_cost_benefit_span_last_gap_2",
+      "line": 135,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_international_trade_span_last_gap_1",
+      "line": 142,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_international_trade_span_last_gap_2",
+      "line": 145,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_price_elasticity_span_last_gap_1",
+      "line": 152,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_price_elasticity_span_last_gap_2",
+      "line": 155,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_consumer_behavior_span_last_gap_1",
+      "line": 162,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_consumer_behavior_span_last_gap_2",
+      "line": 165,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_fiscal_last_gap_exceeded",
+      "line": 172,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_labor_last_gap_exceeded",
+      "line": 177,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_fiscal_first_gap_does_not_produce_full_span",
+      "line": 185,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_monetary_first_gap_does_not_produce_full_span",
+      "line": 191,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_labor_first_gap_does_not_produce_full_span",
+      "line": 195,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_fiscal_span_in_sentence",
+      "line": 203,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_monetary_span_in_sentence",
+      "line": 207,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_labor_span_in_sentence",
+      "line": 211,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_econ_skills_spans.py::TestEconSkillsSpans::test_interest_span_in_sentence",
+      "line": 215,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_france_exact_match",
+      "line": 45,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_germany_exact_match",
+      "line": 48,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_japan_exact_match",
+      "line": 51,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_china_exact_match",
+      "line": 54,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_brazil_exact_match",
+      "line": 57,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_canada_exact_match",
+      "line": 60,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_mexico_exact_match",
+      "line": 63,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_italy_exact_match",
+      "line": 66,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_spain_exact_match",
+      "line": 69,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_india_exact_match",
+      "line": 72,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_argentina_exact_match",
+      "line": 75,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_london_exact_match",
+      "line": 82,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_paris_exact_match",
+      "line": 85,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_tokyo_exact_match",
+      "line": 88,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_beijing_exact_match",
+      "line": 91,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_chicago_exact_match",
+      "line": 94,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_sydney_exact_match",
+      "line": 97,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_berlin_exact_match",
+      "line": 100,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_rome_exact_match",
+      "line": 103,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_europe_exact_match",
+      "line": 110,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_asia_exact_match",
+      "line": 113,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_africa_exact_match",
+      "line": 116,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_antarctica_exact_match",
+      "line": 119,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_usa_maps_to_united_states",
+      "line": 126,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_america_maps_to_united_states",
+      "line": 129,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_uk_maps_to_united_kingdom",
+      "line": 132,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_britain_maps_to_united_kingdom",
+      "line": 135,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_england_maps_to_united_kingdom",
+      "line": 138,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_nyc_maps_to_new_york",
+      "line": 141,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_la_maps_to_los_angeles",
+      "line": 144,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_deutschland_maps_to_germany",
+      "line": 147,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_prc_maps_to_china",
+      "line": 150,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_peking_maps_to_beijing",
+      "line": 153,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_bombay_maps_to_mumbai",
+      "line": 156,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_everest_maps_to_mount_everest",
+      "line": 159,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_north_america_span",
+      "line": 166,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_south_america_span",
+      "line": 169,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_united_states_span",
+      "line": 172,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_united_kingdom_span",
+      "line": 175,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_new_york_span",
+      "line": 178,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_los_angeles_span",
+      "line": 181,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_south_africa_span",
+      "line": 184,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_eiffel_tower_span",
+      "line": 187,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_great_wall_span",
+      "line": 190,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_pacific_ocean_span",
+      "line": 193,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_mount_everest_span",
+      "line": 196,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_big_ben_span",
+      "line": 199,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_united_states_in_sentence",
+      "line": 206,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_geography_parser.py::TestGeographyParser::test_new_york_in_sentence",
+      "line": 209,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_jazz_exact_match",
+      "line": 44,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_blues_exact_match",
+      "line": 47,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_opera_exact_match",
+      "line": 50,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_reggae_exact_match",
+      "line": 53,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_soul_exact_match",
+      "line": 56,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_bebop_exact_match",
+      "line": 59,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_baroque_exact_match",
+      "line": 62,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_romantic_exact_match",
+      "line": 65,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_melody_exact_match",
+      "line": 72,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_harmony_exact_match",
+      "line": 75,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_rhythm_exact_match",
+      "line": 78,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_tempo_exact_match",
+      "line": 81,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_chord_exact_match",
+      "line": 84,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_scale_exact_match",
+      "line": 87,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_pitch_exact_match",
+      "line": 90,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_timbre_exact_match",
+      "line": 93,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_rock_altlabel_maps_to_rock_music",
+      "line": 100,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_pop_altlabel_maps_to_pop_music",
+      "line": 103,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_folk_altlabel_maps_to_folk_music",
+      "line": 106,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_classical_altlabel_maps_to_classical_music",
+      "line": 109,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_country_altlabel_maps_to_country_music",
+      "line": 112,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_rap_altlabel_maps_to_hip_hop",
+      "line": 115,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_metal_altlabel_maps_to_heavy_metal",
+      "line": 118,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_punk_altlabel_maps_to_punk_rock",
+      "line": 121,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_beat_altlabel_maps_to_rhythm",
+      "line": 124,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_classical_music_span",
+      "line": 131,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_rock_music_span",
+      "line": 134,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_pop_music_span",
+      "line": 137,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_folk_music_span",
+      "line": 140,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_heavy_metal_span",
+      "line": 143,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_hip_hop_span",
+      "line": 146,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_smooth_jazz_span",
+      "line": 149,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_country_music_span",
+      "line": 152,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_punk_rock_span",
+      "line": 155,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_electronic_music_span",
+      "line": 158,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_heavy_metal_in_sentence",
+      "line": 165,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_genres.py::TestMusicParserGenres::test_smooth_jazz_in_sentence",
+      "line": 168,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_guitar_exact_match",
+      "line": 45,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_violin_exact_match",
+      "line": 48,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_cello_exact_match",
+      "line": 51,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_harp_exact_match",
+      "line": 54,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_ukulele_exact_match",
+      "line": 57,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_banjo_exact_match",
+      "line": 60,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_mandolin_exact_match",
+      "line": 63,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_flute_exact_match",
+      "line": 70,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_trumpet_exact_match",
+      "line": 73,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_saxophone_exact_match",
+      "line": 76,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_clarinet_exact_match",
+      "line": 79,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_oboe_exact_match",
+      "line": 82,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_trombone_exact_match",
+      "line": 85,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_tuba_exact_match",
+      "line": 88,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_piccolo_exact_match",
+      "line": 91,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_bassoon_exact_match",
+      "line": 94,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_drum_exact_match",
+      "line": 101,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_cymbal_exact_match",
+      "line": 104,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_xylophone_exact_match",
+      "line": 107,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_marimba_exact_match",
+      "line": 110,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_tambourine_exact_match",
+      "line": 113,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_timpani_exact_match",
+      "line": 116,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_piano_exact_match",
+      "line": 123,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_organ_exact_match",
+      "line": 126,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_synthesizer_exact_match",
+      "line": 129,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_harpsichord_exact_match",
+      "line": 132,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_sax_maps_to_saxophone",
+      "line": 139,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_fiddle_maps_to_violin",
+      "line": 142,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_synth_maps_to_synthesizer",
+      "line": 145,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_axe_maps_to_guitar",
+      "line": 148,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_electric_guitar_span",
+      "line": 155,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_acoustic_guitar_span",
+      "line": 158,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_bass_guitar_span",
+      "line": 161,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_string_instrument_span",
+      "line": 164,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_wind_instrument_span",
+      "line": 168,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_percussion_instrument_span",
+      "line": 172,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_keyboard_instrument_span",
+      "line": 176,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_grand_piano_span",
+      "line": 180,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_snare_drum_span",
+      "line": 183,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_bass_drum_span",
+      "line": 186,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_french_horn_span",
+      "line": 189,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_alto_saxophone_span",
+      "line": 192,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_tenor_saxophone_span",
+      "line": 195,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_electric_guitar_in_sentence",
+      "line": 202,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_music_parser_instruments.py::TestMusicParserInstruments::test_grand_piano_in_sentence",
+      "line": 205,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_apostrophe.py::TestMutatoAPI::test_swap_input_text_01",
+      "line": 50,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_apostrophe.py::TestMutatoAPI::test_swap_input_text_02",
+      "line": 61,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_apostrophe.py::TestMutatoAPI::test_swap_input_text_03",
+      "line": 71,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_bnode.py::TestMutatoAPI::test_swap_input_text_01",
+      "line": 48,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_by_predicate.py::TestMutatoAPI::test_by_predicate",
+      "line": 53,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_idempotency.py::TestMutatoAPIJsonIdempotency::test_same_input_produces_same_output",
+      "line": 30,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_idempotency.py::TestMutatoAPIJsonIdempotency::test_repeated_calls_find_same_entities",
+      "line": 35,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_idempotency.py::TestMutatoAPIJsonIdempotency::test_result_token_count_is_stable",
+      "line": 41,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_idempotency.py::TestMutatoAPIJsonIdempotency::test_token_order_is_stable",
+      "line": 46,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_idempotency.py::TestMutatoAPIJsonIdempotency::test_high_ctr_still_finds_entity",
+      "line": 52,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_unrecognised_tokens_still_appear_in_output",
+      "line": 32,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_recognised_entity_with_surrounding_noise",
+      "line": 37,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_every_token_has_a_normal_field",
+      "line": 41,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_case_variants_normalise_to_same_entity",
+      "line": 46,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_two_separate_recognised_entities",
+      "line": 54,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_output_token_count_matches_expected_token_boundary",
+      "line": 61,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_apostrophe_form_normalises_to_same_as_possessive",
+      "line": 66,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_json_punctuation.py::TestMutatoAPI::test_swap_input_text_01",
+      "line": 54,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_basic_swap.py::TestMutatoAPI::test_swap",
+      "line": 32,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_conjunction_span.py::TestMutatoAPI::test_swap_input_text_01",
+      "line": 31,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_edge_cases.py::TestMutatoAPIOwlEdgeCases::test_none_input_returns_none",
+      "line": 27,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_edge_cases.py::TestMutatoAPIOwlEdgeCases::test_empty_string_returns_none",
+      "line": 30,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_edge_cases.py::TestMutatoAPIOwlEdgeCases::test_whitespace_only_does_not_raise",
+      "line": 33,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_edge_cases.py::TestMutatoAPIOwlEdgeCases::test_numeric_string_returns_list",
+      "line": 40,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_edge_cases.py::TestMutatoAPIOwlEdgeCases::test_all_caps_returns_list",
+      "line": 45,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_edge_cases.py::TestMutatoAPIOwlEdgeCases::test_single_character_returns_list",
+      "line": 50,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_edge_cases.py::TestMutatoAPIOwlEdgeCases::test_punctuation_only_does_not_raise",
+      "line": 55,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_edge_cases.py::TestMutatoAPIOwlEdgeCases::test_mixed_alphanumeric_returns_list",
+      "line": 62,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_medical_sentence.py::TestMutatoAPI::test_swaps",
+      "line": 30,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_multiword_span.py::TestMutatoAPI::test_swaps_01",
+      "line": 48,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_multiword_span.py::TestMutatoAPI::test_swaps_02",
+      "line": 54,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_multiword_span.py::TestMutatoAPI::test_swaps_03",
+      "line": 60,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_multiword_span.py::TestMutatoAPI::test_swaps_04",
+      "line": 66,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_negation_span.py::TestMutatoAPI::test_swaps",
+      "line": 32,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_span_distance.py::TestMutatoAPI::test_swap_input_text_01",
+      "line": 49,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_span_distance.py::TestMutatoAPI::test_swap_input_text_02",
+      "line": 68,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_owl_span_preposition.py::TestMutatoAPI::test_swaps_01",
+      "line": 48,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_roundtrip.py::TestRoundTrip::test_roundtrip",
+      "line": 78,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_result_is_a_list",
+      "line": 29,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_each_token_is_a_dict",
+      "line": 33,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_all_tokens_have_normal_field",
+      "line": 38,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_normal_field_is_a_string",
+      "line": 43,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_normal_field_is_lowercase",
+      "line": 48,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_swapped_token_has_swaps_field",
+      "line": 53,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_geometry_swap_canon_is_correct",
+      "line": 58,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_geometry_swap_type_is_exact",
+      "line": 62,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_swap_type_is_a_known_value",
+      "line": 66,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_swap_canon_is_a_string",
+      "line": 73,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_returns_owl_schema_instance_for_animals",
+      "line": 33,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_returns_owl_schema_instance_for_colors",
+      "line": 37,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_returns_owl_schema_instance_for_music",
+      "line": 41,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_returns_owl_schema_instance_for_geography",
+      "line": 45,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_returns_owl_schema_instance_for_econ",
+      "line": 49,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_animals_detected_as_class_based",
+      "line": 57,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_colors_detected_as_class_based",
+      "line": 61,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_music_detected_as_class_based",
+      "line": 65,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_geography_detected_as_class_based",
+      "line": 69,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_econ_detected_as_mixed",
+      "line": 77,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_econ_not_detected_as_class_based",
+      "line": 81,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_econ_not_detected_as_skos",
+      "line": 85,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_econ_not_detected_as_individual",
+      "line": 89,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_animals_detection_is_deterministic",
+      "line": 97,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_econ_detection_is_deterministic",
+      "line": 103,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_empty_graph_returns_class_based",
+      "line": 113,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_skos_concept_triggers_skos_schema",
+      "line": 117,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_individual_only_triggers_individual_schema",
+      "line": 125,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_individual_plus_subclass_triggers_mixed_schema",
+      "line": 132,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_owl_schema_detector.py::TestOWLSchemaDetector::test_skos_takes_priority_over_individuals",
+      "line": 140,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_has_children_key",
+      "line": 48,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_has_parents_key",
+      "line": 51,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_has_trie_key",
+      "line": 54,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_has_ngrams_key",
+      "line": 57,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_has_spans_key",
+      "line": 60,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_has_labels_key",
+      "line": 63,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_has_equivalents_key",
+      "line": 66,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_has_predicates_key",
+      "line": 69,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_has_by_predicate_key",
+      "line": 72,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_has_ner_key",
+      "line": 75,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_has_synonyms_key",
+      "line": 78,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_no_extra_top_level_keys",
+      "line": 81,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_children_keys_match_mda",
+      "line": 88,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_parents_keys_match_mda",
+      "line": 94,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_ner_keys_match_mda",
+      "line": 100,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_labels_keys_match_mda",
+      "line": 106,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_ngrams_unigrams_match_mda",
+      "line": 112,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_synonyms_fwd_matches_mda",
+      "line": 118,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_children_is_non_empty",
+      "line": 128,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_children_animal_includes_mammal",
+      "line": 131,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_parents_poodle_includes_dog",
+      "line": 136,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_ner_all_values_are_ner_label",
+      "line": 141,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorAnimals::test_synonyms_has_fwd_rev_lookup",
+      "line": 145,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_has_children_key",
+      "line": 171,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_has_parents_key",
+      "line": 174,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_has_trie_key",
+      "line": 177,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_has_ngrams_key",
+      "line": 180,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_has_spans_key",
+      "line": 183,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_has_labels_key",
+      "line": 186,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_has_equivalents_key",
+      "line": 189,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_has_predicates_key",
+      "line": 192,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_has_by_predicate_key",
+      "line": 195,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_has_ner_key",
+      "line": 198,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_has_synonyms_key",
+      "line": 201,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_exact_top_level_key_set",
+      "line": 204,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_children_is_non_empty",
+      "line": 211,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_parents_is_non_empty",
+      "line": 214,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_ner_is_non_empty",
+      "line": 217,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_labels_is_non_empty",
+      "line": 220,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_ngrams_unigrams_is_non_empty",
+      "line": 223,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_children_is_dict",
+      "line": 230,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_parents_is_dict",
+      "line": 233,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_children_values_are_lists",
+      "line": 236,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_parents_values_are_lists",
+      "line": 241,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_ner_all_values_are_ner_label",
+      "line": 246,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_synonyms_has_fwd_rev_lookup",
+      "line": 250,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_synonyms_fwd_is_dict",
+      "line": 256,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_synonyms_rev_is_dict",
+      "line": 259,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_ngrams_is_dict",
+      "line": 262,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_predicates_is_list",
+      "line": 265,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_by_predicate_is_dict",
+      "line": 268,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_children_keys_are_strings",
+      "line": 275,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_parents_keys_are_strings",
+      "line": 280,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_children_list_items_are_strings",
+      "line": 285,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/schema/test_universal_mda_generator.py::TestUniversalMDAGeneratorEcon::test_parents_list_items_are_strings",
+      "line": 291,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/test_ask_json_api.py::TestAddFunction::test_functions",
+      "line": 22,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/test_ask_owl_api.py::TestAddFunction::test_keyed_labels",
+      "line": 23,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/test_ask_owl_api.py::TestAddFunction::test_predicates",
+      "line": 31,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/test_ask_owl_api.py::TestAddFunction::test_entities",
+      "line": 34,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/test_ask_owl_api.py::TestAddFunction::test_children",
+      "line": 38,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/test_ask_owl_api.py::TestAddFunction::test_descendants",
+      "line": 50,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/test_ask_owl_api.py::TestAddFunction::test_parents",
+      "line": 64,
+      "status": "passed"
+    },
+    {
+      "id": "tests/owl/test_ask_owl_api.py::TestAddFunction::test_ancestors",
+      "line": 72,
+      "status": "passed"
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "generated/d_courses_test.json",
+      "sha256": "a9a2bbcee714dec2cad9fc8d5b76e53a7df6868e5930948d4c46d2e23059b5d6",
+      "bytes": 6099420
+    },
+    {
+      "path": "ontologies/animals-test.owl",
+      "sha256": "132b854849c1c7ec65902dbb10c35039441b77aacecb1074055355be00ec79d8",
+      "bytes": 10819
+    },
+    {
+      "path": "ontologies/colors-test.owl",
+      "sha256": "93a9345b0557b04ecbf06f03eaef6cb795cff95532d5b9a457ec1b8cdc87c594",
+      "bytes": 6682
+    },
+    {
+      "path": "ontologies/courses-20240709.owl",
+      "sha256": "d50ed2602a634dcd7bf93d2b888766bb47e7c04bd26f71bc3b8315f734032111",
+      "bytes": 138080
+    },
+    {
+      "path": "ontologies/courses-20241023.owl",
+      "sha256": "631d9ee429d35f371acc68acd8154577a995ac4ded378ae623532ffe5c1cb886",
+      "bytes": 880127
+    },
+    {
+      "path": "ontologies/courses-20241129.owl",
+      "sha256": "8cbdc9003a31faabd2f55c25ba7638e1dce630532d13c7cc23c1475849db5135",
+      "bytes": 1547158
+    },
+    {
+      "path": "ontologies/courses-20241213.owl",
+      "sha256": "f78c24b075ec6412f6b4ba97b6cf1c0d5fd0fa62f417abaab466e2ad136e3e17",
+      "bytes": 1575074
+    },
+    {
+      "path": "ontologies/courses-20250122.json",
+      "sha256": "51cfc5f0b05e0a2747415bf51417546090805ecf54949e0e90875a486eaad8ed",
+      "bytes": 6188747
+    },
+    {
+      "path": "ontologies/courses-20250122.owl",
+      "sha256": "698a05691dc88c780a11f8f9a579e4df3ae227d79d8018a17a9777ddec308ba6",
+      "bytes": 1614301
+    },
+    {
+      "path": "ontologies/courses-20250131.owl",
+      "sha256": "1ac79b5e71acd6b6a20e5172cf02f4b8365b750b19d5b294922c3c854332a41b",
+      "bytes": 1719735
+    },
+    {
+      "path": "ontologies/courses-20251013.owl",
+      "sha256": "dbe155e85c29151fb23a5698a3f825e8a20e32a484d47d5dcb78bb109118bed0",
+      "bytes": 1810137
+    },
+    {
+      "path": "ontologies/courses-20251028.owl",
+      "sha256": "c65f797420da617a2149c40c8eab3c9f4c3fe3608831cd3704e536ac6aff9134",
+      "bytes": 1815820
+    },
+    {
+      "path": "ontologies/econ-20160218.owl",
+      "sha256": "31ce57164410a39fa132d094c7d5c71e0969d7716ec4fb85634a55ff5c4b2c43",
+      "bytes": 185317
+    },
+    {
+      "path": "ontologies/geography-test.owl",
+      "sha256": "1cda19a3dcaadbfd202772a711c147c1426908b5841c4a5f7ae52cf04e23b802",
+      "bytes": 11532
+    },
+    {
+      "path": "ontologies/medic-copilot-20230726.owl",
+      "sha256": "c38a35368cb7950bc94d159c18f30dcc259e535c5dbd4fad16c9611e89e3c161",
+      "bytes": 342869
+    },
+    {
+      "path": "ontologies/medic-copilot-20230801.json",
+      "sha256": "e58fb69fee868dda1b3a0813fc745d9f6bd6416315311bb07ad85dbfae7782fa",
+      "bytes": 1996003
+    },
+    {
+      "path": "ontologies/medic-copilot-20230801.owl",
+      "sha256": "97677a4e86d0fa0abd3fe054afb7e459132cea5dbf4fbcefbf6a99f1afb47eb6",
+      "bytes": 600724
+    },
+    {
+      "path": "ontologies/medic-copilot-20230802.owl",
+      "sha256": "615a0fe653706bb0a60329cbe250766f3c51e8f41c18fdca3fe75c67be41d439",
+      "bytes": 600522
+    },
+    {
+      "path": "ontologies/medic-copilot-20230816.owl",
+      "sha256": "bf754c8ca9318591b3c8bcb69a9e9f2dc7f7c50fba17c4faf315a543540500d2",
+      "bytes": 1025426
+    },
+    {
+      "path": "ontologies/medic-copilot-20230818.owl",
+      "sha256": "e7e77e022788a0c92a63dd779a9d6fbfc54f60b4c453a35bf657d6e2d904635e",
+      "bytes": 1101888
+    },
+    {
+      "path": "ontologies/medicopilot.owl",
+      "sha256": "c38a35368cb7950bc94d159c18f30dcc259e535c5dbd4fad16c9611e89e3c161",
+      "bytes": 342869
+    },
+    {
+      "path": "ontologies/music-test.owl",
+      "sha256": "abc2d5acfef16eef858487c35f1611950a3b1367966ab42e44fb804cf67db5a7",
+      "bytes": 13107
+    }
+  ]
+}

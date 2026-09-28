@@ -1,0 +1,3 @@
+pytest==9.1.1
+rdflib==7.1.4
+pyparsing==3.2.3
