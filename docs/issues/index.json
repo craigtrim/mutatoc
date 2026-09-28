@@ -1,0 +1,42 @@
+[
+  {
+    "title": "Build the standalone C17 library and native test harness",
+    "url": "https://github.com/craigtrim/mutatoc/issues/1",
+    "body": "docs/issues/01-native-core.md"
+  },
+  {
+    "title": "Implement native RDF/Turtle loading and query compatibility",
+    "url": "https://github.com/craigtrim/mutatoc/issues/2",
+    "body": "docs/issues/02-rdf.md"
+  },
+  {
+    "title": "Port ontology finders and MDA JSON generation",
+    "url": "https://github.com/craigtrim/mutatoc/issues/3",
+    "body": "docs/issues/03-ontology.md"
+  },
+  {
+    "title": "Port exact, span and hierarchy matching",
+    "url": "https://github.com/craigtrim/mutatoc/issues/4",
+    "body": "docs/issues/04-matching.md"
+  },
+  {
+    "title": "Wrap spaCy and retain complete NLP preprocessing parity",
+    "url": "https://github.com/craigtrim/mutatoc/issues/5",
+    "body": "docs/issues/05-text.md"
+  },
+  {
+    "title": "Port all upstream tests and enforce Python/C compatibility",
+    "url": "https://github.com/craigtrim/mutatoc/issues/6",
+    "body": "docs/issues/06-parity.md"
+  },
+  {
+    "title": "Provide the Windows CLI and persistent Axiom integration protocol",
+    "url": "https://github.com/craigtrim/mutatoc/issues/7",
+    "body": "docs/issues/07-cli.md"
+  },
+  {
+    "title": "Port LingPatLab into C and remove its runtime dependency",
+    "url": "https://github.com/craigtrim/mutatoc/issues/8",
+    "body": "docs/issues/08-lingpatlab-native.md"
+  }
+]

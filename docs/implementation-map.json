@@ -1,0 +1,1469 @@
+{
+  "reference_revision": "da6bfa5df80b208a3271e111f2921ad281d0da98",
+  "module_count": 91,
+  "note": "Functional implementation mapping; Python classes/module layout are replaced by the C API. Runtime dependencies and source defects are detailed in compatibility.md.",
+  "modules": [
+    {
+      "source": "mutato/__init__.py",
+      "public_symbols": [],
+      "area": "Public API and package/module exports",
+      "implementation": [
+        "include/mutatoc.h",
+        "src/api.c",
+        "CMakeLists.txt"
+      ]
+    },
+    {
+      "source": "mutato/api.py",
+      "public_symbols": [
+        "OntologyParser",
+        "OntologyParser.from_dict",
+        "OntologyParser.to_dict",
+        "OntologyParser.parse"
+      ],
+      "area": "Public API and package/module exports",
+      "implementation": [
+        "include/mutatoc.h",
+        "src/api.c",
+        "CMakeLists.txt"
+      ]
+    },
+    {
+      "source": "mutato/cli.py",
+      "public_symbols": [
+        "main"
+      ],
+      "area": "Command-line interface and explicit snapshots",
+      "implementation": [
+        "src/cli.c"
+      ]
+    },
+    {
+      "source": "mutato/core/__init__.py",
+      "public_symbols": [
+        "isEnabledForDebug",
+        "isEnabledForInfo",
+        "configure_logging"
+      ],
+      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "implementation": [
+        "src/util.c",
+        "src/uri.c",
+        "src/api.c",
+        "src/cli.c"
+      ]
+    },
+    {
+      "source": "mutato/core/enforcer.py",
+      "public_symbols": [
+        "DataTypeNotExpectedError",
+        "ContentNotExpectedError",
+        "Enforcer",
+        "Enforcer.is_tuple",
+        "Enforcer.is_optional_tuple",
+        "Enforcer.is_bool",
+        "Enforcer.is_str",
+        "Enforcer.is_optional_str",
+        "Enforcer.is_int_or_float",
+        "Enforcer.is_int",
+        "Enforcer.is_optional_int",
+        "Enforcer.is_float",
+        "Enforcer.is_optional_float",
+        "Enforcer.is_list",
+        "Enforcer.is_optional_list",
+        "Enforcer.is_nonempty_list",
+        "Enforcer.is_empty_list",
+        "Enforcer.is_dict",
+        "Enforcer.is_dict_of_lists",
+        "Enforcer.is_dict_of_list_of_strs",
+        "Enforcer.is_dict_of_list_of_floats",
+        "Enforcer.is_dict_of_list_of_ints",
+        "Enforcer.is_dict_of_list_of_tuples",
+        "Enforcer.is_dict_of_list_of_dicts",
+        "Enforcer.is_dict_of_list_of_typed_dicts",
+        "Enforcer.is_nonempty_dict",
+        "Enforcer.is_empty_dict",
+        "Enforcer.is_optional_dict",
+        "Enforcer.keys",
+        "Enforcer.is_list_of_float",
+        "Enforcer.is_list_of_int",
+        "Enforcer.is_list_of_str",
+        "Enforcer.is_list_of_list_of_dicts",
+        "Enforcer.is_list_of_tuples",
+        "Enforcer.is_list_of_dicts",
+        "Enforcer.is_none",
+        "Enforcer.is_json"
+      ],
+      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "implementation": [
+        "src/util.c",
+        "src/uri.c",
+        "src/api.c",
+        "src/cli.c"
+      ]
+    },
+    {
+      "source": "mutato/core/env_io.py",
+      "public_symbols": [
+        "EnvIO",
+        "EnvIO.exists",
+        "EnvIO.float_or_exception",
+        "EnvIO.float_or_default",
+        "EnvIO.int_or_exception",
+        "EnvIO.int_or_default",
+        "EnvIO.str_or_default",
+        "EnvIO.str_or_exception",
+        "EnvIO.as_list",
+        "EnvIO.as_str",
+        "EnvIO.as_int",
+        "EnvIO.as_float",
+        "EnvIO.is_true",
+        "EnvIO.is_false",
+        "EnvIO.set_true",
+        "EnvIO.set_false",
+        "EnvIO.exists_as_true",
+        "EnvIO.set_string",
+        "EnvIO.set_int",
+        "EnvIO.set_float"
+      ],
+      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "implementation": [
+        "src/util.c",
+        "src/uri.c",
+        "src/api.c",
+        "src/cli.c"
+      ]
+    },
+    {
+      "source": "mutato/core/file_io.py",
+      "public_symbols": [
+        "FileIO",
+        "FileIO.is_empty_folder",
+        "FileIO.local_directory",
+        "FileIO.local_directory_by_name",
+        "FileIO.normpath",
+        "FileIO.join",
+        "FileIO.join_cwd",
+        "FileIO.temp",
+        "FileIO.exists",
+        "FileIO.exists_or_error",
+        "FileIO.exists_or_create",
+        "FileIO.create_dir",
+        "FileIO.get_file_name",
+        "FileIO.debug",
+        "FileIO.write_image",
+        "FileIO.write_json",
+        "FileIO.read_json",
+        "FileIO.read_string",
+        "FileIO.write_string",
+        "FileIO.write_lines",
+        "FileIO.read_lines",
+        "FileIO.yield_lines",
+        "FileIO.has_files",
+        "FileIO.delete_files",
+        "FileIO.count_files",
+        "FileIO.list_directory",
+        "FileIO.load_files",
+        "FileIO.load_all_files",
+        "FileIO.load_all_folders",
+        "FileIO.extension",
+        "FileIO.parse_json",
+        "FileIO.event"
+      ],
+      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "implementation": [
+        "src/util.c",
+        "src/uri.c",
+        "src/api.c",
+        "src/cli.c"
+      ]
+    },
+    {
+      "source": "mutato/core/stopwatch.py",
+      "public_symbols": [
+        "Stopwatch",
+        "Stopwatch.duration",
+        "Stopwatch.running",
+        "Stopwatch.restart",
+        "Stopwatch.reset",
+        "Stopwatch.start",
+        "Stopwatch.stop"
+      ],
+      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "implementation": [
+        "src/util.c",
+        "src/uri.c",
+        "src/api.c",
+        "src/cli.c"
+      ]
+    },
+    {
+      "source": "mutato/core/text_utils.py",
+      "public_symbols": [
+        "TextUtils",
+        "TextUtils.cartesian",
+        "TextUtils.cartesian_bigrams",
+        "TextUtils.cartesian_trigrams",
+        "TextUtils.cartesian_quadgrams",
+        "TextUtils.cartesian_5grams",
+        "TextUtils.sliding_window",
+        "TextUtils.most_similar_phrase",
+        "TextUtils.longest_common_phrase",
+        "TextUtils.is_punctuation",
+        "TextUtils.has_punctuation",
+        "TextUtils.remove_punctuation",
+        "TextUtils.find_subsumed_tokens",
+        "TextUtils.choose_random_line",
+        "TextUtils.jaccard_similarity",
+        "TextUtils.split_on_len",
+        "TextUtils.ends_with_punctuation",
+        "TextUtils.remove_ending_punctuation",
+        "TextUtils.split_on_punctuation",
+        "TextUtils.update_spacing",
+        "TextUtils.remove_double_spaces",
+        "TextUtils.update_csvs",
+        "TextUtils.update_determiners",
+        "TextUtils.startswith_vowel",
+        "TextUtils.lower_case",
+        "TextUtils.sentence_case",
+        "TextUtils.title_case"
+      ],
+      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "implementation": [
+        "src/util.c",
+        "src/uri.c",
+        "src/api.c",
+        "src/cli.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/__init__.py",
+      "public_symbols": [],
+      "area": "Public API and package/module exports",
+      "implementation": [
+        "include/mutatoc.h",
+        "src/api.c",
+        "CMakeLists.txt"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/__init__.py",
+      "public_symbols": [],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/bp/__init__.py",
+      "public_symbols": [],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/bp/find_ontology_data.py",
+      "public_symbols": [
+        "FindOntologyData",
+        "FindOntologyData.ontologies",
+        "FindOntologyData.absolute_path",
+        "FindOntologyData.by_predicate",
+        "FindOntologyData.by_predicate_rev",
+        "FindOntologyData.transitive",
+        "FindOntologyData.effects",
+        "FindOntologyData.effects_rev",
+        "FindOntologyData.requires",
+        "FindOntologyData.required_by",
+        "FindOntologyData.requires_by_entity",
+        "FindOntologyData.required_by_entity",
+        "FindOntologyData.similar",
+        "FindOntologyData.similar_rev",
+        "FindOntologyData.similar_by_entity",
+        "FindOntologyData.implies",
+        "FindOntologyData.implies_by_entity",
+        "FindOntologyData.implied_by",
+        "FindOntologyData.implied_by_entity",
+        "FindOntologyData.is_canon",
+        "FindOntologyData.find_canon",
+        "FindOntologyData.is_variant",
+        "FindOntologyData.find_variants",
+        "FindOntologyData.find_ner",
+        "FindOntologyData.graffl_ner",
+        "FindOntologyData.graffl_ner_rev",
+        "FindOntologyData.spacy_ner",
+        "FindOntologyData.spacy_ner_rev",
+        "FindOntologyData.ner_depth",
+        "FindOntologyData.ner_depth_rev",
+        "FindOntologyData.infer_by_requires",
+        "FindOntologyData.labels",
+        "FindOntologyData.labels_rev",
+        "FindOntologyData.label_by_entity",
+        "FindOntologyData.ner_taxonomy",
+        "FindOntologyData.ner_taxonomy_rev",
+        "FindOntologyData.equivalents",
+        "FindOntologyData.has_spans",
+        "FindOntologyData.spans",
+        "FindOntologyData.span_keys",
+        "FindOntologyData.synonyms",
+        "FindOntologyData.synonyms_rev",
+        "FindOntologyData.trie",
+        "FindOntologyData.types",
+        "FindOntologyData.types_rev",
+        "FindOntologyData.uses",
+        "FindOntologyData.uses_rev",
+        "FindOntologyData.has_parent",
+        "FindOntologyData.has_ancestor",
+        "FindOntologyData.entity_exists",
+        "FindOntologyData.children",
+        "FindOntologyData.children_and_self",
+        "FindOntologyData.descendants",
+        "FindOntologyData.descendants_and_self",
+        "FindOntologyData.parents",
+        "FindOntologyData.parents_and_self",
+        "FindOntologyData.ancestors",
+        "FindOntologyData.ancestors_and_self",
+        "FindOntologyData.lookup",
+        "FindOntologyData.has_data"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/bp/find_ontology_json.py",
+      "public_symbols": [
+        "FindOntologyJSON",
+        "FindOntologyJSON.ontologies",
+        "FindOntologyJSON.predicates",
+        "FindOntologyJSON.by_predicate",
+        "FindOntologyJSON.by_predicate_rev",
+        "FindOntologyJSON.transitive",
+        "FindOntologyJSON.effects",
+        "FindOntologyJSON.effects_rev",
+        "FindOntologyJSON.requires",
+        "FindOntologyJSON.required_by",
+        "FindOntologyJSON.requires_by_entity",
+        "FindOntologyJSON.required_by_entity",
+        "FindOntologyJSON.similar",
+        "FindOntologyJSON.similar_rev",
+        "FindOntologyJSON.similar_by_entity",
+        "FindOntologyJSON.implies",
+        "FindOntologyJSON.implies_by_entity",
+        "FindOntologyJSON.implied_by",
+        "FindOntologyJSON.implied_by_entity",
+        "FindOntologyJSON.is_canon",
+        "FindOntologyJSON.find_canon",
+        "FindOntologyJSON.is_variant",
+        "FindOntologyJSON.find_variants",
+        "FindOntologyJSON.find_ner",
+        "FindOntologyJSON.labels",
+        "FindOntologyJSON.labels_rev",
+        "FindOntologyJSON.label_by_entity",
+        "FindOntologyJSON.equivalents",
+        "FindOntologyJSON.has_spans",
+        "FindOntologyJSON.spans",
+        "FindOntologyJSON.span_keys",
+        "FindOntologyJSON.synonyms",
+        "FindOntologyJSON.synonyms_rev",
+        "FindOntologyJSON.trie",
+        "FindOntologyJSON.types",
+        "FindOntologyJSON.types_rev",
+        "FindOntologyJSON.uses",
+        "FindOntologyJSON.uses_rev",
+        "FindOntologyJSON.lookup",
+        "FindOntologyJSON.has_data",
+        "FindOntologyJSON.entity_exists",
+        "FindOntologyJSON.children",
+        "FindOntologyJSON.children_and_self",
+        "FindOntologyJSON.descendants",
+        "FindOntologyJSON.descendants_and_self",
+        "FindOntologyJSON.parents",
+        "FindOntologyJSON.parents_and_self",
+        "FindOntologyJSON.has_parent",
+        "FindOntologyJSON.ancestors",
+        "FindOntologyJSON.ancestors_and_self",
+        "FindOntologyJSON.has_ancestor"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/__init__.py",
+      "public_symbols": [],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/external_synonym_loader.py",
+      "public_symbols": [
+        "ExternalSynonymLoader",
+        "ExternalSynonymLoader.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/json_find_canon.py",
+      "public_symbols": [
+        "OwlFindCanon",
+        "OwlFindCanon.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/model_result_merge.py",
+      "public_symbols": [
+        "ModelResultMerge",
+        "ModelResultMerge.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/owl_find_canon.py",
+      "public_symbols": [
+        "OwlFindCanon",
+        "OwlFindCanon.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/span/__init__.py",
+      "public_symbols": [],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/span/owl_span_augment.py",
+      "public_symbols": [
+        "OwlSpanAugment",
+        "OwlSpanAugment.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/span/owl_span_generate.py",
+      "public_symbols": [
+        "OwlSpanGenerate",
+        "OwlSpanGenerate.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/view_generator_lookup.py",
+      "public_symbols": [
+        "ViewGeneratorLookup",
+        "ViewGeneratorLookup.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/view_generator_nerdepth.py",
+      "public_symbols": [
+        "ViewGeneratorNerDepth",
+        "ViewGeneratorNerDepth.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/view_generator_nerlabel.py",
+      "public_symbols": [
+        "ViewGeneratorNerLabel",
+        "ViewGeneratorNerLabel.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dmo/view_generator_nertaxo.py",
+      "public_symbols": [
+        "ViewGeneratorNerTaxo",
+        "ViewGeneratorNerTaxo.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/dto/__init__.py",
+      "public_symbols": [
+        "cleanse_canon"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/svc/__init__.py",
+      "public_symbols": [],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/svc/find_equivalents.py",
+      "public_symbols": [
+        "FindEquivalents",
+        "FindEquivalents.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/svc/find_ner.py",
+      "public_symbols": [
+        "FindNER",
+        "FindNER.find_ner"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/svc/find_synonyms.py",
+      "public_symbols": [
+        "FindSynonyms",
+        "FindSynonyms.d_synonyms_fwd",
+        "FindSynonyms.d_synonyms_rev",
+        "FindSynonyms.is_canon",
+        "FindSynonyms.is_variant",
+        "FindSynonyms.find_canon",
+        "FindSynonyms.find_variants"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/svc/find_types.py",
+      "public_symbols": [
+        "FindTypes",
+        "FindTypes.has_parent",
+        "FindTypes.has_ancestor",
+        "FindTypes.exists",
+        "FindTypes.children",
+        "FindTypes.children_and_self",
+        "FindTypes.descendants",
+        "FindTypes.descendants_and_self",
+        "FindTypes.parents",
+        "FindTypes.parents_and_self",
+        "FindTypes.ancestors",
+        "FindTypes.ancestors_and_self"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/svc/load_synonyms.py",
+      "public_symbols": [
+        "LoadSynonyms",
+        "LoadSynonyms.synonyms",
+        "LoadSynonyms.synonyms_rev"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/svc/query_ner_depth.py",
+      "public_symbols": [
+        "QueryNerDepth",
+        "QueryNerDepth.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/svc/query_ner_label.py",
+      "public_symbols": [
+        "QueryNerLabel",
+        "QueryNerLabel.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/multiquery/svc/query_ner_taxo.py",
+      "public_symbols": [
+        "QueryNerTaxo",
+        "QueryNerTaxo.process"
+      ],
+      "area": "Cached/live finders, collection merging and external synonyms",
+      "implementation": [
+        "src/data_query.c",
+        "src/views.c",
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/__init__.py",
+      "public_symbols": [],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/bp/__init__.py",
+      "public_symbols": [],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/bp/ask_json_api.py",
+      "public_symbols": [
+        "AskJsonAPI",
+        "AskJsonAPI.ngrams",
+        "AskJsonAPI.trie",
+        "AskJsonAPI.by_predicate",
+        "AskJsonAPI.labels",
+        "AskJsonAPI.types",
+        "AskJsonAPI.predicates",
+        "AskJsonAPI.synonyms",
+        "AskJsonAPI.synonyms_rev",
+        "AskJsonAPI.synonyms_lookup",
+        "AskJsonAPI.equivalents",
+        "AskJsonAPI.find_ner",
+        "AskJsonAPI.spans",
+        "AskJsonAPI.entities",
+        "AskJsonAPI.children",
+        "AskJsonAPI.descendants",
+        "AskJsonAPI.parents",
+        "AskJsonAPI.ancestors"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/bp/ask_owl_api.py",
+      "public_symbols": [
+        "AskOwlAPI",
+        "AskOwlAPI.adhoc",
+        "AskOwlAPI.ngrams",
+        "AskOwlAPI.trie",
+        "AskOwlAPI.by_predicate",
+        "AskOwlAPI.keyed_labels",
+        "AskOwlAPI.labels",
+        "AskOwlAPI.entities",
+        "AskOwlAPI.parents",
+        "AskOwlAPI.ancestors",
+        "AskOwlAPI.children",
+        "AskOwlAPI.descendants",
+        "AskOwlAPI.types",
+        "AskOwlAPI.predicates",
+        "AskOwlAPI.synonyms",
+        "AskOwlAPI.synonyms_rev",
+        "AskOwlAPI.equivalents",
+        "AskOwlAPI.spans"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/dmo/__init__.py",
+      "public_symbols": [],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/dmo/owl_graph_connector.py",
+      "public_symbols": [
+        "OwlGraphConnector",
+        "OwlGraphConnector.graph"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/dmo/owl_query_extract.py",
+      "public_symbols": [
+        "OwlQueryExtract",
+        "OwlQueryExtract.process"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/dmo/owl_query_normalize.py",
+      "public_symbols": [
+        "OwlQueryNormalize",
+        "OwlQueryNormalize.process"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/dto/__init__.py",
+      "public_symbols": [],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/dto/query_result_type.py",
+      "public_symbols": [
+        "QueryResultType"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/svc/__init__.py",
+      "public_symbols": [],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/svc/generate_plus_spans.py",
+      "public_symbols": [
+        "GeneratePlusSpans",
+        "GeneratePlusSpans.sliding_n_grams",
+        "GeneratePlusSpans.sliding_bigrams",
+        "GeneratePlusSpans.process"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/svc/generate_view_spans.py",
+      "public_symbols": [
+        "GenerateViewSpans",
+        "GenerateViewSpans.process"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/svc/generate_view_synonyms.py",
+      "public_symbols": [
+        "GenerateViewSynonyms",
+        "GenerateViewSynonyms.process"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/svc/generate_view_trie.py",
+      "public_symbols": [
+        "GenerateViewTrie",
+        "GenerateViewTrie.process"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/svc/load_ontology_model.py",
+      "public_symbols": [
+        "LoadOntologyModel",
+        "LoadOntologyModel.process"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/finder/singlequery/svc/query_ontology_model.py",
+      "public_symbols": [
+        "QueryOntologyModel",
+        "QueryOntologyModel.process"
+      ],
+      "area": "RDF graph access, extraction and ad hoc queries",
+      "implementation": [
+        "src/rdf.c",
+        "src/ontology.c",
+        "src/views.c",
+        "src/sparql.c",
+        "src/api.c",
+        "runtime/sparql_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/mda/__init__.py",
+      "public_symbols": [],
+      "area": "Schema detection and MDA generation",
+      "implementation": [
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/mda/extractors/__init__.py",
+      "public_symbols": [],
+      "area": "Schema detection and MDA generation",
+      "implementation": [
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/mda/extractors/mixed_ask_owl_api.py",
+      "public_symbols": [
+        "MixedAskOwlAPI",
+        "MixedAskOwlAPI.ngrams",
+        "MixedAskOwlAPI.children",
+        "MixedAskOwlAPI.parents"
+      ],
+      "area": "Schema detection and MDA generation",
+      "implementation": [
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/mda/mda_generator.py",
+      "public_symbols": [
+        "MDAGenerator",
+        "MDAGenerator.generate"
+      ],
+      "area": "Schema detection and MDA generation",
+      "implementation": [
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/mda/owl_schema.py",
+      "public_symbols": [
+        "OWLSchema"
+      ],
+      "area": "Schema detection and MDA generation",
+      "implementation": [
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/mda/owl_schema_detector.py",
+      "public_symbols": [
+        "OWLSchemaDetector",
+        "OWLSchemaDetector.detect"
+      ],
+      "area": "Schema detection and MDA generation",
+      "implementation": [
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/mda/universal_mda_generator.py",
+      "public_symbols": [
+        "UniversalMDAGenerator",
+        "UniversalMDAGenerator.generate"
+      ],
+      "area": "Schema detection and MDA generation",
+      "implementation": [
+        "src/ontology.c",
+        "src/api.c"
+      ]
+    },
+    {
+      "source": "mutato/parser/__init__.py",
+      "public_symbols": [
+        "owl_parse"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/bp/__init__.py",
+      "public_symbols": [],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/bp/mutato_api.py",
+      "public_symbols": [
+        "MutatoAPI",
+        "MutatoAPI.swap_input_text",
+        "MutatoAPI.swap_input_tokens"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/__init__.py",
+      "public_symbols": [],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/core/__init__.py",
+      "public_symbols": [],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/core/swap_token_generator.py",
+      "public_symbols": [
+        "SwapTokenGenerator",
+        "SwapTokenGenerator.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/exact/__init__.py",
+      "public_symbols": [],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/exact/sliding_window_blacklist.py",
+      "public_symbols": [
+        "SlidingWindowBlacklist",
+        "SlidingWindowBlacklist.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/exact/sliding_window_extract.py",
+      "public_symbols": [
+        "SlidingWindowExtract",
+        "SlidingWindowExtract.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/exact/sliding_window_lookup.py",
+      "public_symbols": [
+        "SlidingWindowLookup",
+        "SlidingWindowLookup.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/exact_match_finder.py",
+      "public_symbols": [
+        "ExactMatchFinder",
+        "ExactMatchFinder.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/exact_match_swapper.py",
+      "public_symbols": [
+        "ExactMatchSwapper",
+        "ExactMatchSwapper.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/hierarchy_match_finder.py",
+      "public_symbols": [
+        "HierarchyMatchFinder",
+        "HierarchyMatchFinder.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/hierarchy_match_swapper.py",
+      "public_symbols": [
+        "HierarchyMatchSwapper",
+        "HierarchyMatchSwapper.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/spacy_match_finder.py",
+      "public_symbols": [
+        "SpacyMatchFinder",
+        "SpacyMatchFinder.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/spacy_match_swapper.py",
+      "public_symbols": [
+        "SpacyMatchSwapper",
+        "SpacyMatchSwapper.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/span_match_finder.py",
+      "public_symbols": [
+        "SpanMatchFinder",
+        "SpanMatchFinder.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/span_match_swapper.py",
+      "public_symbols": [
+        "SpanMatchSwapper",
+        "SpanMatchSwapper.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/spans/__init__.py",
+      "public_symbols": [],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/spans/span_content_check.py",
+      "public_symbols": [
+        "SpanContentCheck",
+        "SpanContentCheck.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/spans/span_context_check.py",
+      "public_symbols": [
+        "SpanContextCheck",
+        "SpanContextCheck.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/spans/span_distance_check.py",
+      "public_symbols": [
+        "SpanDistanceCheck",
+        "SpanDistanceCheck.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dmo/swap_result_summarizer.py",
+      "public_symbols": [
+        "SwapResultSummarizer",
+        "SwapResultSummarizer.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dto/__init__.py",
+      "public_symbols": [],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/dto/candidate_synonym_blacklist_kb.py",
+      "public_symbols": [],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/svc/__init__.py",
+      "public_symbols": [],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/svc/augment_token_hierarchy.py",
+      "public_symbols": [
+        "AugmentTokenHierarchy",
+        "AugmentTokenHierarchy.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/svc/perform_exact_matching.py",
+      "public_symbols": [
+        "PerformExactMatching",
+        "PerformExactMatching.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/svc/perform_hierarchy_matching.py",
+      "public_symbols": [
+        "PerformHierarchyMatching",
+        "PerformHierarchyMatching.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/svc/perform_spacy_matching.py",
+      "public_symbols": [
+        "PerformSpacyMatching",
+        "PerformSpacyMatching.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    },
+    {
+      "source": "mutato/parser/svc/perform_span_matching.py",
+      "public_symbols": [
+        "PerformSpanMatching",
+        "PerformSpanMatching.process"
+      ],
+      "area": "Token preprocessing and ontology matching",
+      "implementation": [
+        "src/match.c",
+        "src/api.c",
+        "runtime/spacy_worker.py"
+      ]
+    }
+  ]
+}
