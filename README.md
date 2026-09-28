@@ -4,6 +4,8 @@ Mutatoc is the C17 port of [Mutato](https://github.com/craigtrim/mutato). It acc
 
 LingPatLab 1.1.1 is implemented in C, including tokenization, token construction, normalization, stemming, WordNet membership, segmentation, entity extraction and text utilities. The runtime no longer installs LingPatLab, wordnet-lookup or unicodedata2. A small Python worker exposes spaCy 3.8.2 and `en_core_web_sm` 3.8.0 model operations; the C engine applies the linguistic rules. A separate RDFLib 7.1.4 worker handles arbitrary SPARQL and normalization of date, duration, base64 and XML literals. These workers start lazily and persist per engine. Prepared tokens, snapshots and linguistic operations that do not use the trained model run without Python. [Native LingPatLab APIs](docs/lingpatlab.md) describe the complete port and source-specific behavior.
 
+Version 0.2.3 builds a match index once per loaded ontology, so the cost of a matching request no longer grows with ontology size. Token results are unchanged. See [the match index](docs/performance.md#match-index).
+
 Version 0.2.2 fixes dotted-abbreviation matching, preserves literal punctuation, and removes the ten-token exact-match cutoff. Whitespace inside an exact phrase remains in its source history. See [punctuation regression coverage](docs/punctuation.md). The 0.2.1 performance improvements remain in place; see [performance and validation](docs/performance.md). [Speed comparison with Mutato](docs/mutato-comparison.md) measures both implementations on the same ontologies and inputs.
 
 ## Windows build

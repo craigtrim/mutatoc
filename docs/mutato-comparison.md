@@ -2,11 +2,11 @@
 
 This compares mutatoc with the Python reference, Mutato 1.1.1 (`da6bfa5`, cloned from https://github.com/craigtrim/mutato), on the same ontologies and inputs. Both implementations produced identical output in every comparison below.
 
-The mutatoc figures are for the source after 0.2.2, which adds the match index described in [performance](performance.md#match-index). The 0.2.2 release figures appear alongside where the index changed them.
+The mutatoc figures are for 0.2.3, which adds the match index described in [performance](performance.md#match-index). The 0.2.2 figures appear alongside where the index changed them.
 
 ## Setup
 
-Measured on 2026-09-28 on an AMD Ryzen Threadripper 3960X running Windows 10. Both sides used Python 3.11.0, spaCy 3.8.2 and `en_core_web_sm` 3.8.0. mutatoc ran as the `mutatoc-win-x64-0.2.2` package with its bundled runtime, with the executable replaced by the current build.
+Measured on 2026-09-28 on an AMD Ryzen Threadripper 3960X running Windows 10. Both sides used Python 3.11.0, spaCy 3.8.2 and `en_core_web_sm` 3.8.0. mutatoc ran with the bundled runtime from its Windows package and the 0.2.3 executable.
 
 mutatoc runs through `--serve`, so its timings include JSON encoding and the pipe round trip (about 0.02 ms per request). Mutato runs in process. Construction from OWL runs in a fresh process for every sample on both sides, and the reported time covers only the construction call. Figures are medians of 10 runs, except construction and cold runs, which are medians of 3.
 
@@ -86,7 +86,7 @@ Clone Mutato at the reference revision and run the benchmark with a Python that 
 
 ```powershell
 git clone --branch v1.1.1 https://github.com/craigtrim/mutato.git .reference/bench/mutato
-python scripts/benchmark_mutato.py --mutato .reference/bench/mutato --exe dist/mutatoc-win-x64-0.2.2/mutatoc.exe
+python scripts/benchmark_mutato.py --mutato .reference/bench/mutato --exe dist/mutatoc-win-x64-0.2.3/mutatoc.exe
 ```
 
 The full report is written to `artifacts/benchmark-mutato.json`. `--only` limits the run to named ontologies, and `--runs` and `--build-runs` set the sample counts. The document generator drops trailing periods from test phrases, because mutatoc deliberately renders `..` as literal punctuation where Mutato emits tilde markers (see `tests/lingpatlab/punctuation-corrections.json`).

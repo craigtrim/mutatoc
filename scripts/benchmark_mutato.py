@@ -3,7 +3,7 @@
 Run with a Python that has Mutato's pinned dependencies, and point it at a
 Mutato checkout and a mutatoc executable:
 
-    python scripts/benchmark_mutato.py --mutato .reference/bench/mutato --exe dist/mutatoc-win-x64-0.2.2/mutatoc.exe
+    python scripts/benchmark_mutato.py --mutato .reference/bench/mutato --exe dist/mutatoc-win-x64-0.2.3/mutatoc.exe
 
 Every measurement runs both implementations on the same ontology and input.
 Construction is timed in a fresh process per iteration so neither side gains

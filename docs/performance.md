@@ -10,7 +10,7 @@ Validation compares complete token results for 266 window-boundary, overlap, nes
 
 ## Match index
 
-After 0.2.2, matching reads the ontology through an index built once per loaded view instead of through the JSON view itself. cJSON objects are linked lists, so each lookup in 0.2.2 scanned the object, and the exact stage rebuilt a hash set of every synonym on every request. The per-request cost therefore grew with the ontology: one unmatched token cost 0.11 ms on animals-test and 1.38 ms on courses-20251028.
+In 0.2.3, matching reads the ontology through an index built once per loaded view instead of through the JSON view itself. cJSON objects are linked lists, so each lookup in 0.2.2 scanned the object, and the exact stage rebuilt a hash set of every synonym on every request. The per-request cost therefore grew with the ontology: one unmatched token cost 0.11 ms on animals-test and 1.38 ms on courses-20251028.
 
 The index holds the synonym sets for each word count, forward and reverse canonical forms, span rules by key with their content already merged and sorted, the entity set and the NER map. Hashed lookups keep cJSON's first-key-wins behavior for duplicate keys and skip unnamed array members, as direct lookups do. The hierarchy stage computes each token's surface forms once per pass instead of once for every window containing the token, and the spans stage no longer walks the token list by index.
 
@@ -18,7 +18,7 @@ The engine owns one index and builds it at the end of every successful `load`. W
 
 Construction of the whole-ontology entity, subentity and lookup lists also uses hashed membership instead of scanning the list on each insert. Their contents and order are unchanged.
 
-| Measurement on Windows | 0.2.2 | Match index |
+| Measurement on Windows | 0.2.2 | 0.2.3 |
 | --- | ---: | ---: |
 | courses-20251028 snapshot load | 875 ms | 600 ms |
 | courses-20251028 live-mode load plus first match | 1,232 ms | 845 ms |
