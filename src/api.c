@@ -658,7 +658,7 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err) {
             return NULL;
         J *tokens;
         if (!strcmp(op, "parse_tokens"))
-            tokens = DUP(GET(q, "tokens"));
+            tokens = cJSON_DetachItemFromObjectCaseSensitive(q, "tokens"); /* q is freed after dispatch */
         else {
             if (!cJSON_IsString(GET(q, "text"))) {
                 fail(err, 2, "parse requires string text");
@@ -670,7 +670,6 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err) {
             return NULL;
         J *out = match_tokens(index, tokens, e->names, GET(q, "ctr") ? GET(q, "ctr")->valueint : 0,
                               err);
-        DEL(tokens);
         if (!out)
             return NULL;
         J *r = OBJ();

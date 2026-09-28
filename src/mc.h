@@ -117,7 +117,7 @@ typedef struct MatchIndex MatchIndex;
 MatchIndex *match_index_build(const J *);
 const J *match_index_view(const MatchIndex *);
 void match_index_free(MatchIndex *);
-J *match_tokens(const MatchIndex *, const J *, const J *, int, mc_error *);
+J *match_tokens(const MatchIndex *, J *, const J *, int, mc_error *);
 J *transform_tokens(J *, const MatchIndex *, const J *, const J *, const char *, mc_error *);
 char *render(const J *);
 struct mc_engine {

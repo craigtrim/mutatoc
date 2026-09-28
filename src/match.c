@@ -27,6 +27,7 @@ struct MatchIndex {
     Map *words;                 /* words[n] holds lookup["n"] for n <= DENSE_WORDS */
     int word_cap;
     Map sparse_words; /* decimal word count to Map, above DENSE_WORDS */
+    Map prefixes;     /* every synonym prefix that ends before a whitespace character */
     Map fwd, rev, spans, entities, ner;
     int entity_count, live;
 };
@@ -100,6 +101,24 @@ static int index_lookup(MatchIndex *x, J *lookup) {
         }
         EACH(word, group) map_put(words, S(word), (void *)1);
     }
+    /* A window's normalized text is a prefix of every longer window from the same
+       token, ending before whitespace: norm() lowercases and trims, and neither the
+       final-sigma rule nor trimming looks past the space that joins tokens. A window
+       whose text is not such a prefix of any synonym therefore cannot grow into one. */
+    EACH(group, lookup) {
+        EACH(word, group) {
+            const char *s = S(word), *p = s;
+            while (*p) {
+                const char *at = p;
+                uint32_t c = uread(&p);
+                if (at > s && uspace(c)) {
+                    char *prefix = slice(s, (size_t)(at - s));
+                    map_put(&x->prefixes, prefix, (void *)1);
+                    free(prefix);
+                }
+            }
+        }
+    }
     return 1;
 }
 static int index_spans(MatchIndex *x, J *rules) {
@@ -146,6 +165,7 @@ void match_index_free(MatchIndex *x) {
             free(x->sparse_words.slots[i].value);
         }
     map_free(&x->sparse_words);
+    map_free(&x->prefixes);
     for (size_t i = 0; i < x->spans.cap; i++)
         if (x->spans.slots[i].key) {
             SpanList *list = x->spans.slots[i].value;
@@ -288,14 +308,17 @@ static void window_matches(ExactWindow *window, int remaining, const MatchIndex 
             buf_put(&b, " ");
         buf_put(&b, S(GET(token, "normal")));
         Map *words = words_at(x, n);
-        if (!words || !words->size || (n == 1 && GET(window->token, "swaps")))
-            continue;
         char *s = norm(b.p, 1, 0);
-        if (map_get(words, s)) {
+        if (words && words->size && !(n == 1 && GET(window->token, "swaps")) &&
+            map_get(words, s)) {
             window->length = length;
             window->words = n;
         }
+        /* Empty text has no fixed start: trimming a longer window removes its space. */
+        int longer = !*s || map_get((Map *)&x->prefixes, s) != NULL;
         free(s);
+        if (!longer)
+            break;
     }
     free(b.p);
 }
@@ -560,10 +583,12 @@ static int valid_tokens(const J *input, mc_error *e) {
     }
     return 1;
 }
-J *match_tokens(const MatchIndex *x, const J *input, const J *names, int ctr, mc_error *e) {
-    if (!valid_tokens(input, e))
+J *match_tokens(const MatchIndex *x, J *ts, const J *names, int ctr, mc_error *e) {
+    /* Takes ownership of ts, which each request already owns, instead of copying it. */
+    if (!valid_tokens(ts, e)) {
+        DEL(ts);
         return NULL;
-    J *ts = DUP(input);
+    }
     if (ctr < -1000) {
         DEL(ts);
         fail(e, 4, "Matching recursion limit exceeded");
