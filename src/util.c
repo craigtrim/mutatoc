@@ -394,6 +394,14 @@ void unique(J *a, const char *s) {
     if (!contains(a, s))
         ADD(a, STR(s));
 }
+/* unique() for arrays that only this set's owner appends to: same order and
+   contents, with a hash check instead of a scan of the whole array. */
+void unique_indexed(J *a, Map *seen, const char *s) {
+    if (map_get(seen, s))
+        return;
+    map_put(seen, s, (void *)1);
+    ADD(a, STR(s));
+}
 static int cmp_lex(const void *a, const void *b) {
     return strcmp(S(*(J *const *)a), S(*(J *const *)b));
 }

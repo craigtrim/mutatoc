@@ -99,30 +99,45 @@ J *generate_synonyms(J *raw, int reverse) {
     DEL(f);
     return r;
 }
-static void lookup_add(J *d, const char *s) {
+/* Lookup groups hold every synonym of an ontology, so membership is hashed on
+   the group key and value together rather than scanned per insert. */
+static void lookup_push(J *d, Map *seen, const char *key, const char *value) {
+    Buf k = {0};
+    buf_put(&k, key);
+    buf_add(&k, "\x1f", 1);
+    buf_put(&k, value);
+    if (!map_get(seen, k.p)) {
+        map_put(seen, k.p, (void *)1);
+        ADD(ensure(d, key, 1), STR(value));
+    }
+    free(k.p);
+}
+static void lookup_add(J *d, Map *seen, const char *s) {
     char *r = replace(s, "_", " ");
     char key[32];
     snprintf(key, sizeof(key), "%d", count(r, ' ') + 1);
-    push(d, key, r);
+    lookup_push(d, seen, key, r);
     free(r);
 }
 J *generate_lookup(J *f) {
     J *d = OBJ();
+    Map seen = {0};
     EACH(k, f) {
-        lookup_add(d, k->string);
+        lookup_add(d, &seen, k->string);
         EACH(v, k) {
             char *s = norm(S(v), 1, 1);
-            lookup_add(d, s);
+            lookup_add(d, &seen, s);
             size_t n = strlen(s);
             if (n && strchr("!?.", s[n - 1])) {
                 char key[32];
                 snprintf(key, sizeof(key), "%d", count(s, ' ') + 1);
                 s[n - 1] = 0;
-                push(d, key, s);
+                lookup_push(d, &seen, key, s);
             }
             free(s);
         }
     }
+    map_free(&seen);
     for (int n = 1; n <= 6; n++) {
         char k[8];
         snprintf(k, sizeof(k), "%d", n);
@@ -370,7 +385,8 @@ J *ontology_build(Graph *g, int distance, int force_class, mc_error *e) {
       *parents = OBJ(), *children = OBJ(), *equivs = OBJ(), *grams = OBJ(), *subentities = ARR(),
       *preds = ARR();
     Map label_index = {0}, ner_index = {0}, raw_index = {0}, synraw_index = {0},
-        parent_index = {0}, child_index = {0}, equiv_index = {0}, predicate_indexes = {0};
+        parent_index = {0}, child_index = {0}, equiv_index = {0}, predicate_indexes = {0},
+        subentity_index = {0};
     int individuals = 0, subclass = 0, skos = 0;
     for (size_t i = 0; i < g->n; i++) {
         Triple *t = &g->ts[i];
@@ -432,7 +448,7 @@ J *ontology_build(Graph *g, int distance, int force_class, mc_error *e) {
             }
         }
         if (!strcmp(t->p.value, RDFS "subClassOf")) {
-            unique(subentities, key);
+            unique_indexed(subentities, &subentity_index, key);
             const char *child = local(t->s.value);
             J *orig = rdf_flatten(g, &t->o, 0, e);
             EACH(v, orig) {
@@ -480,6 +496,7 @@ J *ontology_build(Graph *g, int distance, int force_class, mc_error *e) {
     map_free(&parent_index);
     map_free(&child_index);
     map_free(&equiv_index);
+    map_free(&subentity_index);
     for (size_t i = 0; i < predicate_indexes.cap; i++) {
         Map *index = predicate_indexes.slots[i].value;
         if (index) {
@@ -493,11 +510,13 @@ J *ontology_build(Graph *g, int distance, int force_class, mc_error *e) {
     }
     J *ngentities = ARR();
     if (mixed) {
+        Map seen = {0};
         EACH(k, labels) {
             char *s = lower(k->string);
-            unique(ngentities, s);
+            unique_indexed(ngentities, &seen, s);
             free(s);
         }
+        map_free(&seen);
     } else {
         DEL(ngentities);
         ngentities = DUP(subentities);

@@ -230,10 +230,12 @@ J *live_view(mc_engine *e, mc_error *err) {
     set(d, "_custom_predicates", custom);
     set(d, "_live", BOOL(1));
     J *entities = ARR(), *types = GET(GET(d, "by_predicate"), "rdfs:subClassOf");
+    Map seen = {0};
     EACH(k, types) {
-        unique(entities, k->string);
-        EACH(v, k) unique(entities, S(v));
+        unique_indexed(entities, &seen, k->string);
+        EACH(v, k) unique_indexed(entities, &seen, S(v));
     }
+    map_free(&seen);
     set(d, "entities", entities);
     ner_views(e->graph, d, err);
     J *fwd = GET(GET(d, "synonyms"), "fwd"), *rev = GET(GET(d, "synonyms"), "rev");
