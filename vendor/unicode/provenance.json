@@ -1,0 +1,10 @@
+{
+  "unicodedata2": "18.0.0",
+  "python": "3.11.0",
+  "unicode_license_url": "https://www.unicode.org/license.txt",
+  "files": {
+    "PYTHON-LICENSE": "bef662129c6ebf939116e16bb2be76ced8dc38957fbf55d87e541f97be3f6ed3",
+    "UNICODE-LICENSE": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+    "UNICODEDATA2-LICENSE": "a07e9185cca870c556a44d5b4dff2bea516e0068ecf7984fd9c6818839bfd761"
+  }
+}
