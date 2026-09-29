@@ -1,3 +1,9 @@
+/*
+ * mc.h - Internal engine types and shared interfaces.
+ *
+ * Declares graph storage, matching indexes, workers, and utility helpers.
+ */
+
 #ifndef MC_INTERNAL_H
 #define MC_INTERNAL_H
 #include "cJSON.h"
@@ -8,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 typedef cJSON J;
 #define EACH(v, a) for (J *v = (a) ? (a)->child : NULL; v; v = v->next)
 #define OBJ cJSON_CreateObject
@@ -30,8 +37,8 @@ typedef cJSON J;
 #define SKOS "http://www.w3.org/2004/02/skos/core#"
 #define XSD "http://www.w3.org/2001/XMLSchema#"
 typedef struct {
-    char *p;
-    size_t n, cap;
+	char *p;
+	size_t n, cap;
 } Buf;
 void buf_add(Buf *, const char *, size_t);
 void buf_put(Buf *, const char *);
@@ -62,30 +69,30 @@ char *join(const J *, const char *);
 J *split(const char *, const char *);
 const char *local(const char *);
 typedef struct {
-    char *key;
-    void *value;
+	char *key;
+	void *value;
 } Slot;
 typedef struct {
-    Slot *slots;
-    size_t size, cap;
+	Slot *slots;
+	size_t size, cap;
 } Map;
 void *map_get(Map *, const char *);
 void map_put(Map *, const char *, void *);
 void map_free(Map *);
 void unique_indexed(J *, Map *, const char *);
 typedef struct {
-    char *value, *datatype, *language;
-    int kind;
+	char *value, *datatype, *language;
+	int kind;
 } Term;
 typedef struct {
-    Term s, p, o;
+	Term s, p, o;
 } Triple;
 typedef struct {
-    Triple *ts;
-    size_t n, cap;
-    J *prefixes;
-    Map subjects;
-    Map triple_keys;
+	Triple *ts;
+	size_t n, cap;
+	J *prefixes;
+	Map subjects;
+	Map triple_keys;
 } Graph;
 void literal_normalize(Term *);
 Graph *rdf_parse(const char *, const char *, mc_error *);
@@ -118,23 +125,24 @@ MatchIndex *match_index_build(const J *);
 const J *match_index_view(const MatchIndex *);
 void match_index_free(MatchIndex *);
 J *match_tokens(const MatchIndex *, J *, const J *, int, mc_error *);
-J *transform_tokens(J *, const MatchIndex *, const J *, const J *, const char *, mc_error *);
+J *transform_tokens(J *, const MatchIndex *, const J *, const J *, const char *,
+		    mc_error *);
 char *render(const J *);
 struct mc_engine {
-    J *snapshot;
-    J *live;
-    J *names;
-    char *directory;
-    char *source_path;
-    int live_mode;
-    int graph_only, force_class;
-    Graph *graph;
-    char *name;
-    int distance;
-    mc_spacy *spacy;
-    mc_spacy *sparql;
-    mc_engine **parts;
-    size_t part_count;
-    MatchIndex *index; /* hash index of the view matching last used; owned */
+	J *snapshot;
+	J *live;
+	J *names;
+	char *directory;
+	char *source_path;
+	int live_mode;
+	int graph_only, force_class;
+	Graph *graph;
+	char *name;
+	int distance;
+	mc_spacy *spacy;
+	mc_spacy *sparql;
+	mc_engine **parts;
+	size_t part_count;
+	MatchIndex *index; /* hash index of the view matching last used; owned */
 };
 #endif
