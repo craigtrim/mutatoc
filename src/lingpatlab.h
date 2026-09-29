@@ -1,6 +1,13 @@
+/*
+ * lingpatlab.h - Internal interfaces for native LingPatLab operations.
+ *
+ * Connects token processing, text utilities, and request validation.
+ */
+
 #ifndef MUTATOC_LINGPATLAB_H
 #define MUTATOC_LINGPATLAB_H
 #include "mc.h"
+
 J *lp_data(const char *);
 int lp_numeric(uint32_t);
 int lp_upper(uint32_t);

@@ -6,8 +6,8 @@
   "unicode": "14.0.0",
   "punctuation_unicode": "18.0.0",
   "files": {
-    "src/lingpatlab_data.h": "da762496393dba46d5e74d811563f8aedb22ae424419cf6011ec64b8c8f80e24",
-    "src/wordnet_data.h": "93a5409420970a64753cce03be3b32e1f91dc4140fa82cd856008197479a4894",
-    "src/lingpatlab_unicode.h": "69fe953ea52294133da7143a4ca7bd81db382842e9a42590e9cb98922b759645"
+    "src/lingpatlab_data.h": "5cc17655dd3be97d547021d0fea4f46ee5a2acd4238c8a838643bb8038848b5f",
+    "src/wordnet_data.h": "0173b7b76d98aa77b718061c74ab74ad477b7250b304456e02737ea5be77e8f9",
+    "src/lingpatlab_unicode.h": "c50627e879910f5246c3de87f1e611de9ed354fc84833ea7dfe668ed94930f86"
   }
 }
