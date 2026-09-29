@@ -1,5 +1,15 @@
 # mutatoc
 
+[![C port compatibility](https://github.com/craigtrim/mutatoc/actions/workflows/test.yml/badge.svg)](https://github.com/craigtrim/mutatoc/actions/workflows/test.yml)
+[![Version](https://img.shields.io/badge/version-0.2.3-blue)](include/mutatoc.h)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![C17](https://img.shields.io/badge/C-17-00599C?logo=c&logoColor=white)](CMakeLists.txt)
+[![CMake 3.20+](https://img.shields.io/badge/CMake-3.20%2B-064F8C?logo=cmake&logoColor=white)](CMakeLists.txt)
+[![Platforms](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey)](.github/workflows/test.yml)
+[![Python runtime](https://img.shields.io/badge/runtime-Python%203.11-3776AB?logo=python&logoColor=white)](scripts/setup_spacy.py)
+[![spaCy 3.8.2](https://img.shields.io/badge/spaCy-3.8.2-09A3D5?logo=spacy&logoColor=white)](docs/lingpatlab.md)
+[![Upstream tests](https://img.shields.io/badge/Mutato%20tests-961%20retained-brightgreen)](docs/compatibility.md)
+
 Mutatoc is the C17 port of [Mutato](https://github.com/craigtrim/mutato). It accepts the same Turtle-encoded OWL ontologies and MDA JSON snapshots. Ontology extraction, cached/live finder behavior, collection merging, and exact/span/hierarchy matching run in C.
 
 LingPatLab 1.1.1 is implemented in C, including tokenization, token construction, normalization, stemming, WordNet membership, segmentation, entity extraction and text utilities. The runtime no longer installs LingPatLab, wordnet-lookup or unicodedata2. A small Python worker exposes spaCy 3.8.2 and `en_core_web_sm` 3.8.0 model operations; the C engine applies the linguistic rules. A separate RDFLib 7.1.4 worker handles arbitrary SPARQL and normalization of date, duration, base64 and XML literals. These workers start lazily and persist per engine. Prepared tokens, snapshots and linguistic operations that do not use the trained model run without Python. [Native LingPatLab APIs](docs/lingpatlab.md) describe the complete port and source-specific behavior.
