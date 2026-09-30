@@ -1,4 +1,6 @@
-# W3C Turtle conformance files must keep their exact bytes: several tests contain
-# multi-line literals whose line endings are part of the expected value.
+# Test inputs must keep their exact bytes on every platform. Several W3C Turtle
+# tests and fixture ontologies contain multi-line literals whose line endings are
+# part of the parsed value, so a line-ending conversion changes the graph.
 # craigtrim/mutatoc#1
 tests/w3c-turtle/** -text
+tests/fixtures/** -text

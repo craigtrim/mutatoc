@@ -1,5 +1,5 @@
 {
-  "source": "Triple counts and blank-node-independent fingerprints of the fixture ontologies, recorded after RDFLib 7.1.4 confirmed each native graph isomorphic to its own parse (tests/test_rdf.c computes the fingerprint).",
+  "source": "Triple counts and blank-node-independent fingerprints of the fixture ontologies as committed (LF bytes), recorded after RDFLib 7.1.4 confirmed each native graph isomorphic to its own parse of the same bytes (tests/test_rdf.c computes the fingerprint).",
   "graphs": [
     {
       "file": "animals-test.owl",
@@ -64,32 +64,32 @@
     {
       "file": "medic-copilot-20230726.owl",
       "triples": 4512,
-      "fingerprint": "011086850564b4c4"
+      "fingerprint": "a7f1faea9e944932"
     },
     {
       "file": "medic-copilot-20230801.owl",
       "triples": 6862,
-      "fingerprint": "cd091684beb35d8e"
+      "fingerprint": "bb83edd874add494"
     },
     {
       "file": "medic-copilot-20230802.owl",
       "triples": 6858,
-      "fingerprint": "ebf655ba61a03dc6"
+      "fingerprint": "51241855ffe303f0"
     },
     {
       "file": "medic-copilot-20230816.owl",
       "triples": 13417,
-      "fingerprint": "4a3b0a1ab7f34ec1"
+      "fingerprint": "3d4213fe1ac8119b"
     },
     {
       "file": "medic-copilot-20230818.owl",
       "triples": 13988,
-      "fingerprint": "ea1e71e523577398"
+      "fingerprint": "ff27bc4729903c6f"
     },
     {
       "file": "medicopilot.owl",
       "triples": 4512,
-      "fingerprint": "011086850564b4c4"
+      "fingerprint": "a7f1faea9e944932"
     },
     {
       "file": "music-test.owl",
