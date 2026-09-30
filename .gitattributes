@@ -1,0 +1,4 @@
+# W3C Turtle conformance files must keep their exact bytes: several tests contain
+# multi-line literals whose line endings are part of the expected value.
+# craigtrim/mutatoc#1
+tests/w3c-turtle/** -text

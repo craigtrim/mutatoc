@@ -1,0 +1,100 @@
+{
+  "source": "Triple counts and blank-node-independent fingerprints of the fixture ontologies, recorded after RDFLib 7.1.4 confirmed each native graph isomorphic to its own parse (tests/test_rdf.c computes the fingerprint).",
+  "graphs": [
+    {
+      "file": "animals-test.owl",
+      "triples": 208,
+      "fingerprint": "c04cd83b4cf3bfd3"
+    },
+    {
+      "file": "colors-test.owl",
+      "triples": 124,
+      "fingerprint": "75920a6c3b312b6d"
+    },
+    {
+      "file": "courses-20240709.owl",
+      "triples": 2327,
+      "fingerprint": "8f1ce5dadeeea43d"
+    },
+    {
+      "file": "courses-20241023.owl",
+      "triples": 13580,
+      "fingerprint": "c910b83fe1715869"
+    },
+    {
+      "file": "courses-20241129.owl",
+      "triples": 22933,
+      "fingerprint": "d19574af32fed217"
+    },
+    {
+      "file": "courses-20241213.owl",
+      "triples": 23590,
+      "fingerprint": "3c10850482847a50"
+    },
+    {
+      "file": "courses-20250122.owl",
+      "triples": 24329,
+      "fingerprint": "31709d7506c2345d"
+    },
+    {
+      "file": "courses-20250131.owl",
+      "triples": 26479,
+      "fingerprint": "282faf778222fd97"
+    },
+    {
+      "file": "courses-20251013.owl",
+      "triples": 28147,
+      "fingerprint": "78c5a94f64a689c7"
+    },
+    {
+      "file": "courses-20251028.owl",
+      "triples": 28241,
+      "fingerprint": "55ac9e506285f628"
+    },
+    {
+      "file": "econ-20160218.owl",
+      "triples": 2520,
+      "fingerprint": "8a2a132a97c576fa"
+    },
+    {
+      "file": "geography-test.owl",
+      "triples": 220,
+      "fingerprint": "b8a747dc9e0d53e7"
+    },
+    {
+      "file": "medic-copilot-20230726.owl",
+      "triples": 4512,
+      "fingerprint": "011086850564b4c4"
+    },
+    {
+      "file": "medic-copilot-20230801.owl",
+      "triples": 6862,
+      "fingerprint": "cd091684beb35d8e"
+    },
+    {
+      "file": "medic-copilot-20230802.owl",
+      "triples": 6858,
+      "fingerprint": "ebf655ba61a03dc6"
+    },
+    {
+      "file": "medic-copilot-20230816.owl",
+      "triples": 13417,
+      "fingerprint": "4a3b0a1ab7f34ec1"
+    },
+    {
+      "file": "medic-copilot-20230818.owl",
+      "triples": 13988,
+      "fingerprint": "ea1e71e523577398"
+    },
+    {
+      "file": "medicopilot.owl",
+      "triples": 4512,
+      "fingerprint": "011086850564b4c4"
+    },
+    {
+      "file": "music-test.owl",
+      "triples": 244,
+      "fingerprint": "ea3c3fc5d63c3595"
+    }
+  ]
+}
