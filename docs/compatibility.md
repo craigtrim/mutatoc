@@ -1,9 +1,8 @@
 # Compatibility contract
 
-Reference: Mutato `da6bfa5df80b208a3271e111f2921ad281d0da98`.
 <!-- Rewritten for the native-only runtime: craigtrim/mutatoc#1 -->
 
-
+Reference: Mutato `da6bfa5df80b208a3271e111f2921ad281d0da98`.
 
 The logical port preserves ontology extraction and matching, including the differences between direct OWL queries, the live finder, the JSON finder and the low-level JSON API. The same OWL files and prepared snapshots remain inputs. Mutato's class instances and callbacks are represented by an opaque C engine and JSON operations.
 
@@ -48,4 +47,4 @@ The supported input serialization is Turtle-encoded OWL, which is also what the 
 
 Input files and protocol messages are bounded at 256 MiB. Turtle/blank-node recursion is bounded at 128 levels; hierarchy traversal and matching have explicit cycle/work guards. Resource-limit failures return diagnostics rather than silently truncated results. No finite corpus proves equivalence for every possible ontology or sentence; the recorded results describe the exercised contract.
 
-Windows MSVC and GCC, and Linux GCC with address/undefined-behavior sanitizers, are validated. macOS and other architectures have not been validated. The packaged Windows distribution is x64.
+Windows MSVC and GCC, and Linux GCC with address/undefined-behavior sanitizers, are validated. GitHub Actions builds and tests Windows MSVC, Linux GCC and the Linux sanitizer configuration on every push, and test fixtures keep their exact bytes so both platforms parse the same graphs. macOS and other architectures have not been validated. The packaged Windows distribution is x64.

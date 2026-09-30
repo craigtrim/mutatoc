@@ -6,6 +6,10 @@
 
 Mutatoc no longer uses spaCy, LingPatLab or Python at build, test or run time ([#1](https://github.com/craigtrim/mutatoc/issues/1)). Raw text is tokenized natively in C, so a parse runs entirely in process. Everything that served general NLP rather than ontology matching is gone.
 
+### Added
+
+- `--jsonf` prints the one-shot result as JSON indented two spaces per level; `--json` stays compact.
+
 ### Breaking changes
 
 - **Operations removed:** `lingpatlab` (segmentation, people and topic extraction, name analysis, phrase filtering, prompt generation, and the text, DTO and dictionary helpers), `configure_spacy`, `configure_sparql`, `spacy_info`, `sparql`, `query` with `method: "adhoc"`, the `spacy` stage of `transform_tokens`, and the `spacy_ner` and `spacy_ner_rev` query stubs. `triples` returns the whole graph for callers who want to run SPARQL with their own tooling.
@@ -25,7 +29,7 @@ Parsing those texts against seven ontologies (87,067 parses) found every entity 
 
 ### Tests
 
-Every check runs in CTest without Python. Mutato's 961 upstream tests were recorded request by request against 0.2.3 and are replayed in C; the real tests also passed against 0.3.0 before their harness was retired. The punctuation, extensions, concurrency and RDF suites were ported to C. The W3C Turtle suite runs against expected graphs converted once from the W3C result files, and the 19 ontology graphs are checked against recorded triple counts and blank-node-independent fingerprints. New suites cover the tokenizer contract, typed literals and caller metadata.
+Every check runs in CTest without Python. Mutato's 961 upstream tests were recorded request by request against 0.2.3 and are replayed in C; the real tests also passed against 0.3.0 before their harness was retired. The punctuation, extensions, concurrency and RDF suites were ported to C. The W3C Turtle suite runs against expected graphs converted once from the W3C result files, and the 19 ontology graphs are checked against recorded triple counts and blank-node-independent fingerprints. New suites cover the tokenizer contract, typed literals and caller metadata. Test fixtures now keep their exact bytes on every platform; a Windows clone made before this release still holds converted copies, which `git rm -r --cached -q tests/fixtures tests/w3c-turtle`, `git reset -q` and `git checkout -- tests/fixtures tests/w3c-turtle` replace once.
 
 ### Performance
 
