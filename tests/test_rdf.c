@@ -372,6 +372,7 @@ static void w3c_turtle(mc_engine *e, const char *root)
 {
 	J *table = test_read_json(root, "tests/fixtures/w3c-turtle.json");
 	int passed = 0, count = 0;
+	CHECK(test_require_cases(GET(table, "tests"), "W3C Turtle table"));
 	EACH(t, GET(table, "tests")) {
 		const char *name = S(GET(t, "name")), *type = S(GET(t, "type"));
 		Buf rel = { 0 };
@@ -382,12 +383,19 @@ static void w3c_turtle(mc_engine *e, const char *root)
 		mc_error err = { 0 };
 		char *text = read_file(path, &err);
 		free(path);
+		if (!text) {
+			fprintf(stderr, "W3C Turtle %s: %s\n", name,
+				err.message);
+			CHECK(text != NULL);
+			count++;
+			continue;
+		}
 		Buf base = { 0 };
 		buf_put(&base, S(GET(table, "base")));
 		buf_put(&base, name);
 		J *q = OBJ();
 		PUT(q, "op", STR("read_rdf"));
-		PUT(q, "turtle", STR(text ? text : ""));
+		PUT(q, "turtle", STR(text));
 		PUT(q, "base", STR(base.p));
 		free(base.p);
 		free(text);
@@ -424,6 +432,7 @@ static void ontology_graphs(mc_engine *e, const char *root)
 {
 	J *expected = test_read_json(root, "tests/fixtures/rdf-graphs.json");
 	int passed = 0, count = 0;
+	CHECK(test_require_cases(GET(expected, "graphs"), "ontology graphs"));
 	EACH(row, GET(expected, "graphs")) {
 		Buf rel = { 0 };
 		buf_put(&rel, "tests/fixtures/ontologies/");

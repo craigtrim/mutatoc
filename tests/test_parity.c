@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 	if (argc != 2)
 		return 2;
 	J *index = read_json_path(argv[1], "index.json");
-	if (!index)
+	if (!test_require_cases(index, "parity index"))
 		return 2;
 	int total = 0, failed = 0, raw_total = 0, raw_failed = 0;
 	EACH(group, index) {
@@ -32,6 +32,8 @@ int main(int argc, char **argv)
 		J *snapshot =
 			read_json_path(argv[1], S(GET(group, "snapshot")));
 		J *cases = read_json_path(argv[1], S(GET(group, "cases")));
+		if (!test_require_cases(cases, S(GET(group, "cases"))))
+			failed++;
 		J *q = OBJ();
 		PUT(q, "op", STR("load"));
 		PUT(q, "name", DUP(GET(group, "name")));

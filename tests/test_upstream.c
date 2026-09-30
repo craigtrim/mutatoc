@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 		return 2;
 	J *trace =
 		test_read_json(argv[1], "tests/fixtures/upstream/trace.json");
-	if (!trace)
+	if (!test_require_cases(GET(trace, "sessions"), "upstream trace"))
 		return 2;
 	char *fixtures = test_path(argv[1], "tests/fixtures");
 	int count = SIZE(GET(trace, "sessions"));

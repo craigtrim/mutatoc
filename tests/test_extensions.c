@@ -73,6 +73,7 @@ static void optional_stages(void)
 		root));
 	J *rows = test_read_json(root, "tests/fixtures/api/stages.json");
 	int count = 0;
+	CHECK(test_require_cases(rows, "stages.json"));
 	EACH(row, rows) {
 		J *r = test_request(e, GET(row, "request"));
 		count++;
@@ -113,6 +114,8 @@ static void exact_windows(void)
 	DEL(r);
 	DEL(q);
 	int count = 0;
+	CHECK(test_require_cases(GET(corpus, "cases"),
+				 "matching-regressions.json"));
 	EACH(c, GET(corpus, "cases")) {
 		q = OBJ();
 		PUT(q, "op", STR("transform_tokens"));

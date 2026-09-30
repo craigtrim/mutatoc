@@ -91,6 +91,18 @@ static J *test_read_json(const char *root, const char *relative)
 	return out;
 }
 
+/*
+ * A reference fixture that is missing, malformed or empty must fail its
+ * suite rather than let it pass with no cases. Returns 1 for a nonempty array.
+ */
+static int test_require_cases(const J *cases, const char *label)
+{
+	if (cJSON_IsArray(cases) && SIZE(cases) > 0)
+		return 1;
+	fprintf(stderr, "FAIL %s: reference cases missing or empty\n", label);
+	return 0;
+}
+
 /* Sends one request and returns the whole {"ok":...} response. */
 static J *test_request(mc_engine *e, const J *q)
 {
