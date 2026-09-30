@@ -1,7 +1,9 @@
 /*
  * test_native.c - Native ontology loading and matching checks.
  *
- * Exercises JSON requests, prepared tokens, and error responses.
+ * Exercises JSON requests, raw and prepared tokens, caller metadata, and
+ * error responses.
+ * craigtrim/mutatoc#1
  */
 
 #include "mc.h"
@@ -24,6 +26,48 @@ static J *request(mc_engine *e, const char *s)
 	J *j = r ? cJSON_Parse(r) : NULL;
 	mc_free(r);
 	return j;
+}
+
+/*
+ * Caller fields of any shape survive matching unchanged in the swap history.
+ * A field named ent is ordinary metadata: an unlabeled hierarchy match gets a
+ * null label rather than borrowing it.
+ */
+static void caller_metadata(mc_engine *e, const char *root)
+{
+	Buf b = { 0 };
+	buf_put(&b, "{\"op\":\"load\",\"path\":\"");
+	buf_put(&b, root);
+	buf_put(&b, "/tests/fixtures/api/proper.owl\",\"interface\":\"data\","
+		    "\"class_based\":true}");
+	J *r = request(e, b.p);
+	free(b.p);
+	CHECK(cJSON_IsTrue(GET(r, "ok")));
+	DEL(r);
+	const char *tokens =
+		"[{\"id\":\"a\",\"text\":\"Unlabelled \",\"x\":0,\"y\":10,"
+		"\"normal\":\"unlabelled\",\"ancestors\":[\"animal\",\"dog\",\"root\"],"
+		"\"descendants\":[\"ghost\"],\"ent\":\"ORG\",\"caller\":{\"s\":\"x\","
+		"\"b\":true,\"n\":null,\"a\":[1,\"two\",{\"deep\":[false,null]}],"
+		"\"o\":{\"k\":{\"k2\":\"v\"}}}},{\"id\":7,\"text\":\"collar\",\"x\":11,"
+		"\"y\":17,\"normal\":\"collar\",\"ancestors\":[],\"descendants\":[],"
+		"\"flag\":false,\"ent\":\"\"}]";
+	Buf q = { 0 };
+	buf_put(&q, "{\"op\":\"transform_tokens\",\"stage\":\"hierarchy\","
+		    "\"tokens\":");
+	buf_put(&q, tokens);
+	buf_put(&q, "}");
+	r = request(e, q.p);
+	free(q.p);
+	J *input = cJSON_Parse(tokens), *out = GET(r, "result"),
+	  *match = AT(out, 0), *swaps = GET(match, "swaps");
+	CHECK(cJSON_IsTrue(GET(r, "ok")) && SIZE(out) == 1);
+	CHECK(!strcmp(S(GET(swaps, "type")), "hierarchy"));
+	CHECK(!strcmp(S(GET(swaps, "canon")), "dog_collar"));
+	CHECK(cJSON_IsNull(GET(match, "ner")));
+	CHECK(cJSON_Compare(GET(swaps, "tokens"), input, 1));
+	DEL(input);
+	DEL(r);
 }
 
 int main(int argc, char **argv)
@@ -68,8 +112,9 @@ int main(int argc, char **argv)
 	}
 	r = request(e,
 		    "{\"op\":\"parse\",\"text\":\"Fiscal Policy Analysis\"}");
-	CHECK(cJSON_IsFalse(
-		GET(r, "ok"))); /* No approximate raw-text fallback. */
+	CHECK(cJSON_IsTrue(GET(r, "ok"))); /* Raw text needs no worker. */
+	CHECK(!strcmp(S(GET(GET(r, "result"), "text")),
+		      "fiscal_policy_analysis"));
 	DEL(r);
 	r = request(
 		e,
@@ -84,6 +129,7 @@ int main(int argc, char **argv)
 	CHECK(strstr(wire, "18446744073709551615") != NULL);
 	free(wire);
 	DEL(r);
+	caller_metadata(e, argv[1]);
 	mc_destroy(e);
 	printf("%d checks, %d failures\n", total, failed);
 	return failed ? 1 : 0;
