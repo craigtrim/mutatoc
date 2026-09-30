@@ -9,6 +9,7 @@ Mutatoc no longer uses spaCy, LingPatLab or Python at build, test or run time ([
 ### Added
 
 - `--jsonf` prints the one-shot result as JSON indented two spaces per level; `--json` stays compact.
+- `--stopwatch` prints the total run time of a one-shot run after its output, in milliseconds, seconds or minutes as fits. It writes to stderr, so piped JSON stays valid.
 
 ### Breaking changes
 

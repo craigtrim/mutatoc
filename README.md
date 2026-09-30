@@ -34,7 +34,7 @@ Use the installed Visual Studio generator, or `-G Ninja -DCMAKE_BUILD_TYPE=Relea
 .\build-msvc\Release\mutatoc.exe --ontology tests/fixtures/ontologies/animals-test.owl --input-text "Dog walks through London."
 ```
 
-This prints the canonical text, `dog walks through London .`, where `dog` is the matched entity. Add `--json` for the full result as compact JSON, or `--jsonf` for the same result indented for reading. It lists every token with its `id`, `text`, `x`, `y` and `normal`, and each matched entity with its canonical form, match type and the tokens it replaced. `--ontology FILE --snapshot OUT` writes the generated MDA object to `OUT`, and `--serve` keeps an engine open for JSON requests.
+This prints the canonical text, `dog walks through London .`, where `dog` is the matched entity. Add `--json` for the full result as compact JSON, or `--jsonf` for the same result indented for reading. It lists every token with its `id`, `text`, `x`, `y` and `normal`, and each matched entity with its canonical form, match type and the tokens it replaced. `--stopwatch` adds the total run time after the output, such as `Elapsed: 23.4 ms`, on stderr so piped JSON stays valid. `--ontology FILE --snapshot OUT` writes the generated MDA object to `OUT`, and `--serve` keeps an engine open for JSON requests.
 
 `scripts/package.cmake` assembles a relocatable Windows distribution from the static and shared builds, with a checksum manifest. See [packaging](docs/packaging.md).
 

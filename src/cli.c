@@ -10,6 +10,30 @@
 #include <shellapi.h>
 #endif
 #include "mc.h"
+#include <time.h>
+
+static double now_seconds(void)
+{
+	struct timespec t;
+	if (!timespec_get(&t, TIME_UTC))
+		return 0;
+	return (double)t.tv_sec + (double)t.tv_nsec / 1e9;
+}
+
+/* Written to stderr so stdout stays valid JSON when it is piped. */
+static void print_elapsed(double seconds)
+{
+	fflush(stdout);
+	if (seconds < 1)
+		fprintf(stderr, "Elapsed: %.1f ms\n", seconds * 1000);
+	else if (seconds < 60)
+		fprintf(stderr, "Elapsed: %.2f s\n", seconds);
+	else {
+		int minutes = (int)(seconds / 60);
+		fprintf(stderr, "Elapsed: %d min %.1f s\n", minutes,
+			seconds - minutes * 60);
+	}
+}
 
 static char *read_line(FILE *f)
 {
@@ -105,9 +129,11 @@ static void usage(void)
 {
 	puts("mutatoc " MUTATOC_VERSION "\nUsage:\n"
 	     "  mutatoc --ontology FILE --input-text TEXT [--json | --jsonf] [--live]\n"
-	     "  mutatoc --ontology FILE --snapshot FILE\n"
+	     "          [--stopwatch]\n"
+	     "  mutatoc --ontology FILE --snapshot FILE [--stopwatch]\n"
 	     "  mutatoc --serve\n  mutatoc --version\n\n"
 	     "--json prints the full result as compact JSON; --jsonf pretty-prints it.\n"
+	     "--stopwatch prints the total run time to stderr after the output.\n"
 	     "--serve accepts one JSON request per line and retains the ontology.\n"
 	     "--live uses the reference class-based extraction path.\n"
 	     "--force-cache rebuilds from OWL; this runtime has no implicit disk cache.\n"
@@ -116,8 +142,9 @@ static void usage(void)
 
 static int run(int argc, char **argv)
 {
+	double start = now_seconds();
 	const char *path = NULL, *text = NULL, *snapshot = NULL;
-	int serve = 0, json = 0, live = 0, force = 0;
+	int serve = 0, json = 0, live = 0, force = 0, stopwatch = 0;
 	for (int i = 1; i < argc; i++) {
 		const char *a = argv[i];
 		if (!strcmp(a, "--help") || !strcmp(a, "-h")) {
@@ -138,6 +165,8 @@ static int run(int argc, char **argv)
 			live = 1;
 		else if (!strcmp(a, "--force-cache"))
 			force = 1;
+		else if (!strcmp(a, "--stopwatch"))
+			stopwatch = 1;
 		else if (!strcmp(a, "--ontology") ||
 			 !strcmp(a, "--input-text") ||
 			 !strcmp(a, "--snapshot") ||
@@ -162,7 +191,7 @@ static int run(int argc, char **argv)
 		      stderr);
 		return 2;
 	}
-	if (serve && (path || text || snapshot)) {
+	if (serve && (path || text || snapshot || stopwatch)) {
 		fputs("--serve cannot be combined with one-shot options\n",
 		      stderr);
 		return 2;
@@ -251,6 +280,8 @@ static int run(int argc, char **argv)
 		DEL(r);
 	}
 	mc_destroy(e);
+	if (stopwatch)
+		print_elapsed(now_seconds() - start);
 	return 0;
 }
 
