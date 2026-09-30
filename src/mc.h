@@ -1,7 +1,8 @@
 /*
  * mc.h - Internal engine types and shared interfaces.
  *
- * Declares graph storage, matching indexes, workers, and utility helpers.
+ * Declares graph storage, matching indexes, the tokenizer, and utility helpers.
+ * craigtrim/mutatoc#1
  */
 
 #ifndef MC_INTERNAL_H
@@ -112,14 +113,7 @@ J *generate_synonyms(J *, int);
 J *generate_lookup(J *);
 J *generate_spans(J *, int, int);
 J *generate_trie(J *);
-typedef struct mc_spacy mc_spacy;
-void spacy_free(mc_spacy *);
-void sparql_invalidate(mc_spacy *);
-J *sparql_query(mc_engine *, const J *, mc_error *);
-int normalize_special_literals(mc_engine *, Graph *, mc_error *);
-J *sparql_transform(mc_engine *, const J *, J *, mc_error *);
-J *spacy_tokens(mc_engine *, const char *, mc_error *);
-J *spacy_info(mc_engine *, mc_error *);
+J *tokenize_text(const char *);
 typedef struct MatchIndex MatchIndex;
 MatchIndex *match_index_build(const J *);
 const J *match_index_view(const MatchIndex *);
@@ -139,8 +133,6 @@ struct mc_engine {
 	Graph *graph;
 	char *name;
 	int distance;
-	mc_spacy *spacy;
-	mc_spacy *sparql;
 	mc_engine **parts;
 	size_t part_count;
 	MatchIndex *index; /* hash index of the view matching last used; owned */

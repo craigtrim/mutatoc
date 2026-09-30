@@ -1,7 +1,8 @@
 /*
  * mutatoc.h - Public C API for ontology loading and matching.
  *
- * Declares engine ownership, worker configuration, and JSON requests.
+ * Declares engine ownership and JSON requests. Everything runs in process.
+ * craigtrim/mutatoc#1
  */
 
 #ifndef MUTATOC_H
@@ -13,7 +14,7 @@
 extern "C" {
 #endif
 
-#define MUTATOC_VERSION "0.2.3"
+#define MUTATOC_VERSION "0.3.0"
 
 typedef struct mc_engine mc_engine;
 typedef struct {
@@ -30,25 +31,6 @@ typedef struct {
 mc_engine *mc_create(void);
 void mc_destroy(mc_engine *engine);
 void mc_free(void *buffer);
-
-/*
- * Configure the spaCy worker for native LingPatLab preprocessing. It starts
- * lazily, loads the model once, and exits on engine destruction or
- * reconfiguration. Arguments are copied as UTF-8 and passed without a shell.
- * A zero timeout selects 120000 ms per startup or request. Returns 1 on
- * success. Raw parse/tokenize requires configuration; parse_tokens does not.
- */
-int mc_use_spacy(mc_engine *engine, const char *python_executable,
-		 const char *worker_script, const char *model,
-		 unsigned timeout_ms, mc_error *error);
-
-/*
- * Configure the persistent RDFLib compatibility worker for arbitrary SPARQL and
- * date/duration/base64/XML literal normalization during ontology load.
- */
-int mc_use_sparql(mc_engine *engine, const char *python_executable,
-		  const char *worker_script, unsigned timeout_ms,
-		  mc_error *error);
 
 /*
  * Execute one JSON request and return one JSON response. Operation errors are

@@ -1,7 +1,9 @@
 /*
  * literal.c - RDF literal normalization.
  *
- * Preserves reference formatting for numeric and Boolean values.
+ * Preserves reference formatting for numeric and Boolean values. Date, time,
+ * duration, binary and XML literals keep their lexical form.
+ * craigtrim/mutatoc#1
  */
 
 #include "mc.h"
@@ -107,7 +109,7 @@ static char *float_text(const char *input)
 			decimals = 1;
 		snprintf(candidate, sizeof(candidate), "%.*f", decimals, value);
 	} else {
-		/* Python uses a lowercase exponent and at least two exponent digits. */
+		/* Mutato writes a lowercase exponent with at least two digits. */
 		const char *ep = strchr(scientific, 'e');
 		size_t n = (size_t)(ep - scientific);
 		while (n && scientific[n - 1] == '0')

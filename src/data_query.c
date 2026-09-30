@@ -2,6 +2,7 @@
  * data_query.c - Queries over ontology snapshots.
  *
  * Resolves labels, synonyms, and hierarchy relationships from JSON views.
+ * craigtrim/mutatoc#1
  */
 
 #include "mc.h"
@@ -52,12 +53,11 @@ J *data_query(J *d, const char *m, const J *args, const J *kwargs, mc_error *e)
 	}
 	if (!strcmp(m, "infer_by_requires")) {
 		fail(e, 4,
-		     "infer_by_requires is explicitly unimplemented in the Python reference");
+		     "infer_by_requires is explicitly unimplemented in the Mutato reference");
 		return NULL;
 	}
 	J *types = GET(GET(d, "by_predicate"), "rdfs:subClassOf");
-	if (!strcmp(m, "graffl_ner") || !strcmp(m, "graffl_ner_rev") ||
-	    !strcmp(m, "spacy_ner") || !strcmp(m, "spacy_ner_rev"))
+	if (!strcmp(m, "graffl_ner") || !strcmp(m, "graffl_ner_rev"))
 		return OBJ();
 	if (!strcmp(m, "find_ner"))
 		return STR("NER");

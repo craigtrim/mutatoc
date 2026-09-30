@@ -2,6 +2,7 @@
  * match.c - Indexed ontology matching and token transforms.
  *
  * Reuses view indexes while preserving match order and token history.
+ * craigtrim/mutatoc#1
  */
 
 #include "mc.h"
@@ -300,24 +301,6 @@ static J *collapse(J *ts, int start, int end, J *r)
 	}
 	cJSON_ReplaceItemViaPointer(ts, first, r);
 	return ts;
-}
-
-static char *normal_sequence(J *token, int n, const char *sep)
-{
-	Buf b = { 0 };
-	for (int i = 0; i < n; i++, token = token->next) {
-		if (i)
-			buf_put(&b, sep);
-		buf_put(&b, S(GET(token, "normal")));
-	}
-	char *s = norm(b.p ? b.p : "", 1, 0);
-	free(b.p);
-	return s;
-}
-
-static char *normal_window(J *ts, int start, int n, const char *sep)
-{
-	return normal_sequence(AT(ts, start), n, sep);
 }
 
 typedef struct {
@@ -653,12 +636,13 @@ static J *hierarchy(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 					fail(e, 4,
 					     "Hierarchy combination limit exceeded");
 				if (canon) {
-					J *ner = GET(first, "ner");
-					if (!ner)
-						ner = GET(first, "ent");
+					/*
+					 * Only an earlier match supplies a
+					 * label; caller token fields do not.
+					 */
 					J *r = swap(ts, i, i + n, canon,
-						    "hierarchy", names, ner,
-						    75.0);
+						    "hierarchy", names,
+						    GET(first, "ner"), 75.0);
 					ts = collapse(ts, i, i + n, r);
 					changed = 1;
 					free(canon);
@@ -759,31 +743,6 @@ J *transform_tokens(J *d, const MatchIndex *x, const J *input, const J *names,
 			if (err->code) {
 				DEL(ts);
 				return NULL;
-			}
-		}
-		return ts;
-	}
-	if (!strcmp(stage, "spacy")) {
-		int changed = 1;
-		while (changed) {
-			changed = 0;
-			for (int i = 0; i + 1 < SIZE(ts); i++) {
-				const char *ent = S(GET(AT(ts, i), "ent"));
-				if (!*ent ||
-				    strcmp(ent, S(GET(AT(ts, i + 1), "ent"))))
-					continue;
-				int end = i + 2;
-				while (end < SIZE(ts) &&
-				       !strcmp(ent, S(GET(AT(ts, end), "ent"))))
-					end++;
-				char *canon =
-					normal_window(ts, i, end - i, "_");
-				J *r = swap(ts, i, end, canon, "spacy", names,
-					    GET(AT(ts, i), "ent"), 100.0);
-				free(canon);
-				ts = collapse(ts, i, end, r);
-				changed = 1;
-				break;
 			}
 		}
 		return ts;
