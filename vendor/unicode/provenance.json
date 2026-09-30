@@ -2,6 +2,13 @@
   "unicodedata2": "18.0.0",
   "python": "3.11.0",
   "unicode_license_url": "https://www.unicode.org/license.txt",
+  "tables": {
+    "src/unicode_data.h": "Unicode 14.0.0 lowercase mappings and alphabetic ranges, extracted with Python 3.11.0 unicodedata",
+    "src/uppercase_data.h": "Unicode 14.0.0 uppercase mappings, extracted with Python 3.11.0 unicodedata",
+    "src/case_data.h": "Unicode 14.0.0 cased and case-ignorable ranges, extracted with Python 3.11.0 unicodedata",
+    "src/tokenize_data.h": "numeric_ranges: Unicode 14.0.0 characters with a Numeric_Type, extracted with Python 3.11.0 unicodedata"
+  },
+  "note": "The tables are frozen; the generators were retired in 0.3.0 and remain in the repository history.",
   "files": {
     "PYTHON-LICENSE": "bef662129c6ebf939116e16bb2be76ced8dc38957fbf55d87e541f97be3f6ed3",
     "UNICODE-LICENSE": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",

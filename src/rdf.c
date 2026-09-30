@@ -2,6 +2,7 @@
  * rdf.c - Turtle parsing and RDF graph operations.
  *
  * Reads RDF terms, indexes triples, and flattens graph values for queries.
+ * craigtrim/mutatoc#1
  */
 
 #include "mc.h"
@@ -441,7 +442,7 @@ static Term object(Parser *p)
 			term_free(&dt);
 		} else
 			t.datatype =
-				NULL; /* RDFLib preserves plain versus explicitly typed strings. */
+				NULL; /* Plain and explicitly typed strings stay distinct. */
 	} else if (isdigit((unsigned char)c) || c == '+' || c == '-' ||
 		   (c == '.' && isdigit((unsigned char)p->p[1]))) {
 		char *w = word(p);
