@@ -4147,28 +4147,6 @@
     "request": {
       "op": "query",
       "interface": "data",
-      "method": "spacy_ner",
-      "args": [],
-      "kwargs": {}
-    },
-    "expected": {}
-  },
-  {
-    "fixture": "contract",
-    "request": {
-      "op": "query",
-      "interface": "data",
-      "method": "spacy_ner_rev",
-      "args": [],
-      "kwargs": {}
-    },
-    "expected": {}
-  },
-  {
-    "fixture": "contract",
-    "request": {
-      "op": "query",
-      "interface": "data",
       "method": "span_keys",
       "args": [],
       "kwargs": {}
@@ -12855,28 +12833,6 @@
         "cat"
       ]
     }
-  },
-  {
-    "fixture": "proper",
-    "request": {
-      "op": "query",
-      "interface": "data",
-      "method": "spacy_ner",
-      "args": [],
-      "kwargs": {}
-    },
-    "expected": {}
-  },
-  {
-    "fixture": "proper",
-    "request": {
-      "op": "query",
-      "interface": "data",
-      "method": "spacy_ner_rev",
-      "args": [],
-      "kwargs": {}
-    },
-    "expected": {}
   },
   {
     "fixture": "proper",
@@ -23385,28 +23341,6 @@
       "kwargs": {}
     },
     "error": "ValueError"
-  },
-  {
-    "fixture": "animals-test",
-    "request": {
-      "op": "query",
-      "interface": "data",
-      "method": "spacy_ner",
-      "args": [],
-      "kwargs": {}
-    },
-    "expected": {}
-  },
-  {
-    "fixture": "animals-test",
-    "request": {
-      "op": "query",
-      "interface": "data",
-      "method": "spacy_ner_rev",
-      "args": [],
-      "kwargs": {}
-    },
-    "expected": {}
   },
   {
     "fixture": "animals-test",
