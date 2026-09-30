@@ -52,12 +52,62 @@ static J *call(mc_engine *e, J *q)
 	return out;
 }
 
+static void indent(Buf *b, int depth)
+{
+	for (int i = 0; i < depth; i++)
+		buf_put(b, "  ");
+}
+
+/*
+ * One member or element per line, indented two spaces per level. Scalars and
+ * keys go through cJSON's printer, which keeps escaping and large integers
+ * exact.
+ */
+static void pretty_value(Buf *b, const J *v, int depth)
+{
+	if (!cJSON_IsArray(v) && !cJSON_IsObject(v)) {
+		char *s = cJSON_PrintUnformatted(v);
+		buf_put(b, s ? s : "null");
+		free(s);
+		return;
+	}
+	int object = cJSON_IsObject(v);
+	if (!v->child) {
+		buf_put(b, object ? "{}" : "[]");
+		return;
+	}
+	buf_put(b, object ? "{\n" : "[\n");
+	EACH(item, v) {
+		indent(b, depth + 1);
+		if (object) {
+			J *key = STR(item->string);
+			char *s = cJSON_PrintUnformatted(key);
+			buf_put(b, s ? s : "\"\"");
+			buf_put(b, ": ");
+			free(s);
+			DEL(key);
+		}
+		pretty_value(b, item, depth + 1);
+		buf_put(b, item->next ? ",\n" : "\n");
+	}
+	indent(b, depth);
+	buf_put(b, object ? "}" : "]");
+}
+
+static char *pretty(const J *v)
+{
+	Buf b = { 0 };
+	pretty_value(&b, v, 0);
+	return buf_take(&b);
+}
+
 static void usage(void)
 {
 	puts("mutatoc " MUTATOC_VERSION "\nUsage:\n"
-	     "  mutatoc --ontology FILE --input-text TEXT [--json] [--live]\n"
+	     "  mutatoc --ontology FILE --input-text TEXT [--json | --jsonf] [--live]\n"
 	     "  mutatoc --ontology FILE --snapshot FILE\n"
 	     "  mutatoc --serve\n  mutatoc --version\n\n"
+	     "--json prints the full result as compact JSON; --jsonf pretty-prints it.\n"
 	     "--serve accepts one JSON request per line and retains the ontology.\n"
 	     "--live uses the reference class-based extraction path.\n"
 	     "--force-cache rebuilds from OWL; this runtime has no implicit disk cache.\n"
@@ -81,7 +131,9 @@ static int run(int argc, char **argv)
 		if (!strcmp(a, "--serve"))
 			serve = 1;
 		else if (!strcmp(a, "--json"))
-			json = 1;
+			json = json ? json : 1;
+		else if (!strcmp(a, "--jsonf"))
+			json = 2;
 		else if (!strcmp(a, "--live"))
 			live = 1;
 		else if (!strcmp(a, "--force-cache"))
@@ -190,8 +242,9 @@ static int run(int argc, char **argv)
 			return 1;
 		}
 		if (json) {
-			char *s = cJSON_PrintUnformatted(r);
-			puts(s);
+			char *s = json == 2 ? pretty(r) :
+					      cJSON_PrintUnformatted(r);
+			puts(s ? s : "");
 			free(s);
 		} else
 			puts(S(GET(r, "text")));
