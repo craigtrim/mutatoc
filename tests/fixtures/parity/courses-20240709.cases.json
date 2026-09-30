@@ -7,64 +7,16 @@
       {
         "id": "5512239401927816148#1",
         "text": "modern ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13014342748077730856#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5512239401927816148,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 13014342748077730856,
-          "head_text": "world_history"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "modern",
-        "stem": "modern"
+        "normal": "modern"
       },
       {
         "id": "13014342748077730856#2",
         "text": "world_history",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx_xxxx",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "13014342748077730856#2",
-        "other": {
-          "i": 2,
-          "idx": 8,
-          "orth": 13014342748077730856,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 13014342748077730856,
-          "head_text": "world_history"
-        },
-        "is_punct": false,
         "x": 7,
         "y": 20,
-        "is_wordnet": false,
-        "normal": "world_history",
-        "stem": "world_histori"
+        "normal": "world_history"
       }
     ],
     "expected_tokens": [
@@ -80,64 +32,16 @@
             {
               "id": "5512239401927816148#1",
               "text": "modern ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "13014342748077730856#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 5512239401927816148,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 13014342748077730856,
-                "head_text": "world_history"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "modern",
-              "stem": "modern"
+              "normal": "modern"
             },
             {
               "id": "13014342748077730856#2",
               "text": "world_history",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx_xxxx",
-              "is_alpha": false,
-              "is_stop": false,
-              "head": "13014342748077730856#2",
-              "other": {
-                "i": 2,
-                "idx": 8,
-                "orth": 13014342748077730856,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 13014342748077730856,
-                "head_text": "world_history"
-              },
-              "is_punct": false,
               "x": 7,
               "y": 20,
-              "is_wordnet": false,
-              "normal": "world_history",
-              "stem": "world_histori"
+              "normal": "world_history"
             }
           ],
           "canon": "modern_world_history",
@@ -149,7 +53,21 @@
         }
       }
     ],
-    "expected_text": "modern_world_history"
+    "expected_text": "modern_world_history",
+    "raw": {
+      "entities": [
+        {
+          "canon": "modern_world_history",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 20,
+          "text": "modern world_history",
+          "confidence": 100
+        }
+      ],
+      "text": "modern_world_history"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_owl_multiword_span.py::TestMutatoAPI::test_swaps_02",
@@ -159,95 +77,23 @@
       {
         "id": "5512239401927816148#1",
         "text": "modern ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6249630248276940353#4",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5512239401927816148,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 6249630248276940353,
-          "head_text": "history"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "modern",
-        "stem": "modern"
+        "normal": "modern"
       },
       {
         "id": "1703489418272052182#3",
         "text": "world ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6249630248276940353#4",
-        "other": {
-          "i": 2,
-          "idx": 8,
-          "orth": 1703489418272052182,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 6249630248276940353,
-          "head_text": "history"
-        },
-        "is_punct": false,
         "x": 7,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "world",
-        "stem": "world"
+        "normal": "world"
       },
       {
         "id": "6249630248276940353#4",
         "text": "history",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6249630248276940353#4",
-        "other": {
-          "i": 4,
-          "idx": 15,
-          "orth": 6249630248276940353,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 6249630248276940353,
-          "head_text": "history"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 20,
-        "is_wordnet": true,
-        "normal": "history",
-        "stem": "histori"
+        "normal": "history"
       }
     ],
     "expected_tokens": [
@@ -263,95 +109,23 @@
             {
               "id": "5512239401927816148#1",
               "text": "modern ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6249630248276940353#4",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 5512239401927816148,
-                "head_i": 4,
-                "head_idx": 15,
-                "head_orth": 6249630248276940353,
-                "head_text": "history"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "modern",
-              "stem": "modern"
+              "normal": "modern"
             },
             {
               "id": "1703489418272052182#3",
               "text": "world ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "compound",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6249630248276940353#4",
-              "other": {
-                "i": 2,
-                "idx": 8,
-                "orth": 1703489418272052182,
-                "head_i": 4,
-                "head_idx": 15,
-                "head_orth": 6249630248276940353,
-                "head_text": "history"
-              },
-              "is_punct": false,
               "x": 7,
               "y": 12,
-              "is_wordnet": true,
-              "normal": "world",
-              "stem": "world"
+              "normal": "world"
             },
             {
               "id": "6249630248276940353#4",
               "text": "history",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6249630248276940353#4",
-              "other": {
-                "i": 4,
-                "idx": 15,
-                "orth": 6249630248276940353,
-                "head_i": 4,
-                "head_idx": 15,
-                "head_orth": 6249630248276940353,
-                "head_text": "history"
-              },
-              "is_punct": false,
               "x": 13,
               "y": 20,
-              "is_wordnet": true,
-              "normal": "history",
-              "stem": "histori"
+              "normal": "history"
             }
           ],
           "canon": "modern_world_history",
@@ -363,7 +137,21 @@
         }
       }
     ],
-    "expected_text": "modern_world_history"
+    "expected_text": "modern_world_history",
+    "raw": {
+      "entities": [
+        {
+          "canon": "modern_world_history",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 20,
+          "text": "modern world history",
+          "confidence": 100
+        }
+      ],
+      "text": "modern_world_history"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_owl_multiword_span.py::TestMutatoAPI::test_swaps_03",
@@ -373,126 +161,30 @@
       {
         "id": "13664501585248103180#1",
         "text": "MODERN ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "XXXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "17308819469015764664#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13664501585248103180,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 17308819469015764664,
-          "head_text": "WORLD"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "modern",
-        "stem": "modern"
+        "normal": "modern"
       },
       {
         "id": "17308819469015764664#3",
         "text": "WORLD ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "",
-        "shape": "XXXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5534863650146696396#6",
-        "other": {
-          "i": 2,
-          "idx": 8,
-          "orth": 17308819469015764664,
-          "head_i": 6,
-          "head_idx": 21,
-          "head_orth": 5534863650146696396,
-          "head_text": "S1"
-        },
-        "is_punct": false,
         "x": 7,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "world",
-        "stem": "world"
+        "normal": "world"
       },
       {
         "id": "12130184092545842617#5",
         "text": "HIST ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "XXXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5534863650146696396#6",
-        "other": {
-          "i": 4,
-          "idx": 15,
-          "orth": 12130184092545842617,
-          "head_i": 6,
-          "head_idx": 21,
-          "head_orth": 5534863650146696396,
-          "head_text": "S1"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 17,
-        "is_wordnet": false,
-        "normal": "hist",
-        "stem": "hist"
+        "normal": "hist"
       },
       {
         "id": "5534863650146696396#6",
         "text": "S1",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xd",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "5534863650146696396#6",
-        "other": {
-          "i": 6,
-          "idx": 21,
-          "orth": 5534863650146696396,
-          "head_i": 6,
-          "head_idx": 21,
-          "head_orth": 5534863650146696396,
-          "head_text": "S1"
-        },
-        "is_punct": false,
         "x": 18,
         "y": 20,
-        "is_wordnet": false,
-        "normal": "s1",
-        "stem": "s1"
+        "normal": "s1"
       }
     ],
     "expected_tokens": [
@@ -508,33 +200,9 @@
             {
               "id": "13664501585248103180#1",
               "text": "MODERN ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "ORG",
-              "shape": "XXXX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "17308819469015764664#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 13664501585248103180,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 17308819469015764664,
-                "head_text": "WORLD"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "modern",
-              "stem": "modern"
+              "normal": "modern"
             },
             {
               "id": "17308819469015764664#3",
@@ -548,64 +216,16 @@
                   {
                     "id": "17308819469015764664#3",
                     "text": "WORLD ",
-                    "tense": "",
-                    "noun_number": "singular",
-                    "verb_form": "",
-                    "sentiment": 0.0,
-                    "pos": "NOUN",
-                    "tag": "NN",
-                    "dep": "compound",
-                    "ent": "",
-                    "shape": "XXXX",
-                    "is_alpha": true,
-                    "is_stop": false,
-                    "head": "5534863650146696396#6",
-                    "other": {
-                      "i": 2,
-                      "idx": 8,
-                      "orth": 17308819469015764664,
-                      "head_i": 6,
-                      "head_idx": 21,
-                      "head_orth": 5534863650146696396,
-                      "head_text": "S1"
-                    },
-                    "is_punct": false,
                     "x": 7,
                     "y": 12,
-                    "is_wordnet": true,
-                    "normal": "world",
-                    "stem": "world"
+                    "normal": "world"
                   },
                   {
                     "id": "12130184092545842617#5",
                     "text": "HIST ",
-                    "tense": "",
-                    "noun_number": "singular",
-                    "verb_form": "",
-                    "sentiment": 0.0,
-                    "pos": "PROPN",
-                    "tag": "NNP",
-                    "dep": "compound",
-                    "ent": "ORG",
-                    "shape": "XXXX",
-                    "is_alpha": true,
-                    "is_stop": false,
-                    "head": "5534863650146696396#6",
-                    "other": {
-                      "i": 4,
-                      "idx": 15,
-                      "orth": 12130184092545842617,
-                      "head_i": 6,
-                      "head_idx": 21,
-                      "head_orth": 5534863650146696396,
-                      "head_text": "S1"
-                    },
-                    "is_punct": false,
                     "x": 13,
                     "y": 17,
-                    "is_wordnet": false,
-                    "normal": "hist",
-                    "stem": "hist"
+                    "normal": "hist"
                   }
                 ],
                 "canon": "world_history",
@@ -628,36 +248,26 @@
       {
         "id": "5534863650146696396#6",
         "text": "S1",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xd",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "5534863650146696396#6",
-        "other": {
-          "i": 6,
-          "idx": 21,
-          "orth": 5534863650146696396,
-          "head_i": 6,
-          "head_idx": 21,
-          "head_orth": 5534863650146696396,
-          "head_text": "S1"
-        },
-        "is_punct": false,
         "x": 18,
         "y": 20,
-        "is_wordnet": false,
-        "normal": "s1",
-        "stem": "s1"
+        "normal": "s1"
       }
     ],
-    "expected_text": "modern_world_history S1"
+    "expected_text": "modern_world_history S1",
+    "raw": {
+      "entities": [
+        {
+          "canon": "modern_world_history",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 17,
+          "text": "MODERN WORLD HIST",
+          "confidence": 100
+        }
+      ],
+      "text": "modern_world_history S1"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_owl_multiword_span.py::TestMutatoAPI::test_swaps_04",
@@ -667,376 +277,88 @@
       {
         "id": "16037325823156266367#1",
         "text": "for ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADP",
-        "tag": "IN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "16037325823156266367#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 16037325823156266367,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 16037325823156266367,
-          "head_text": "for"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "for",
-        "stem": "for"
+        "normal": "for"
       },
       {
         "id": "16562721716392411175#3",
         "text": "Input ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "17062258109916561512#4",
-        "other": {
-          "i": 2,
-          "idx": 5,
-          "orth": 16562721716392411175,
-          "head_i": 4,
-          "head_idx": 12,
-          "head_orth": 17062258109916561512,
-          "head_text": "Text"
-        },
-        "is_punct": false,
         "x": 4,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "input",
-        "stem": "input"
+        "normal": "input"
       },
       {
         "id": "17062258109916561512#4",
         "text": "Text",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "pobj",
-        "ent": "",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "16037325823156266367#0",
-        "other": {
-          "i": 4,
-          "idx": 12,
-          "orth": 17062258109916561512,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 16037325823156266367,
-          "head_text": "for"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 14,
-        "is_wordnet": true,
-        "normal": "text",
-        "stem": "text"
+        "normal": "text"
       },
       {
         "id": "11532473245541075862#6",
         "text": ": ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PUNCT",
-        "tag": ":",
-        "dep": "punct",
-        "ent": "",
-        "shape": ":",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "17062258109916561512#4",
-        "other": {
-          "i": 5,
-          "idx": 17,
-          "orth": 11532473245541075862,
-          "head_i": 4,
-          "head_idx": 12,
-          "head_orth": 17062258109916561512,
-          "head_text": "Text"
-        },
-        "is_punct": false,
         "x": 14,
         "y": 15,
-        "is_wordnet": false,
-        "normal": ":",
-        "stem": ":"
+        "normal": ":"
       },
       {
         "id": "13664501585248103180#8",
         "text": "MODERN ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "XXXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "17308819469015764664#9",
-        "other": {
-          "i": 7,
-          "idx": 20,
-          "orth": 13664501585248103180,
-          "head_i": 9,
-          "head_idx": 28,
-          "head_orth": 17308819469015764664,
-          "head_text": "WORLD"
-        },
-        "is_punct": false,
         "x": 16,
         "y": 22,
-        "is_wordnet": true,
-        "normal": "modern",
-        "stem": "modern"
+        "normal": "modern"
       },
       {
         "id": "17308819469015764664#10",
         "text": "WORLD ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "",
-        "shape": "XXXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5534863650146696396#13",
-        "other": {
-          "i": 9,
-          "idx": 28,
-          "orth": 17308819469015764664,
-          "head_i": 13,
-          "head_idx": 41,
-          "head_orth": 5534863650146696396,
-          "head_text": "S1"
-        },
-        "is_punct": false,
         "x": 23,
         "y": 28,
-        "is_wordnet": true,
-        "normal": "world",
-        "stem": "world"
+        "normal": "world"
       },
       {
         "id": "12130184092545842617#12",
         "text": "HIST ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "XXXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5534863650146696396#13",
-        "other": {
-          "i": 11,
-          "idx": 35,
-          "orth": 12130184092545842617,
-          "head_i": 13,
-          "head_idx": 41,
-          "head_orth": 5534863650146696396,
-          "head_text": "S1"
-        },
-        "is_punct": false,
         "x": 29,
         "y": 33,
-        "is_wordnet": false,
-        "normal": "hist",
-        "stem": "hist"
+        "normal": "hist"
       },
       {
         "id": "5534863650146696396#13",
         "text": "S1",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "appos",
-        "ent": "",
-        "shape": "Xd",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "17062258109916561512#4",
-        "other": {
-          "i": 13,
-          "idx": 41,
-          "orth": 5534863650146696396,
-          "head_i": 4,
-          "head_idx": 12,
-          "head_orth": 17062258109916561512,
-          "head_text": "Text"
-        },
-        "is_punct": false,
         "x": 34,
         "y": 36,
-        "is_wordnet": false,
-        "normal": "s1",
-        "stem": "s1"
+        "normal": "s1"
       }
     ],
     "expected_tokens": [
       {
         "id": "16037325823156266367#1",
         "text": "for ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADP",
-        "tag": "IN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "16037325823156266367#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 16037325823156266367,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 16037325823156266367,
-          "head_text": "for"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "for",
-        "stem": "for"
+        "normal": "for"
       },
       {
         "id": "16562721716392411175#3",
         "text": "Input ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "17062258109916561512#4",
-        "other": {
-          "i": 2,
-          "idx": 5,
-          "orth": 16562721716392411175,
-          "head_i": 4,
-          "head_idx": 12,
-          "head_orth": 17062258109916561512,
-          "head_text": "Text"
-        },
-        "is_punct": false,
         "x": 4,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "input",
-        "stem": "input"
+        "normal": "input"
       },
       {
         "id": "17062258109916561512#4",
         "text": "Text",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "pobj",
-        "ent": "",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "16037325823156266367#0",
-        "other": {
-          "i": 4,
-          "idx": 12,
-          "orth": 17062258109916561512,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 16037325823156266367,
-          "head_text": "for"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 14,
-        "is_wordnet": true,
-        "normal": "text",
-        "stem": "text"
+        "normal": "text"
       },
       {
         "id": "11532473245541075862#6",
         "text": ": ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PUNCT",
-        "tag": ":",
-        "dep": "punct",
-        "ent": "",
-        "shape": ":",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "17062258109916561512#4",
-        "other": {
-          "i": 5,
-          "idx": 17,
-          "orth": 11532473245541075862,
-          "head_i": 4,
-          "head_idx": 12,
-          "head_orth": 17062258109916561512,
-          "head_text": "Text"
-        },
-        "is_punct": false,
         "x": 14,
         "y": 15,
-        "is_wordnet": false,
-        "normal": ":",
-        "stem": ":"
+        "normal": ":"
       },
       {
         "id": "13664501585248103180#8",
@@ -1050,33 +372,9 @@
             {
               "id": "13664501585248103180#8",
               "text": "MODERN ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "ORG",
-              "shape": "XXXX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "17308819469015764664#9",
-              "other": {
-                "i": 7,
-                "idx": 20,
-                "orth": 13664501585248103180,
-                "head_i": 9,
-                "head_idx": 28,
-                "head_orth": 17308819469015764664,
-                "head_text": "WORLD"
-              },
-              "is_punct": false,
               "x": 16,
               "y": 22,
-              "is_wordnet": true,
-              "normal": "modern",
-              "stem": "modern"
+              "normal": "modern"
             },
             {
               "id": "17308819469015764664#10",
@@ -1090,64 +388,16 @@
                   {
                     "id": "17308819469015764664#10",
                     "text": "WORLD ",
-                    "tense": "",
-                    "noun_number": "singular",
-                    "verb_form": "",
-                    "sentiment": 0.0,
-                    "pos": "NOUN",
-                    "tag": "NN",
-                    "dep": "compound",
-                    "ent": "",
-                    "shape": "XXXX",
-                    "is_alpha": true,
-                    "is_stop": false,
-                    "head": "5534863650146696396#13",
-                    "other": {
-                      "i": 9,
-                      "idx": 28,
-                      "orth": 17308819469015764664,
-                      "head_i": 13,
-                      "head_idx": 41,
-                      "head_orth": 5534863650146696396,
-                      "head_text": "S1"
-                    },
-                    "is_punct": false,
                     "x": 23,
                     "y": 28,
-                    "is_wordnet": true,
-                    "normal": "world",
-                    "stem": "world"
+                    "normal": "world"
                   },
                   {
                     "id": "12130184092545842617#12",
                     "text": "HIST ",
-                    "tense": "",
-                    "noun_number": "singular",
-                    "verb_form": "",
-                    "sentiment": 0.0,
-                    "pos": "PROPN",
-                    "tag": "NNP",
-                    "dep": "compound",
-                    "ent": "ORG",
-                    "shape": "XXXX",
-                    "is_alpha": true,
-                    "is_stop": false,
-                    "head": "5534863650146696396#13",
-                    "other": {
-                      "i": 11,
-                      "idx": 35,
-                      "orth": 12130184092545842617,
-                      "head_i": 13,
-                      "head_idx": 41,
-                      "head_orth": 5534863650146696396,
-                      "head_text": "S1"
-                    },
-                    "is_punct": false,
                     "x": 29,
                     "y": 33,
-                    "is_wordnet": false,
-                    "normal": "hist",
-                    "stem": "hist"
+                    "normal": "hist"
                   }
                 ],
                 "canon": "world_history",
@@ -1170,35 +420,25 @@
       {
         "id": "5534863650146696396#13",
         "text": "S1",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "appos",
-        "ent": "",
-        "shape": "Xd",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "17062258109916561512#4",
-        "other": {
-          "i": 13,
-          "idx": 41,
-          "orth": 5534863650146696396,
-          "head_i": 4,
-          "head_idx": 12,
-          "head_orth": 17062258109916561512,
-          "head_text": "Text"
-        },
-        "is_punct": false,
         "x": 34,
         "y": 36,
-        "is_wordnet": false,
-        "normal": "s1",
-        "stem": "s1"
+        "normal": "s1"
       }
     ],
-    "expected_text": "for Input Text : modern_world_history S1"
+    "expected_text": "for Input Text : modern_world_history S1",
+    "raw": {
+      "entities": [
+        {
+          "canon": "modern_world_history",
+          "type": "exact",
+          "ner": null,
+          "x": 16,
+          "y": 33,
+          "text": "MODERN WORLD HIST",
+          "confidence": 100
+        }
+      ],
+      "text": "for Input Text : modern_world_history S1"
+    }
   }
 ]

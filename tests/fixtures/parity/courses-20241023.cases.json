@@ -7,126 +7,30 @@
       {
         "id": "13899507030447257129#1",
         "text": "Research ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5295636970541427783#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13899507030447257129,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 5295636970541427783,
-          "head_text": "Methods"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "research",
-        "stem": "research"
+        "normal": "research"
       },
       {
         "id": "5295636970541427783#3",
         "text": "Methods ",
-        "tense": "",
-        "noun_number": "plural",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNPS",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5295636970541427783#2",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 5295636970541427783,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 5295636970541427783,
-          "head_text": "Methods"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "methods",
-        "stem": "method"
+        "normal": "methods"
       },
       {
         "id": "3002984154512732771#5",
         "text": "in ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADP",
-        "tag": "IN",
-        "dep": "prep",
-        "ent": "",
-        "shape": "xx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "5295636970541427783#2",
-        "other": {
-          "i": 4,
-          "idx": 19,
-          "orth": 3002984154512732771,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 5295636970541427783,
-          "head_text": "Methods"
-        },
-        "is_punct": false,
         "x": 17,
         "y": 19,
-        "is_wordnet": true,
-        "normal": "in",
-        "stem": "in"
+        "normal": "in"
       },
       {
         "id": "5505243898298316554#6",
         "text": "Statistics",
-        "tense": "",
-        "noun_number": "plural",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NNS",
-        "dep": "pobj",
-        "ent": "ORG",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "3002984154512732771#4",
-        "other": {
-          "i": 6,
-          "idx": 23,
-          "orth": 5505243898298316554,
-          "head_i": 4,
-          "head_idx": 19,
-          "head_orth": 3002984154512732771,
-          "head_text": "in"
-        },
-        "is_punct": false,
         "x": 20,
         "y": 30,
-        "is_wordnet": true,
-        "normal": "statistics",
-        "stem": "statistic"
+        "normal": "statistics"
       }
     ],
     "expected_tokens": [
@@ -151,64 +55,16 @@
                   {
                     "id": "13899507030447257129#1",
                     "text": "Research ",
-                    "tense": "",
-                    "noun_number": "singular",
-                    "verb_form": "",
-                    "sentiment": 0.0,
-                    "pos": "NOUN",
-                    "tag": "NN",
-                    "dep": "compound",
-                    "ent": "",
-                    "shape": "Xxxxx",
-                    "is_alpha": true,
-                    "is_stop": false,
-                    "head": "5295636970541427783#2",
-                    "other": {
-                      "i": 0,
-                      "idx": 0,
-                      "orth": 13899507030447257129,
-                      "head_i": 2,
-                      "head_idx": 10,
-                      "head_orth": 5295636970541427783,
-                      "head_text": "Methods"
-                    },
-                    "is_punct": false,
                     "x": 0,
                     "y": 8,
-                    "is_wordnet": true,
-                    "normal": "research",
-                    "stem": "research"
+                    "normal": "research"
                   },
                   {
                     "id": "5295636970541427783#3",
                     "text": "Methods ",
-                    "tense": "",
-                    "noun_number": "plural",
-                    "verb_form": "",
-                    "sentiment": 0.0,
-                    "pos": "PROPN",
-                    "tag": "NNPS",
-                    "dep": "ROOT",
-                    "ent": "",
-                    "shape": "Xxxxx",
-                    "is_alpha": true,
-                    "is_stop": false,
-                    "head": "5295636970541427783#2",
-                    "other": {
-                      "i": 2,
-                      "idx": 10,
-                      "orth": 5295636970541427783,
-                      "head_i": 2,
-                      "head_idx": 10,
-                      "head_orth": 5295636970541427783,
-                      "head_text": "Methods"
-                    },
-                    "is_punct": false,
                     "x": 9,
                     "y": 16,
-                    "is_wordnet": true,
-                    "normal": "methods",
-                    "stem": "method"
+                    "normal": "methods"
                   }
                 ],
                 "canon": "research_methods",
@@ -222,33 +78,9 @@
             {
               "id": "3002984154512732771#5",
               "text": "in ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADP",
-              "tag": "IN",
-              "dep": "prep",
-              "ent": "",
-              "shape": "xx",
-              "is_alpha": true,
-              "is_stop": true,
-              "head": "5295636970541427783#2",
-              "other": {
-                "i": 4,
-                "idx": 19,
-                "orth": 3002984154512732771,
-                "head_i": 2,
-                "head_idx": 10,
-                "head_orth": 5295636970541427783,
-                "head_text": "Methods"
-              },
-              "is_punct": false,
               "x": 17,
               "y": 19,
-              "is_wordnet": true,
-              "normal": "in",
-              "stem": "in"
+              "normal": "in"
             },
             {
               "id": "5505243898298316554#6",
@@ -262,33 +94,9 @@
                   {
                     "id": "5505243898298316554#6",
                     "text": "Statistics",
-                    "tense": "",
-                    "noun_number": "plural",
-                    "verb_form": "",
-                    "sentiment": 0.0,
-                    "pos": "NOUN",
-                    "tag": "NNS",
-                    "dep": "pobj",
-                    "ent": "ORG",
-                    "shape": "Xxxxx",
-                    "is_alpha": true,
-                    "is_stop": false,
-                    "head": "3002984154512732771#4",
-                    "other": {
-                      "i": 6,
-                      "idx": 23,
-                      "orth": 5505243898298316554,
-                      "head_i": 4,
-                      "head_idx": 19,
-                      "head_orth": 3002984154512732771,
-                      "head_text": "in"
-                    },
-                    "is_punct": false,
                     "x": 20,
                     "y": 30,
-                    "is_wordnet": true,
-                    "normal": "statistics",
-                    "stem": "statistic"
+                    "normal": "statistics"
                   }
                 ],
                 "canon": "statistics",
@@ -309,6 +117,20 @@
         }
       }
     ],
-    "expected_text": "research_methods_statistics"
+    "expected_text": "research_methods_statistics",
+    "raw": {
+      "entities": [
+        {
+          "canon": "research_methods_statistics",
+          "type": "spans",
+          "ner": null,
+          "x": 0,
+          "y": 30,
+          "text": "Research Methods in Statistics",
+          "confidence": 100
+        }
+      ],
+      "text": "research_methods_statistics"
+    }
   }
 ]
