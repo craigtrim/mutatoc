@@ -31,11 +31,11 @@
     {
       "platform": "Linux x64, Ubuntu 20.04 under WSL",
       "compiler": "GCC 9.4",
-      "configuration": "Debug, AddressSanitizer and UndefinedBehaviorSanitizer, leak detection",
+      "configuration": "Debug, AddressSanitizer and UndefinedBehaviorSanitizer (non-recoverable), leak detection, LF fixtures",
       "ctest_passed": 11,
       "ctest_failed": 0,
       "sanitizer_reports": 0,
-      "elapsed_seconds": 774.96
+      "elapsed_seconds": 679.45
     }
   ],
   "suites": {
