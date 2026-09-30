@@ -1,3 +1,4 @@
+# Native build and full test suite; nothing but CMake and a C compiler (craigtrim/mutatoc#1).
 name: C port compatibility
 on: [push, pull_request]
 jobs:
@@ -9,44 +10,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          repository: craigtrim/mutato
-          ref: da6bfa5df80b208a3271e111f2921ad281d0da98
-          path: .reference/upstream
-          sparse-checkout: resources/lib
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Install pinned preprocessing
-        run: python scripts/setup_spacy.py --with-sparql --model-archive .reference/upstream/resources/lib/en_core_web_sm-3.8.0.tar.gz
       - name: Configure and build
-        shell: bash
         run: |
-          if [ "$RUNNER_OS" = Windows ]; then
-            py="$PWD/.runtime/Scripts/python.exe"
-          else
-            py="$PWD/.runtime/bin/python"
-          fi
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DMUTATOC_TEST_PYTHON="$py"
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
-      - name: Test native engine and full spaCy bridge
+      - name: Test
         run: ctest --test-dir build -C Release --output-on-failure
-      - name: Run all upstream assertions
-        shell: bash
+  sanitizers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure and build with address and undefined-behavior sanitizers
         run: |
-          if [ "$RUNNER_OS" = Windows ]; then
-            py="$PWD/.runtime/Scripts/python.exe"
-            export MUTATOC_EXE="$PWD/build/Release/mutatoc.exe"
-          else
-            py="$PWD/.runtime/bin/python"
-            export MUTATOC_EXE="$PWD/build/mutatoc"
-          fi
-          "$py" -m pip install -r tests/upstream/requirements.txt
-          "$py" scripts/run_upstream.py
-          "$py" scripts/run_lingpatlab_upstream.py --exe "$MUTATOC_EXE"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: validation-${{ matrix.os }}
-          path: artifacts/
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DMUTATOC_SANITIZE=ON
+          cmake --build build
+      - name: Test
+        env:
+          ASAN_OPTIONS: detect_leaks=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: ctest --test-dir build --output-on-failure --timeout 3600

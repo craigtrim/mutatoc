@@ -7,33 +7,9 @@
       {
         "id": "6687196400677774548#0",
         "text": "Geometry",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6687196400677774548#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 6687196400677774548,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 6687196400677774548,
-          "head_text": "Geometry"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "geometry",
-        "stem": "geometri"
+        "normal": "geometry"
       }
     ],
     "expected_tokens": [
@@ -49,33 +25,9 @@
             {
               "id": "6687196400677774548#0",
               "text": "Geometry",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6687196400677774548#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 6687196400677774548,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 6687196400677774548,
-                "head_text": "Geometry"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "geometry",
-              "stem": "geometri"
+              "normal": "geometry"
             }
           ],
           "canon": "geometry",
@@ -87,7 +39,21 @@
         }
       }
     ],
-    "expected_text": "geometry"
+    "expected_text": "geometry",
+    "raw": {
+      "entities": [
+        {
+          "canon": "geometry",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 8,
+          "text": "Geometry",
+          "confidence": 100
+        }
+      ],
+      "text": "geometry"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_parse_empty_string_returns_empty",
@@ -95,7 +61,11 @@
     "ctr": 0,
     "tokens": [],
     "expected_tokens": [],
-    "expected_text": ""
+    "expected_text": "",
+    "raw": {
+      "entities": [],
+      "text": ""
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_case_variants_normalise_to_same_entity",
@@ -105,33 +75,9 @@
       {
         "id": "13919511831116069417#0",
         "text": "GEOMETRY",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "XXXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13919511831116069417#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13919511831116069417,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 13919511831116069417,
-          "head_text": "GEOMETRY"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "geometry",
-        "stem": "geometri"
+        "normal": "geometry"
       }
     ],
     "expected_tokens": [
@@ -147,33 +93,9 @@
             {
               "id": "13919511831116069417#0",
               "text": "GEOMETRY",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "XXXX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "13919511831116069417#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 13919511831116069417,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 13919511831116069417,
-                "head_text": "GEOMETRY"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "geometry",
-              "stem": "geometri"
+              "normal": "geometry"
             }
           ],
           "canon": "geometry",
@@ -185,7 +107,21 @@
         }
       }
     ],
-    "expected_text": "geometry"
+    "expected_text": "geometry",
+    "raw": {
+      "entities": [
+        {
+          "canon": "geometry",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 8,
+          "text": "GEOMETRY",
+          "confidence": 100
+        }
+      ],
+      "text": "geometry"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_anova_normalises_to_canonical",
@@ -195,33 +131,9 @@
       {
         "id": "16883992814799797752#0",
         "text": "anova",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "NORP",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "16883992814799797752#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 16883992814799797752,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 16883992814799797752,
-          "head_text": "anova"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "anova",
-        "stem": "anova"
+        "normal": "anova"
       }
     ],
     "expected_tokens": [
@@ -237,33 +149,9 @@
             {
               "id": "16883992814799797752#0",
               "text": "anova",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "NORP",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "16883992814799797752#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 16883992814799797752,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 16883992814799797752,
-                "head_text": "anova"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "anova",
-              "stem": "anova"
+              "normal": "anova"
             }
           ],
           "canon": "anova",
@@ -275,7 +163,21 @@
         }
       }
     ],
-    "expected_text": "anova"
+    "expected_text": "anova",
+    "raw": {
+      "entities": [
+        {
+          "canon": "anova",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "anova",
+          "confidence": 100
+        }
+      ],
+      "text": "anova"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_inflection_normalises_to_canonical",
@@ -285,33 +187,9 @@
       {
         "id": "1731388310215343099#0",
         "text": "inflection",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1731388310215343099#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 1731388310215343099,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 1731388310215343099,
-          "head_text": "inflection"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 10,
-        "is_wordnet": true,
-        "normal": "inflection",
-        "stem": "inflection"
+        "normal": "inflection"
       }
     ],
     "expected_tokens": [
@@ -327,33 +205,9 @@
             {
               "id": "1731388310215343099#0",
               "text": "inflection",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1731388310215343099#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 1731388310215343099,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 1731388310215343099,
-                "head_text": "inflection"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 10,
-              "is_wordnet": true,
-              "normal": "inflection",
-              "stem": "inflection"
+              "normal": "inflection"
             }
           ],
           "canon": "inflection",
@@ -365,7 +219,21 @@
         }
       }
     ],
-    "expected_text": "inflection"
+    "expected_text": "inflection",
+    "raw": {
+      "entities": [
+        {
+          "canon": "inflection",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 10,
+          "text": "inflection",
+          "confidence": 100
+        }
+      ],
+      "text": "inflection"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_owl.py::TestOntologyParserFromOwl::test_abstract_algebra_normalises",
@@ -375,64 +243,16 @@
       {
         "id": "2999350356831612692#1",
         "text": "abstract ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2733592882812761714#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 2999350356831612692,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 2733592882812761714,
-          "head_text": "algebra"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "abstract",
-        "stem": "abstract"
+        "normal": "abstract"
       },
       {
         "id": "2733592882812761714#2",
         "text": "algebra",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2733592882812761714#2",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 2733592882812761714,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 2733592882812761714,
-          "head_text": "algebra"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "algebra",
-        "stem": "algebra"
+        "normal": "algebra"
       }
     ],
     "expected_tokens": [
@@ -448,64 +268,16 @@
             {
               "id": "2999350356831612692#1",
               "text": "abstract ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2733592882812761714#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 2999350356831612692,
-                "head_i": 2,
-                "head_idx": 10,
-                "head_orth": 2733592882812761714,
-                "head_text": "algebra"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "abstract",
-              "stem": "abstract"
+              "normal": "abstract"
             },
             {
               "id": "2733592882812761714#2",
               "text": "algebra",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2733592882812761714#2",
-              "other": {
-                "i": 2,
-                "idx": 10,
-                "orth": 2733592882812761714,
-                "head_i": 2,
-                "head_idx": 10,
-                "head_orth": 2733592882812761714,
-                "head_text": "algebra"
-              },
-              "is_punct": false,
               "x": 9,
               "y": 16,
-              "is_wordnet": true,
-              "normal": "algebra",
-              "stem": "algebra"
+              "normal": "algebra"
             }
           ],
           "canon": "abstract_algebra",
@@ -517,7 +289,21 @@
         }
       }
     ],
-    "expected_text": "abstract_algebra"
+    "expected_text": "abstract_algebra",
+    "raw": {
+      "entities": [
+        {
+          "canon": "abstract_algebra",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 16,
+          "text": "abstract algebra",
+          "confidence": 100
+        }
+      ],
+      "text": "abstract_algebra"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_abnormal_psychology_normalises",
@@ -527,64 +313,16 @@
       {
         "id": "15870133002299861379#1",
         "text": "abnormal ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11678413194777518829#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 15870133002299861379,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 11678413194777518829,
-          "head_text": "psychology"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "abnormal",
-        "stem": "abnorm"
+        "normal": "abnormal"
       },
       {
         "id": "11678413194777518829#2",
         "text": "psychology",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11678413194777518829#2",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 11678413194777518829,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 11678413194777518829,
-          "head_text": "psychology"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 19,
-        "is_wordnet": true,
-        "normal": "psychology",
-        "stem": "psychologi"
+        "normal": "psychology"
       }
     ],
     "expected_tokens": [
@@ -600,64 +338,16 @@
             {
               "id": "15870133002299861379#1",
               "text": "abnormal ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "11678413194777518829#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 15870133002299861379,
-                "head_i": 2,
-                "head_idx": 10,
-                "head_orth": 11678413194777518829,
-                "head_text": "psychology"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "abnormal",
-              "stem": "abnorm"
+              "normal": "abnormal"
             },
             {
               "id": "11678413194777518829#2",
               "text": "psychology",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "11678413194777518829#2",
-              "other": {
-                "i": 2,
-                "idx": 10,
-                "orth": 11678413194777518829,
-                "head_i": 2,
-                "head_idx": 10,
-                "head_orth": 11678413194777518829,
-                "head_text": "psychology"
-              },
-              "is_punct": false,
               "x": 9,
               "y": 19,
-              "is_wordnet": true,
-              "normal": "psychology",
-              "stem": "psychologi"
+              "normal": "psychology"
             }
           ],
           "canon": "abnormal_psychology",
@@ -669,7 +359,21 @@
         }
       }
     ],
-    "expected_text": "abnormal_psychology"
+    "expected_text": "abnormal_psychology",
+    "raw": {
+      "entities": [
+        {
+          "canon": "abnormal_psychology",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 19,
+          "text": "abnormal psychology",
+          "confidence": 100
+        }
+      ],
+      "text": "abnormal_psychology"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_academic_english_normalises",
@@ -679,64 +383,16 @@
       {
         "id": "108522058314224597#1",
         "text": "academic ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "15664069018857731591#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 108522058314224597,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 15664069018857731591,
-          "head_text": "english"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "academic",
-        "stem": "academ"
+        "normal": "academic"
       },
       {
         "id": "15664069018857731591#2",
         "text": "english",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "LANGUAGE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "15664069018857731591#2",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 15664069018857731591,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 15664069018857731591,
-          "head_text": "english"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "english",
-        "stem": "english"
+        "normal": "english"
       }
     ],
     "expected_tokens": [
@@ -752,64 +408,16 @@
             {
               "id": "108522058314224597#1",
               "text": "academic ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "15664069018857731591#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 108522058314224597,
-                "head_i": 2,
-                "head_idx": 10,
-                "head_orth": 15664069018857731591,
-                "head_text": "english"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "academic",
-              "stem": "academ"
+              "normal": "academic"
             },
             {
               "id": "15664069018857731591#2",
               "text": "english",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "LANGUAGE",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "15664069018857731591#2",
-              "other": {
-                "i": 2,
-                "idx": 10,
-                "orth": 15664069018857731591,
-                "head_i": 2,
-                "head_idx": 10,
-                "head_orth": 15664069018857731591,
-                "head_text": "english"
-              },
-              "is_punct": false,
               "x": 9,
               "y": 16,
-              "is_wordnet": true,
-              "normal": "english",
-              "stem": "english"
+              "normal": "english"
             }
           ],
           "canon": "academic_english",
@@ -821,7 +429,21 @@
         }
       }
     ],
-    "expected_text": "academic_english"
+    "expected_text": "academic_english",
+    "raw": {
+      "entities": [
+        {
+          "canon": "academic_english",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 16,
+          "text": "academic english",
+          "confidence": 100
+        }
+      ],
+      "text": "academic_english"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_mixed_sentence_preserves_unmatched_tokens",
@@ -831,190 +453,46 @@
       {
         "id": "4690420944186131903#1",
         "text": "I ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4690420944186131903,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 1,
-        "is_wordnet": false,
-        "normal": "i",
-        "stem": "i"
+        "normal": "i"
       },
       {
         "id": "8996416285431871446#3",
         "text": "studied ",
-        "tense": "past",
-        "noun_number": "",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBD",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 2,
-          "idx": 3,
-          "orth": 8996416285431871446,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 2,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "studied",
-        "stem": "studi"
+        "normal": "studied"
       },
       {
         "id": "6687196400677774548#5",
         "text": "Geometry ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "dobj",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 4,
-          "idx": 12,
-          "orth": 6687196400677774548,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 18,
-        "is_wordnet": true,
-        "normal": "geometry",
-        "stem": "geometri"
+        "normal": "geometry"
       },
       {
         "id": "11042482332948150395#6",
         "text": "today",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "npadvmod",
-        "ent": "DATE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 6,
-          "idx": 22,
-          "orth": 11042482332948150395,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 19,
         "y": 24,
-        "is_wordnet": true,
-        "normal": "today",
-        "stem": "todai"
+        "normal": "today"
       }
     ],
     "expected_tokens": [
       {
         "id": "4690420944186131903#1",
         "text": "I ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4690420944186131903,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 1,
-        "is_wordnet": false,
-        "normal": "i",
-        "stem": "i"
+        "normal": "i"
       },
       {
         "id": "8996416285431871446#3",
         "text": "studied ",
-        "tense": "past",
-        "noun_number": "",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBD",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 2,
-          "idx": 3,
-          "orth": 8996416285431871446,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 2,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "studied",
-        "stem": "studi"
+        "normal": "studied"
       },
       {
         "id": "6687196400677774548#5",
@@ -1028,33 +506,9 @@
             {
               "id": "6687196400677774548#5",
               "text": "Geometry ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "dobj",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "8996416285431871446#2",
-              "other": {
-                "i": 4,
-                "idx": 12,
-                "orth": 6687196400677774548,
-                "head_i": 2,
-                "head_idx": 3,
-                "head_orth": 8996416285431871446,
-                "head_text": "studied"
-              },
-              "is_punct": false,
               "x": 10,
               "y": 18,
-              "is_wordnet": true,
-              "normal": "geometry",
-              "stem": "geometri"
+              "normal": "geometry"
             }
           ],
           "canon": "geometry",
@@ -1068,36 +522,26 @@
       {
         "id": "11042482332948150395#6",
         "text": "today",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "npadvmod",
-        "ent": "DATE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 6,
-          "idx": 22,
-          "orth": 11042482332948150395,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 19,
         "y": 24,
-        "is_wordnet": true,
-        "normal": "today",
-        "stem": "todai"
+        "normal": "today"
       }
     ],
-    "expected_text": "I studied geometry today"
+    "expected_text": "I studied geometry today",
+    "raw": {
+      "entities": [
+        {
+          "canon": "geometry",
+          "type": "exact",
+          "ner": null,
+          "x": 10,
+          "y": 18,
+          "text": "Geometry",
+          "confidence": 100
+        }
+      ],
+      "text": "I studied geometry today"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_mixed_sentence_with_multiword",
@@ -1107,252 +551,60 @@
       {
         "id": "4690420944186131903#1",
         "text": "I ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "1524062747651706878#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4690420944186131903,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 1524062747651706878,
-          "head_text": "took"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 1,
-        "is_wordnet": false,
-        "normal": "i",
-        "stem": "i"
+        "normal": "i"
       },
       {
         "id": "1524062747651706878#3",
         "text": "took ",
-        "tense": "past",
-        "noun_number": "",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBD",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1524062747651706878#2",
-        "other": {
-          "i": 2,
-          "idx": 3,
-          "orth": 1524062747651706878,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 1524062747651706878,
-          "head_text": "took"
-        },
-        "is_punct": false,
         "x": 2,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "took",
-        "stem": "took"
+        "normal": "took"
       },
       {
         "id": "2999350356831612692#5",
         "text": "abstract ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2733592882812761714#6",
-        "other": {
-          "i": 4,
-          "idx": 9,
-          "orth": 2999350356831612692,
-          "head_i": 6,
-          "head_idx": 19,
-          "head_orth": 2733592882812761714,
-          "head_text": "algebra"
-        },
-        "is_punct": false,
         "x": 7,
         "y": 15,
-        "is_wordnet": true,
-        "normal": "abstract",
-        "stem": "abstract"
+        "normal": "abstract"
       },
       {
         "id": "2733592882812761714#7",
         "text": "algebra ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "dobj",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1524062747651706878#2",
-        "other": {
-          "i": 6,
-          "idx": 19,
-          "orth": 2733592882812761714,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 1524062747651706878,
-          "head_text": "took"
-        },
-        "is_punct": false,
         "x": 16,
         "y": 23,
-        "is_wordnet": true,
-        "normal": "algebra",
-        "stem": "algebra"
+        "normal": "algebra"
       },
       {
         "id": "10321518907502812892#9",
         "text": "last ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "DATE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "14889849580704678361#10",
-        "other": {
-          "i": 8,
-          "idx": 28,
-          "orth": 10321518907502812892,
-          "head_i": 10,
-          "head_idx": 34,
-          "head_orth": 14889849580704678361,
-          "head_text": "year"
-        },
-        "is_punct": false,
         "x": 24,
         "y": 28,
-        "is_wordnet": true,
-        "normal": "last",
-        "stem": "last"
+        "normal": "last"
       },
       {
         "id": "14889849580704678361#10",
         "text": "year",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "npadvmod",
-        "ent": "DATE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1524062747651706878#2",
-        "other": {
-          "i": 10,
-          "idx": 34,
-          "orth": 14889849580704678361,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 1524062747651706878,
-          "head_text": "took"
-        },
-        "is_punct": false,
         "x": 29,
         "y": 33,
-        "is_wordnet": true,
-        "normal": "year",
-        "stem": "year"
+        "normal": "year"
       }
     ],
     "expected_tokens": [
       {
         "id": "4690420944186131903#1",
         "text": "I ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "1524062747651706878#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4690420944186131903,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 1524062747651706878,
-          "head_text": "took"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 1,
-        "is_wordnet": false,
-        "normal": "i",
-        "stem": "i"
+        "normal": "i"
       },
       {
         "id": "1524062747651706878#3",
         "text": "took ",
-        "tense": "past",
-        "noun_number": "",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBD",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1524062747651706878#2",
-        "other": {
-          "i": 2,
-          "idx": 3,
-          "orth": 1524062747651706878,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 1524062747651706878,
-          "head_text": "took"
-        },
-        "is_punct": false,
         "x": 2,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "took",
-        "stem": "took"
+        "normal": "took"
       },
       {
         "id": "2999350356831612692#5",
@@ -1366,64 +618,16 @@
             {
               "id": "2999350356831612692#5",
               "text": "abstract ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2733592882812761714#6",
-              "other": {
-                "i": 4,
-                "idx": 9,
-                "orth": 2999350356831612692,
-                "head_i": 6,
-                "head_idx": 19,
-                "head_orth": 2733592882812761714,
-                "head_text": "algebra"
-              },
-              "is_punct": false,
               "x": 7,
               "y": 15,
-              "is_wordnet": true,
-              "normal": "abstract",
-              "stem": "abstract"
+              "normal": "abstract"
             },
             {
               "id": "2733592882812761714#7",
               "text": "algebra ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "dobj",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1524062747651706878#2",
-              "other": {
-                "i": 6,
-                "idx": 19,
-                "orth": 2733592882812761714,
-                "head_i": 2,
-                "head_idx": 3,
-                "head_orth": 1524062747651706878,
-                "head_text": "took"
-              },
-              "is_punct": false,
               "x": 16,
               "y": 23,
-              "is_wordnet": true,
-              "normal": "algebra",
-              "stem": "algebra"
+              "normal": "algebra"
             }
           ],
           "canon": "abstract_algebra",
@@ -1437,67 +641,33 @@
       {
         "id": "10321518907502812892#9",
         "text": "last ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "DATE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "14889849580704678361#10",
-        "other": {
-          "i": 8,
-          "idx": 28,
-          "orth": 10321518907502812892,
-          "head_i": 10,
-          "head_idx": 34,
-          "head_orth": 14889849580704678361,
-          "head_text": "year"
-        },
-        "is_punct": false,
         "x": 24,
         "y": 28,
-        "is_wordnet": true,
-        "normal": "last",
-        "stem": "last"
+        "normal": "last"
       },
       {
         "id": "14889849580704678361#10",
         "text": "year",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "npadvmod",
-        "ent": "DATE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1524062747651706878#2",
-        "other": {
-          "i": 10,
-          "idx": 34,
-          "orth": 14889849580704678361,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 1524062747651706878,
-          "head_text": "took"
-        },
-        "is_punct": false,
         "x": 29,
         "y": 33,
-        "is_wordnet": true,
-        "normal": "year",
-        "stem": "year"
+        "normal": "year"
       }
     ],
-    "expected_text": "I took abstract_algebra last year"
+    "expected_text": "I took abstract_algebra last year",
+    "raw": {
+      "entities": [
+        {
+          "canon": "abstract_algebra",
+          "type": "exact",
+          "ner": null,
+          "x": 7,
+          "y": 23,
+          "text": "abstract algebra",
+          "confidence": 100
+        }
+      ],
+      "text": "I took abstract_algebra last year"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_unmatched_text_returned_unchanged",
@@ -1507,255 +677,67 @@
       {
         "id": "14250695932240153181#1",
         "text": "blah ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "INTJ",
-        "tag": "UH",
-        "dep": "ROOT",
-        "ent": "PERSON",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14250695932240153181#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 14250695932240153181,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 14250695932240153181,
-          "head_text": "blah"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "blah",
-        "stem": "blah"
+        "normal": "blah"
       },
       {
         "id": "14250695932240153181#3",
         "text": "blah ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "PERSON",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14031040224266207083#6",
-        "other": {
-          "i": 2,
-          "idx": 6,
-          "orth": 14250695932240153181,
-          "head_i": 6,
-          "head_idx": 17,
-          "head_orth": 14031040224266207083,
-          "head_text": "nonsense"
-        },
-        "is_punct": false,
         "x": 5,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "blah",
-        "stem": "blah"
+        "normal": "blah"
       },
       {
         "id": "2340877612503562431#5",
         "text": "xyz ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "PERSON",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14031040224266207083#6",
-        "other": {
-          "i": 4,
-          "idx": 12,
-          "orth": 2340877612503562431,
-          "head_i": 6,
-          "head_idx": 17,
-          "head_orth": 14031040224266207083,
-          "head_text": "nonsense"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 13,
-        "is_wordnet": false,
-        "normal": "xyz",
-        "stem": "xyz"
+        "normal": "xyz"
       },
       {
         "id": "14031040224266207083#6",
         "text": "nonsense",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "dobj",
-        "ent": "PERSON",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14250695932240153181#0",
-        "other": {
-          "i": 6,
-          "idx": 17,
-          "orth": 14031040224266207083,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 14250695932240153181,
-          "head_text": "blah"
-        },
-        "is_punct": false,
         "x": 14,
         "y": 22,
-        "is_wordnet": true,
-        "normal": "nonsense",
-        "stem": "nonsense"
+        "normal": "nonsense"
       }
     ],
     "expected_tokens": [
       {
         "id": "14250695932240153181#1",
         "text": "blah ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "INTJ",
-        "tag": "UH",
-        "dep": "ROOT",
-        "ent": "PERSON",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14250695932240153181#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 14250695932240153181,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 14250695932240153181,
-          "head_text": "blah"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "blah",
-        "stem": "blah"
+        "normal": "blah"
       },
       {
         "id": "14250695932240153181#3",
         "text": "blah ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "PERSON",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14031040224266207083#6",
-        "other": {
-          "i": 2,
-          "idx": 6,
-          "orth": 14250695932240153181,
-          "head_i": 6,
-          "head_idx": 17,
-          "head_orth": 14031040224266207083,
-          "head_text": "nonsense"
-        },
-        "is_punct": false,
         "x": 5,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "blah",
-        "stem": "blah"
+        "normal": "blah"
       },
       {
         "id": "2340877612503562431#5",
         "text": "xyz ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "PERSON",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14031040224266207083#6",
-        "other": {
-          "i": 4,
-          "idx": 12,
-          "orth": 2340877612503562431,
-          "head_i": 6,
-          "head_idx": 17,
-          "head_orth": 14031040224266207083,
-          "head_text": "nonsense"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 13,
-        "is_wordnet": false,
-        "normal": "xyz",
-        "stem": "xyz"
+        "normal": "xyz"
       },
       {
         "id": "14031040224266207083#6",
         "text": "nonsense",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "dobj",
-        "ent": "PERSON",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14250695932240153181#0",
-        "other": {
-          "i": 6,
-          "idx": 17,
-          "orth": 14031040224266207083,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 14250695932240153181,
-          "head_text": "blah"
-        },
-        "is_punct": false,
         "x": 14,
         "y": 22,
-        "is_wordnet": true,
-        "normal": "nonsense",
-        "stem": "nonsense"
+        "normal": "nonsense"
       }
     ],
-    "expected_text": "blah blah xyz nonsense"
+    "expected_text": "blah blah xyz nonsense",
+    "raw": {
+      "entities": [],
+      "text": "blah blah xyz nonsense"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_parse_called_twice_gives_same_result",
@@ -1765,190 +747,46 @@
       {
         "id": "4690420944186131903#1",
         "text": "I ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4690420944186131903,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 1,
-        "is_wordnet": false,
-        "normal": "i",
-        "stem": "i"
+        "normal": "i"
       },
       {
         "id": "8996416285431871446#3",
         "text": "studied ",
-        "tense": "past",
-        "noun_number": "",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBD",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 2,
-          "idx": 3,
-          "orth": 8996416285431871446,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 2,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "studied",
-        "stem": "studi"
+        "normal": "studied"
       },
       {
         "id": "2999350356831612692#5",
         "text": "abstract ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2733592882812761714#6",
-        "other": {
-          "i": 4,
-          "idx": 12,
-          "orth": 2999350356831612692,
-          "head_i": 6,
-          "head_idx": 22,
-          "head_orth": 2733592882812761714,
-          "head_text": "algebra"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 18,
-        "is_wordnet": true,
-        "normal": "abstract",
-        "stem": "abstract"
+        "normal": "abstract"
       },
       {
         "id": "2733592882812761714#6",
         "text": "algebra",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "dobj",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 6,
-          "idx": 22,
-          "orth": 2733592882812761714,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 19,
         "y": 26,
-        "is_wordnet": true,
-        "normal": "algebra",
-        "stem": "algebra"
+        "normal": "algebra"
       }
     ],
     "expected_tokens": [
       {
         "id": "4690420944186131903#1",
         "text": "I ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4690420944186131903,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 1,
-        "is_wordnet": false,
-        "normal": "i",
-        "stem": "i"
+        "normal": "i"
       },
       {
         "id": "8996416285431871446#3",
         "text": "studied ",
-        "tense": "past",
-        "noun_number": "",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBD",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 2,
-          "idx": 3,
-          "orth": 8996416285431871446,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 2,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "studied",
-        "stem": "studi"
+        "normal": "studied"
       },
       {
         "id": "2999350356831612692#5",
@@ -1962,64 +800,16 @@
             {
               "id": "2999350356831612692#5",
               "text": "abstract ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2733592882812761714#6",
-              "other": {
-                "i": 4,
-                "idx": 12,
-                "orth": 2999350356831612692,
-                "head_i": 6,
-                "head_idx": 22,
-                "head_orth": 2733592882812761714,
-                "head_text": "algebra"
-              },
-              "is_punct": false,
               "x": 10,
               "y": 18,
-              "is_wordnet": true,
-              "normal": "abstract",
-              "stem": "abstract"
+              "normal": "abstract"
             },
             {
               "id": "2733592882812761714#6",
               "text": "algebra",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "dobj",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "8996416285431871446#2",
-              "other": {
-                "i": 6,
-                "idx": 22,
-                "orth": 2733592882812761714,
-                "head_i": 2,
-                "head_idx": 3,
-                "head_orth": 8996416285431871446,
-                "head_text": "studied"
-              },
-              "is_punct": false,
               "x": 19,
               "y": 26,
-              "is_wordnet": true,
-              "normal": "algebra",
-              "stem": "algebra"
+              "normal": "algebra"
             }
           ],
           "canon": "abstract_algebra",
@@ -2031,7 +821,21 @@
         }
       }
     ],
-    "expected_text": "I studied abstract_algebra"
+    "expected_text": "I studied abstract_algebra",
+    "raw": {
+      "entities": [
+        {
+          "canon": "abstract_algebra",
+          "type": "exact",
+          "ner": null,
+          "x": 10,
+          "y": 26,
+          "text": "abstract algebra",
+          "confidence": 100
+        }
+      ],
+      "text": "I studied abstract_algebra"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_dict.py::TestOntologyParserFromDict::test_two_matched_terms_in_one_sentence",
@@ -2041,126 +845,30 @@
       {
         "id": "6687196400677774548#1",
         "text": "Geometry ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6687196400677774548#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 6687196400677774548,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 6687196400677774548,
-          "head_text": "Geometry"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "geometry",
-        "stem": "geometri"
+        "normal": "geometry"
       },
       {
         "id": "2283656566040971221#3",
         "text": "and ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "CCONJ",
-        "tag": "CC",
-        "dep": "cc",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "6687196400677774548#0",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 2283656566040971221,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 6687196400677774548,
-          "head_text": "Geometry"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "and",
-        "stem": "and"
+        "normal": "and"
       },
       {
         "id": "2999350356831612692#5",
         "text": "abstract ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2733592882812761714#6",
-        "other": {
-          "i": 4,
-          "idx": 15,
-          "orth": 2999350356831612692,
-          "head_i": 6,
-          "head_idx": 25,
-          "head_orth": 2733592882812761714,
-          "head_text": "algebra"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 21,
-        "is_wordnet": true,
-        "normal": "abstract",
-        "stem": "abstract"
+        "normal": "abstract"
       },
       {
         "id": "2733592882812761714#6",
         "text": "algebra",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "conj",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6687196400677774548#0",
-        "other": {
-          "i": 6,
-          "idx": 25,
-          "orth": 2733592882812761714,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 6687196400677774548,
-          "head_text": "Geometry"
-        },
-        "is_punct": false,
         "x": 22,
         "y": 29,
-        "is_wordnet": true,
-        "normal": "algebra",
-        "stem": "algebra"
+        "normal": "algebra"
       }
     ],
     "expected_tokens": [
@@ -2176,33 +884,9 @@
             {
               "id": "6687196400677774548#1",
               "text": "Geometry ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6687196400677774548#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 6687196400677774548,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 6687196400677774548,
-                "head_text": "Geometry"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "geometry",
-              "stem": "geometri"
+              "normal": "geometry"
             }
           ],
           "canon": "geometry",
@@ -2216,33 +900,9 @@
       {
         "id": "2283656566040971221#3",
         "text": "and ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "CCONJ",
-        "tag": "CC",
-        "dep": "cc",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "6687196400677774548#0",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 2283656566040971221,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 6687196400677774548,
-          "head_text": "Geometry"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "and",
-        "stem": "and"
+        "normal": "and"
       },
       {
         "id": "2999350356831612692#5",
@@ -2256,64 +916,16 @@
             {
               "id": "2999350356831612692#5",
               "text": "abstract ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2733592882812761714#6",
-              "other": {
-                "i": 4,
-                "idx": 15,
-                "orth": 2999350356831612692,
-                "head_i": 6,
-                "head_idx": 25,
-                "head_orth": 2733592882812761714,
-                "head_text": "algebra"
-              },
-              "is_punct": false,
               "x": 13,
               "y": 21,
-              "is_wordnet": true,
-              "normal": "abstract",
-              "stem": "abstract"
+              "normal": "abstract"
             },
             {
               "id": "2733592882812761714#6",
               "text": "algebra",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "conj",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6687196400677774548#0",
-              "other": {
-                "i": 6,
-                "idx": 25,
-                "orth": 2733592882812761714,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 6687196400677774548,
-                "head_text": "Geometry"
-              },
-              "is_punct": false,
               "x": 22,
               "y": 29,
-              "is_wordnet": true,
-              "normal": "algebra",
-              "stem": "algebra"
+              "normal": "algebra"
             }
           ],
           "canon": "abstract_algebra",
@@ -2325,7 +937,30 @@
         }
       }
     ],
-    "expected_text": "geometry and abstract_algebra"
+    "expected_text": "geometry and abstract_algebra",
+    "raw": {
+      "entities": [
+        {
+          "canon": "geometry",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 8,
+          "text": "Geometry",
+          "confidence": 100
+        },
+        {
+          "canon": "abstract_algebra",
+          "type": "exact",
+          "ner": null,
+          "x": 13,
+          "y": 29,
+          "text": "abstract algebra",
+          "confidence": 100
+        }
+      ],
+      "text": "geometry and abstract_algebra"
+    }
   },
   {
     "test": "owl/api/test_ontology_parser_from_dict.py::TestOntologyParserRoundTrip::test_round_trip_produces_same_parse_result",
@@ -2335,252 +970,60 @@
       {
         "id": "4690420944186131903#1",
         "text": "I ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4690420944186131903,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 1,
-        "is_wordnet": false,
-        "normal": "i",
-        "stem": "i"
+        "normal": "i"
       },
       {
         "id": "8996416285431871446#3",
         "text": "studied ",
-        "tense": "past",
-        "noun_number": "",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBD",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 2,
-          "idx": 3,
-          "orth": 8996416285431871446,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 2,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "studied",
-        "stem": "studi"
+        "normal": "studied"
       },
       {
         "id": "2999350356831612692#5",
         "text": "abstract ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2733592882812761714#6",
-        "other": {
-          "i": 4,
-          "idx": 12,
-          "orth": 2999350356831612692,
-          "head_i": 6,
-          "head_idx": 22,
-          "head_orth": 2733592882812761714,
-          "head_text": "algebra"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 18,
-        "is_wordnet": true,
-        "normal": "abstract",
-        "stem": "abstract"
+        "normal": "abstract"
       },
       {
         "id": "2733592882812761714#7",
         "text": "algebra ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "dobj",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 6,
-          "idx": 22,
-          "orth": 2733592882812761714,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 19,
         "y": 26,
-        "is_wordnet": true,
-        "normal": "algebra",
-        "stem": "algebra"
+        "normal": "algebra"
       },
       {
         "id": "2283656566040971221#9",
         "text": "and ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "CCONJ",
-        "tag": "CC",
-        "dep": "cc",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "2733592882812761714#6",
-        "other": {
-          "i": 8,
-          "idx": 31,
-          "orth": 2283656566040971221,
-          "head_i": 6,
-          "head_idx": 22,
-          "head_orth": 2733592882812761714,
-          "head_text": "algebra"
-        },
-        "is_punct": false,
         "x": 27,
         "y": 30,
-        "is_wordnet": true,
-        "normal": "and",
-        "stem": "and"
+        "normal": "and"
       },
       {
         "id": "6687196400677774548#10",
         "text": "Geometry",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "conj",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2733592882812761714#6",
-        "other": {
-          "i": 10,
-          "idx": 36,
-          "orth": 6687196400677774548,
-          "head_i": 6,
-          "head_idx": 22,
-          "head_orth": 2733592882812761714,
-          "head_text": "algebra"
-        },
-        "is_punct": false,
         "x": 31,
         "y": 39,
-        "is_wordnet": true,
-        "normal": "geometry",
-        "stem": "geometri"
+        "normal": "geometry"
       }
     ],
     "expected_tokens": [
       {
         "id": "4690420944186131903#1",
         "text": "I ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4690420944186131903,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 1,
-        "is_wordnet": false,
-        "normal": "i",
-        "stem": "i"
+        "normal": "i"
       },
       {
         "id": "8996416285431871446#3",
         "text": "studied ",
-        "tense": "past",
-        "noun_number": "",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBD",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8996416285431871446#2",
-        "other": {
-          "i": 2,
-          "idx": 3,
-          "orth": 8996416285431871446,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 8996416285431871446,
-          "head_text": "studied"
-        },
-        "is_punct": false,
         "x": 2,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "studied",
-        "stem": "studi"
+        "normal": "studied"
       },
       {
         "id": "2999350356831612692#5",
@@ -2594,64 +1037,16 @@
             {
               "id": "2999350356831612692#5",
               "text": "abstract ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2733592882812761714#6",
-              "other": {
-                "i": 4,
-                "idx": 12,
-                "orth": 2999350356831612692,
-                "head_i": 6,
-                "head_idx": 22,
-                "head_orth": 2733592882812761714,
-                "head_text": "algebra"
-              },
-              "is_punct": false,
               "x": 10,
               "y": 18,
-              "is_wordnet": true,
-              "normal": "abstract",
-              "stem": "abstract"
+              "normal": "abstract"
             },
             {
               "id": "2733592882812761714#7",
               "text": "algebra ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "dobj",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "8996416285431871446#2",
-              "other": {
-                "i": 6,
-                "idx": 22,
-                "orth": 2733592882812761714,
-                "head_i": 2,
-                "head_idx": 3,
-                "head_orth": 8996416285431871446,
-                "head_text": "studied"
-              },
-              "is_punct": false,
               "x": 19,
               "y": 26,
-              "is_wordnet": true,
-              "normal": "algebra",
-              "stem": "algebra"
+              "normal": "algebra"
             }
           ],
           "canon": "abstract_algebra",
@@ -2665,33 +1060,9 @@
       {
         "id": "2283656566040971221#9",
         "text": "and ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "CCONJ",
-        "tag": "CC",
-        "dep": "cc",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "2733592882812761714#6",
-        "other": {
-          "i": 8,
-          "idx": 31,
-          "orth": 2283656566040971221,
-          "head_i": 6,
-          "head_idx": 22,
-          "head_orth": 2733592882812761714,
-          "head_text": "algebra"
-        },
-        "is_punct": false,
         "x": 27,
         "y": 30,
-        "is_wordnet": true,
-        "normal": "and",
-        "stem": "and"
+        "normal": "and"
       },
       {
         "id": "6687196400677774548#10",
@@ -2705,33 +1076,9 @@
             {
               "id": "6687196400677774548#10",
               "text": "Geometry",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "conj",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2733592882812761714#6",
-              "other": {
-                "i": 10,
-                "idx": 36,
-                "orth": 6687196400677774548,
-                "head_i": 6,
-                "head_idx": 22,
-                "head_orth": 2733592882812761714,
-                "head_text": "algebra"
-              },
-              "is_punct": false,
               "x": 31,
               "y": 39,
-              "is_wordnet": true,
-              "normal": "geometry",
-              "stem": "geometri"
+              "normal": "geometry"
             }
           ],
           "canon": "geometry",
@@ -2743,7 +1090,30 @@
         }
       }
     ],
-    "expected_text": "I studied abstract_algebra and geometry"
+    "expected_text": "I studied abstract_algebra and geometry",
+    "raw": {
+      "entities": [
+        {
+          "canon": "abstract_algebra",
+          "type": "exact",
+          "ner": null,
+          "x": 10,
+          "y": 26,
+          "text": "abstract algebra",
+          "confidence": 100
+        },
+        {
+          "canon": "geometry",
+          "type": "exact",
+          "ner": null,
+          "x": 31,
+          "y": 39,
+          "text": "Geometry",
+          "confidence": 100
+        }
+      ],
+      "text": "I studied abstract_algebra and geometry"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_apostrophe_form_normalises_to_same_as_possessive",
@@ -2753,64 +1123,16 @@
       {
         "id": "4572583899738182151#1",
         "text": "womens ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1848708500339133338#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4572583899738182151,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 1848708500339133338,
-          "head_text": "choir"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "womens",
-        "stem": "women"
+        "normal": "womens"
       },
       {
         "id": "1848708500339133338#2",
         "text": "choir",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1848708500339133338#2",
-        "other": {
-          "i": 2,
-          "idx": 8,
-          "orth": 1848708500339133338,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 1848708500339133338,
-          "head_text": "choir"
-        },
-        "is_punct": false,
         "x": 7,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "choir",
-        "stem": "choir"
+        "normal": "choir"
       }
     ],
     "expected_tokens": [
@@ -2826,64 +1148,16 @@
             {
               "id": "4572583899738182151#1",
               "text": "womens ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1848708500339133338#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 4572583899738182151,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 1848708500339133338,
-                "head_text": "choir"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "womens",
-              "stem": "women"
+              "normal": "womens"
             },
             {
               "id": "1848708500339133338#2",
               "text": "choir",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1848708500339133338#2",
-              "other": {
-                "i": 2,
-                "idx": 8,
-                "orth": 1848708500339133338,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 1848708500339133338,
-                "head_text": "choir"
-              },
-              "is_punct": false,
               "x": 7,
               "y": 12,
-              "is_wordnet": true,
-              "normal": "choir",
-              "stem": "choir"
+              "normal": "choir"
             }
           ],
           "canon": "womens_choir",
@@ -2895,7 +1169,21 @@
         }
       }
     ],
-    "expected_text": "womens_choir"
+    "expected_text": "womens_choir",
+    "raw": {
+      "entities": [
+        {
+          "canon": "womens_choir",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 12,
+          "text": "womens choir",
+          "confidence": 100
+        }
+      ],
+      "text": "womens_choir"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_json_idempotency.py::TestMutatoAPIJsonIdempotency::test_high_ctr_still_finds_entity",
@@ -2905,64 +1193,16 @@
       {
         "id": "4572583899738182151#1",
         "text": "womens ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1848708500339133338#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4572583899738182151,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 1848708500339133338,
-          "head_text": "choir"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "womens",
-        "stem": "women"
+        "normal": "womens"
       },
       {
         "id": "1848708500339133338#2",
         "text": "choir",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1848708500339133338#2",
-        "other": {
-          "i": 2,
-          "idx": 8,
-          "orth": 1848708500339133338,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 1848708500339133338,
-          "head_text": "choir"
-        },
-        "is_punct": false,
         "x": 7,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "choir",
-        "stem": "choir"
+        "normal": "choir"
       }
     ],
     "expected_tokens": [
@@ -2978,64 +1218,16 @@
             {
               "id": "4572583899738182151#1",
               "text": "womens ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1848708500339133338#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 4572583899738182151,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 1848708500339133338,
-                "head_text": "choir"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "womens",
-              "stem": "women"
+              "normal": "womens"
             },
             {
               "id": "1848708500339133338#2",
               "text": "choir",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1848708500339133338#2",
-              "other": {
-                "i": 2,
-                "idx": 8,
-                "orth": 1848708500339133338,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 1848708500339133338,
-                "head_text": "choir"
-              },
-              "is_punct": false,
               "x": 7,
               "y": 12,
-              "is_wordnet": true,
-              "normal": "choir",
-              "stem": "choir"
+              "normal": "choir"
             }
           ],
           "canon": "womens_choir",
@@ -3047,7 +1239,21 @@
         }
       }
     ],
-    "expected_text": "womens_choir"
+    "expected_text": "womens_choir",
+    "raw": {
+      "entities": [
+        {
+          "canon": "womens_choir",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 12,
+          "text": "womens choir",
+          "confidence": 100
+        }
+      ],
+      "text": "womens_choir"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_unrecognised_tokens_still_appear_in_output",
@@ -3057,131 +1263,39 @@
       {
         "id": "4724330733325702978#1",
         "text": "xyzqwerty ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13865481433108993156#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4724330733325702978,
-          "head_i": 2,
-          "head_idx": 11,
-          "head_orth": 13865481433108993156,
-          "head_text": "foobar123"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 9,
-        "is_wordnet": false,
-        "normal": "xyzqwerty",
-        "stem": "xyzqwerti"
+        "normal": "xyzqwerty"
       },
       {
         "id": "13865481433108993156#2",
         "text": "foobar123",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "xxxxddd",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "13865481433108993156#2",
-        "other": {
-          "i": 2,
-          "idx": 11,
-          "orth": 13865481433108993156,
-          "head_i": 2,
-          "head_idx": 11,
-          "head_orth": 13865481433108993156,
-          "head_text": "foobar123"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 19,
-        "is_wordnet": false,
-        "normal": "foobar123",
-        "stem": "foobar123"
+        "normal": "foobar123"
       }
     ],
     "expected_tokens": [
       {
         "id": "4724330733325702978#1",
         "text": "xyzqwerty ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13865481433108993156#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4724330733325702978,
-          "head_i": 2,
-          "head_idx": 11,
-          "head_orth": 13865481433108993156,
-          "head_text": "foobar123"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 9,
-        "is_wordnet": false,
-        "normal": "xyzqwerty",
-        "stem": "xyzqwerti"
+        "normal": "xyzqwerty"
       },
       {
         "id": "13865481433108993156#2",
         "text": "foobar123",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "xxxxddd",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "13865481433108993156#2",
-        "other": {
-          "i": 2,
-          "idx": 11,
-          "orth": 13865481433108993156,
-          "head_i": 2,
-          "head_idx": 11,
-          "head_orth": 13865481433108993156,
-          "head_text": "foobar123"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 19,
-        "is_wordnet": false,
-        "normal": "foobar123",
-        "stem": "foobar123"
+        "normal": "foobar123"
       }
     ],
-    "expected_text": "xyzqwerty foobar123"
+    "expected_text": "xyzqwerty foobar123",
+    "raw": {
+      "entities": [],
+      "text": "xyzqwerty foobar123"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_recognised_entity_with_surrounding_noise",
@@ -3191,128 +1305,32 @@
       {
         "id": "16481074758685916174#1",
         "text": "foo ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "inf",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VB",
-        "dep": "nmod",
-        "ent": "ORG",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5898049090513426128#4",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 16481074758685916174,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 5898049090513426128,
-          "head_text": "bar"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": false,
-        "normal": "foo",
-        "stem": "foo"
+        "normal": "foo"
       },
       {
         "id": "6687196400677774548#3",
         "text": "Geometry ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5898049090513426128#4",
-        "other": {
-          "i": 2,
-          "idx": 5,
-          "orth": 6687196400677774548,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 5898049090513426128,
-          "head_text": "bar"
-        },
-        "is_punct": false,
         "x": 4,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "geometry",
-        "stem": "geometri"
+        "normal": "geometry"
       },
       {
         "id": "5898049090513426128#4",
         "text": "bar",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5898049090513426128#4",
-        "other": {
-          "i": 4,
-          "idx": 15,
-          "orth": 5898049090513426128,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 5898049090513426128,
-          "head_text": "bar"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "bar",
-        "stem": "bar"
+        "normal": "bar"
       }
     ],
     "expected_tokens": [
       {
         "id": "16481074758685916174#1",
         "text": "foo ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "inf",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VB",
-        "dep": "nmod",
-        "ent": "ORG",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5898049090513426128#4",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 16481074758685916174,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 5898049090513426128,
-          "head_text": "bar"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": false,
-        "normal": "foo",
-        "stem": "foo"
+        "normal": "foo"
       },
       {
         "id": "6687196400677774548#3",
@@ -3326,33 +1344,9 @@
             {
               "id": "6687196400677774548#3",
               "text": "Geometry ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "ORG",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "5898049090513426128#4",
-              "other": {
-                "i": 2,
-                "idx": 5,
-                "orth": 6687196400677774548,
-                "head_i": 4,
-                "head_idx": 15,
-                "head_orth": 5898049090513426128,
-                "head_text": "bar"
-              },
-              "is_punct": false,
               "x": 4,
               "y": 12,
-              "is_wordnet": true,
-              "normal": "geometry",
-              "stem": "geometri"
+              "normal": "geometry"
             }
           ],
           "canon": "geometry",
@@ -3366,36 +1360,26 @@
       {
         "id": "5898049090513426128#4",
         "text": "bar",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5898049090513426128#4",
-        "other": {
-          "i": 4,
-          "idx": 15,
-          "orth": 5898049090513426128,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 5898049090513426128,
-          "head_text": "bar"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "bar",
-        "stem": "bar"
+        "normal": "bar"
       }
     ],
-    "expected_text": "foo geometry bar"
+    "expected_text": "foo geometry bar",
+    "raw": {
+      "entities": [
+        {
+          "canon": "geometry",
+          "type": "exact",
+          "ner": null,
+          "x": 4,
+          "y": 12,
+          "text": "Geometry",
+          "confidence": 100
+        }
+      ],
+      "text": "foo geometry bar"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_every_token_has_a_normal_field",
@@ -3405,126 +1389,30 @@
       {
         "id": "6687196400677774548#1",
         "text": "Geometry ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1330614439010165361#6",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 6687196400677774548,
-          "head_i": 6,
-          "head_idx": 20,
-          "head_orth": 1330614439010165361,
-          "head_text": "Algebra"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "geometry",
-        "stem": "geometri"
+        "normal": "geometry"
       },
       {
         "id": "16481074758685916174#3",
         "text": "foo ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1330614439010165361#6",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 16481074758685916174,
-          "head_i": 6,
-          "head_idx": 20,
-          "head_orth": 1330614439010165361,
-          "head_text": "Algebra"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 12,
-        "is_wordnet": false,
-        "normal": "foo",
-        "stem": "foo"
+        "normal": "foo"
       },
       {
         "id": "5898049090513426128#5",
         "text": "bar ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1330614439010165361#6",
-        "other": {
-          "i": 4,
-          "idx": 15,
-          "orth": 5898049090513426128,
-          "head_i": 6,
-          "head_idx": 20,
-          "head_orth": 1330614439010165361,
-          "head_text": "Algebra"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "bar",
-        "stem": "bar"
+        "normal": "bar"
       },
       {
         "id": "1330614439010165361#6",
         "text": "Algebra",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "PRODUCT",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1330614439010165361#6",
-        "other": {
-          "i": 6,
-          "idx": 20,
-          "orth": 1330614439010165361,
-          "head_i": 6,
-          "head_idx": 20,
-          "head_orth": 1330614439010165361,
-          "head_text": "Algebra"
-        },
-        "is_punct": false,
         "x": 17,
         "y": 24,
-        "is_wordnet": true,
-        "normal": "algebra",
-        "stem": "algebra"
+        "normal": "algebra"
       }
     ],
     "expected_tokens": [
@@ -3540,33 +1428,9 @@
             {
               "id": "6687196400677774548#1",
               "text": "Geometry ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "compound",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1330614439010165361#6",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 6687196400677774548,
-                "head_i": 6,
-                "head_idx": 20,
-                "head_orth": 1330614439010165361,
-                "head_text": "Algebra"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "geometry",
-              "stem": "geometri"
+              "normal": "geometry"
             }
           ],
           "canon": "geometry",
@@ -3580,64 +1444,16 @@
       {
         "id": "16481074758685916174#3",
         "text": "foo ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1330614439010165361#6",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 16481074758685916174,
-          "head_i": 6,
-          "head_idx": 20,
-          "head_orth": 1330614439010165361,
-          "head_text": "Algebra"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 12,
-        "is_wordnet": false,
-        "normal": "foo",
-        "stem": "foo"
+        "normal": "foo"
       },
       {
         "id": "5898049090513426128#5",
         "text": "bar ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1330614439010165361#6",
-        "other": {
-          "i": 4,
-          "idx": 15,
-          "orth": 5898049090513426128,
-          "head_i": 6,
-          "head_idx": 20,
-          "head_orth": 1330614439010165361,
-          "head_text": "Algebra"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "bar",
-        "stem": "bar"
+        "normal": "bar"
       },
       {
         "id": "1330614439010165361#6",
@@ -3651,33 +1467,9 @@
             {
               "id": "1330614439010165361#6",
               "text": "Algebra",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "PRODUCT",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1330614439010165361#6",
-              "other": {
-                "i": 6,
-                "idx": 20,
-                "orth": 1330614439010165361,
-                "head_i": 6,
-                "head_idx": 20,
-                "head_orth": 1330614439010165361,
-                "head_text": "Algebra"
-              },
-              "is_punct": false,
               "x": 17,
               "y": 24,
-              "is_wordnet": true,
-              "normal": "algebra",
-              "stem": "algebra"
+              "normal": "algebra"
             }
           ],
           "canon": "algebra",
@@ -3689,7 +1481,30 @@
         }
       }
     ],
-    "expected_text": "geometry foo bar algebra"
+    "expected_text": "geometry foo bar algebra",
+    "raw": {
+      "entities": [
+        {
+          "canon": "geometry",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 8,
+          "text": "Geometry",
+          "confidence": 100
+        },
+        {
+          "canon": "algebra",
+          "type": "exact",
+          "ner": null,
+          "x": 17,
+          "y": 24,
+          "text": "Algebra",
+          "confidence": 100
+        }
+      ],
+      "text": "geometry foo bar algebra"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_case_variants_normalise_to_same_entity",
@@ -3699,33 +1514,9 @@
       {
         "id": "15635057833378959556#0",
         "text": "geometry",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "15635057833378959556#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 15635057833378959556,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 15635057833378959556,
-          "head_text": "geometry"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "geometry",
-        "stem": "geometri"
+        "normal": "geometry"
       }
     ],
     "expected_tokens": [
@@ -3741,33 +1532,9 @@
             {
               "id": "15635057833378959556#0",
               "text": "geometry",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "15635057833378959556#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 15635057833378959556,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 15635057833378959556,
-                "head_text": "geometry"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "geometry",
-              "stem": "geometri"
+              "normal": "geometry"
             }
           ],
           "canon": "geometry",
@@ -3779,7 +1546,21 @@
         }
       }
     ],
-    "expected_text": "geometry"
+    "expected_text": "geometry",
+    "raw": {
+      "entities": [
+        {
+          "canon": "geometry",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 8,
+          "text": "geometry",
+          "confidence": 100
+        }
+      ],
+      "text": "geometry"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_two_separate_recognised_entities",
@@ -3789,64 +1570,16 @@
       {
         "id": "6687196400677774548#1",
         "text": "Geometry ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1330614439010165361#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 6687196400677774548,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 1330614439010165361,
-          "head_text": "Algebra"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "geometry",
-        "stem": "geometri"
+        "normal": "geometry"
       },
       {
         "id": "1330614439010165361#2",
         "text": "Algebra",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "PRODUCT",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1330614439010165361#2",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 1330614439010165361,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 1330614439010165361,
-          "head_text": "Algebra"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "algebra",
-        "stem": "algebra"
+        "normal": "algebra"
       }
     ],
     "expected_tokens": [
@@ -3862,33 +1595,9 @@
             {
               "id": "6687196400677774548#1",
               "text": "Geometry ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "compound",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1330614439010165361#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 6687196400677774548,
-                "head_i": 2,
-                "head_idx": 10,
-                "head_orth": 1330614439010165361,
-                "head_text": "Algebra"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "geometry",
-              "stem": "geometri"
+              "normal": "geometry"
             }
           ],
           "canon": "geometry",
@@ -3911,33 +1620,9 @@
             {
               "id": "1330614439010165361#2",
               "text": "Algebra",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "PRODUCT",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1330614439010165361#2",
-              "other": {
-                "i": 2,
-                "idx": 10,
-                "orth": 1330614439010165361,
-                "head_i": 2,
-                "head_idx": 10,
-                "head_orth": 1330614439010165361,
-                "head_text": "Algebra"
-              },
-              "is_punct": false,
               "x": 9,
               "y": 16,
-              "is_wordnet": true,
-              "normal": "algebra",
-              "stem": "algebra"
+              "normal": "algebra"
             }
           ],
           "canon": "algebra",
@@ -3949,7 +1634,30 @@
         }
       }
     ],
-    "expected_text": "geometry algebra"
+    "expected_text": "geometry algebra",
+    "raw": {
+      "entities": [
+        {
+          "canon": "geometry",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 8,
+          "text": "Geometry",
+          "confidence": 100
+        },
+        {
+          "canon": "algebra",
+          "type": "exact",
+          "ner": null,
+          "x": 9,
+          "y": 16,
+          "text": "Algebra",
+          "confidence": 100
+        }
+      ],
+      "text": "geometry algebra"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_json_multi_entity.py::TestMutatoAPIJsonMultiEntity::test_apostrophe_form_normalises_to_same_as_possessive",
@@ -3959,64 +1667,16 @@
       {
         "id": "5831664268743912495#1",
         "text": "women's ",
-        "tense": "",
-        "noun_number": "plural",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NNS",
-        "dep": "poss",
-        "ent": "",
-        "shape": "xxxx'x",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "1848708500339133338#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5831664268743912495,
-          "head_i": 2,
-          "head_idx": 9,
-          "head_orth": 1848708500339133338,
-          "head_text": "choir"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": false,
-        "normal": "women's",
-        "stem": "women'"
+        "normal": "women's"
       },
       {
         "id": "1848708500339133338#2",
         "text": "choir",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1848708500339133338#2",
-        "other": {
-          "i": 2,
-          "idx": 9,
-          "orth": 1848708500339133338,
-          "head_i": 2,
-          "head_idx": 9,
-          "head_orth": 1848708500339133338,
-          "head_text": "choir"
-        },
-        "is_punct": false,
         "x": 8,
         "y": 13,
-        "is_wordnet": true,
-        "normal": "choir",
-        "stem": "choir"
+        "normal": "choir"
       }
     ],
     "expected_tokens": [
@@ -4032,64 +1692,16 @@
             {
               "id": "5831664268743912495#1",
               "text": "women's ",
-              "tense": "",
-              "noun_number": "plural",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NNS",
-              "dep": "poss",
-              "ent": "",
-              "shape": "xxxx'x",
-              "is_alpha": false,
-              "is_stop": false,
-              "head": "1848708500339133338#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 5831664268743912495,
-                "head_i": 2,
-                "head_idx": 9,
-                "head_orth": 1848708500339133338,
-                "head_text": "choir"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": false,
-              "normal": "women's",
-              "stem": "women'"
+              "normal": "women's"
             },
             {
               "id": "1848708500339133338#2",
               "text": "choir",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1848708500339133338#2",
-              "other": {
-                "i": 2,
-                "idx": 9,
-                "orth": 1848708500339133338,
-                "head_i": 2,
-                "head_idx": 9,
-                "head_orth": 1848708500339133338,
-                "head_text": "choir"
-              },
-              "is_punct": false,
               "x": 8,
               "y": 13,
-              "is_wordnet": true,
-              "normal": "choir",
-              "stem": "choir"
+              "normal": "choir"
             }
           ],
           "canon": "womens_choir",
@@ -4101,7 +1713,21 @@
         }
       }
     ],
-    "expected_text": "womens_choir"
+    "expected_text": "womens_choir",
+    "raw": {
+      "entities": [
+        {
+          "canon": "womens_choir",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 13,
+          "text": "women's choir",
+          "confidence": 100
+        }
+      ],
+      "text": "womens_choir"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_swap_type_is_a_known_value",
@@ -4111,95 +1737,23 @@
       {
         "id": "6687196400677774548#1",
         "text": "Geometry ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5898049090513426128#4",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 6687196400677774548,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 5898049090513426128,
-          "head_text": "bar"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "geometry",
-        "stem": "geometri"
+        "normal": "geometry"
       },
       {
         "id": "16481074758685916174#3",
         "text": "foo ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5898049090513426128#4",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 16481074758685916174,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 5898049090513426128,
-          "head_text": "bar"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 12,
-        "is_wordnet": false,
-        "normal": "foo",
-        "stem": "foo"
+        "normal": "foo"
       },
       {
         "id": "5898049090513426128#4",
         "text": "bar",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5898049090513426128#4",
-        "other": {
-          "i": 4,
-          "idx": 15,
-          "orth": 5898049090513426128,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 5898049090513426128,
-          "head_text": "bar"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "bar",
-        "stem": "bar"
+        "normal": "bar"
       }
     ],
     "expected_tokens": [
@@ -4215,33 +1769,9 @@
             {
               "id": "6687196400677774548#1",
               "text": "Geometry ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "compound",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "5898049090513426128#4",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 6687196400677774548,
-                "head_i": 4,
-                "head_idx": 15,
-                "head_orth": 5898049090513426128,
-                "head_text": "bar"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "geometry",
-              "stem": "geometri"
+              "normal": "geometry"
             }
           ],
           "canon": "geometry",
@@ -4255,67 +1785,33 @@
       {
         "id": "16481074758685916174#3",
         "text": "foo ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5898049090513426128#4",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 16481074758685916174,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 5898049090513426128,
-          "head_text": "bar"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 12,
-        "is_wordnet": false,
-        "normal": "foo",
-        "stem": "foo"
+        "normal": "foo"
       },
       {
         "id": "5898049090513426128#4",
         "text": "bar",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5898049090513426128#4",
-        "other": {
-          "i": 4,
-          "idx": 15,
-          "orth": 5898049090513426128,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 5898049090513426128,
-          "head_text": "bar"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "bar",
-        "stem": "bar"
+        "normal": "bar"
       }
     ],
-    "expected_text": "geometry foo bar"
+    "expected_text": "geometry foo bar",
+    "raw": {
+      "entities": [
+        {
+          "canon": "geometry",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 8,
+          "text": "Geometry",
+          "confidence": 100
+        }
+      ],
+      "text": "geometry foo bar"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_token_structure.py::TestMutatoAPITokenStructure::test_normal_field_is_lowercase",
@@ -4325,95 +1821,23 @@
       {
         "id": "13919511831116069417#1",
         "text": "GEOMETRY ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "compound",
-        "ent": "",
-        "shape": "XXXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "733024997364864034#4",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13919511831116069417,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 733024997364864034,
-          "head_text": "BAR"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "geometry",
-        "stem": "geometri"
+        "normal": "geometry"
       },
       {
         "id": "5742051156418634183#3",
         "text": "FOO ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "XXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "733024997364864034#4",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 5742051156418634183,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 733024997364864034,
-          "head_text": "BAR"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 12,
-        "is_wordnet": false,
-        "normal": "foo",
-        "stem": "foo"
+        "normal": "foo"
       },
       {
         "id": "733024997364864034#4",
         "text": "BAR",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "XXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "733024997364864034#4",
-        "other": {
-          "i": 4,
-          "idx": 15,
-          "orth": 733024997364864034,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 733024997364864034,
-          "head_text": "BAR"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "bar",
-        "stem": "bar"
+        "normal": "bar"
       }
     ],
     "expected_tokens": [
@@ -4429,33 +1853,9 @@
             {
               "id": "13919511831116069417#1",
               "text": "GEOMETRY ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "compound",
-              "ent": "",
-              "shape": "XXXX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "733024997364864034#4",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 13919511831116069417,
-                "head_i": 4,
-                "head_idx": 15,
-                "head_orth": 733024997364864034,
-                "head_text": "BAR"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "geometry",
-              "stem": "geometri"
+              "normal": "geometry"
             }
           ],
           "canon": "geometry",
@@ -4469,66 +1869,32 @@
       {
         "id": "5742051156418634183#3",
         "text": "FOO ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "XXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "733024997364864034#4",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 5742051156418634183,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 733024997364864034,
-          "head_text": "BAR"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 12,
-        "is_wordnet": false,
-        "normal": "foo",
-        "stem": "foo"
+        "normal": "foo"
       },
       {
         "id": "733024997364864034#4",
         "text": "BAR",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "XXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "733024997364864034#4",
-        "other": {
-          "i": 4,
-          "idx": 15,
-          "orth": 733024997364864034,
-          "head_i": 4,
-          "head_idx": 15,
-          "head_orth": 733024997364864034,
-          "head_text": "BAR"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "bar",
-        "stem": "bar"
+        "normal": "bar"
       }
     ],
-    "expected_text": "geometry FOO BAR"
+    "expected_text": "geometry FOO BAR",
+    "raw": {
+      "entities": [
+        {
+          "canon": "geometry",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 8,
+          "text": "GEOMETRY",
+          "confidence": 100
+        }
+      ],
+      "text": "geometry FOO BAR"
+    }
   }
 ]

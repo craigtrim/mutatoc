@@ -7,33 +7,9 @@
       {
         "id": "6613816697677965370#0",
         "text": "France",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6613816697677965370#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 6613816697677965370,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 6613816697677965370,
-          "head_text": "France"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "france",
-        "stem": "france"
+        "normal": "france"
       }
     ],
     "expected_tokens": [
@@ -49,33 +25,9 @@
             {
               "id": "6613816697677965370#0",
               "text": "France",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6613816697677965370#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 6613816697677965370,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 6613816697677965370,
-                "head_text": "France"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "france",
-              "stem": "france"
+              "normal": "france"
             }
           ],
           "canon": "france",
@@ -87,7 +39,21 @@
         }
       }
     ],
-    "expected_text": "france"
+    "expected_text": "france",
+    "raw": {
+      "entities": [
+        {
+          "canon": "france",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "France",
+          "confidence": 100
+        }
+      ],
+      "text": "france"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_germany_exact_match",
@@ -97,33 +63,9 @@
       {
         "id": "12101821946584629805#0",
         "text": "Germany",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "12101821946584629805#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 12101821946584629805,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 12101821946584629805,
-          "head_text": "Germany"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "germany",
-        "stem": "germani"
+        "normal": "germany"
       }
     ],
     "expected_tokens": [
@@ -139,33 +81,9 @@
             {
               "id": "12101821946584629805#0",
               "text": "Germany",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "12101821946584629805#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 12101821946584629805,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 12101821946584629805,
-                "head_text": "Germany"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "germany",
-              "stem": "germani"
+              "normal": "germany"
             }
           ],
           "canon": "germany",
@@ -177,7 +95,21 @@
         }
       }
     ],
-    "expected_text": "germany"
+    "expected_text": "germany",
+    "raw": {
+      "entities": [
+        {
+          "canon": "germany",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "Germany",
+          "confidence": 100
+        }
+      ],
+      "text": "germany"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_japan_exact_match",
@@ -187,33 +119,9 @@
       {
         "id": "11778144722599621067#0",
         "text": "Japan",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11778144722599621067#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 11778144722599621067,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 11778144722599621067,
-          "head_text": "Japan"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "japan",
-        "stem": "japan"
+        "normal": "japan"
       }
     ],
     "expected_tokens": [
@@ -229,33 +137,9 @@
             {
               "id": "11778144722599621067#0",
               "text": "Japan",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "11778144722599621067#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 11778144722599621067,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 11778144722599621067,
-                "head_text": "Japan"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "japan",
-              "stem": "japan"
+              "normal": "japan"
             }
           ],
           "canon": "japan",
@@ -267,7 +151,21 @@
         }
       }
     ],
-    "expected_text": "japan"
+    "expected_text": "japan",
+    "raw": {
+      "entities": [
+        {
+          "canon": "japan",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "Japan",
+          "confidence": 100
+        }
+      ],
+      "text": "japan"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_china_exact_match",
@@ -277,33 +175,9 @@
       {
         "id": "13385439009439644888#0",
         "text": "China",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13385439009439644888#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13385439009439644888,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 13385439009439644888,
-          "head_text": "China"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "china",
-        "stem": "china"
+        "normal": "china"
       }
     ],
     "expected_tokens": [
@@ -319,33 +193,9 @@
             {
               "id": "13385439009439644888#0",
               "text": "China",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "13385439009439644888#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 13385439009439644888,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 13385439009439644888,
-                "head_text": "China"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "china",
-              "stem": "china"
+              "normal": "china"
             }
           ],
           "canon": "china",
@@ -357,7 +207,21 @@
         }
       }
     ],
-    "expected_text": "china"
+    "expected_text": "china",
+    "raw": {
+      "entities": [
+        {
+          "canon": "china",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "China",
+          "confidence": 100
+        }
+      ],
+      "text": "china"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_brazil_exact_match",
@@ -367,33 +231,9 @@
       {
         "id": "11428788335096200086#0",
         "text": "Brazil",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11428788335096200086#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 11428788335096200086,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 11428788335096200086,
-          "head_text": "Brazil"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "brazil",
-        "stem": "brazil"
+        "normal": "brazil"
       }
     ],
     "expected_tokens": [
@@ -409,33 +249,9 @@
             {
               "id": "11428788335096200086#0",
               "text": "Brazil",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "11428788335096200086#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 11428788335096200086,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 11428788335096200086,
-                "head_text": "Brazil"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "brazil",
-              "stem": "brazil"
+              "normal": "brazil"
             }
           ],
           "canon": "brazil",
@@ -447,7 +263,21 @@
         }
       }
     ],
-    "expected_text": "brazil"
+    "expected_text": "brazil",
+    "raw": {
+      "entities": [
+        {
+          "canon": "brazil",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Brazil",
+          "confidence": 100
+        }
+      ],
+      "text": "brazil"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_canada_exact_match",
@@ -457,33 +287,9 @@
       {
         "id": "12493166723054806753#0",
         "text": "Canada",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "12493166723054806753#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 12493166723054806753,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 12493166723054806753,
-          "head_text": "Canada"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "canada",
-        "stem": "canada"
+        "normal": "canada"
       }
     ],
     "expected_tokens": [
@@ -499,33 +305,9 @@
             {
               "id": "12493166723054806753#0",
               "text": "Canada",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "12493166723054806753#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 12493166723054806753,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 12493166723054806753,
-                "head_text": "Canada"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "canada",
-              "stem": "canada"
+              "normal": "canada"
             }
           ],
           "canon": "canada",
@@ -537,7 +319,21 @@
         }
       }
     ],
-    "expected_text": "canada"
+    "expected_text": "canada",
+    "raw": {
+      "entities": [
+        {
+          "canon": "canada",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Canada",
+          "confidence": 100
+        }
+      ],
+      "text": "canada"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_mexico_exact_match",
@@ -547,33 +343,9 @@
       {
         "id": "11806034973885074649#0",
         "text": "Mexico",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11806034973885074649#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 11806034973885074649,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 11806034973885074649,
-          "head_text": "Mexico"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "mexico",
-        "stem": "mexico"
+        "normal": "mexico"
       }
     ],
     "expected_tokens": [
@@ -589,33 +361,9 @@
             {
               "id": "11806034973885074649#0",
               "text": "Mexico",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "11806034973885074649#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 11806034973885074649,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 11806034973885074649,
-                "head_text": "Mexico"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "mexico",
-              "stem": "mexico"
+              "normal": "mexico"
             }
           ],
           "canon": "mexico",
@@ -627,7 +375,21 @@
         }
       }
     ],
-    "expected_text": "mexico"
+    "expected_text": "mexico",
+    "raw": {
+      "entities": [
+        {
+          "canon": "mexico",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Mexico",
+          "confidence": 100
+        }
+      ],
+      "text": "mexico"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_italy_exact_match",
@@ -637,33 +399,9 @@
       {
         "id": "5879186332814567530#0",
         "text": "Italy",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5879186332814567530#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5879186332814567530,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 5879186332814567530,
-          "head_text": "Italy"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "italy",
-        "stem": "itali"
+        "normal": "italy"
       }
     ],
     "expected_tokens": [
@@ -679,33 +417,9 @@
             {
               "id": "5879186332814567530#0",
               "text": "Italy",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "5879186332814567530#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 5879186332814567530,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 5879186332814567530,
-                "head_text": "Italy"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "italy",
-              "stem": "itali"
+              "normal": "italy"
             }
           ],
           "canon": "italy",
@@ -717,7 +431,21 @@
         }
       }
     ],
-    "expected_text": "italy"
+    "expected_text": "italy",
+    "raw": {
+      "entities": [
+        {
+          "canon": "italy",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "Italy",
+          "confidence": 100
+        }
+      ],
+      "text": "italy"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_spain_exact_match",
@@ -727,33 +455,9 @@
       {
         "id": "17549558730983322913#0",
         "text": "Spain",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "17549558730983322913#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 17549558730983322913,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 17549558730983322913,
-          "head_text": "Spain"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "spain",
-        "stem": "spain"
+        "normal": "spain"
       }
     ],
     "expected_tokens": [
@@ -769,33 +473,9 @@
             {
               "id": "17549558730983322913#0",
               "text": "Spain",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "17549558730983322913#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 17549558730983322913,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 17549558730983322913,
-                "head_text": "Spain"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "spain",
-              "stem": "spain"
+              "normal": "spain"
             }
           ],
           "canon": "spain",
@@ -807,7 +487,21 @@
         }
       }
     ],
-    "expected_text": "spain"
+    "expected_text": "spain",
+    "raw": {
+      "entities": [
+        {
+          "canon": "spain",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "Spain",
+          "confidence": 100
+        }
+      ],
+      "text": "spain"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_india_exact_match",
@@ -817,33 +511,9 @@
       {
         "id": "13756031414435721121#0",
         "text": "India",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13756031414435721121#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13756031414435721121,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 13756031414435721121,
-          "head_text": "India"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "india",
-        "stem": "india"
+        "normal": "india"
       }
     ],
     "expected_tokens": [
@@ -859,33 +529,9 @@
             {
               "id": "13756031414435721121#0",
               "text": "India",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "13756031414435721121#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 13756031414435721121,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 13756031414435721121,
-                "head_text": "India"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "india",
-              "stem": "india"
+              "normal": "india"
             }
           ],
           "canon": "india",
@@ -897,7 +543,21 @@
         }
       }
     ],
-    "expected_text": "india"
+    "expected_text": "india",
+    "raw": {
+      "entities": [
+        {
+          "canon": "india",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "India",
+          "confidence": 100
+        }
+      ],
+      "text": "india"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_argentina_exact_match",
@@ -907,33 +567,9 @@
       {
         "id": "8892412674995408215#0",
         "text": "Argentina",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8892412674995408215#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 8892412674995408215,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 8892412674995408215,
-          "head_text": "Argentina"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "argentina",
-        "stem": "argentina"
+        "normal": "argentina"
       }
     ],
     "expected_tokens": [
@@ -949,33 +585,9 @@
             {
               "id": "8892412674995408215#0",
               "text": "Argentina",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "8892412674995408215#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 8892412674995408215,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 8892412674995408215,
-                "head_text": "Argentina"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 9,
-              "is_wordnet": true,
-              "normal": "argentina",
-              "stem": "argentina"
+              "normal": "argentina"
             }
           ],
           "canon": "argentina",
@@ -987,7 +599,21 @@
         }
       }
     ],
-    "expected_text": "argentina"
+    "expected_text": "argentina",
+    "raw": {
+      "entities": [
+        {
+          "canon": "argentina",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 9,
+          "text": "Argentina",
+          "confidence": 100
+        }
+      ],
+      "text": "argentina"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_london_exact_match",
@@ -997,33 +623,9 @@
       {
         "id": "5392354317538386956#0",
         "text": "London",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5392354317538386956#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5392354317538386956,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 5392354317538386956,
-          "head_text": "London"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "london",
-        "stem": "london"
+        "normal": "london"
       }
     ],
     "expected_tokens": [
@@ -1039,33 +641,9 @@
             {
               "id": "5392354317538386956#0",
               "text": "London",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "5392354317538386956#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 5392354317538386956,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 5392354317538386956,
-                "head_text": "London"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "london",
-              "stem": "london"
+              "normal": "london"
             }
           ],
           "canon": "london",
@@ -1077,7 +655,21 @@
         }
       }
     ],
-    "expected_text": "london"
+    "expected_text": "london",
+    "raw": {
+      "entities": [
+        {
+          "canon": "london",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "London",
+          "confidence": 100
+        }
+      ],
+      "text": "london"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_paris_exact_match",
@@ -1087,33 +679,9 @@
       {
         "id": "10427160276079242800#0",
         "text": "Paris",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "10427160276079242800#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 10427160276079242800,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 10427160276079242800,
-          "head_text": "Paris"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "paris",
-        "stem": "pari"
+        "normal": "paris"
       }
     ],
     "expected_tokens": [
@@ -1129,33 +697,9 @@
             {
               "id": "10427160276079242800#0",
               "text": "Paris",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "10427160276079242800#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 10427160276079242800,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 10427160276079242800,
-                "head_text": "Paris"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "paris",
-              "stem": "pari"
+              "normal": "paris"
             }
           ],
           "canon": "paris",
@@ -1167,7 +711,21 @@
         }
       }
     ],
-    "expected_text": "paris"
+    "expected_text": "paris",
+    "raw": {
+      "entities": [
+        {
+          "canon": "paris",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "Paris",
+          "confidence": 100
+        }
+      ],
+      "text": "paris"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_tokyo_exact_match",
@@ -1177,33 +735,9 @@
       {
         "id": "1689865463182427203#0",
         "text": "Tokyo",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1689865463182427203#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 1689865463182427203,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 1689865463182427203,
-          "head_text": "Tokyo"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "tokyo",
-        "stem": "tokyo"
+        "normal": "tokyo"
       }
     ],
     "expected_tokens": [
@@ -1219,33 +753,9 @@
             {
               "id": "1689865463182427203#0",
               "text": "Tokyo",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1689865463182427203#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 1689865463182427203,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 1689865463182427203,
-                "head_text": "Tokyo"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "tokyo",
-              "stem": "tokyo"
+              "normal": "tokyo"
             }
           ],
           "canon": "tokyo",
@@ -1257,7 +767,21 @@
         }
       }
     ],
-    "expected_text": "tokyo"
+    "expected_text": "tokyo",
+    "raw": {
+      "entities": [
+        {
+          "canon": "tokyo",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "Tokyo",
+          "confidence": 100
+        }
+      ],
+      "text": "tokyo"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_beijing_exact_match",
@@ -1267,33 +791,9 @@
       {
         "id": "2949147885855558195#0",
         "text": "Beijing",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2949147885855558195#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 2949147885855558195,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 2949147885855558195,
-          "head_text": "Beijing"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "beijing",
-        "stem": "beij"
+        "normal": "beijing"
       }
     ],
     "expected_tokens": [
@@ -1309,33 +809,9 @@
             {
               "id": "2949147885855558195#0",
               "text": "Beijing",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2949147885855558195#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 2949147885855558195,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 2949147885855558195,
-                "head_text": "Beijing"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "beijing",
-              "stem": "beij"
+              "normal": "beijing"
             }
           ],
           "canon": "beijing",
@@ -1347,7 +823,21 @@
         }
       }
     ],
-    "expected_text": "beijing"
+    "expected_text": "beijing",
+    "raw": {
+      "entities": [
+        {
+          "canon": "beijing",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "Beijing",
+          "confidence": 100
+        }
+      ],
+      "text": "beijing"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_chicago_exact_match",
@@ -1357,33 +847,9 @@
       {
         "id": "3767271857074311788#0",
         "text": "Chicago",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "3767271857074311788#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 3767271857074311788,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 3767271857074311788,
-          "head_text": "Chicago"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "chicago",
-        "stem": "chicago"
+        "normal": "chicago"
       }
     ],
     "expected_tokens": [
@@ -1399,33 +865,9 @@
             {
               "id": "3767271857074311788#0",
               "text": "Chicago",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "3767271857074311788#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 3767271857074311788,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 3767271857074311788,
-                "head_text": "Chicago"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "chicago",
-              "stem": "chicago"
+              "normal": "chicago"
             }
           ],
           "canon": "chicago",
@@ -1437,7 +879,21 @@
         }
       }
     ],
-    "expected_text": "chicago"
+    "expected_text": "chicago",
+    "raw": {
+      "entities": [
+        {
+          "canon": "chicago",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "Chicago",
+          "confidence": 100
+        }
+      ],
+      "text": "chicago"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_sydney_exact_match",
@@ -1447,33 +903,9 @@
       {
         "id": "64914885292384134#0",
         "text": "Sydney",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "64914885292384134#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 64914885292384134,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 64914885292384134,
-          "head_text": "Sydney"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "sydney",
-        "stem": "sydnei"
+        "normal": "sydney"
       }
     ],
     "expected_tokens": [
@@ -1489,33 +921,9 @@
             {
               "id": "64914885292384134#0",
               "text": "Sydney",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "64914885292384134#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 64914885292384134,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 64914885292384134,
-                "head_text": "Sydney"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "sydney",
-              "stem": "sydnei"
+              "normal": "sydney"
             }
           ],
           "canon": "sydney",
@@ -1527,7 +935,21 @@
         }
       }
     ],
-    "expected_text": "sydney"
+    "expected_text": "sydney",
+    "raw": {
+      "entities": [
+        {
+          "canon": "sydney",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Sydney",
+          "confidence": 100
+        }
+      ],
+      "text": "sydney"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_berlin_exact_match",
@@ -1537,33 +959,9 @@
       {
         "id": "14607853860610250682#0",
         "text": "Berlin",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14607853860610250682#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 14607853860610250682,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 14607853860610250682,
-          "head_text": "Berlin"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "berlin",
-        "stem": "berlin"
+        "normal": "berlin"
       }
     ],
     "expected_tokens": [
@@ -1579,33 +977,9 @@
             {
               "id": "14607853860610250682#0",
               "text": "Berlin",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14607853860610250682#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 14607853860610250682,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 14607853860610250682,
-                "head_text": "Berlin"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "berlin",
-              "stem": "berlin"
+              "normal": "berlin"
             }
           ],
           "canon": "berlin",
@@ -1617,7 +991,21 @@
         }
       }
     ],
-    "expected_text": "berlin"
+    "expected_text": "berlin",
+    "raw": {
+      "entities": [
+        {
+          "canon": "berlin",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Berlin",
+          "confidence": 100
+        }
+      ],
+      "text": "berlin"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_rome_exact_match",
@@ -1627,33 +1015,9 @@
       {
         "id": "7430892194449458039#0",
         "text": "Rome",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "7430892194449458039#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 7430892194449458039,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 7430892194449458039,
-          "head_text": "Rome"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "rome",
-        "stem": "rome"
+        "normal": "rome"
       }
     ],
     "expected_tokens": [
@@ -1669,33 +1033,9 @@
             {
               "id": "7430892194449458039#0",
               "text": "Rome",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "7430892194449458039#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 7430892194449458039,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 7430892194449458039,
-                "head_text": "Rome"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "rome",
-              "stem": "rome"
+              "normal": "rome"
             }
           ],
           "canon": "rome",
@@ -1707,7 +1047,21 @@
         }
       }
     ],
-    "expected_text": "rome"
+    "expected_text": "rome",
+    "raw": {
+      "entities": [
+        {
+          "canon": "rome",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 4,
+          "text": "Rome",
+          "confidence": 100
+        }
+      ],
+      "text": "rome"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_europe_exact_match",
@@ -1717,33 +1071,9 @@
       {
         "id": "8117742040754315580#0",
         "text": "Europe",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "LOC",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8117742040754315580#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 8117742040754315580,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 8117742040754315580,
-          "head_text": "Europe"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "europe",
-        "stem": "europe"
+        "normal": "europe"
       }
     ],
     "expected_tokens": [
@@ -1759,33 +1089,9 @@
             {
               "id": "8117742040754315580#0",
               "text": "Europe",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "LOC",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "8117742040754315580#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 8117742040754315580,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 8117742040754315580,
-                "head_text": "Europe"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "europe",
-              "stem": "europe"
+              "normal": "europe"
             }
           ],
           "canon": "europe",
@@ -1797,7 +1103,21 @@
         }
       }
     ],
-    "expected_text": "europe"
+    "expected_text": "europe",
+    "raw": {
+      "entities": [
+        {
+          "canon": "europe",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Europe",
+          "confidence": 100
+        }
+      ],
+      "text": "europe"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_asia_exact_match",
@@ -1807,33 +1127,9 @@
       {
         "id": "13172233958268439049#0",
         "text": "Asia",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "LOC",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13172233958268439049#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13172233958268439049,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 13172233958268439049,
-          "head_text": "Asia"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "asia",
-        "stem": "asia"
+        "normal": "asia"
       }
     ],
     "expected_tokens": [
@@ -1849,33 +1145,9 @@
             {
               "id": "13172233958268439049#0",
               "text": "Asia",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "LOC",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "13172233958268439049#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 13172233958268439049,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 13172233958268439049,
-                "head_text": "Asia"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "asia",
-              "stem": "asia"
+              "normal": "asia"
             }
           ],
           "canon": "asia",
@@ -1887,7 +1159,21 @@
         }
       }
     ],
-    "expected_text": "asia"
+    "expected_text": "asia",
+    "raw": {
+      "entities": [
+        {
+          "canon": "asia",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 4,
+          "text": "Asia",
+          "confidence": 100
+        }
+      ],
+      "text": "asia"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_africa_exact_match",
@@ -1897,33 +1183,9 @@
       {
         "id": "14216530883836791987#0",
         "text": "Africa",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "LOC",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14216530883836791987#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 14216530883836791987,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 14216530883836791987,
-          "head_text": "Africa"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "africa",
-        "stem": "africa"
+        "normal": "africa"
       }
     ],
     "expected_tokens": [
@@ -1939,33 +1201,9 @@
             {
               "id": "14216530883836791987#0",
               "text": "Africa",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "LOC",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14216530883836791987#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 14216530883836791987,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 14216530883836791987,
-                "head_text": "Africa"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "africa",
-              "stem": "africa"
+              "normal": "africa"
             }
           ],
           "canon": "africa",
@@ -1977,7 +1215,21 @@
         }
       }
     ],
-    "expected_text": "africa"
+    "expected_text": "africa",
+    "raw": {
+      "entities": [
+        {
+          "canon": "africa",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Africa",
+          "confidence": 100
+        }
+      ],
+      "text": "africa"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_antarctica_exact_match",
@@ -1987,33 +1239,9 @@
       {
         "id": "17587588617695599475#0",
         "text": "Antarctica",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "LOC",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "17587588617695599475#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 17587588617695599475,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 17587588617695599475,
-          "head_text": "Antarctica"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 10,
-        "is_wordnet": true,
-        "normal": "antarctica",
-        "stem": "antarctica"
+        "normal": "antarctica"
       }
     ],
     "expected_tokens": [
@@ -2029,33 +1257,9 @@
             {
               "id": "17587588617695599475#0",
               "text": "Antarctica",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "LOC",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "17587588617695599475#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 17587588617695599475,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 17587588617695599475,
-                "head_text": "Antarctica"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 10,
-              "is_wordnet": true,
-              "normal": "antarctica",
-              "stem": "antarctica"
+              "normal": "antarctica"
             }
           ],
           "canon": "antarctica",
@@ -2067,7 +1271,21 @@
         }
       }
     ],
-    "expected_text": "antarctica"
+    "expected_text": "antarctica",
+    "raw": {
+      "entities": [
+        {
+          "canon": "antarctica",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 10,
+          "text": "Antarctica",
+          "confidence": 100
+        }
+      ],
+      "text": "antarctica"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_usa_maps_to_united_states",
@@ -2077,33 +1295,9 @@
       {
         "id": "881628435112216044#0",
         "text": "USA",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "XXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "881628435112216044#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 881628435112216044,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 881628435112216044,
-          "head_text": "USA"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "usa",
-        "stem": "usa"
+        "normal": "usa"
       }
     ],
     "expected_tokens": [
@@ -2119,33 +1313,9 @@
             {
               "id": "881628435112216044#0",
               "text": "USA",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "XXX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "881628435112216044#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 881628435112216044,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 881628435112216044,
-                "head_text": "USA"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 3,
-              "is_wordnet": true,
-              "normal": "usa",
-              "stem": "usa"
+              "normal": "usa"
             }
           ],
           "canon": "united_states",
@@ -2157,7 +1327,21 @@
         }
       }
     ],
-    "expected_text": "united_states"
+    "expected_text": "united_states",
+    "raw": {
+      "entities": [
+        {
+          "canon": "united_states",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 3,
+          "text": "USA",
+          "confidence": 100
+        }
+      ],
+      "text": "united_states"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_america_maps_to_united_states",
@@ -2167,33 +1351,9 @@
       {
         "id": "13134984502707718284#0",
         "text": "America",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13134984502707718284#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13134984502707718284,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 13134984502707718284,
-          "head_text": "America"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "america",
-        "stem": "america"
+        "normal": "america"
       }
     ],
     "expected_tokens": [
@@ -2209,33 +1369,9 @@
             {
               "id": "13134984502707718284#0",
               "text": "America",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "13134984502707718284#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 13134984502707718284,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 13134984502707718284,
-                "head_text": "America"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "america",
-              "stem": "america"
+              "normal": "america"
             }
           ],
           "canon": "united_states",
@@ -2247,7 +1383,21 @@
         }
       }
     ],
-    "expected_text": "united_states"
+    "expected_text": "united_states",
+    "raw": {
+      "entities": [
+        {
+          "canon": "united_states",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "America",
+          "confidence": 100
+        }
+      ],
+      "text": "united_states"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_uk_maps_to_united_kingdom",
@@ -2257,33 +1407,9 @@
       {
         "id": "14067982841790495447#0",
         "text": "UK",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "XX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14067982841790495447#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 14067982841790495447,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 14067982841790495447,
-          "head_text": "UK"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 2,
-        "is_wordnet": true,
-        "normal": "uk",
-        "stem": "uk"
+        "normal": "uk"
       }
     ],
     "expected_tokens": [
@@ -2299,33 +1425,9 @@
             {
               "id": "14067982841790495447#0",
               "text": "UK",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "XX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14067982841790495447#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 14067982841790495447,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 14067982841790495447,
-                "head_text": "UK"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 2,
-              "is_wordnet": true,
-              "normal": "uk",
-              "stem": "uk"
+              "normal": "uk"
             }
           ],
           "canon": "united_kingdom",
@@ -2337,7 +1439,21 @@
         }
       }
     ],
-    "expected_text": "united_kingdom"
+    "expected_text": "united_kingdom",
+    "raw": {
+      "entities": [
+        {
+          "canon": "united_kingdom",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 2,
+          "text": "UK",
+          "confidence": 100
+        }
+      ],
+      "text": "united_kingdom"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_britain_maps_to_united_kingdom",
@@ -2347,33 +1463,9 @@
       {
         "id": "9199405576633879440#0",
         "text": "Britain",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "9199405576633879440#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 9199405576633879440,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 9199405576633879440,
-          "head_text": "Britain"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "britain",
-        "stem": "britain"
+        "normal": "britain"
       }
     ],
     "expected_tokens": [
@@ -2389,33 +1481,9 @@
             {
               "id": "9199405576633879440#0",
               "text": "Britain",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "9199405576633879440#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 9199405576633879440,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 9199405576633879440,
-                "head_text": "Britain"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "britain",
-              "stem": "britain"
+              "normal": "britain"
             }
           ],
           "canon": "united_kingdom",
@@ -2427,7 +1495,21 @@
         }
       }
     ],
-    "expected_text": "united_kingdom"
+    "expected_text": "united_kingdom",
+    "raw": {
+      "entities": [
+        {
+          "canon": "united_kingdom",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "Britain",
+          "confidence": 100
+        }
+      ],
+      "text": "united_kingdom"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_england_maps_to_united_kingdom",
@@ -2437,33 +1519,9 @@
       {
         "id": "10941252157987694380#0",
         "text": "England",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "10941252157987694380#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 10941252157987694380,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 10941252157987694380,
-          "head_text": "England"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "england",
-        "stem": "england"
+        "normal": "england"
       }
     ],
     "expected_tokens": [
@@ -2479,33 +1537,9 @@
             {
               "id": "10941252157987694380#0",
               "text": "England",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "10941252157987694380#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 10941252157987694380,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 10941252157987694380,
-                "head_text": "England"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "england",
-              "stem": "england"
+              "normal": "england"
             }
           ],
           "canon": "united_kingdom",
@@ -2517,7 +1551,21 @@
         }
       }
     ],
-    "expected_text": "united_kingdom"
+    "expected_text": "united_kingdom",
+    "raw": {
+      "entities": [
+        {
+          "canon": "united_kingdom",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "England",
+          "confidence": 100
+        }
+      ],
+      "text": "united_kingdom"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_nyc_maps_to_new_york",
@@ -2527,33 +1575,9 @@
       {
         "id": "4308787674710433140#0",
         "text": "NYC",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "LOC",
-        "shape": "XXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "4308787674710433140#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4308787674710433140,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 4308787674710433140,
-          "head_text": "NYC"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": false,
-        "normal": "nyc",
-        "stem": "nyc"
+        "normal": "nyc"
       }
     ],
     "expected_tokens": [
@@ -2569,33 +1593,9 @@
             {
               "id": "4308787674710433140#0",
               "text": "NYC",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "LOC",
-              "shape": "XXX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "4308787674710433140#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 4308787674710433140,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 4308787674710433140,
-                "head_text": "NYC"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 3,
-              "is_wordnet": false,
-              "normal": "nyc",
-              "stem": "nyc"
+              "normal": "nyc"
             }
           ],
           "canon": "new_york",
@@ -2607,7 +1607,21 @@
         }
       }
     ],
-    "expected_text": "new_york"
+    "expected_text": "new_york",
+    "raw": {
+      "entities": [
+        {
+          "canon": "new_york",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 3,
+          "text": "NYC",
+          "confidence": 100
+        }
+      ],
+      "text": "new_york"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_la_maps_to_los_angeles",
@@ -2617,33 +1631,9 @@
       {
         "id": "1402090224648381380#0",
         "text": "LA",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "XX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1402090224648381380#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 1402090224648381380,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 1402090224648381380,
-          "head_text": "LA"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 2,
-        "is_wordnet": true,
-        "normal": "la",
-        "stem": "la"
+        "normal": "la"
       }
     ],
     "expected_tokens": [
@@ -2659,33 +1649,9 @@
             {
               "id": "1402090224648381380#0",
               "text": "LA",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "XX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1402090224648381380#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 1402090224648381380,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 1402090224648381380,
-                "head_text": "LA"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 2,
-              "is_wordnet": true,
-              "normal": "la",
-              "stem": "la"
+              "normal": "la"
             }
           ],
           "canon": "los_angeles",
@@ -2697,7 +1663,21 @@
         }
       }
     ],
-    "expected_text": "los_angeles"
+    "expected_text": "los_angeles",
+    "raw": {
+      "entities": [
+        {
+          "canon": "los_angeles",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 2,
+          "text": "LA",
+          "confidence": 100
+        }
+      ],
+      "text": "los_angeles"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_deutschland_maps_to_germany",
@@ -2707,33 +1687,9 @@
       {
         "id": "3491614202785599281#0",
         "text": "Deutschland",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "3491614202785599281#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 3491614202785599281,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 3491614202785599281,
-          "head_text": "Deutschland"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 11,
-        "is_wordnet": true,
-        "normal": "deutschland",
-        "stem": "deutschland"
+        "normal": "deutschland"
       }
     ],
     "expected_tokens": [
@@ -2749,33 +1705,9 @@
             {
               "id": "3491614202785599281#0",
               "text": "Deutschland",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "3491614202785599281#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 3491614202785599281,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 3491614202785599281,
-                "head_text": "Deutschland"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 11,
-              "is_wordnet": true,
-              "normal": "deutschland",
-              "stem": "deutschland"
+              "normal": "deutschland"
             }
           ],
           "canon": "germany",
@@ -2787,7 +1719,21 @@
         }
       }
     ],
-    "expected_text": "germany"
+    "expected_text": "germany",
+    "raw": {
+      "entities": [
+        {
+          "canon": "germany",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 11,
+          "text": "Deutschland",
+          "confidence": 100
+        }
+      ],
+      "text": "germany"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_prc_maps_to_china",
@@ -2797,33 +1743,9 @@
       {
         "id": "12249207539416520332#0",
         "text": "PRC",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "XXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "12249207539416520332#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 12249207539416520332,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 12249207539416520332,
-          "head_text": "PRC"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "prc",
-        "stem": "prc"
+        "normal": "prc"
       }
     ],
     "expected_tokens": [
@@ -2839,33 +1761,9 @@
             {
               "id": "12249207539416520332#0",
               "text": "PRC",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "XXX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "12249207539416520332#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 12249207539416520332,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 12249207539416520332,
-                "head_text": "PRC"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 3,
-              "is_wordnet": true,
-              "normal": "prc",
-              "stem": "prc"
+              "normal": "prc"
             }
           ],
           "canon": "china",
@@ -2877,7 +1775,21 @@
         }
       }
     ],
-    "expected_text": "china"
+    "expected_text": "china",
+    "raw": {
+      "entities": [
+        {
+          "canon": "china",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 3,
+          "text": "PRC",
+          "confidence": 100
+        }
+      ],
+      "text": "china"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_peking_maps_to_beijing",
@@ -2887,33 +1799,9 @@
       {
         "id": "9841544783883477450#0",
         "text": "peking",
-        "tense": "pres",
-        "noun_number": "",
-        "verb_form": "part",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBG",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "9841544783883477450#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 9841544783883477450,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 9841544783883477450,
-          "head_text": "peking"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "peking",
-        "stem": "pek"
+        "normal": "peking"
       }
     ],
     "expected_tokens": [
@@ -2929,33 +1817,9 @@
             {
               "id": "9841544783883477450#0",
               "text": "peking",
-              "tense": "pres",
-              "noun_number": "",
-              "verb_form": "part",
-              "sentiment": 0.0,
-              "pos": "VERB",
-              "tag": "VBG",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "9841544783883477450#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 9841544783883477450,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 9841544783883477450,
-                "head_text": "peking"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "peking",
-              "stem": "pek"
+              "normal": "peking"
             }
           ],
           "canon": "beijing",
@@ -2967,7 +1831,21 @@
         }
       }
     ],
-    "expected_text": "beijing"
+    "expected_text": "beijing",
+    "raw": {
+      "entities": [
+        {
+          "canon": "beijing",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "peking",
+          "confidence": 100
+        }
+      ],
+      "text": "beijing"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_bombay_maps_to_mumbai",
@@ -2977,33 +1855,9 @@
       {
         "id": "15381374466031393843#0",
         "text": "bombay",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "15381374466031393843#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 15381374466031393843,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 15381374466031393843,
-          "head_text": "bombay"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "bombay",
-        "stem": "bombai"
+        "normal": "bombay"
       }
     ],
     "expected_tokens": [
@@ -3019,33 +1873,9 @@
             {
               "id": "15381374466031393843#0",
               "text": "bombay",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "15381374466031393843#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 15381374466031393843,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 15381374466031393843,
-                "head_text": "bombay"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "bombay",
-              "stem": "bombai"
+              "normal": "bombay"
             }
           ],
           "canon": "mumbai",
@@ -3057,7 +1887,21 @@
         }
       }
     ],
-    "expected_text": "mumbai"
+    "expected_text": "mumbai",
+    "raw": {
+      "entities": [
+        {
+          "canon": "mumbai",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "bombay",
+          "confidence": 100
+        }
+      ],
+      "text": "mumbai"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_everest_maps_to_mount_everest",
@@ -3067,33 +1911,9 @@
       {
         "id": "6114042505879624772#0",
         "text": "everest",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "inf",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VB",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6114042505879624772#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 6114042505879624772,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 6114042505879624772,
-          "head_text": "everest"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "everest",
-        "stem": "everest"
+        "normal": "everest"
       }
     ],
     "expected_tokens": [
@@ -3109,33 +1929,9 @@
             {
               "id": "6114042505879624772#0",
               "text": "everest",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "inf",
-              "sentiment": 0.0,
-              "pos": "VERB",
-              "tag": "VB",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6114042505879624772#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 6114042505879624772,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 6114042505879624772,
-                "head_text": "everest"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "everest",
-              "stem": "everest"
+              "normal": "everest"
             }
           ],
           "canon": "mount_everest",
@@ -3147,7 +1943,21 @@
         }
       }
     ],
-    "expected_text": "mount_everest"
+    "expected_text": "mount_everest",
+    "raw": {
+      "entities": [
+        {
+          "canon": "mount_everest",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "everest",
+          "confidence": 100
+        }
+      ],
+      "text": "mount_everest"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_north_america_span",
@@ -3157,64 +1967,16 @@
       {
         "id": "12673666897586381700#1",
         "text": "North ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13134984502707718284#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 12673666897586381700,
-          "head_i": 2,
-          "head_idx": 7,
-          "head_orth": 13134984502707718284,
-          "head_text": "America"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "north",
-        "stem": "north"
+        "normal": "north"
       },
       {
         "id": "13134984502707718284#2",
         "text": "America",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13134984502707718284#2",
-        "other": {
-          "i": 2,
-          "idx": 7,
-          "orth": 13134984502707718284,
-          "head_i": 2,
-          "head_idx": 7,
-          "head_orth": 13134984502707718284,
-          "head_text": "America"
-        },
-        "is_punct": false,
         "x": 6,
         "y": 13,
-        "is_wordnet": true,
-        "normal": "america",
-        "stem": "america"
+        "normal": "america"
       }
     ],
     "expected_tokens": [
@@ -3230,64 +1992,16 @@
             {
               "id": "12673666897586381700#1",
               "text": "North ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "13134984502707718284#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 12673666897586381700,
-                "head_i": 2,
-                "head_idx": 7,
-                "head_orth": 13134984502707718284,
-                "head_text": "America"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "north",
-              "stem": "north"
+              "normal": "north"
             },
             {
               "id": "13134984502707718284#2",
               "text": "America",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "13134984502707718284#2",
-              "other": {
-                "i": 2,
-                "idx": 7,
-                "orth": 13134984502707718284,
-                "head_i": 2,
-                "head_idx": 7,
-                "head_orth": 13134984502707718284,
-                "head_text": "America"
-              },
-              "is_punct": false,
               "x": 6,
               "y": 13,
-              "is_wordnet": true,
-              "normal": "america",
-              "stem": "america"
+              "normal": "america"
             }
           ],
           "canon": "north_america",
@@ -3299,7 +2013,21 @@
         }
       }
     ],
-    "expected_text": "north_america"
+    "expected_text": "north_america",
+    "raw": {
+      "entities": [
+        {
+          "canon": "north_america",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 13,
+          "text": "North America",
+          "confidence": 100
+        }
+      ],
+      "text": "north_america"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_south_america_span",
@@ -3309,64 +2037,16 @@
       {
         "id": "17000969757051719863#1",
         "text": "South ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13134984502707718284#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 17000969757051719863,
-          "head_i": 2,
-          "head_idx": 7,
-          "head_orth": 13134984502707718284,
-          "head_text": "America"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "south",
-        "stem": "south"
+        "normal": "south"
       },
       {
         "id": "13134984502707718284#2",
         "text": "America",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13134984502707718284#2",
-        "other": {
-          "i": 2,
-          "idx": 7,
-          "orth": 13134984502707718284,
-          "head_i": 2,
-          "head_idx": 7,
-          "head_orth": 13134984502707718284,
-          "head_text": "America"
-        },
-        "is_punct": false,
         "x": 6,
         "y": 13,
-        "is_wordnet": true,
-        "normal": "america",
-        "stem": "america"
+        "normal": "america"
       }
     ],
     "expected_tokens": [
@@ -3382,64 +2062,16 @@
             {
               "id": "17000969757051719863#1",
               "text": "South ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "13134984502707718284#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 17000969757051719863,
-                "head_i": 2,
-                "head_idx": 7,
-                "head_orth": 13134984502707718284,
-                "head_text": "America"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "south",
-              "stem": "south"
+              "normal": "south"
             },
             {
               "id": "13134984502707718284#2",
               "text": "America",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "13134984502707718284#2",
-              "other": {
-                "i": 2,
-                "idx": 7,
-                "orth": 13134984502707718284,
-                "head_i": 2,
-                "head_idx": 7,
-                "head_orth": 13134984502707718284,
-                "head_text": "America"
-              },
-              "is_punct": false,
               "x": 6,
               "y": 13,
-              "is_wordnet": true,
-              "normal": "america",
-              "stem": "america"
+              "normal": "america"
             }
           ],
           "canon": "south_america",
@@ -3451,7 +2083,21 @@
         }
       }
     ],
-    "expected_text": "south_america"
+    "expected_text": "south_america",
+    "raw": {
+      "entities": [
+        {
+          "canon": "south_america",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 13,
+          "text": "South America",
+          "confidence": 100
+        }
+      ],
+      "text": "south_america"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_united_states_span",
@@ -3461,64 +2107,16 @@
       {
         "id": "13226800834791099135#1",
         "text": "United ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "3278625293875499398#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13226800834791099135,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 3278625293875499398,
-          "head_text": "States"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "united",
-        "stem": "unit"
+        "normal": "united"
       },
       {
         "id": "3278625293875499398#2",
         "text": "States",
-        "tense": "",
-        "noun_number": "plural",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNPS",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "3278625293875499398#2",
-        "other": {
-          "i": 2,
-          "idx": 8,
-          "orth": 3278625293875499398,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 3278625293875499398,
-          "head_text": "States"
-        },
-        "is_punct": false,
         "x": 7,
         "y": 13,
-        "is_wordnet": true,
-        "normal": "states",
-        "stem": "state"
+        "normal": "states"
       }
     ],
     "expected_tokens": [
@@ -3534,64 +2132,16 @@
             {
               "id": "13226800834791099135#1",
               "text": "United ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "3278625293875499398#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 13226800834791099135,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 3278625293875499398,
-                "head_text": "States"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "united",
-              "stem": "unit"
+              "normal": "united"
             },
             {
               "id": "3278625293875499398#2",
               "text": "States",
-              "tense": "",
-              "noun_number": "plural",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNPS",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "3278625293875499398#2",
-              "other": {
-                "i": 2,
-                "idx": 8,
-                "orth": 3278625293875499398,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 3278625293875499398,
-                "head_text": "States"
-              },
-              "is_punct": false,
               "x": 7,
               "y": 13,
-              "is_wordnet": true,
-              "normal": "states",
-              "stem": "state"
+              "normal": "states"
             }
           ],
           "canon": "united_states",
@@ -3603,7 +2153,21 @@
         }
       }
     ],
-    "expected_text": "united_states"
+    "expected_text": "united_states",
+    "raw": {
+      "entities": [
+        {
+          "canon": "united_states",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 13,
+          "text": "United States",
+          "confidence": 100
+        }
+      ],
+      "text": "united_states"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_united_kingdom_span",
@@ -3613,64 +2177,16 @@
       {
         "id": "13226800834791099135#1",
         "text": "United ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1698348621709282100#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13226800834791099135,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 1698348621709282100,
-          "head_text": "Kingdom"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "united",
-        "stem": "unit"
+        "normal": "united"
       },
       {
         "id": "1698348621709282100#2",
         "text": "Kingdom",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1698348621709282100#2",
-        "other": {
-          "i": 2,
-          "idx": 8,
-          "orth": 1698348621709282100,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 1698348621709282100,
-          "head_text": "Kingdom"
-        },
-        "is_punct": false,
         "x": 7,
         "y": 14,
-        "is_wordnet": true,
-        "normal": "kingdom",
-        "stem": "kingdom"
+        "normal": "kingdom"
       }
     ],
     "expected_tokens": [
@@ -3686,64 +2202,16 @@
             {
               "id": "13226800834791099135#1",
               "text": "United ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1698348621709282100#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 13226800834791099135,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 1698348621709282100,
-                "head_text": "Kingdom"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "united",
-              "stem": "unit"
+              "normal": "united"
             },
             {
               "id": "1698348621709282100#2",
               "text": "Kingdom",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1698348621709282100#2",
-              "other": {
-                "i": 2,
-                "idx": 8,
-                "orth": 1698348621709282100,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 1698348621709282100,
-                "head_text": "Kingdom"
-              },
-              "is_punct": false,
               "x": 7,
               "y": 14,
-              "is_wordnet": true,
-              "normal": "kingdom",
-              "stem": "kingdom"
+              "normal": "kingdom"
             }
           ],
           "canon": "united_kingdom",
@@ -3755,7 +2223,21 @@
         }
       }
     ],
-    "expected_text": "united_kingdom"
+    "expected_text": "united_kingdom",
+    "raw": {
+      "entities": [
+        {
+          "canon": "united_kingdom",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 14,
+          "text": "United Kingdom",
+          "confidence": 100
+        }
+      ],
+      "text": "united_kingdom"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_new_york_span",
@@ -3765,64 +2247,16 @@
       {
         "id": "7503827727184870577#1",
         "text": "New ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "GPE",
-        "shape": "Xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "7898044819112200372#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 7503827727184870577,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 7898044819112200372,
-          "head_text": "York"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "new",
-        "stem": "new"
+        "normal": "new"
       },
       {
         "id": "7898044819112200372#2",
         "text": "York",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "7898044819112200372#2",
-        "other": {
-          "i": 2,
-          "idx": 5,
-          "orth": 7898044819112200372,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 7898044819112200372,
-          "head_text": "York"
-        },
-        "is_punct": false,
         "x": 4,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "york",
-        "stem": "york"
+        "normal": "york"
       }
     ],
     "expected_tokens": [
@@ -3838,64 +2272,16 @@
             {
               "id": "7503827727184870577#1",
               "text": "New ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "GPE",
-              "shape": "Xxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "7898044819112200372#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 7503827727184870577,
-                "head_i": 2,
-                "head_idx": 5,
-                "head_orth": 7898044819112200372,
-                "head_text": "York"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 3,
-              "is_wordnet": true,
-              "normal": "new",
-              "stem": "new"
+              "normal": "new"
             },
             {
               "id": "7898044819112200372#2",
               "text": "York",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "7898044819112200372#2",
-              "other": {
-                "i": 2,
-                "idx": 5,
-                "orth": 7898044819112200372,
-                "head_i": 2,
-                "head_idx": 5,
-                "head_orth": 7898044819112200372,
-                "head_text": "York"
-              },
-              "is_punct": false,
               "x": 4,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "york",
-              "stem": "york"
+              "normal": "york"
             }
           ],
           "canon": "new_york",
@@ -3907,7 +2293,21 @@
         }
       }
     ],
-    "expected_text": "new_york"
+    "expected_text": "new_york",
+    "raw": {
+      "entities": [
+        {
+          "canon": "new_york",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 8,
+          "text": "New York",
+          "confidence": 100
+        }
+      ],
+      "text": "new_york"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_los_angeles_span",
@@ -3917,64 +2317,16 @@
       {
         "id": "8281310487209232694#1",
         "text": "Los ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "GPE",
-        "shape": "Xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "10932196212924477247#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 8281310487209232694,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 10932196212924477247,
-          "head_text": "Angeles"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "los",
-        "stem": "lo"
+        "normal": "los"
       },
       {
         "id": "10932196212924477247#2",
         "text": "Angeles",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "10932196212924477247#2",
-        "other": {
-          "i": 2,
-          "idx": 5,
-          "orth": 10932196212924477247,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 10932196212924477247,
-          "head_text": "Angeles"
-        },
-        "is_punct": false,
         "x": 4,
         "y": 11,
-        "is_wordnet": true,
-        "normal": "angeles",
-        "stem": "angele"
+        "normal": "angeles"
       }
     ],
     "expected_tokens": [
@@ -3990,64 +2342,16 @@
             {
               "id": "8281310487209232694#1",
               "text": "Los ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "GPE",
-              "shape": "Xxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "10932196212924477247#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 8281310487209232694,
-                "head_i": 2,
-                "head_idx": 5,
-                "head_orth": 10932196212924477247,
-                "head_text": "Angeles"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 3,
-              "is_wordnet": true,
-              "normal": "los",
-              "stem": "lo"
+              "normal": "los"
             },
             {
               "id": "10932196212924477247#2",
               "text": "Angeles",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "10932196212924477247#2",
-              "other": {
-                "i": 2,
-                "idx": 5,
-                "orth": 10932196212924477247,
-                "head_i": 2,
-                "head_idx": 5,
-                "head_orth": 10932196212924477247,
-                "head_text": "Angeles"
-              },
-              "is_punct": false,
               "x": 4,
               "y": 11,
-              "is_wordnet": true,
-              "normal": "angeles",
-              "stem": "angele"
+              "normal": "angeles"
             }
           ],
           "canon": "los_angeles",
@@ -4059,7 +2363,21 @@
         }
       }
     ],
-    "expected_text": "los_angeles"
+    "expected_text": "los_angeles",
+    "raw": {
+      "entities": [
+        {
+          "canon": "los_angeles",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 11,
+          "text": "Los Angeles",
+          "confidence": 100
+        }
+      ],
+      "text": "los_angeles"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_south_africa_span",
@@ -4069,64 +2387,16 @@
       {
         "id": "17000969757051719863#1",
         "text": "South ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14216530883836791987#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 17000969757051719863,
-          "head_i": 2,
-          "head_idx": 7,
-          "head_orth": 14216530883836791987,
-          "head_text": "Africa"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "south",
-        "stem": "south"
+        "normal": "south"
       },
       {
         "id": "14216530883836791987#2",
         "text": "Africa",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14216530883836791987#2",
-        "other": {
-          "i": 2,
-          "idx": 7,
-          "orth": 14216530883836791987,
-          "head_i": 2,
-          "head_idx": 7,
-          "head_orth": 14216530883836791987,
-          "head_text": "Africa"
-        },
-        "is_punct": false,
         "x": 6,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "africa",
-        "stem": "africa"
+        "normal": "africa"
       }
     ],
     "expected_tokens": [
@@ -4142,64 +2412,16 @@
             {
               "id": "17000969757051719863#1",
               "text": "South ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14216530883836791987#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 17000969757051719863,
-                "head_i": 2,
-                "head_idx": 7,
-                "head_orth": 14216530883836791987,
-                "head_text": "Africa"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "south",
-              "stem": "south"
+              "normal": "south"
             },
             {
               "id": "14216530883836791987#2",
               "text": "Africa",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14216530883836791987#2",
-              "other": {
-                "i": 2,
-                "idx": 7,
-                "orth": 14216530883836791987,
-                "head_i": 2,
-                "head_idx": 7,
-                "head_orth": 14216530883836791987,
-                "head_text": "Africa"
-              },
-              "is_punct": false,
               "x": 6,
               "y": 12,
-              "is_wordnet": true,
-              "normal": "africa",
-              "stem": "africa"
+              "normal": "africa"
             }
           ],
           "canon": "south_africa",
@@ -4211,7 +2433,21 @@
         }
       }
     ],
-    "expected_text": "south_africa"
+    "expected_text": "south_africa",
+    "raw": {
+      "entities": [
+        {
+          "canon": "south_africa",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 12,
+          "text": "South Africa",
+          "confidence": 100
+        }
+      ],
+      "text": "south_africa"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_eiffel_tower_span",
@@ -4221,64 +2457,16 @@
       {
         "id": "4070221957993466759#1",
         "text": "Eiffel ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "7173414934001905289#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4070221957993466759,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 7173414934001905289,
-          "head_text": "Tower"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "eiffel",
-        "stem": "eiffel"
+        "normal": "eiffel"
       },
       {
         "id": "7173414934001905289#2",
         "text": "Tower",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "7173414934001905289#2",
-        "other": {
-          "i": 2,
-          "idx": 8,
-          "orth": 7173414934001905289,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 7173414934001905289,
-          "head_text": "Tower"
-        },
-        "is_punct": false,
         "x": 7,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "tower",
-        "stem": "tower"
+        "normal": "tower"
       }
     ],
     "expected_tokens": [
@@ -4294,64 +2482,16 @@
             {
               "id": "4070221957993466759#1",
               "text": "Eiffel ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "7173414934001905289#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 4070221957993466759,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 7173414934001905289,
-                "head_text": "Tower"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "eiffel",
-              "stem": "eiffel"
+              "normal": "eiffel"
             },
             {
               "id": "7173414934001905289#2",
               "text": "Tower",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "7173414934001905289#2",
-              "other": {
-                "i": 2,
-                "idx": 8,
-                "orth": 7173414934001905289,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 7173414934001905289,
-                "head_text": "Tower"
-              },
-              "is_punct": false,
               "x": 7,
               "y": 12,
-              "is_wordnet": true,
-              "normal": "tower",
-              "stem": "tower"
+              "normal": "tower"
             }
           ],
           "canon": "eiffel_tower",
@@ -4363,7 +2503,21 @@
         }
       }
     ],
-    "expected_text": "eiffel_tower"
+    "expected_text": "eiffel_tower",
+    "raw": {
+      "entities": [
+        {
+          "canon": "eiffel_tower",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 12,
+          "text": "Eiffel Tower",
+          "confidence": 100
+        }
+      ],
+      "text": "eiffel_tower"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_great_wall_span",
@@ -4373,64 +2527,16 @@
       {
         "id": "14637358012790906115#1",
         "text": "Great ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8806908179280924345#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 14637358012790906115,
-          "head_i": 2,
-          "head_idx": 7,
-          "head_orth": 8806908179280924345,
-          "head_text": "Wall"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "great",
-        "stem": "gree"
+        "normal": "great"
       },
       {
         "id": "8806908179280924345#2",
         "text": "Wall",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8806908179280924345#2",
-        "other": {
-          "i": 2,
-          "idx": 7,
-          "orth": 8806908179280924345,
-          "head_i": 2,
-          "head_idx": 7,
-          "head_orth": 8806908179280924345,
-          "head_text": "Wall"
-        },
-        "is_punct": false,
         "x": 6,
         "y": 10,
-        "is_wordnet": true,
-        "normal": "wall",
-        "stem": "wall"
+        "normal": "wall"
       }
     ],
     "expected_tokens": [
@@ -4446,64 +2552,16 @@
             {
               "id": "14637358012790906115#1",
               "text": "Great ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "compound",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "8806908179280924345#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 14637358012790906115,
-                "head_i": 2,
-                "head_idx": 7,
-                "head_orth": 8806908179280924345,
-                "head_text": "Wall"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "great",
-              "stem": "gree"
+              "normal": "great"
             },
             {
               "id": "8806908179280924345#2",
               "text": "Wall",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "8806908179280924345#2",
-              "other": {
-                "i": 2,
-                "idx": 7,
-                "orth": 8806908179280924345,
-                "head_i": 2,
-                "head_idx": 7,
-                "head_orth": 8806908179280924345,
-                "head_text": "Wall"
-              },
-              "is_punct": false,
               "x": 6,
               "y": 10,
-              "is_wordnet": true,
-              "normal": "wall",
-              "stem": "wall"
+              "normal": "wall"
             }
           ],
           "canon": "great_wall",
@@ -4515,7 +2573,21 @@
         }
       }
     ],
-    "expected_text": "great_wall"
+    "expected_text": "great_wall",
+    "raw": {
+      "entities": [
+        {
+          "canon": "great_wall",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 10,
+          "text": "Great Wall",
+          "confidence": 100
+        }
+      ],
+      "text": "great_wall"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_pacific_ocean_span",
@@ -4525,64 +2597,16 @@
       {
         "id": "7543293588541783153#1",
         "text": "Pacific ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "LOC",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "3745291585819928485#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 7543293588541783153,
-          "head_i": 2,
-          "head_idx": 9,
-          "head_orth": 3745291585819928485,
-          "head_text": "Ocean"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "pacific",
-        "stem": "pacif"
+        "normal": "pacific"
       },
       {
         "id": "3745291585819928485#2",
         "text": "Ocean",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "LOC",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "3745291585819928485#2",
-        "other": {
-          "i": 2,
-          "idx": 9,
-          "orth": 3745291585819928485,
-          "head_i": 2,
-          "head_idx": 9,
-          "head_orth": 3745291585819928485,
-          "head_text": "Ocean"
-        },
-        "is_punct": false,
         "x": 8,
         "y": 13,
-        "is_wordnet": true,
-        "normal": "ocean",
-        "stem": "ocean"
+        "normal": "ocean"
       }
     ],
     "expected_tokens": [
@@ -4598,64 +2622,16 @@
             {
               "id": "7543293588541783153#1",
               "text": "Pacific ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "LOC",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "3745291585819928485#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 7543293588541783153,
-                "head_i": 2,
-                "head_idx": 9,
-                "head_orth": 3745291585819928485,
-                "head_text": "Ocean"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "pacific",
-              "stem": "pacif"
+              "normal": "pacific"
             },
             {
               "id": "3745291585819928485#2",
               "text": "Ocean",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "LOC",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "3745291585819928485#2",
-              "other": {
-                "i": 2,
-                "idx": 9,
-                "orth": 3745291585819928485,
-                "head_i": 2,
-                "head_idx": 9,
-                "head_orth": 3745291585819928485,
-                "head_text": "Ocean"
-              },
-              "is_punct": false,
               "x": 8,
               "y": 13,
-              "is_wordnet": true,
-              "normal": "ocean",
-              "stem": "ocean"
+              "normal": "ocean"
             }
           ],
           "canon": "pacific_ocean",
@@ -4667,7 +2643,21 @@
         }
       }
     ],
-    "expected_text": "pacific_ocean"
+    "expected_text": "pacific_ocean",
+    "raw": {
+      "entities": [
+        {
+          "canon": "pacific_ocean",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 13,
+          "text": "Pacific Ocean",
+          "confidence": 100
+        }
+      ],
+      "text": "pacific_ocean"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_mount_everest_span",
@@ -4677,64 +2667,16 @@
       {
         "id": "5101729985738810198#1",
         "text": "Mount ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "10895907526500539708#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5101729985738810198,
-          "head_i": 2,
-          "head_idx": 7,
-          "head_orth": 10895907526500539708,
-          "head_text": "Everest"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "mount",
-        "stem": "mount"
+        "normal": "mount"
       },
       {
         "id": "10895907526500539708#2",
         "text": "Everest",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "LOC",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "10895907526500539708#2",
-        "other": {
-          "i": 2,
-          "idx": 7,
-          "orth": 10895907526500539708,
-          "head_i": 2,
-          "head_idx": 7,
-          "head_orth": 10895907526500539708,
-          "head_text": "Everest"
-        },
-        "is_punct": false,
         "x": 6,
         "y": 13,
-        "is_wordnet": true,
-        "normal": "everest",
-        "stem": "everest"
+        "normal": "everest"
       }
     ],
     "expected_tokens": [
@@ -4750,64 +2692,16 @@
             {
               "id": "5101729985738810198#1",
               "text": "Mount ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "10895907526500539708#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 5101729985738810198,
-                "head_i": 2,
-                "head_idx": 7,
-                "head_orth": 10895907526500539708,
-                "head_text": "Everest"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "mount",
-              "stem": "mount"
+              "normal": "mount"
             },
             {
               "id": "10895907526500539708#2",
               "text": "Everest",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "LOC",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "10895907526500539708#2",
-              "other": {
-                "i": 2,
-                "idx": 7,
-                "orth": 10895907526500539708,
-                "head_i": 2,
-                "head_idx": 7,
-                "head_orth": 10895907526500539708,
-                "head_text": "Everest"
-              },
-              "is_punct": false,
               "x": 6,
               "y": 13,
-              "is_wordnet": true,
-              "normal": "everest",
-              "stem": "everest"
+              "normal": "everest"
             }
           ],
           "canon": "mount_everest",
@@ -4819,7 +2713,21 @@
         }
       }
     ],
-    "expected_text": "mount_everest"
+    "expected_text": "mount_everest",
+    "raw": {
+      "entities": [
+        {
+          "canon": "mount_everest",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 13,
+          "text": "Mount Everest",
+          "confidence": 100
+        }
+      ],
+      "text": "mount_everest"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_big_ben_span",
@@ -4829,64 +2737,16 @@
       {
         "id": "11424154495882175203#1",
         "text": "Big ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "12410721966382571671#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 11424154495882175203,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 12410721966382571671,
-          "head_text": "Ben"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "big",
-        "stem": "big"
+        "normal": "big"
       },
       {
         "id": "12410721966382571671#2",
         "text": "Ben",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "12410721966382571671#2",
-        "other": {
-          "i": 2,
-          "idx": 5,
-          "orth": 12410721966382571671,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 12410721966382571671,
-          "head_text": "Ben"
-        },
-        "is_punct": false,
         "x": 4,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "ben",
-        "stem": "ben"
+        "normal": "ben"
       }
     ],
     "expected_tokens": [
@@ -4902,64 +2762,16 @@
             {
               "id": "11424154495882175203#1",
               "text": "Big ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "compound",
-              "ent": "",
-              "shape": "Xxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "12410721966382571671#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 11424154495882175203,
-                "head_i": 2,
-                "head_idx": 5,
-                "head_orth": 12410721966382571671,
-                "head_text": "Ben"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 3,
-              "is_wordnet": true,
-              "normal": "big",
-              "stem": "big"
+              "normal": "big"
             },
             {
               "id": "12410721966382571671#2",
               "text": "Ben",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "12410721966382571671#2",
-              "other": {
-                "i": 2,
-                "idx": 5,
-                "orth": 12410721966382571671,
-                "head_i": 2,
-                "head_idx": 5,
-                "head_orth": 12410721966382571671,
-                "head_text": "Ben"
-              },
-              "is_punct": false,
               "x": 4,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "ben",
-              "stem": "ben"
+              "normal": "ben"
             }
           ],
           "canon": "big_ben",
@@ -4971,7 +2783,21 @@
         }
       }
     ],
-    "expected_text": "big_ben"
+    "expected_text": "big_ben",
+    "raw": {
+      "entities": [
+        {
+          "canon": "big_ben",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "Big Ben",
+          "confidence": 100
+        }
+      ],
+      "text": "big_ben"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_united_states_in_sentence",
@@ -4981,314 +2807,74 @@
       {
         "id": "4690420944186131903#1",
         "text": "I ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "11749534953085588517#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4690420944186131903,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 11749534953085588517,
-          "head_text": "visited"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 1,
-        "is_wordnet": false,
-        "normal": "i",
-        "stem": "i"
+        "normal": "i"
       },
       {
         "id": "11749534953085588517#3",
         "text": "visited ",
-        "tense": "past",
-        "noun_number": "",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBD",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11749534953085588517#2",
-        "other": {
-          "i": 2,
-          "idx": 3,
-          "orth": 11749534953085588517,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 11749534953085588517,
-          "head_text": "visited"
-        },
-        "is_punct": false,
         "x": 2,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "visited",
-        "stem": "visit"
+        "normal": "visited"
       },
       {
         "id": "7425985699627899538#5",
         "text": "the ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "DET",
-        "tag": "DT",
-        "dep": "det",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "3278625293875499398#8",
-        "other": {
-          "i": 4,
-          "idx": 12,
-          "orth": 7425985699627899538,
-          "head_i": 8,
-          "head_idx": 25,
-          "head_orth": 3278625293875499398,
-          "head_text": "States"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 13,
-        "is_wordnet": true,
-        "normal": "the",
-        "stem": "the"
+        "normal": "the"
       },
       {
         "id": "13226800834791099135#7",
         "text": "United ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "3278625293875499398#8",
-        "other": {
-          "i": 6,
-          "idx": 17,
-          "orth": 13226800834791099135,
-          "head_i": 8,
-          "head_idx": 25,
-          "head_orth": 3278625293875499398,
-          "head_text": "States"
-        },
-        "is_punct": false,
         "x": 14,
         "y": 20,
-        "is_wordnet": true,
-        "normal": "united",
-        "stem": "unit"
+        "normal": "united"
       },
       {
         "id": "3278625293875499398#9",
         "text": "States ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "dobj",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11749534953085588517#2",
-        "other": {
-          "i": 8,
-          "idx": 25,
-          "orth": 3278625293875499398,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 11749534953085588517,
-          "head_text": "visited"
-        },
-        "is_punct": false,
         "x": 21,
         "y": 27,
-        "is_wordnet": true,
-        "normal": "states",
-        "stem": "state"
+        "normal": "states"
       },
       {
         "id": "10321518907502812892#11",
         "text": "last ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "DATE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "14889849580704678361#12",
-        "other": {
-          "i": 10,
-          "idx": 33,
-          "orth": 10321518907502812892,
-          "head_i": 12,
-          "head_idx": 39,
-          "head_orth": 14889849580704678361,
-          "head_text": "year"
-        },
-        "is_punct": false,
         "x": 28,
         "y": 32,
-        "is_wordnet": true,
-        "normal": "last",
-        "stem": "last"
+        "normal": "last"
       },
       {
         "id": "14889849580704678361#12",
         "text": "year",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "npadvmod",
-        "ent": "DATE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11749534953085588517#2",
-        "other": {
-          "i": 12,
-          "idx": 39,
-          "orth": 14889849580704678361,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 11749534953085588517,
-          "head_text": "visited"
-        },
-        "is_punct": false,
         "x": 33,
         "y": 37,
-        "is_wordnet": true,
-        "normal": "year",
-        "stem": "year"
+        "normal": "year"
       }
     ],
     "expected_tokens": [
       {
         "id": "4690420944186131903#1",
         "text": "I ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "11749534953085588517#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4690420944186131903,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 11749534953085588517,
-          "head_text": "visited"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 1,
-        "is_wordnet": false,
-        "normal": "i",
-        "stem": "i"
+        "normal": "i"
       },
       {
         "id": "11749534953085588517#3",
         "text": "visited ",
-        "tense": "past",
-        "noun_number": "",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBD",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11749534953085588517#2",
-        "other": {
-          "i": 2,
-          "idx": 3,
-          "orth": 11749534953085588517,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 11749534953085588517,
-          "head_text": "visited"
-        },
-        "is_punct": false,
         "x": 2,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "visited",
-        "stem": "visit"
+        "normal": "visited"
       },
       {
         "id": "7425985699627899538#5",
         "text": "the ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "DET",
-        "tag": "DT",
-        "dep": "det",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "3278625293875499398#8",
-        "other": {
-          "i": 4,
-          "idx": 12,
-          "orth": 7425985699627899538,
-          "head_i": 8,
-          "head_idx": 25,
-          "head_orth": 3278625293875499398,
-          "head_text": "States"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 13,
-        "is_wordnet": true,
-        "normal": "the",
-        "stem": "the"
+        "normal": "the"
       },
       {
         "id": "13226800834791099135#7",
@@ -5302,64 +2888,16 @@
             {
               "id": "13226800834791099135#7",
               "text": "United ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "3278625293875499398#8",
-              "other": {
-                "i": 6,
-                "idx": 17,
-                "orth": 13226800834791099135,
-                "head_i": 8,
-                "head_idx": 25,
-                "head_orth": 3278625293875499398,
-                "head_text": "States"
-              },
-              "is_punct": false,
               "x": 14,
               "y": 20,
-              "is_wordnet": true,
-              "normal": "united",
-              "stem": "unit"
+              "normal": "united"
             },
             {
               "id": "3278625293875499398#9",
               "text": "States ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "dobj",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "11749534953085588517#2",
-              "other": {
-                "i": 8,
-                "idx": 25,
-                "orth": 3278625293875499398,
-                "head_i": 2,
-                "head_idx": 3,
-                "head_orth": 11749534953085588517,
-                "head_text": "visited"
-              },
-              "is_punct": false,
               "x": 21,
               "y": 27,
-              "is_wordnet": true,
-              "normal": "states",
-              "stem": "state"
+              "normal": "states"
             }
           ],
           "canon": "united_states",
@@ -5373,67 +2911,33 @@
       {
         "id": "10321518907502812892#11",
         "text": "last ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "DATE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "14889849580704678361#12",
-        "other": {
-          "i": 10,
-          "idx": 33,
-          "orth": 10321518907502812892,
-          "head_i": 12,
-          "head_idx": 39,
-          "head_orth": 14889849580704678361,
-          "head_text": "year"
-        },
-        "is_punct": false,
         "x": 28,
         "y": 32,
-        "is_wordnet": true,
-        "normal": "last",
-        "stem": "last"
+        "normal": "last"
       },
       {
         "id": "14889849580704678361#12",
         "text": "year",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "npadvmod",
-        "ent": "DATE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11749534953085588517#2",
-        "other": {
-          "i": 12,
-          "idx": 39,
-          "orth": 14889849580704678361,
-          "head_i": 2,
-          "head_idx": 3,
-          "head_orth": 11749534953085588517,
-          "head_text": "visited"
-        },
-        "is_punct": false,
         "x": 33,
         "y": 37,
-        "is_wordnet": true,
-        "normal": "year",
-        "stem": "year"
+        "normal": "year"
       }
     ],
-    "expected_text": "I visited the united_states last year"
+    "expected_text": "I visited the united_states last year",
+    "raw": {
+      "entities": [
+        {
+          "canon": "united_states",
+          "type": "exact",
+          "ner": null,
+          "x": 14,
+          "y": 27,
+          "text": "United States",
+          "confidence": 100
+        }
+      ],
+      "text": "I visited the united_states last year"
+    }
   },
   {
     "test": "owl/parser/test_geography_parser.py::TestGeographyParser::test_new_york_in_sentence",
@@ -5443,252 +2947,60 @@
       {
         "id": "5252949303365547547#1",
         "text": "She ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "Xxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "11245784847398743405#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5252949303365547547,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 11245784847398743405,
-          "head_text": "lives"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "she",
-        "stem": "she"
+        "normal": "she"
       },
       {
         "id": "11245784847398743405#3",
         "text": "lives ",
-        "tense": "pres",
-        "noun_number": "singular",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBZ",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11245784847398743405#2",
-        "other": {
-          "i": 2,
-          "idx": 5,
-          "orth": 11245784847398743405,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 11245784847398743405,
-          "head_text": "lives"
-        },
-        "is_punct": false,
         "x": 4,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "lives",
-        "stem": "live"
+        "normal": "lives"
       },
       {
         "id": "3002984154512732771#5",
         "text": "in ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADP",
-        "tag": "IN",
-        "dep": "prep",
-        "ent": "",
-        "shape": "xx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "11245784847398743405#2",
-        "other": {
-          "i": 4,
-          "idx": 12,
-          "orth": 3002984154512732771,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 11245784847398743405,
-          "head_text": "lives"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "in",
-        "stem": "in"
+        "normal": "in"
       },
       {
         "id": "7503827727184870577#7",
         "text": "New ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "GPE",
-        "shape": "Xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "7898044819112200372#8",
-        "other": {
-          "i": 6,
-          "idx": 16,
-          "orth": 7503827727184870577,
-          "head_i": 8,
-          "head_idx": 21,
-          "head_orth": 7898044819112200372,
-          "head_text": "York"
-        },
-        "is_punct": false,
         "x": 13,
         "y": 16,
-        "is_wordnet": true,
-        "normal": "new",
-        "stem": "new"
+        "normal": "new"
       },
       {
         "id": "7898044819112200372#8",
         "text": "York",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "pobj",
-        "ent": "GPE",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "3002984154512732771#4",
-        "other": {
-          "i": 8,
-          "idx": 21,
-          "orth": 7898044819112200372,
-          "head_i": 4,
-          "head_idx": 12,
-          "head_orth": 3002984154512732771,
-          "head_text": "in"
-        },
-        "is_punct": false,
         "x": 17,
         "y": 21,
-        "is_wordnet": true,
-        "normal": "york",
-        "stem": "york"
+        "normal": "york"
       }
     ],
     "expected_tokens": [
       {
         "id": "5252949303365547547#1",
         "text": "She ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PRON",
-        "tag": "PRP",
-        "dep": "nsubj",
-        "ent": "",
-        "shape": "Xxx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "11245784847398743405#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5252949303365547547,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 11245784847398743405,
-          "head_text": "lives"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "she",
-        "stem": "she"
+        "normal": "she"
       },
       {
         "id": "11245784847398743405#3",
         "text": "lives ",
-        "tense": "pres",
-        "noun_number": "singular",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBZ",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11245784847398743405#2",
-        "other": {
-          "i": 2,
-          "idx": 5,
-          "orth": 11245784847398743405,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 11245784847398743405,
-          "head_text": "lives"
-        },
-        "is_punct": false,
         "x": 4,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "lives",
-        "stem": "live"
+        "normal": "lives"
       },
       {
         "id": "3002984154512732771#5",
         "text": "in ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADP",
-        "tag": "IN",
-        "dep": "prep",
-        "ent": "",
-        "shape": "xx",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "11245784847398743405#2",
-        "other": {
-          "i": 4,
-          "idx": 12,
-          "orth": 3002984154512732771,
-          "head_i": 2,
-          "head_idx": 5,
-          "head_orth": 11245784847398743405,
-          "head_text": "lives"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "in",
-        "stem": "in"
+        "normal": "in"
       },
       {
         "id": "7503827727184870577#7",
@@ -5702,64 +3014,16 @@
             {
               "id": "7503827727184870577#7",
               "text": "New ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "GPE",
-              "shape": "Xxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "7898044819112200372#8",
-              "other": {
-                "i": 6,
-                "idx": 16,
-                "orth": 7503827727184870577,
-                "head_i": 8,
-                "head_idx": 21,
-                "head_orth": 7898044819112200372,
-                "head_text": "York"
-              },
-              "is_punct": false,
               "x": 13,
               "y": 16,
-              "is_wordnet": true,
-              "normal": "new",
-              "stem": "new"
+              "normal": "new"
             },
             {
               "id": "7898044819112200372#8",
               "text": "York",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "pobj",
-              "ent": "GPE",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "3002984154512732771#4",
-              "other": {
-                "i": 8,
-                "idx": 21,
-                "orth": 7898044819112200372,
-                "head_i": 4,
-                "head_idx": 12,
-                "head_orth": 3002984154512732771,
-                "head_text": "in"
-              },
-              "is_punct": false,
               "x": 17,
               "y": 21,
-              "is_wordnet": true,
-              "normal": "york",
-              "stem": "york"
+              "normal": "york"
             }
           ],
           "canon": "new_york",
@@ -5771,6 +3035,20 @@
         }
       }
     ],
-    "expected_text": "She lives in new_york"
+    "expected_text": "She lives in new_york",
+    "raw": {
+      "entities": [
+        {
+          "canon": "new_york",
+          "type": "exact",
+          "ner": null,
+          "x": 13,
+          "y": 21,
+          "text": "New York",
+          "confidence": 100
+        }
+      ],
+      "text": "She lives in new_york"
+    }
   }
 ]

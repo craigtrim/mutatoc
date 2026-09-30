@@ -1,15 +1,13 @@
 /*
  * cli.c - Command-line entry point and JSON request server.
  *
- * Loads runtime settings and supports one-shot and persistent requests.
+ * Supports one-shot and persistent requests; everything runs in process.
+ * craigtrim/mutatoc#1
  */
 
 #ifdef _WIN32
 #include <windows.h>
 #include <shellapi.h>
-#elif defined(__linux__)
-#define _POSIX_C_SOURCE 200809L
-#include <unistd.h>
 #endif
 #include "mc.h"
 
@@ -54,61 +52,13 @@ static J *call(mc_engine *e, J *q)
 	return out;
 }
 
-static const char *env_or(const char *key, const char *fallback)
-{
-	const char *v = getenv(key);
-	return v && *v ? v : fallback;
-}
-
-static char *beside_executable(const char *argv0, const char *relative)
-{
-	char *exe = NULL;
-#ifdef _WIN32
-	wchar_t path[32768];
-	DWORD count = GetModuleFileNameW(NULL, path, 32768);
-	if (count && count < 32768) {
-		int n = WideCharToMultiByte(CP_UTF8, 0, path, -1, NULL, 0, NULL,
-					    NULL);
-		exe = malloc((size_t)n);
-		if (exe)
-			WideCharToMultiByte(CP_UTF8, 0, path, -1, exe, n, NULL,
-					    NULL);
-	}
-#elif defined(__linux__)
-	char path[4096];
-	ssize_t n = readlink("/proc/self/exe", path, sizeof(path) - 1);
-	if (n > 0)
-		exe = slice(path, (size_t)n);
-#endif
-	if (!exe)
-		exe = copy(argv0);
-	char *slash = strrchr(exe, '/'), *backslash = strrchr(exe, '\\');
-	if (backslash && (!slash || backslash > slash))
-		slash = backslash;
-	if (slash)
-		slash[1] = 0;
-	else
-		exe[0] = 0;
-	Buf b = { 0 };
-	buf_put(&b, exe);
-	buf_put(&b, relative);
-	free(exe);
-	return buf_take(&b);
-}
-
 static void usage(void)
 {
 	puts("mutatoc " MUTATOC_VERSION "\nUsage:\n"
 	     "  mutatoc --ontology FILE --input-text TEXT [--json] [--live]\n"
 	     "  mutatoc --ontology FILE --snapshot FILE\n"
 	     "  mutatoc --serve\n  mutatoc --version\n\n"
-	     "Raw text uses the original spaCy/LingPatLab preprocessing. Options:\n"
-	     "  --python FILE         Python executable (MUTATOC_PYTHON, bundled runtime, then python)\n"
-	     "  --spacy-worker FILE   Worker script (MUTATOC_SPACY_WORKER, default beside executable)\n"
-	     "  --sparql-worker FILE  RDFLib query worker (MUTATOC_SPARQL_WORKER)\n"
-	     "  --spacy-model MODEL   Model package/path (MUTATOC_SPACY_MODEL, default en_core_web_sm)\n"
-	     "  --spacy-timeout MS    Startup/request deadline (default 120000)\n\n"
-	     "--serve accepts one JSON request per line and retains the ontology and model.\n"
+	     "--serve accepts one JSON request per line and retains the ontology.\n"
 	     "--live uses the reference class-based extraction path.\n"
 	     "--force-cache rebuilds from OWL; this runtime has no implicit disk cache.\n"
 	     "--namespace is accepted for compatibility; RDF prefixes define IRIs.");
@@ -117,11 +67,6 @@ static void usage(void)
 static int run(int argc, char **argv)
 {
 	const char *path = NULL, *text = NULL, *snapshot = NULL;
-	const char *python = env_or("MUTATOC_PYTHON", NULL);
-	const char *worker = env_or("MUTATOC_SPACY_WORKER", NULL);
-	const char *sparql_worker = env_or("MUTATOC_SPARQL_WORKER", NULL);
-	const char *model = env_or("MUTATOC_SPACY_MODEL", "en_core_web_sm");
-	unsigned timeout = 0;
 	int serve = 0, json = 0, live = 0, force = 0;
 	for (int i = 1; i < argc; i++) {
 		const char *a = argv[i];
@@ -144,11 +89,7 @@ static int run(int argc, char **argv)
 		else if (!strcmp(a, "--ontology") ||
 			 !strcmp(a, "--input-text") ||
 			 !strcmp(a, "--snapshot") ||
-			 !strcmp(a, "--namespace") || !strcmp(a, "--python") ||
-			 !strcmp(a, "--spacy-worker") ||
-			 !strcmp(a, "--spacy-model") ||
-			 !strcmp(a, "--spacy-timeout") ||
-			 !strcmp(a, "--sparql-worker")) {
+			 !strcmp(a, "--namespace")) {
 			if (++i == argc) {
 				fprintf(stderr, "Missing value for %s\n", a);
 				return 2;
@@ -159,25 +100,6 @@ static int run(int argc, char **argv)
 				text = argv[i];
 			else if (!strcmp(a, "--snapshot"))
 				snapshot = argv[i];
-			else if (!strcmp(a, "--python"))
-				python = argv[i];
-			else if (!strcmp(a, "--spacy-worker"))
-				worker = argv[i];
-			else if (!strcmp(a, "--spacy-model"))
-				model = argv[i];
-			else if (!strcmp(a, "--sparql-worker"))
-				sparql_worker = argv[i];
-			else if (!strcmp(a, "--spacy-timeout")) {
-				char *end;
-				unsigned long value =
-					strtoul(argv[i], &end, 10);
-				if (!*argv[i] || *end || value > 3600000) {
-					fputs("Invalid --spacy-timeout\n",
-					      stderr);
-					return 2;
-				}
-				timeout = (unsigned)value;
-			}
 		} else if (strcmp(a, "parse")) {
 			fprintf(stderr, "Unknown option: %s\n", a);
 			return 2;
@@ -196,38 +118,7 @@ static int run(int argc, char **argv)
 	mc_engine *e = mc_create();
 	if (!e)
 		return 1;
-	char *discovered =
-		worker ? NULL :
-			 beside_executable(argv[0], "runtime/spacy_worker.py");
-	char *discovered_sparql =
-		sparql_worker ?
-			NULL :
-			beside_executable(argv[0], "runtime/sparql_worker.py");
-	char *bundled = beside_executable(argv[0], "runtime/python/python.exe");
-	if (!python) {
-		FILE *candidate = mc_fopen(bundled, "rb");
-		if (candidate) {
-			fclose(candidate);
-			python = bundled;
-		} else
-			python = "python";
-	}
 	mc_error err;
-	if (!mc_use_spacy(e, python, worker ? worker : discovered, model,
-			  timeout, &err) ||
-	    !mc_use_sparql(e, python,
-			   sparql_worker ? sparql_worker : discovered_sparql,
-			   timeout, &err)) {
-		fprintf(stderr, "%s\n", err.message);
-		free(discovered);
-		free(discovered_sparql);
-		free(bundled);
-		mc_destroy(e);
-		return 2;
-	}
-	free(discovered);
-	free(discovered_sparql);
-	free(bundled);
 	if (serve) {
 		char *q;
 		while ((q = read_line(stdin))) {

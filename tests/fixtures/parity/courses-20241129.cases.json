@@ -7,252 +7,60 @@
       {
         "id": "1542505116886173521#1",
         "text": "JV ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "XX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11589654385328881484#6",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 1542505116886173521,
-          "head_i": 6,
-          "head_idx": 17,
-          "head_orth": 11589654385328881484,
-          "head_text": "CHOIR"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 2,
-        "is_wordnet": true,
-        "normal": "jv",
-        "stem": "jv"
+        "normal": "jv"
       },
       {
         "id": "86#3",
         "text": "ADV ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "XXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "17111436907293365402#4",
-        "other": {
-          "i": 2,
-          "idx": 4,
-          "orth": 86,
-          "head_i": 4,
-          "head_idx": 9,
-          "head_orth": 17111436907293365402,
-          "head_text": "WOMENS"
-        },
-        "is_punct": false,
         "x": 3,
         "y": 6,
-        "is_wordnet": false,
-        "normal": "adv",
-        "stem": "adv"
+        "normal": "adv"
       },
       {
         "id": "17111436907293365402#5",
         "text": "WOMENS ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "XXXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11589654385328881484#6",
-        "other": {
-          "i": 4,
-          "idx": 9,
-          "orth": 17111436907293365402,
-          "head_i": 6,
-          "head_idx": 17,
-          "head_orth": 11589654385328881484,
-          "head_text": "CHOIR"
-        },
-        "is_punct": false,
         "x": 7,
         "y": 13,
-        "is_wordnet": true,
-        "normal": "womens",
-        "stem": "women"
+        "normal": "womens"
       },
       {
         "id": "11589654385328881484#7",
         "text": "CHOIR ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "PERSON",
-        "shape": "XXXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11589654385328881484#6",
-        "other": {
-          "i": 6,
-          "idx": 17,
-          "orth": 11589654385328881484,
-          "head_i": 6,
-          "head_idx": 17,
-          "head_orth": 11589654385328881484,
-          "head_text": "CHOIR"
-        },
-        "is_punct": false,
         "x": 14,
         "y": 19,
-        "is_wordnet": true,
-        "normal": "choir",
-        "stem": "choir"
+        "normal": "choir"
       },
       {
         "id": "8491910814525953907#9",
         "text": "2021 ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NUM",
-        "tag": "CD",
-        "dep": "nummod",
-        "ent": "DATE",
-        "shape": "dddd",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "14862748245026736845#10",
-        "other": {
-          "i": 8,
-          "idx": 24,
-          "orth": 8491910814525953907,
-          "head_i": 10,
-          "head_idx": 30,
-          "head_orth": 14862748245026736845,
-          "head_text": "A"
-        },
-        "is_punct": false,
         "x": 20,
         "y": 24,
-        "is_wordnet": false,
-        "normal": "2021",
-        "stem": "2021"
+        "normal": "2021"
       },
       {
         "id": "14862748245026736845#10",
         "text": "A",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "appos",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "11589654385328881484#6",
-        "other": {
-          "i": 10,
-          "idx": 30,
-          "orth": 14862748245026736845,
-          "head_i": 6,
-          "head_idx": 17,
-          "head_orth": 11589654385328881484,
-          "head_text": "CHOIR"
-        },
-        "is_punct": false,
         "x": 25,
         "y": 26,
-        "is_wordnet": false,
-        "normal": "a",
-        "stem": "a"
+        "normal": "a"
       }
     ],
     "expected_tokens": [
       {
         "id": "1542505116886173521#1",
         "text": "JV ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "XX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11589654385328881484#6",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 1542505116886173521,
-          "head_i": 6,
-          "head_idx": 17,
-          "head_orth": 11589654385328881484,
-          "head_text": "CHOIR"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 2,
-        "is_wordnet": true,
-        "normal": "jv",
-        "stem": "jv"
+        "normal": "jv"
       },
       {
         "id": "86#3",
         "text": "ADV ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "XXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "17111436907293365402#4",
-        "other": {
-          "i": 2,
-          "idx": 4,
-          "orth": 86,
-          "head_i": 4,
-          "head_idx": 9,
-          "head_orth": 17111436907293365402,
-          "head_text": "WOMENS"
-        },
-        "is_punct": false,
         "x": 3,
         "y": 6,
-        "is_wordnet": false,
-        "normal": "adv",
-        "stem": "adv"
+        "normal": "adv"
       },
       {
         "id": "17111436907293365402#5",
@@ -266,64 +74,16 @@
             {
               "id": "17111436907293365402#5",
               "text": "WOMENS ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "ORG",
-              "shape": "XXXX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "11589654385328881484#6",
-              "other": {
-                "i": 4,
-                "idx": 9,
-                "orth": 17111436907293365402,
-                "head_i": 6,
-                "head_idx": 17,
-                "head_orth": 11589654385328881484,
-                "head_text": "CHOIR"
-              },
-              "is_punct": false,
               "x": 7,
               "y": 13,
-              "is_wordnet": true,
-              "normal": "womens",
-              "stem": "women"
+              "normal": "womens"
             },
             {
               "id": "11589654385328881484#7",
               "text": "CHOIR ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "PERSON",
-              "shape": "XXXX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "11589654385328881484#6",
-              "other": {
-                "i": 6,
-                "idx": 17,
-                "orth": 11589654385328881484,
-                "head_i": 6,
-                "head_idx": 17,
-                "head_orth": 11589654385328881484,
-                "head_text": "CHOIR"
-              },
-              "is_punct": false,
               "x": 14,
               "y": 19,
-              "is_wordnet": true,
-              "normal": "choir",
-              "stem": "choir"
+              "normal": "choir"
             }
           ],
           "canon": "womens_choir",
@@ -337,67 +97,33 @@
       {
         "id": "8491910814525953907#9",
         "text": "2021 ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NUM",
-        "tag": "CD",
-        "dep": "nummod",
-        "ent": "DATE",
-        "shape": "dddd",
-        "is_alpha": false,
-        "is_stop": false,
-        "head": "14862748245026736845#10",
-        "other": {
-          "i": 8,
-          "idx": 24,
-          "orth": 8491910814525953907,
-          "head_i": 10,
-          "head_idx": 30,
-          "head_orth": 14862748245026736845,
-          "head_text": "A"
-        },
-        "is_punct": false,
         "x": 20,
         "y": 24,
-        "is_wordnet": false,
-        "normal": "2021",
-        "stem": "2021"
+        "normal": "2021"
       },
       {
         "id": "14862748245026736845#10",
         "text": "A",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "appos",
-        "ent": "",
-        "shape": "X",
-        "is_alpha": true,
-        "is_stop": true,
-        "head": "11589654385328881484#6",
-        "other": {
-          "i": 10,
-          "idx": 30,
-          "orth": 14862748245026736845,
-          "head_i": 6,
-          "head_idx": 17,
-          "head_orth": 11589654385328881484,
-          "head_text": "CHOIR"
-        },
-        "is_punct": false,
         "x": 25,
         "y": 26,
-        "is_wordnet": false,
-        "normal": "a",
-        "stem": "a"
+        "normal": "a"
       }
     ],
-    "expected_text": "JV ADV womens_choir 2021 A"
+    "expected_text": "JV ADV womens_choir 2021 A",
+    "raw": {
+      "entities": [
+        {
+          "canon": "womens_choir",
+          "type": "exact",
+          "ner": null,
+          "x": 7,
+          "y": 19,
+          "text": "WOMENS CHOIR",
+          "confidence": 100
+        }
+      ],
+      "text": "JV ADV womens_choir 2021 A"
+    }
   },
   {
     "test": "owl/parser/test_mutato_api_json_apostrophe.py::TestMutatoAPI::test_swap_input_text_02",
@@ -407,64 +133,16 @@
       {
         "id": "4572583899738182151#1",
         "text": "womens ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1848708500339133338#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 4572583899738182151,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 1848708500339133338,
-          "head_text": "choir"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "womens",
-        "stem": "women"
+        "normal": "womens"
       },
       {
         "id": "1848708500339133338#2",
         "text": "choir",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1848708500339133338#2",
-        "other": {
-          "i": 2,
-          "idx": 8,
-          "orth": 1848708500339133338,
-          "head_i": 2,
-          "head_idx": 8,
-          "head_orth": 1848708500339133338,
-          "head_text": "choir"
-        },
-        "is_punct": false,
         "x": 7,
         "y": 12,
-        "is_wordnet": true,
-        "normal": "choir",
-        "stem": "choir"
+        "normal": "choir"
       }
     ],
     "expected_tokens": [
@@ -480,64 +158,16 @@
             {
               "id": "4572583899738182151#1",
               "text": "womens ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1848708500339133338#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 4572583899738182151,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 1848708500339133338,
-                "head_text": "choir"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "womens",
-              "stem": "women"
+              "normal": "womens"
             },
             {
               "id": "1848708500339133338#2",
               "text": "choir",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1848708500339133338#2",
-              "other": {
-                "i": 2,
-                "idx": 8,
-                "orth": 1848708500339133338,
-                "head_i": 2,
-                "head_idx": 8,
-                "head_orth": 1848708500339133338,
-                "head_text": "choir"
-              },
-              "is_punct": false,
               "x": 7,
               "y": 12,
-              "is_wordnet": true,
-              "normal": "choir",
-              "stem": "choir"
+              "normal": "choir"
             }
           ],
           "canon": "womens_choir",
@@ -549,6 +179,20 @@
         }
       }
     ],
-    "expected_text": "womens_choir"
+    "expected_text": "womens_choir",
+    "raw": {
+      "entities": [
+        {
+          "canon": "womens_choir",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 12,
+          "text": "womens choir",
+          "confidence": 100
+        }
+      ],
+      "text": "womens_choir"
+    }
   }
 ]

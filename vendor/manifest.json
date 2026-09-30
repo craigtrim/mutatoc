@@ -2,7 +2,7 @@
   {
     "path": "vendor/cjson/cJSON.c",
     "url": "https://raw.githubusercontent.com/DaveGamble/cJSON/v1.7.19/cJSON.c",
-    "sha256": "ff458aa1fda9911c4cf02f593e353d66e926c0c90bca2f10c6c87471208edfc3",
+    "sha256": "da2ad47d3f987c2366fea75eeef3d44b083e4dc371cbef1b0c5d289740b1ab6b",
     "upstream_sha256": "298581a04a36c0165da4b0aade235c23088cb2faa58651d720ea2f3706ed0b0d",
     "patch": "Preserve large integer lexemes; preserve embedded NUL using internal modified UTF-8 and standard JSON escapes; reject malformed Unicode escapes and unescaped controls; use thread-local parser error state."
   },

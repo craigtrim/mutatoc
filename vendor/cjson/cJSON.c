@@ -388,8 +388,9 @@ loop_end:
     }
 
     /* mutatoc: preserve integer lexemes outside binary64's exact range.
-     * spaCy orth/head_orth hashes are unsigned 64-bit values. Raw JSON retains
-     * their numeric wire type without rounding during parse/copy/print. */
+     * Caller identifiers can be unsigned 64-bit values (craigtrim/mutatoc#1).
+     * Raw JSON retains their numeric wire type without rounding during
+     * parse/copy/print. */
     if (!has_decimal_point && !strchr((const char *)number_c_string, 'e') &&
         !strchr((const char *)number_c_string, 'E') &&
         (number > 9007199254740991.0 || number < -9007199254740991.0))

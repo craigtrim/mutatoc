@@ -7,33 +7,9 @@
       {
         "id": "5764037739878831584#0",
         "text": "Red",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5764037739878831584#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5764037739878831584,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 5764037739878831584,
-          "head_text": "Red"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "red",
-        "stem": "red"
+        "normal": "red"
       }
     ],
     "expected_tokens": [
@@ -49,33 +25,9 @@
             {
               "id": "5764037739878831584#0",
               "text": "Red",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "5764037739878831584#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 5764037739878831584,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 5764037739878831584,
-                "head_text": "Red"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 3,
-              "is_wordnet": true,
-              "normal": "red",
-              "stem": "red"
+              "normal": "red"
             }
           ],
           "canon": "red",
@@ -87,7 +39,21 @@
         }
       }
     ],
-    "expected_text": "red"
+    "expected_text": "red",
+    "raw": {
+      "entities": [
+        {
+          "canon": "red",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 3,
+          "text": "Red",
+          "confidence": 100
+        }
+      ],
+      "text": "red"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_blue_exact_match",
@@ -97,33 +63,9 @@
       {
         "id": "16525029037422792391#0",
         "text": "Blue",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "16525029037422792391#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 16525029037422792391,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 16525029037422792391,
-          "head_text": "Blue"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "blue",
-        "stem": "blue"
+        "normal": "blue"
       }
     ],
     "expected_tokens": [
@@ -139,33 +81,9 @@
             {
               "id": "16525029037422792391#0",
               "text": "Blue",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "16525029037422792391#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 16525029037422792391,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 16525029037422792391,
-                "head_text": "Blue"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "blue",
-              "stem": "blue"
+              "normal": "blue"
             }
           ],
           "canon": "blue",
@@ -177,7 +95,21 @@
         }
       }
     ],
-    "expected_text": "blue"
+    "expected_text": "blue",
+    "raw": {
+      "entities": [
+        {
+          "canon": "blue",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 4,
+          "text": "Blue",
+          "confidence": 100
+        }
+      ],
+      "text": "blue"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_yellow_exact_match",
@@ -187,33 +119,9 @@
       {
         "id": "8485502072298702525#0",
         "text": "Yellow",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8485502072298702525#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 8485502072298702525,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 8485502072298702525,
-          "head_text": "Yellow"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "yellow",
-        "stem": "yellow"
+        "normal": "yellow"
       }
     ],
     "expected_tokens": [
@@ -229,33 +137,9 @@
             {
               "id": "8485502072298702525#0",
               "text": "Yellow",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "8485502072298702525#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 8485502072298702525,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 8485502072298702525,
-                "head_text": "Yellow"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "yellow",
-              "stem": "yellow"
+              "normal": "yellow"
             }
           ],
           "canon": "yellow",
@@ -267,7 +151,21 @@
         }
       }
     ],
-    "expected_text": "yellow"
+    "expected_text": "yellow",
+    "raw": {
+      "entities": [
+        {
+          "canon": "yellow",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Yellow",
+          "confidence": 100
+        }
+      ],
+      "text": "yellow"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_orange_exact_match",
@@ -277,33 +175,9 @@
       {
         "id": "7752216554273339937#0",
         "text": "Orange",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "7752216554273339937#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 7752216554273339937,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 7752216554273339937,
-          "head_text": "Orange"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "orange",
-        "stem": "orange"
+        "normal": "orange"
       }
     ],
     "expected_tokens": [
@@ -319,33 +193,9 @@
             {
               "id": "7752216554273339937#0",
               "text": "Orange",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "7752216554273339937#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 7752216554273339937,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 7752216554273339937,
-                "head_text": "Orange"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "orange",
-              "stem": "orange"
+              "normal": "orange"
             }
           ],
           "canon": "orange",
@@ -357,7 +207,21 @@
         }
       }
     ],
-    "expected_text": "orange"
+    "expected_text": "orange",
+    "raw": {
+      "entities": [
+        {
+          "canon": "orange",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Orange",
+          "confidence": 100
+        }
+      ],
+      "text": "orange"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_green_exact_match",
@@ -367,33 +231,9 @@
       {
         "id": "6056264313941430663#0",
         "text": "Green",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6056264313941430663#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 6056264313941430663,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 6056264313941430663,
-          "head_text": "Green"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "green",
-        "stem": "green"
+        "normal": "green"
       }
     ],
     "expected_tokens": [
@@ -409,33 +249,9 @@
             {
               "id": "6056264313941430663#0",
               "text": "Green",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6056264313941430663#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 6056264313941430663,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 6056264313941430663,
-                "head_text": "Green"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "green",
-              "stem": "green"
+              "normal": "green"
             }
           ],
           "canon": "green",
@@ -447,7 +263,21 @@
         }
       }
     ],
-    "expected_text": "green"
+    "expected_text": "green",
+    "raw": {
+      "entities": [
+        {
+          "canon": "green",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "Green",
+          "confidence": 100
+        }
+      ],
+      "text": "green"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_purple_exact_match",
@@ -457,33 +287,9 @@
       {
         "id": "9535147292922932216#0",
         "text": "Purple",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "9535147292922932216#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 9535147292922932216,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 9535147292922932216,
-          "head_text": "Purple"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "purple",
-        "stem": "purple"
+        "normal": "purple"
       }
     ],
     "expected_tokens": [
@@ -499,33 +305,9 @@
             {
               "id": "9535147292922932216#0",
               "text": "Purple",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "9535147292922932216#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 9535147292922932216,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 9535147292922932216,
-                "head_text": "Purple"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "purple",
-              "stem": "purple"
+              "normal": "purple"
             }
           ],
           "canon": "purple",
@@ -537,7 +319,21 @@
         }
       }
     ],
-    "expected_text": "purple"
+    "expected_text": "purple",
+    "raw": {
+      "entities": [
+        {
+          "canon": "purple",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Purple",
+          "confidence": 100
+        }
+      ],
+      "text": "purple"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_indigo_exact_match",
@@ -547,33 +343,9 @@
       {
         "id": "1819300884635363893#0",
         "text": "Indigo",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1819300884635363893#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 1819300884635363893,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 1819300884635363893,
-          "head_text": "Indigo"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "indigo",
-        "stem": "indigo"
+        "normal": "indigo"
       }
     ],
     "expected_tokens": [
@@ -589,33 +361,9 @@
             {
               "id": "1819300884635363893#0",
               "text": "Indigo",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "ORG",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1819300884635363893#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 1819300884635363893,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 1819300884635363893,
-                "head_text": "Indigo"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "indigo",
-              "stem": "indigo"
+              "normal": "indigo"
             }
           ],
           "canon": "indigo",
@@ -627,7 +375,21 @@
         }
       }
     ],
-    "expected_text": "indigo"
+    "expected_text": "indigo",
+    "raw": {
+      "entities": [
+        {
+          "canon": "indigo",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Indigo",
+          "confidence": 100
+        }
+      ],
+      "text": "indigo"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_black_exact_match",
@@ -637,33 +399,9 @@
       {
         "id": "8586368155987542876#0",
         "text": "Black",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8586368155987542876#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 8586368155987542876,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 8586368155987542876,
-          "head_text": "Black"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "black",
-        "stem": "black"
+        "normal": "black"
       }
     ],
     "expected_tokens": [
@@ -679,33 +417,9 @@
             {
               "id": "8586368155987542876#0",
               "text": "Black",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "8586368155987542876#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 8586368155987542876,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 8586368155987542876,
-                "head_text": "Black"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "black",
-              "stem": "black"
+              "normal": "black"
             }
           ],
           "canon": "black",
@@ -717,7 +431,21 @@
         }
       }
     ],
-    "expected_text": "black"
+    "expected_text": "black",
+    "raw": {
+      "entities": [
+        {
+          "canon": "black",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "Black",
+          "confidence": 100
+        }
+      ],
+      "text": "black"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_white_exact_match",
@@ -727,33 +455,9 @@
       {
         "id": "2796950474500970872#0",
         "text": "White",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2796950474500970872#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 2796950474500970872,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 2796950474500970872,
-          "head_text": "White"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "white",
-        "stem": "white"
+        "normal": "white"
       }
     ],
     "expected_tokens": [
@@ -769,33 +473,9 @@
             {
               "id": "2796950474500970872#0",
               "text": "White",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2796950474500970872#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 2796950474500970872,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 2796950474500970872,
-                "head_text": "White"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "white",
-              "stem": "white"
+              "normal": "white"
             }
           ],
           "canon": "white",
@@ -807,7 +487,21 @@
         }
       }
     ],
-    "expected_text": "white"
+    "expected_text": "white",
+    "raw": {
+      "entities": [
+        {
+          "canon": "white",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "White",
+          "confidence": 100
+        }
+      ],
+      "text": "white"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_gray_exact_match",
@@ -817,33 +511,9 @@
       {
         "id": "6823173840826101838#0",
         "text": "Gray",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6823173840826101838#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 6823173840826101838,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 6823173840826101838,
-          "head_text": "Gray"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "gray",
-        "stem": "grai"
+        "normal": "gray"
       }
     ],
     "expected_tokens": [
@@ -859,33 +529,9 @@
             {
               "id": "6823173840826101838#0",
               "text": "Gray",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6823173840826101838#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 6823173840826101838,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 6823173840826101838,
-                "head_text": "Gray"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "gray",
-              "stem": "grai"
+              "normal": "gray"
             }
           ],
           "canon": "gray",
@@ -897,7 +543,21 @@
         }
       }
     ],
-    "expected_text": "gray"
+    "expected_text": "gray",
+    "raw": {
+      "entities": [
+        {
+          "canon": "gray",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 4,
+          "text": "Gray",
+          "confidence": 100
+        }
+      ],
+      "text": "gray"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_brown_exact_match",
@@ -907,33 +567,9 @@
       {
         "id": "12667495615604954721#0",
         "text": "Brown",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "PERSON",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "12667495615604954721#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 12667495615604954721,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 12667495615604954721,
-          "head_text": "Brown"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "brown",
-        "stem": "brown"
+        "normal": "brown"
       }
     ],
     "expected_tokens": [
@@ -949,33 +585,9 @@
             {
               "id": "12667495615604954721#0",
               "text": "Brown",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "PERSON",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "12667495615604954721#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 12667495615604954721,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 12667495615604954721,
-                "head_text": "Brown"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "brown",
-              "stem": "brown"
+              "normal": "brown"
             }
           ],
           "canon": "brown",
@@ -987,7 +599,21 @@
         }
       }
     ],
-    "expected_text": "brown"
+    "expected_text": "brown",
+    "raw": {
+      "entities": [
+        {
+          "canon": "brown",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "Brown",
+          "confidence": 100
+        }
+      ],
+      "text": "brown"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_beige_exact_match",
@@ -997,33 +623,9 @@
       {
         "id": "3244868558141301929#0",
         "text": "Beige",
-        "tense": "",
-        "noun_number": "plural",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NNS",
-        "dep": "ROOT",
-        "ent": "PERSON",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "3244868558141301929#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 3244868558141301929,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 3244868558141301929,
-          "head_text": "Beige"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "beige",
-        "stem": "beige"
+        "normal": "beige"
       }
     ],
     "expected_tokens": [
@@ -1039,33 +641,9 @@
             {
               "id": "3244868558141301929#0",
               "text": "Beige",
-              "tense": "",
-              "noun_number": "plural",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NNS",
-              "dep": "ROOT",
-              "ent": "PERSON",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "3244868558141301929#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 3244868558141301929,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 3244868558141301929,
-                "head_text": "Beige"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "beige",
-              "stem": "beige"
+              "normal": "beige"
             }
           ],
           "canon": "beige",
@@ -1077,7 +655,21 @@
         }
       }
     ],
-    "expected_text": "beige"
+    "expected_text": "beige",
+    "raw": {
+      "entities": [
+        {
+          "canon": "beige",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "Beige",
+          "confidence": 100
+        }
+      ],
+      "text": "beige"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_coral_exact_match",
@@ -1087,33 +679,9 @@
       {
         "id": "18242057570894421861#0",
         "text": "Coral",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "18242057570894421861#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 18242057570894421861,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 18242057570894421861,
-          "head_text": "Coral"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "coral",
-        "stem": "coral"
+        "normal": "coral"
       }
     ],
     "expected_tokens": [
@@ -1129,33 +697,9 @@
             {
               "id": "18242057570894421861#0",
               "text": "Coral",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "18242057570894421861#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 18242057570894421861,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 18242057570894421861,
-                "head_text": "Coral"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "coral",
-              "stem": "coral"
+              "normal": "coral"
             }
           ],
           "canon": "coral",
@@ -1167,7 +711,21 @@
         }
       }
     ],
-    "expected_text": "coral"
+    "expected_text": "coral",
+    "raw": {
+      "entities": [
+        {
+          "canon": "coral",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "Coral",
+          "confidence": 100
+        }
+      ],
+      "text": "coral"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_pink_exact_match",
@@ -1177,33 +735,9 @@
       {
         "id": "14227765689232614200#0",
         "text": "Pink",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14227765689232614200#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 14227765689232614200,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 14227765689232614200,
-          "head_text": "Pink"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "pink",
-        "stem": "pink"
+        "normal": "pink"
       }
     ],
     "expected_tokens": [
@@ -1219,33 +753,9 @@
             {
               "id": "14227765689232614200#0",
               "text": "Pink",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14227765689232614200#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 14227765689232614200,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 14227765689232614200,
-                "head_text": "Pink"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "pink",
-              "stem": "pink"
+              "normal": "pink"
             }
           ],
           "canon": "pink",
@@ -1257,7 +767,21 @@
         }
       }
     ],
-    "expected_text": "pink"
+    "expected_text": "pink",
+    "raw": {
+      "entities": [
+        {
+          "canon": "pink",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 4,
+          "text": "Pink",
+          "confidence": 100
+        }
+      ],
+      "text": "pink"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_maroon_exact_match",
@@ -1267,33 +791,9 @@
       {
         "id": "336836919946884129#0",
         "text": "Maroon",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "336836919946884129#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 336836919946884129,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 336836919946884129,
-          "head_text": "Maroon"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "maroon",
-        "stem": "maroon"
+        "normal": "maroon"
       }
     ],
     "expected_tokens": [
@@ -1309,33 +809,9 @@
             {
               "id": "336836919946884129#0",
               "text": "Maroon",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "336836919946884129#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 336836919946884129,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 336836919946884129,
-                "head_text": "Maroon"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "maroon",
-              "stem": "maroon"
+              "normal": "maroon"
             }
           ],
           "canon": "maroon",
@@ -1347,7 +823,21 @@
         }
       }
     ],
-    "expected_text": "maroon"
+    "expected_text": "maroon",
+    "raw": {
+      "entities": [
+        {
+          "canon": "maroon",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Maroon",
+          "confidence": 100
+        }
+      ],
+      "text": "maroon"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_teal_exact_match",
@@ -1357,33 +847,9 @@
       {
         "id": "12507485021415685190#0",
         "text": "Teal",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "12507485021415685190#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 12507485021415685190,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 12507485021415685190,
-          "head_text": "Teal"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "teal",
-        "stem": "teal"
+        "normal": "teal"
       }
     ],
     "expected_tokens": [
@@ -1399,33 +865,9 @@
             {
               "id": "12507485021415685190#0",
               "text": "Teal",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "12507485021415685190#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 12507485021415685190,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 12507485021415685190,
-                "head_text": "Teal"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "teal",
-              "stem": "teal"
+              "normal": "teal"
             }
           ],
           "canon": "teal",
@@ -1437,7 +879,21 @@
         }
       }
     ],
-    "expected_text": "teal"
+    "expected_text": "teal",
+    "raw": {
+      "entities": [
+        {
+          "canon": "teal",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 4,
+          "text": "Teal",
+          "confidence": 100
+        }
+      ],
+      "text": "teal"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_turquoise_exact_match",
@@ -1447,33 +903,9 @@
       {
         "id": "2605697255758376028#0",
         "text": "Turquoise",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADV",
-        "tag": "RB",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2605697255758376028#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 2605697255758376028,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 2605697255758376028,
-          "head_text": "Turquoise"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "turquoise",
-        "stem": "turquoise"
+        "normal": "turquoise"
       }
     ],
     "expected_tokens": [
@@ -1489,33 +921,9 @@
             {
               "id": "2605697255758376028#0",
               "text": "Turquoise",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADV",
-              "tag": "RB",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2605697255758376028#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 2605697255758376028,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 2605697255758376028,
-                "head_text": "Turquoise"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 9,
-              "is_wordnet": true,
-              "normal": "turquoise",
-              "stem": "turquoise"
+              "normal": "turquoise"
             }
           ],
           "canon": "turquoise",
@@ -1527,7 +935,21 @@
         }
       }
     ],
-    "expected_text": "turquoise"
+    "expected_text": "turquoise",
+    "raw": {
+      "entities": [
+        {
+          "canon": "turquoise",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 9,
+          "text": "Turquoise",
+          "confidence": 100
+        }
+      ],
+      "text": "turquoise"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_navy_exact_match",
@@ -1537,33 +959,9 @@
       {
         "id": "11566012753151149660#0",
         "text": "Navy",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "11566012753151149660#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 11566012753151149660,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 11566012753151149660,
-          "head_text": "Navy"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "navy",
-        "stem": "navi"
+        "normal": "navy"
       }
     ],
     "expected_tokens": [
@@ -1579,33 +977,9 @@
             {
               "id": "11566012753151149660#0",
               "text": "Navy",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "ORG",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "11566012753151149660#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 11566012753151149660,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 11566012753151149660,
-                "head_text": "Navy"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "navy",
-              "stem": "navi"
+              "normal": "navy"
             }
           ],
           "canon": "navy",
@@ -1617,7 +991,21 @@
         }
       }
     ],
-    "expected_text": "navy"
+    "expected_text": "navy",
+    "raw": {
+      "entities": [
+        {
+          "canon": "navy",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 4,
+          "text": "Navy",
+          "confidence": 100
+        }
+      ],
+      "text": "navy"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_mint_exact_match",
@@ -1627,33 +1015,9 @@
       {
         "id": "9996406211293112423#0",
         "text": "Mint",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "9996406211293112423#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 9996406211293112423,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 9996406211293112423,
-          "head_text": "Mint"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "mint",
-        "stem": "mint"
+        "normal": "mint"
       }
     ],
     "expected_tokens": [
@@ -1669,33 +1033,9 @@
             {
               "id": "9996406211293112423#0",
               "text": "Mint",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "9996406211293112423#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 9996406211293112423,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 9996406211293112423,
-                "head_text": "Mint"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "mint",
-              "stem": "mint"
+              "normal": "mint"
             }
           ],
           "canon": "mint",
@@ -1707,7 +1047,21 @@
         }
       }
     ],
-    "expected_text": "mint"
+    "expected_text": "mint",
+    "raw": {
+      "entities": [
+        {
+          "canon": "mint",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 4,
+          "text": "Mint",
+          "confidence": 100
+        }
+      ],
+      "text": "mint"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_silver_exact_match",
@@ -1717,33 +1071,9 @@
       {
         "id": "16949993694123909320#0",
         "text": "Silver",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "16949993694123909320#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 16949993694123909320,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 16949993694123909320,
-          "head_text": "Silver"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "silver",
-        "stem": "silver"
+        "normal": "silver"
       }
     ],
     "expected_tokens": [
@@ -1759,33 +1089,9 @@
             {
               "id": "16949993694123909320#0",
               "text": "Silver",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "16949993694123909320#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 16949993694123909320,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 16949993694123909320,
-                "head_text": "Silver"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "silver",
-              "stem": "silver"
+              "normal": "silver"
             }
           ],
           "canon": "silver",
@@ -1797,7 +1103,21 @@
         }
       }
     ],
-    "expected_text": "silver"
+    "expected_text": "silver",
+    "raw": {
+      "entities": [
+        {
+          "canon": "silver",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Silver",
+          "confidence": 100
+        }
+      ],
+      "text": "silver"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_bronze_exact_match",
@@ -1807,33 +1127,9 @@
       {
         "id": "8606150225420045602#0",
         "text": "Bronze",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "PERSON",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8606150225420045602#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 8606150225420045602,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 8606150225420045602,
-          "head_text": "Bronze"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "bronze",
-        "stem": "bronze"
+        "normal": "bronze"
       }
     ],
     "expected_tokens": [
@@ -1849,33 +1145,9 @@
             {
               "id": "8606150225420045602#0",
               "text": "Bronze",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "PERSON",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "8606150225420045602#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 8606150225420045602,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 8606150225420045602,
-                "head_text": "Bronze"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "bronze",
-              "stem": "bronze"
+              "normal": "bronze"
             }
           ],
           "canon": "bronze",
@@ -1887,7 +1159,21 @@
         }
       }
     ],
-    "expected_text": "bronze"
+    "expected_text": "bronze",
+    "raw": {
+      "entities": [
+        {
+          "canon": "bronze",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "Bronze",
+          "confidence": 100
+        }
+      ],
+      "text": "bronze"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_crimson_maps_to_red",
@@ -1897,33 +1183,9 @@
       {
         "id": "13318318663013578591#0",
         "text": "crimson",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "13318318663013578591#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13318318663013578591,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 13318318663013578591,
-          "head_text": "crimson"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "crimson",
-        "stem": "crimson"
+        "normal": "crimson"
       }
     ],
     "expected_tokens": [
@@ -1939,33 +1201,9 @@
             {
               "id": "13318318663013578591#0",
               "text": "crimson",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "13318318663013578591#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 13318318663013578591,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 13318318663013578591,
-                "head_text": "crimson"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "crimson",
-              "stem": "crimson"
+              "normal": "crimson"
             }
           ],
           "canon": "red",
@@ -1977,7 +1215,21 @@
         }
       }
     ],
-    "expected_text": "red"
+    "expected_text": "red",
+    "raw": {
+      "entities": [
+        {
+          "canon": "red",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "crimson",
+          "confidence": 100
+        }
+      ],
+      "text": "red"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_scarlet_maps_to_red",
@@ -1987,33 +1239,9 @@
       {
         "id": "8251360531512364519#0",
         "text": "scarlet",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "8251360531512364519#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 8251360531512364519,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 8251360531512364519,
-          "head_text": "scarlet"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "scarlet",
-        "stem": "scarlet"
+        "normal": "scarlet"
       }
     ],
     "expected_tokens": [
@@ -2029,33 +1257,9 @@
             {
               "id": "8251360531512364519#0",
               "text": "scarlet",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "8251360531512364519#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 8251360531512364519,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 8251360531512364519,
-                "head_text": "scarlet"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "scarlet",
-              "stem": "scarlet"
+              "normal": "scarlet"
             }
           ],
           "canon": "red",
@@ -2067,7 +1271,21 @@
         }
       }
     ],
-    "expected_text": "red"
+    "expected_text": "red",
+    "raw": {
+      "entities": [
+        {
+          "canon": "red",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "scarlet",
+          "confidence": 100
+        }
+      ],
+      "text": "red"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_azure_maps_to_blue",
@@ -2077,33 +1295,9 @@
       {
         "id": "9805150402525830243#0",
         "text": "azure",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "9805150402525830243#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 9805150402525830243,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 9805150402525830243,
-          "head_text": "azure"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 5,
-        "is_wordnet": true,
-        "normal": "azure",
-        "stem": "azure"
+        "normal": "azure"
       }
     ],
     "expected_tokens": [
@@ -2119,33 +1313,9 @@
             {
               "id": "9805150402525830243#0",
               "text": "azure",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "9805150402525830243#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 9805150402525830243,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 9805150402525830243,
-                "head_text": "azure"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 5,
-              "is_wordnet": true,
-              "normal": "azure",
-              "stem": "azure"
+              "normal": "azure"
             }
           ],
           "canon": "blue",
@@ -2157,7 +1327,21 @@
         }
       }
     ],
-    "expected_text": "blue"
+    "expected_text": "blue",
+    "raw": {
+      "entities": [
+        {
+          "canon": "blue",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 5,
+          "text": "azure",
+          "confidence": 100
+        }
+      ],
+      "text": "blue"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_cobalt_maps_to_blue",
@@ -2167,33 +1351,9 @@
       {
         "id": "14188188596294247823#0",
         "text": "cobalt",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14188188596294247823#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 14188188596294247823,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 14188188596294247823,
-          "head_text": "cobalt"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "cobalt",
-        "stem": "cobalt"
+        "normal": "cobalt"
       }
     ],
     "expected_tokens": [
@@ -2209,33 +1369,9 @@
             {
               "id": "14188188596294247823#0",
               "text": "cobalt",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14188188596294247823#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 14188188596294247823,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 14188188596294247823,
-                "head_text": "cobalt"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "cobalt",
-              "stem": "cobalt"
+              "normal": "cobalt"
             }
           ],
           "canon": "blue",
@@ -2247,7 +1383,21 @@
         }
       }
     ],
-    "expected_text": "blue"
+    "expected_text": "blue",
+    "raw": {
+      "entities": [
+        {
+          "canon": "blue",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "cobalt",
+          "confidence": 100
+        }
+      ],
+      "text": "blue"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_emerald_maps_to_green",
@@ -2257,33 +1407,9 @@
       {
         "id": "15604137901287282315#0",
         "text": "emerald",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "15604137901287282315#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 15604137901287282315,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 15604137901287282315,
-          "head_text": "emerald"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "emerald",
-        "stem": "emerald"
+        "normal": "emerald"
       }
     ],
     "expected_tokens": [
@@ -2299,33 +1425,9 @@
             {
               "id": "15604137901287282315#0",
               "text": "emerald",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "15604137901287282315#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 15604137901287282315,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 15604137901287282315,
-                "head_text": "emerald"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "emerald",
-              "stem": "emerald"
+              "normal": "emerald"
             }
           ],
           "canon": "green",
@@ -2337,7 +1439,21 @@
         }
       }
     ],
-    "expected_text": "green"
+    "expected_text": "green",
+    "raw": {
+      "entities": [
+        {
+          "canon": "green",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "emerald",
+          "confidence": 100
+        }
+      ],
+      "text": "green"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_violet_maps_to_purple",
@@ -2347,33 +1463,9 @@
       {
         "id": "2276416410380410342#0",
         "text": "violet",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2276416410380410342#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 2276416410380410342,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 2276416410380410342,
-          "head_text": "violet"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "violet",
-        "stem": "violet"
+        "normal": "violet"
       }
     ],
     "expected_tokens": [
@@ -2389,33 +1481,9 @@
             {
               "id": "2276416410380410342#0",
               "text": "violet",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "ORG",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2276416410380410342#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 2276416410380410342,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 2276416410380410342,
-                "head_text": "violet"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "violet",
-              "stem": "violet"
+              "normal": "violet"
             }
           ],
           "canon": "purple",
@@ -2427,7 +1495,21 @@
         }
       }
     ],
-    "expected_text": "purple"
+    "expected_text": "purple",
+    "raw": {
+      "entities": [
+        {
+          "canon": "purple",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "violet",
+          "confidence": 100
+        }
+      ],
+      "text": "purple"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_lavender_maps_to_purple",
@@ -2437,33 +1519,9 @@
       {
         "id": "12982654811450096703#0",
         "text": "lavender",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "12982654811450096703#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 12982654811450096703,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 12982654811450096703,
-          "head_text": "lavender"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "lavender",
-        "stem": "lavend"
+        "normal": "lavender"
       }
     ],
     "expected_tokens": [
@@ -2479,33 +1537,9 @@
             {
               "id": "12982654811450096703#0",
               "text": "lavender",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "12982654811450096703#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 12982654811450096703,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 12982654811450096703,
-                "head_text": "lavender"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "lavender",
-              "stem": "lavend"
+              "normal": "lavender"
             }
           ],
           "canon": "purple",
@@ -2517,7 +1551,21 @@
         }
       }
     ],
-    "expected_text": "purple"
+    "expected_text": "purple",
+    "raw": {
+      "entities": [
+        {
+          "canon": "purple",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 8,
+          "text": "lavender",
+          "confidence": 100
+        }
+      ],
+      "text": "purple"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_grey_maps_to_gray",
@@ -2527,33 +1575,9 @@
       {
         "id": "10475807793332549289#0",
         "text": "grey",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "10475807793332549289#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 10475807793332549289,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 10475807793332549289,
-          "head_text": "grey"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "grey",
-        "stem": "grei"
+        "normal": "grey"
       }
     ],
     "expected_tokens": [
@@ -2569,33 +1593,9 @@
             {
               "id": "10475807793332549289#0",
               "text": "grey",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "ORG",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "10475807793332549289#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 10475807793332549289,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 10475807793332549289,
-                "head_text": "grey"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "grey",
-              "stem": "grei"
+              "normal": "grey"
             }
           ],
           "canon": "gray",
@@ -2607,7 +1607,21 @@
         }
       }
     ],
-    "expected_text": "gray"
+    "expected_text": "gray",
+    "raw": {
+      "entities": [
+        {
+          "canon": "gray",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 4,
+          "text": "grey",
+          "confidence": 100
+        }
+      ],
+      "text": "gray"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_tan_maps_to_brown",
@@ -2617,33 +1631,9 @@
       {
         "id": "5127631211755802587#0",
         "text": "tan",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "PERSON",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5127631211755802587#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5127631211755802587,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 5127631211755802587,
-          "head_text": "tan"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "tan",
-        "stem": "tan"
+        "normal": "tan"
       }
     ],
     "expected_tokens": [
@@ -2659,33 +1649,9 @@
             {
               "id": "5127631211755802587#0",
               "text": "tan",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "PERSON",
-              "shape": "xxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "5127631211755802587#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 5127631211755802587,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 5127631211755802587,
-                "head_text": "tan"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 3,
-              "is_wordnet": true,
-              "normal": "tan",
-              "stem": "tan"
+              "normal": "tan"
             }
           ],
           "canon": "brown",
@@ -2697,7 +1663,21 @@
         }
       }
     ],
-    "expected_text": "brown"
+    "expected_text": "brown",
+    "raw": {
+      "entities": [
+        {
+          "canon": "brown",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 3,
+          "text": "tan",
+          "confidence": 100
+        }
+      ],
+      "text": "brown"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_chocolate_maps_to_brown",
@@ -2707,33 +1687,9 @@
       {
         "id": "10946593968795032542#0",
         "text": "chocolate",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "10946593968795032542#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 10946593968795032542,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 10946593968795032542,
-          "head_text": "chocolate"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "chocolate",
-        "stem": "chocol"
+        "normal": "chocolate"
       }
     ],
     "expected_tokens": [
@@ -2749,33 +1705,9 @@
             {
               "id": "10946593968795032542#0",
               "text": "chocolate",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "10946593968795032542#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 10946593968795032542,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 10946593968795032542,
-                "head_text": "chocolate"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 9,
-              "is_wordnet": true,
-              "normal": "chocolate",
-              "stem": "chocol"
+              "normal": "chocolate"
             }
           ],
           "canon": "brown",
@@ -2787,7 +1719,21 @@
         }
       }
     ],
-    "expected_text": "brown"
+    "expected_text": "brown",
+    "raw": {
+      "entities": [
+        {
+          "canon": "brown",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 9,
+          "text": "chocolate",
+          "confidence": 100
+        }
+      ],
+      "text": "brown"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_rose_maps_to_pink",
@@ -2797,33 +1743,9 @@
       {
         "id": "5580784729243738386#0",
         "text": "rose",
-        "tense": "past",
-        "noun_number": "",
-        "verb_form": "fin",
-        "sentiment": 0.0,
-        "pos": "VERB",
-        "tag": "VBD",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "5580784729243738386#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5580784729243738386,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 5580784729243738386,
-          "head_text": "rose"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "rose",
-        "stem": "rose"
+        "normal": "rose"
       }
     ],
     "expected_tokens": [
@@ -2839,33 +1761,9 @@
             {
               "id": "5580784729243738386#0",
               "text": "rose",
-              "tense": "past",
-              "noun_number": "",
-              "verb_form": "fin",
-              "sentiment": 0.0,
-              "pos": "VERB",
-              "tag": "VBD",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "5580784729243738386#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 5580784729243738386,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 5580784729243738386,
-                "head_text": "rose"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "rose",
-              "stem": "rose"
+              "normal": "rose"
             }
           ],
           "canon": "pink",
@@ -2877,7 +1775,21 @@
         }
       }
     ],
-    "expected_text": "pink"
+    "expected_text": "pink",
+    "raw": {
+      "entities": [
+        {
+          "canon": "pink",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 4,
+          "text": "rose",
+          "confidence": 100
+        }
+      ],
+      "text": "pink"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_magenta_maps_to_pink",
@@ -2887,33 +1799,9 @@
       {
         "id": "14328614359251251548#0",
         "text": "magenta",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "GPE",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14328614359251251548#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 14328614359251251548,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 14328614359251251548,
-          "head_text": "magenta"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "magenta",
-        "stem": "magenta"
+        "normal": "magenta"
       }
     ],
     "expected_tokens": [
@@ -2929,33 +1817,9 @@
             {
               "id": "14328614359251251548#0",
               "text": "magenta",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "GPE",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14328614359251251548#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 14328614359251251548,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 14328614359251251548,
-                "head_text": "magenta"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "magenta",
-              "stem": "magenta"
+              "normal": "magenta"
             }
           ],
           "canon": "pink",
@@ -2967,7 +1831,21 @@
         }
       }
     ],
-    "expected_text": "pink"
+    "expected_text": "pink",
+    "raw": {
+      "entities": [
+        {
+          "canon": "pink",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 7,
+          "text": "magenta",
+          "confidence": 100
+        }
+      ],
+      "text": "pink"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_cyan_maps_to_teal",
@@ -2977,33 +1855,9 @@
       {
         "id": "17740462828774604389#0",
         "text": "cyan",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "PERSON",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "17740462828774604389#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 17740462828774604389,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 17740462828774604389,
-          "head_text": "cyan"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "cyan",
-        "stem": "cyan"
+        "normal": "cyan"
       }
     ],
     "expected_tokens": [
@@ -3019,33 +1873,9 @@
             {
               "id": "17740462828774604389#0",
               "text": "cyan",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "PERSON",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "17740462828774604389#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 17740462828774604389,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 17740462828774604389,
-                "head_text": "cyan"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "cyan",
-              "stem": "cyan"
+              "normal": "cyan"
             }
           ],
           "canon": "teal",
@@ -3057,7 +1887,21 @@
         }
       }
     ],
-    "expected_text": "teal"
+    "expected_text": "teal",
+    "raw": {
+      "entities": [
+        {
+          "canon": "teal",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 4,
+          "text": "cyan",
+          "confidence": 100
+        }
+      ],
+      "text": "teal"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_burgundy_maps_to_maroon",
@@ -3067,33 +1911,9 @@
       {
         "id": "16424350533775740444#0",
         "text": "burgundy",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "16424350533775740444#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 16424350533775740444,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 16424350533775740444,
-          "head_text": "burgundy"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "burgundy",
-        "stem": "burgundi"
+        "normal": "burgundy"
       }
     ],
     "expected_tokens": [
@@ -3109,33 +1929,9 @@
             {
               "id": "16424350533775740444#0",
               "text": "burgundy",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "ORG",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "16424350533775740444#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 16424350533775740444,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 16424350533775740444,
-                "head_text": "burgundy"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "burgundy",
-              "stem": "burgundi"
+              "normal": "burgundy"
             }
           ],
           "canon": "maroon",
@@ -3147,7 +1943,21 @@
         }
       }
     ],
-    "expected_text": "maroon"
+    "expected_text": "maroon",
+    "raw": {
+      "entities": [
+        {
+          "canon": "maroon",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 8,
+          "text": "burgundy",
+          "confidence": 100
+        }
+      ],
+      "text": "maroon"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_tangerine_maps_to_orange",
@@ -3157,33 +1967,9 @@
       {
         "id": "7288156672279321610#0",
         "text": "tangerine",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "NORP",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "7288156672279321610#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 7288156672279321610,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 7288156672279321610,
-          "head_text": "tangerine"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "tangerine",
-        "stem": "tangerine"
+        "normal": "tangerine"
       }
     ],
     "expected_tokens": [
@@ -3199,33 +1985,9 @@
             {
               "id": "7288156672279321610#0",
               "text": "tangerine",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "NORP",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "7288156672279321610#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 7288156672279321610,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 7288156672279321610,
-                "head_text": "tangerine"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 9,
-              "is_wordnet": true,
-              "normal": "tangerine",
-              "stem": "tangerine"
+              "normal": "tangerine"
             }
           ],
           "canon": "orange",
@@ -3237,7 +1999,21 @@
         }
       }
     ],
-    "expected_text": "orange"
+    "expected_text": "orange",
+    "raw": {
+      "entities": [
+        {
+          "canon": "orange",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 9,
+          "text": "tangerine",
+          "confidence": 100
+        }
+      ],
+      "text": "orange"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_chrome_maps_to_silver",
@@ -3247,33 +2023,9 @@
       {
         "id": "1990513926937082596#0",
         "text": "chrome",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "1990513926937082596#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 1990513926937082596,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 1990513926937082596,
-          "head_text": "chrome"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "chrome",
-        "stem": "chrome"
+        "normal": "chrome"
       }
     ],
     "expected_tokens": [
@@ -3289,33 +2041,9 @@
             {
               "id": "1990513926937082596#0",
               "text": "chrome",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "1990513926937082596#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 1990513926937082596,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 1990513926937082596,
-                "head_text": "chrome"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "chrome",
-              "stem": "chrome"
+              "normal": "chrome"
             }
           ],
           "canon": "silver",
@@ -3327,7 +2055,21 @@
         }
       }
     ],
-    "expected_text": "silver"
+    "expected_text": "silver",
+    "raw": {
+      "entities": [
+        {
+          "canon": "silver",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "chrome",
+          "confidence": 100
+        }
+      ],
+      "text": "silver"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_colour_maps_to_color",
@@ -3337,33 +2079,9 @@
       {
         "id": "2579953423244470672#0",
         "text": "colour",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "2579953423244470672#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 2579953423244470672,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 2579953423244470672,
-          "head_text": "colour"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 6,
-        "is_wordnet": true,
-        "normal": "colour",
-        "stem": "colour"
+        "normal": "colour"
       }
     ],
     "expected_tokens": [
@@ -3379,33 +2097,9 @@
             {
               "id": "2579953423244470672#0",
               "text": "colour",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "2579953423244470672#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 2579953423244470672,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 2579953423244470672,
-                "head_text": "colour"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 6,
-              "is_wordnet": true,
-              "normal": "colour",
-              "stem": "colour"
+              "normal": "colour"
             }
           ],
           "canon": "color",
@@ -3417,7 +2111,21 @@
         }
       }
     ],
-    "expected_text": "color"
+    "expected_text": "color",
+    "raw": {
+      "entities": [
+        {
+          "canon": "color",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 6,
+          "text": "colour",
+          "confidence": 100
+        }
+      ],
+      "text": "color"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_primary_color_span",
@@ -3427,64 +2135,16 @@
       {
         "id": "10007096227271162987#1",
         "text": "Primary ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 10007096227271162987,
-          "head_i": 2,
-          "head_idx": 9,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "primary",
-        "stem": "primari"
+        "normal": "primary"
       },
       {
         "id": "14752991261910186482#2",
         "text": "Color",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 2,
-          "idx": 9,
-          "orth": 14752991261910186482,
-          "head_i": 2,
-          "head_idx": 9,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 8,
         "y": 13,
-        "is_wordnet": true,
-        "normal": "color",
-        "stem": "color"
+        "normal": "color"
       }
     ],
     "expected_tokens": [
@@ -3500,64 +2160,16 @@
             {
               "id": "10007096227271162987#1",
               "text": "Primary ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "compound",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 10007096227271162987,
-                "head_i": 2,
-                "head_idx": 9,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "primary",
-              "stem": "primari"
+              "normal": "primary"
             },
             {
               "id": "14752991261910186482#2",
               "text": "Color",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 2,
-                "idx": 9,
-                "orth": 14752991261910186482,
-                "head_i": 2,
-                "head_idx": 9,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 8,
               "y": 13,
-              "is_wordnet": true,
-              "normal": "color",
-              "stem": "color"
+              "normal": "color"
             }
           ],
           "canon": "primary_color",
@@ -3569,7 +2181,21 @@
         }
       }
     ],
-    "expected_text": "primary_color"
+    "expected_text": "primary_color",
+    "raw": {
+      "entities": [
+        {
+          "canon": "primary_color",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 13,
+          "text": "Primary Color",
+          "confidence": 100
+        }
+      ],
+      "text": "primary_color"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_secondary_color_span",
@@ -3579,64 +2205,16 @@
       {
         "id": "3680512209835991792#1",
         "text": "Secondary ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 3680512209835991792,
-          "head_i": 2,
-          "head_idx": 11,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 9,
-        "is_wordnet": true,
-        "normal": "secondary",
-        "stem": "secondari"
+        "normal": "secondary"
       },
       {
         "id": "14752991261910186482#2",
         "text": "Color",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 2,
-          "idx": 11,
-          "orth": 14752991261910186482,
-          "head_i": 2,
-          "head_idx": 11,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 10,
         "y": 15,
-        "is_wordnet": true,
-        "normal": "color",
-        "stem": "color"
+        "normal": "color"
       }
     ],
     "expected_tokens": [
@@ -3652,64 +2230,16 @@
             {
               "id": "3680512209835991792#1",
               "text": "Secondary ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 3680512209835991792,
-                "head_i": 2,
-                "head_idx": 11,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 9,
-              "is_wordnet": true,
-              "normal": "secondary",
-              "stem": "secondari"
+              "normal": "secondary"
             },
             {
               "id": "14752991261910186482#2",
               "text": "Color",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 2,
-                "idx": 11,
-                "orth": 14752991261910186482,
-                "head_i": 2,
-                "head_idx": 11,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 10,
               "y": 15,
-              "is_wordnet": true,
-              "normal": "color",
-              "stem": "color"
+              "normal": "color"
             }
           ],
           "canon": "secondary_color",
@@ -3721,7 +2251,21 @@
         }
       }
     ],
-    "expected_text": "secondary_color"
+    "expected_text": "secondary_color",
+    "raw": {
+      "entities": [
+        {
+          "canon": "secondary_color",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 15,
+          "text": "Secondary Color",
+          "confidence": 100
+        }
+      ],
+      "text": "secondary_color"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_neutral_color_span",
@@ -3731,64 +2275,16 @@
       {
         "id": "2938350322338844147#1",
         "text": "Neutral ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 2938350322338844147,
-          "head_i": 2,
-          "head_idx": 9,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": true,
-        "normal": "neutral",
-        "stem": "neutral"
+        "normal": "neutral"
       },
       {
         "id": "14752991261910186482#2",
         "text": "Color",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 2,
-          "idx": 9,
-          "orth": 14752991261910186482,
-          "head_i": 2,
-          "head_idx": 9,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 8,
         "y": 13,
-        "is_wordnet": true,
-        "normal": "color",
-        "stem": "color"
+        "normal": "color"
       }
     ],
     "expected_tokens": [
@@ -3804,64 +2300,16 @@
             {
               "id": "2938350322338844147#1",
               "text": "Neutral ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 2938350322338844147,
-                "head_i": 2,
-                "head_idx": 9,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 7,
-              "is_wordnet": true,
-              "normal": "neutral",
-              "stem": "neutral"
+              "normal": "neutral"
             },
             {
               "id": "14752991261910186482#2",
               "text": "Color",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 2,
-                "idx": 9,
-                "orth": 14752991261910186482,
-                "head_i": 2,
-                "head_idx": 9,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 8,
               "y": 13,
-              "is_wordnet": true,
-              "normal": "color",
-              "stem": "color"
+              "normal": "color"
             }
           ],
           "canon": "neutral_color",
@@ -3873,7 +2321,21 @@
         }
       }
     ],
-    "expected_text": "neutral_color"
+    "expected_text": "neutral_color",
+    "raw": {
+      "entities": [
+        {
+          "canon": "neutral_color",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 13,
+          "text": "Neutral Color",
+          "confidence": 100
+        }
+      ],
+      "text": "neutral_color"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_warm_color_span",
@@ -3883,64 +2345,16 @@
       {
         "id": "6779732879609660841#1",
         "text": "Warm ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 6779732879609660841,
-          "head_i": 2,
-          "head_idx": 6,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "warm",
-        "stem": "warm"
+        "normal": "warm"
       },
       {
         "id": "14752991261910186482#2",
         "text": "Color",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 2,
-          "idx": 6,
-          "orth": 14752991261910186482,
-          "head_i": 2,
-          "head_idx": 6,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 5,
         "y": 10,
-        "is_wordnet": true,
-        "normal": "color",
-        "stem": "color"
+        "normal": "color"
       }
     ],
     "expected_tokens": [
@@ -3956,64 +2370,16 @@
             {
               "id": "6779732879609660841#1",
               "text": "Warm ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "compound",
-              "ent": "",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 6779732879609660841,
-                "head_i": 2,
-                "head_idx": 6,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "warm",
-              "stem": "warm"
+              "normal": "warm"
             },
             {
               "id": "14752991261910186482#2",
               "text": "Color",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 2,
-                "idx": 6,
-                "orth": 14752991261910186482,
-                "head_i": 2,
-                "head_idx": 6,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 5,
               "y": 10,
-              "is_wordnet": true,
-              "normal": "color",
-              "stem": "color"
+              "normal": "color"
             }
           ],
           "canon": "warm_color",
@@ -4025,7 +2391,21 @@
         }
       }
     ],
-    "expected_text": "warm_color"
+    "expected_text": "warm_color",
+    "raw": {
+      "entities": [
+        {
+          "canon": "warm_color",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 10,
+          "text": "Warm Color",
+          "confidence": 100
+        }
+      ],
+      "text": "warm_color"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_cool_color_span",
@@ -4035,64 +2415,16 @@
       {
         "id": "13016027611896205254#1",
         "text": "Cool ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 13016027611896205254,
-          "head_i": 2,
-          "head_idx": 6,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 4,
-        "is_wordnet": true,
-        "normal": "cool",
-        "stem": "cool"
+        "normal": "cool"
       },
       {
         "id": "14752991261910186482#2",
         "text": "Color",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 2,
-          "idx": 6,
-          "orth": 14752991261910186482,
-          "head_i": 2,
-          "head_idx": 6,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 5,
         "y": 10,
-        "is_wordnet": true,
-        "normal": "color",
-        "stem": "color"
+        "normal": "color"
       }
     ],
     "expected_tokens": [
@@ -4108,64 +2440,16 @@
             {
               "id": "13016027611896205254#1",
               "text": "Cool ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 13016027611896205254,
-                "head_i": 2,
-                "head_idx": 6,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 4,
-              "is_wordnet": true,
-              "normal": "cool",
-              "stem": "cool"
+              "normal": "cool"
             },
             {
               "id": "14752991261910186482#2",
               "text": "Color",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 2,
-                "idx": 6,
-                "orth": 14752991261910186482,
-                "head_i": 2,
-                "head_idx": 6,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 5,
               "y": 10,
-              "is_wordnet": true,
-              "normal": "color",
-              "stem": "color"
+              "normal": "color"
             }
           ],
           "canon": "cool_color",
@@ -4177,7 +2461,21 @@
         }
       }
     ],
-    "expected_text": "cool_color"
+    "expected_text": "cool_color",
+    "raw": {
+      "entities": [
+        {
+          "canon": "cool_color",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 10,
+          "text": "Cool Color",
+          "confidence": 100
+        }
+      ],
+      "text": "cool_color"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_metallic_color_span",
@@ -4187,64 +2485,16 @@
       {
         "id": "7361062702302490581#1",
         "text": "Metallic ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 7361062702302490581,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "metallic",
-        "stem": "metall"
+        "normal": "metallic"
       },
       {
         "id": "14752991261910186482#2",
         "text": "Color",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "NOUN",
-        "tag": "NN",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "14752991261910186482#2",
-        "other": {
-          "i": 2,
-          "idx": 10,
-          "orth": 14752991261910186482,
-          "head_i": 2,
-          "head_idx": 10,
-          "head_orth": 14752991261910186482,
-          "head_text": "Color"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 14,
-        "is_wordnet": true,
-        "normal": "color",
-        "stem": "color"
+        "normal": "color"
       }
     ],
     "expected_tokens": [
@@ -4260,64 +2510,16 @@
             {
               "id": "7361062702302490581#1",
               "text": "Metallic ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 7361062702302490581,
-                "head_i": 2,
-                "head_idx": 10,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "metallic",
-              "stem": "metall"
+              "normal": "metallic"
             },
             {
               "id": "14752991261910186482#2",
               "text": "Color",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "NOUN",
-              "tag": "NN",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "14752991261910186482#2",
-              "other": {
-                "i": 2,
-                "idx": 10,
-                "orth": 14752991261910186482,
-                "head_i": 2,
-                "head_idx": 10,
-                "head_orth": 14752991261910186482,
-                "head_text": "Color"
-              },
-              "is_punct": false,
               "x": 9,
               "y": 14,
-              "is_wordnet": true,
-              "normal": "color",
-              "stem": "color"
+              "normal": "color"
             }
           ],
           "canon": "metallic_color",
@@ -4329,7 +2531,21 @@
         }
       }
     ],
-    "expected_text": "metallic_color"
+    "expected_text": "metallic_color",
+    "raw": {
+      "entities": [
+        {
+          "canon": "metallic_color",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 14,
+          "text": "Metallic Color",
+          "confidence": 100
+        }
+      ],
+      "text": "metallic_color"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_unknown_color_no_swaps",
@@ -4339,69 +2555,25 @@
       {
         "id": "9518895558161337725#0",
         "text": "zzxqfoo",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "PERSON",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "9518895558161337725#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 9518895558161337725,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 9518895558161337725,
-          "head_text": "zzxqfoo"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": false,
-        "normal": "zzxqfoo",
-        "stem": "zzxqfoo"
+        "normal": "zzxqfoo"
       }
     ],
     "expected_tokens": [
       {
         "id": "9518895558161337725#0",
         "text": "zzxqfoo",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "PERSON",
-        "shape": "xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "9518895558161337725#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 9518895558161337725,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 9518895558161337725,
-          "head_text": "zzxqfoo"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 7,
-        "is_wordnet": false,
-        "normal": "zzxqfoo",
-        "stem": "zzxqfoo"
+        "normal": "zzxqfoo"
       }
     ],
-    "expected_text": "zzxqfoo"
+    "expected_text": "zzxqfoo",
+    "raw": {
+      "entities": [],
+      "text": "zzxqfoo"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_case_invariant_red",
@@ -4411,33 +2583,9 @@
       {
         "id": "10703295480626775740#0",
         "text": "RED",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "XXX",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "10703295480626775740#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 10703295480626775740,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 10703295480626775740,
-          "head_text": "RED"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "red",
-        "stem": "red"
+        "normal": "red"
       }
     ],
     "expected_tokens": [
@@ -4453,33 +2601,9 @@
             {
               "id": "10703295480626775740#0",
               "text": "RED",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "ORG",
-              "shape": "XXX",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "10703295480626775740#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 10703295480626775740,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 10703295480626775740,
-                "head_text": "RED"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 3,
-              "is_wordnet": true,
-              "normal": "red",
-              "stem": "red"
+              "normal": "red"
             }
           ],
           "canon": "red",
@@ -4491,7 +2615,21 @@
         }
       }
     ],
-    "expected_text": "red"
+    "expected_text": "red",
+    "raw": {
+      "entities": [
+        {
+          "canon": "red",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 3,
+          "text": "RED",
+          "confidence": 100
+        }
+      ],
+      "text": "red"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_case_invariant_red",
@@ -4501,33 +2639,9 @@
       {
         "id": "17551718516836219974#0",
         "text": "red",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "ROOT",
-        "ent": "",
-        "shape": "xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "17551718516836219974#0",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 17551718516836219974,
-          "head_i": 0,
-          "head_idx": 0,
-          "head_orth": 17551718516836219974,
-          "head_text": "red"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "red",
-        "stem": "red"
+        "normal": "red"
       }
     ],
     "expected_tokens": [
@@ -4543,33 +2657,9 @@
             {
               "id": "17551718516836219974#0",
               "text": "red",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "ROOT",
-              "ent": "",
-              "shape": "xxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "17551718516836219974#0",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 17551718516836219974,
-                "head_i": 0,
-                "head_idx": 0,
-                "head_orth": 17551718516836219974,
-                "head_text": "red"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 3,
-              "is_wordnet": true,
-              "normal": "red",
-              "stem": "red"
+              "normal": "red"
             }
           ],
           "canon": "red",
@@ -4581,7 +2671,21 @@
         }
       }
     ],
-    "expected_text": "red"
+    "expected_text": "red",
+    "raw": {
+      "entities": [
+        {
+          "canon": "red",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 3,
+          "text": "red",
+          "confidence": 100
+        }
+      ],
+      "text": "red"
+    }
   },
   {
     "test": "owl/parser/test_colors_parser_basic.py::TestColorsParserBasic::test_swap_type_is_known_value",
@@ -4591,95 +2695,23 @@
       {
         "id": "5764037739878831584#1",
         "text": "Red ",
-        "tense": "",
-        "noun_number": "",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "ADJ",
-        "tag": "JJ",
-        "dep": "amod",
-        "ent": "ORG",
-        "shape": "Xxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6056264313941430663#4",
-        "other": {
-          "i": 0,
-          "idx": 0,
-          "orth": 5764037739878831584,
-          "head_i": 4,
-          "head_idx": 11,
-          "head_orth": 6056264313941430663,
-          "head_text": "Green"
-        },
-        "is_punct": false,
         "x": 0,
         "y": 3,
-        "is_wordnet": true,
-        "normal": "red",
-        "stem": "red"
+        "normal": "red"
       },
       {
         "id": "16525029037422792391#3",
         "text": "Blue ",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "compound",
-        "ent": "ORG",
-        "shape": "Xxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6056264313941430663#4",
-        "other": {
-          "i": 2,
-          "idx": 5,
-          "orth": 16525029037422792391,
-          "head_i": 4,
-          "head_idx": 11,
-          "head_orth": 6056264313941430663,
-          "head_text": "Green"
-        },
-        "is_punct": false,
         "x": 4,
         "y": 8,
-        "is_wordnet": true,
-        "normal": "blue",
-        "stem": "blue"
+        "normal": "blue"
       },
       {
         "id": "6056264313941430663#4",
         "text": "Green",
-        "tense": "",
-        "noun_number": "singular",
-        "verb_form": "",
-        "sentiment": 0.0,
-        "pos": "PROPN",
-        "tag": "NNP",
-        "dep": "ROOT",
-        "ent": "ORG",
-        "shape": "Xxxxx",
-        "is_alpha": true,
-        "is_stop": false,
-        "head": "6056264313941430663#4",
-        "other": {
-          "i": 4,
-          "idx": 11,
-          "orth": 6056264313941430663,
-          "head_i": 4,
-          "head_idx": 11,
-          "head_orth": 6056264313941430663,
-          "head_text": "Green"
-        },
-        "is_punct": false,
         "x": 9,
         "y": 14,
-        "is_wordnet": true,
-        "normal": "green",
-        "stem": "green"
+        "normal": "green"
       }
     ],
     "expected_tokens": [
@@ -4695,33 +2727,9 @@
             {
               "id": "5764037739878831584#1",
               "text": "Red ",
-              "tense": "",
-              "noun_number": "",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "ADJ",
-              "tag": "JJ",
-              "dep": "amod",
-              "ent": "ORG",
-              "shape": "Xxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6056264313941430663#4",
-              "other": {
-                "i": 0,
-                "idx": 0,
-                "orth": 5764037739878831584,
-                "head_i": 4,
-                "head_idx": 11,
-                "head_orth": 6056264313941430663,
-                "head_text": "Green"
-              },
-              "is_punct": false,
               "x": 0,
               "y": 3,
-              "is_wordnet": true,
-              "normal": "red",
-              "stem": "red"
+              "normal": "red"
             }
           ],
           "canon": "red",
@@ -4744,33 +2752,9 @@
             {
               "id": "16525029037422792391#3",
               "text": "Blue ",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "compound",
-              "ent": "ORG",
-              "shape": "Xxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6056264313941430663#4",
-              "other": {
-                "i": 2,
-                "idx": 5,
-                "orth": 16525029037422792391,
-                "head_i": 4,
-                "head_idx": 11,
-                "head_orth": 6056264313941430663,
-                "head_text": "Green"
-              },
-              "is_punct": false,
               "x": 4,
               "y": 8,
-              "is_wordnet": true,
-              "normal": "blue",
-              "stem": "blue"
+              "normal": "blue"
             }
           ],
           "canon": "blue",
@@ -4793,33 +2777,9 @@
             {
               "id": "6056264313941430663#4",
               "text": "Green",
-              "tense": "",
-              "noun_number": "singular",
-              "verb_form": "",
-              "sentiment": 0.0,
-              "pos": "PROPN",
-              "tag": "NNP",
-              "dep": "ROOT",
-              "ent": "ORG",
-              "shape": "Xxxxx",
-              "is_alpha": true,
-              "is_stop": false,
-              "head": "6056264313941430663#4",
-              "other": {
-                "i": 4,
-                "idx": 11,
-                "orth": 6056264313941430663,
-                "head_i": 4,
-                "head_idx": 11,
-                "head_orth": 6056264313941430663,
-                "head_text": "Green"
-              },
-              "is_punct": false,
               "x": 9,
               "y": 14,
-              "is_wordnet": true,
-              "normal": "green",
-              "stem": "green"
+              "normal": "green"
             }
           ],
           "canon": "green",
@@ -4831,6 +2791,38 @@
         }
       }
     ],
-    "expected_text": "red blue green"
+    "expected_text": "red blue green",
+    "raw": {
+      "entities": [
+        {
+          "canon": "red",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 3,
+          "text": "Red",
+          "confidence": 100
+        },
+        {
+          "canon": "blue",
+          "type": "exact",
+          "ner": null,
+          "x": 4,
+          "y": 8,
+          "text": "Blue",
+          "confidence": 100
+        },
+        {
+          "canon": "green",
+          "type": "exact",
+          "ner": null,
+          "x": 9,
+          "y": 14,
+          "text": "Green",
+          "confidence": 100
+        }
+      ],
+      "text": "red blue green"
+    }
   }
 ]

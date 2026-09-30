@@ -1,11 +1,11 @@
 /*
  * api.c - Engine lifecycle and JSON request dispatch.
  *
- * Owns ontology state and routes requests to native operations and workers.
+ * Owns ontology state and routes requests to native operations.
+ * craigtrim/mutatoc#1
  */
 
 #include "mc.h"
-#include "lingpatlab.h"
 
 mc_engine *mc_create(void)
 {
@@ -19,7 +19,6 @@ mc_engine *mc_create(void)
 
 static void clear_ontology(mc_engine *e)
 {
-	sparql_invalidate(e->sparql);
 	match_index_free(e->index);
 	e->index = NULL;
 	DEL(e->snapshot);
@@ -47,9 +46,6 @@ void mc_destroy(mc_engine *e)
 {
 	if (!e)
 		return;
-	spacy_free(e->spacy);
-	spacy_free(e->sparql);
-	e->sparql = NULL;
 	clear_ontology(e);
 	free(e);
 }
@@ -426,9 +422,7 @@ static J *load_collection(mc_engine *e, J *q, mc_error *err)
 			break;
 		}
 		next->parts[next->part_count++] = part;
-		part->sparql = e->sparql;
 		J *loaded = dispatch(part, request, err);
-		part->sparql = NULL;
 		DEL(request);
 		DEL(loaded);
 		if (err->code)
@@ -458,10 +452,7 @@ static J *load_collection(mc_engine *e, J *q, mc_error *err)
 	next->name =
 		copy(*S(GET(q, "name")) ? S(GET(q, "name")) : "collection");
 	clear_ontology(e);
-	mc_spacy *worker = e->spacy, *rdf_worker = e->sparql;
 	*e = *next;
-	e->spacy = worker;
-	e->sparql = rdf_worker;
 	free(next);
 	J *result = OBJ();
 	PUT(result, "name", STR(e->name));
@@ -478,40 +469,6 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 		fail(err, 2, "Request requires string op");
 		return NULL;
 	}
-	if (!strcmp(op, "configure_spacy") || !strcmp(op, "configure_sparql")) {
-		J *timeout = GET(q, "timeout_ms");
-		if (timeout &&
-		    (!cJSON_IsNumber(timeout) || timeout->valuedouble < 0 ||
-		     timeout->valuedouble > 3600000 ||
-		     timeout->valuedouble != (double)timeout->valueint)) {
-			fail(err, 2,
-			     "timeout_ms must be an integer from 0 to 3600000");
-			return NULL;
-		}
-		int ok = !strcmp(op, "configure_sparql") ?
-				 mc_use_sparql(
-					 e, S(GET(q, "python")),
-					 S(GET(q, "worker")),
-					 timeout ? (unsigned)timeout->valueint :
-						   0,
-					 err) :
-				 mc_use_spacy(
-					 e, S(GET(q, "python")),
-					 S(GET(q, "worker")),
-					 GET(q, "model") ? S(GET(q, "model")) :
-							   "en_core_web_sm",
-					 timeout ? (unsigned)timeout->valueint :
-						   0,
-					 err);
-		return ok ? BOOL(1) : NULL;
-	}
-	if (!strcmp(op, "lingpatlab"))
-		return lp_request(e, q, err);
-	if (!strcmp(op, "spacy_info"))
-		return spacy_info(e, err);
-	if (!strcmp(op, "sparql") ||
-	    (!strcmp(op, "query") && !strcmp(S(GET(q, "method")), "adhoc")))
-		return sparql_query(e, q, err);
 	if (!strcmp(op, "version"))
 		return STR(MUTATOC_VERSION);
 	if (!strcmp(op, "load")) {
@@ -551,22 +508,10 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 						file_uri(*path ? path : ".");
 				g = rdf_parse(data, base, err);
 				free(base);
-				int normalized = g ? normalize_special_literals(
-							     e, g, err) :
-						     0;
-				if (normalized == 2) {
-					Graph *rebuilt = rdf_merge(&g, 1);
-					rdf_free(g);
-					g = rebuilt;
-					if (!g)
-						fail(err, 1,
-						     "Out of memory rebuilding normalized graph");
-				}
-				if (g && normalized &&
-				    cJSON_IsTrue(GET(q, "graph_only"))) {
+				if (g && cJSON_IsTrue(GET(q, "graph_only"))) {
 					next = OBJ();
 					PUT(next, "synonyms", OBJ());
-				} else if (g && normalized)
+				} else if (g)
 					next = ontology_build(
 						g,
 						GET(q, "distance") ?
@@ -648,7 +593,7 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 			fail(err, 2, "tokenize requires string text");
 			return NULL;
 		}
-		return spacy_tokens(e, S(GET(q, "text")), err);
+		return tokenize_text(S(GET(q, "text")));
 	}
 	if (!strcmp(op, "generate_spans"))
 		return generate_spans(
@@ -784,7 +729,7 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 				fail(err, 2, "parse requires string text");
 				return NULL;
 			}
-			tokens = spacy_tokens(e, S(GET(q, "text")), err);
+			tokens = tokenize_text(S(GET(q, "text")));
 		}
 		if (!tokens)
 			return NULL;

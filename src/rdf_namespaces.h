@@ -1,7 +1,9 @@
 /*
- * rdf_namespaces.h - Default SPARQL namespace bindings.
+ * rdf_namespaces.h - Default namespace prefixes for query arguments.
  *
- * Uses RDFLib 7.1.4 defaults. Turtle declarations are separate.
+ * The prefixes Mutato's reference graphs bind without a declaration. Turtle
+ * declarations are separate.
+ * craigtrim/mutatoc#1
  */
 
 static const char *rdf_defaults[][2] = {

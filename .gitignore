@@ -1,12 +1,5 @@
+# Build outputs and local reference checkouts (craigtrim/mutatoc#1).
 build*/
 .reference/
-__pycache__/
-.pytest_cache/
-*.pyc
 artifacts/
-
-.runtime/
-
 dist/
-
-.runtime-c/

@@ -1,8 +1,0 @@
-{
-  "package": "en_core_web_sm",
-  "version": "3.8.0",
-  "archive": "en_core_web_sm-3.8.0.tar.gz",
-  "sha256": "14a2f31bc476af87019819ea8c9948fabdfd473a442edd6b1cba62bf0c2c0f55",
-  "bytes": 12806159,
-  "reference": "mutato/resources/lib/en_core_web_sm-3.8.0.tar.gz"
-}
