@@ -1,7 +1,7 @@
 {
   "reference_revision": "da6bfa5df80b208a3271e111f2921ad281d0da98",
   "module_count": 91,
-  "note": "Functional implementation mapping; Python classes/module layout are replaced by the C API. Runtime dependencies and source defects are detailed in compatibility.md.",
+  "note": "Functional implementation mapping; Mutato's classes and module layout are replaced by the C API. Source defects and adaptations are detailed in compatibility.md.",
   "modules": [
     {
       "source": "mutato/__init__.py",
@@ -45,7 +45,7 @@
         "isEnabledForInfo",
         "configure_logging"
       ],
-      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "area": "Replaced Mutato logging, files, validation, timing and JSON utilities",
       "implementation": [
         "src/util.c",
         "src/uri.c",
@@ -94,7 +94,7 @@
         "Enforcer.is_none",
         "Enforcer.is_json"
       ],
-      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "area": "Replaced Mutato logging, files, validation, timing and JSON utilities",
       "implementation": [
         "src/util.c",
         "src/uri.c",
@@ -126,7 +126,7 @@
         "EnvIO.set_int",
         "EnvIO.set_float"
       ],
-      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "area": "Replaced Mutato logging, files, validation, timing and JSON utilities",
       "implementation": [
         "src/util.c",
         "src/uri.c",
@@ -170,7 +170,7 @@
         "FileIO.parse_json",
         "FileIO.event"
       ],
-      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "area": "Replaced Mutato logging, files, validation, timing and JSON utilities",
       "implementation": [
         "src/util.c",
         "src/uri.c",
@@ -189,7 +189,7 @@
         "Stopwatch.start",
         "Stopwatch.stop"
       ],
-      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "area": "Replaced Mutato logging, files, validation, timing and JSON utilities",
       "implementation": [
         "src/util.c",
         "src/uri.c",
@@ -228,7 +228,7 @@
         "TextUtils.sentence_case",
         "TextUtils.title_case"
       ],
-      "area": "Replaced Python logging, files, validation, timing and JSON utilities",
+      "area": "Replaced Mutato logging, files, validation, timing and JSON utilities",
       "implementation": [
         "src/util.c",
         "src/uri.c",
@@ -338,7 +338,12 @@
         "src/views.c",
         "src/ontology.c",
         "src/api.c"
-      ]
+      ],
+      "removed_symbols": [
+        "FindOntologyData.spacy_ner",
+        "FindOntologyData.spacy_ner_rev"
+      ],
+      "removed_note": "Removed in 0.3.0 (craigtrim/mutatoc#1)."
     },
     {
       "source": "mutato/finder/multiquery/bp/find_ontology_json.py",
@@ -725,9 +730,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -738,9 +741,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -770,9 +771,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -802,10 +801,12 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
-      ]
+        "src/api.c"
+      ],
+      "removed_symbols": [
+        "AskOwlAPI.adhoc"
+      ],
+      "removed_note": "Removed in 0.3.0 (craigtrim/mutatoc#1)."
     },
     {
       "source": "mutato/finder/singlequery/dmo/__init__.py",
@@ -815,9 +816,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -831,9 +830,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -847,9 +844,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -863,9 +858,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -876,9 +869,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -891,9 +882,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -904,9 +893,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -922,9 +909,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -938,9 +923,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -954,9 +937,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -970,9 +951,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -986,9 +965,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -1002,9 +979,7 @@
         "src/rdf.c",
         "src/ontology.c",
         "src/views.c",
-        "src/sparql.c",
-        "src/api.c",
-        "runtime/sparql_worker.py"
+        "src/api.c"
       ]
     },
     {
@@ -1095,7 +1070,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1105,7 +1080,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1119,7 +1094,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1129,7 +1104,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1139,7 +1114,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1152,7 +1127,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1162,7 +1137,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1175,7 +1150,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1188,7 +1163,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1201,7 +1176,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1214,7 +1189,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1227,7 +1202,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1240,7 +1215,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1253,7 +1228,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1263,11 +1238,8 @@
         "SpacyMatchFinder.process"
       ],
       "area": "Token preprocessing and ontology matching",
-      "implementation": [
-        "src/match.c",
-        "src/api.c",
-        "runtime/spacy_worker.py"
-      ]
+      "implementation": [],
+      "status": "Removed in 0.3.0 (craigtrim/mutatoc#1); Mutato disabled this matcher in 2022."
     },
     {
       "source": "mutato/parser/dmo/spacy_match_swapper.py",
@@ -1276,11 +1248,8 @@
         "SpacyMatchSwapper.process"
       ],
       "area": "Token preprocessing and ontology matching",
-      "implementation": [
-        "src/match.c",
-        "src/api.c",
-        "runtime/spacy_worker.py"
-      ]
+      "implementation": [],
+      "status": "Removed in 0.3.0 (craigtrim/mutatoc#1); Mutato disabled this matcher in 2022."
     },
     {
       "source": "mutato/parser/dmo/span_match_finder.py",
@@ -1292,7 +1261,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1305,7 +1274,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1315,7 +1284,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1328,7 +1297,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1341,7 +1310,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1354,7 +1323,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1367,7 +1336,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1377,7 +1346,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1387,7 +1356,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1397,7 +1366,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1410,7 +1379,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1423,7 +1392,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1436,7 +1405,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     },
     {
@@ -1446,11 +1415,8 @@
         "PerformSpacyMatching.process"
       ],
       "area": "Token preprocessing and ontology matching",
-      "implementation": [
-        "src/match.c",
-        "src/api.c",
-        "runtime/spacy_worker.py"
-      ]
+      "implementation": [],
+      "status": "Removed in 0.3.0 (craigtrim/mutatoc#1); Mutato disabled this matcher in 2022."
     },
     {
       "source": "mutato/parser/svc/perform_span_matching.py",
@@ -1462,7 +1428,7 @@
       "implementation": [
         "src/match.c",
         "src/api.c",
-        "runtime/spacy_worker.py"
+        "src/tokenize.c"
       ]
     }
   ]
