@@ -1,6 +1,6 @@
 # Changelog
 
-<!-- craigtrim/mutatoc#1 -->
+<!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2 -->
 
 ## 0.3.0 (2026-09-30)
 
@@ -10,6 +10,8 @@ Mutatoc no longer uses spaCy, LingPatLab or Python at build, test or run time ([
 
 - `--jsonf` prints the one-shot result as JSON indented two spaces per level; `--json` stays compact.
 - `--stopwatch` prints the total run time of a one-shot run after its output, in milliseconds, seconds or minutes as fits. It writes to stderr, so piped JSON stays valid.
+- A gold corpus of 11 hand-written paragraphs and documents with 132 expected entities, written down before the engine ran, checked by the `gold` suite ([#2](https://github.com/craigtrim/mutatoc/issues/2)).
+- A `performance` suite that fails when load, first parse, warm parse or peak memory passes its ceiling, run in optimized builds without sanitizers (`mutatoc_bench --check`).
 
 ### Breaking changes
 

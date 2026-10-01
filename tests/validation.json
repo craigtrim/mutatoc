@@ -53,7 +53,21 @@
     "extensions": {"optional_stage_cases": 81, "exact_window_cases": 266, "checks": 378},
     "tokenize": {"cases": 17},
     "concurrency": {"engines": 24, "threads": 8, "prepared_requests": 480, "raw_text_parses": 24},
-    "native": {"checks": 31}
+    "native": {"checks": 31},
+    "gold": {
+      "issue": "https://github.com/craigtrim/mutatoc/issues/2",
+      "texts": 11, "paragraphs": 7, "documents": 4, "characters": 5375, "expected_entities": 132,
+      "expectations_frozen": "2026-10-01T00:08:56Z",
+      "first_engine_run": {"texts_matching": 10, "corrections": 1, "correction": "medicopilot-paragraph: span rule abdominal_wound+penetrating_wound on Penetrating_Abdominal_Wound"},
+      "passed": 11
+    },
+    "performance": {
+      "issue": "https://github.com/craigtrim/mutatoc/issues/2",
+      "ceilings": {"load_ms": {"animals-test": 500, "econ-20160218": 500, "medicopilot": 700, "courses-20251028": 6000}, "first_parse_ms": 300, "parse_ms": 150, "peak_mb": 128},
+      "measured_when_set": {"load_ms": [3.2, 68.0, 112.3, 929.2], "first_parse_ms": [24.1, 9.1, 26.0, 16.0], "parse_ms": [22.7, 9.1, 26.0, 16.1], "peak_mb": 67.4},
+      "verified_failing": "a copy with a 1 ms parse ceiling exits 1"
+    },
+    "cli": {"tests": ["cli_json", "cli_jsonf", "cli_stopwatch"]}
   },
   "migration_evidence": {
     "tokenizer_texts_compared": 12386,
