@@ -4,3 +4,5 @@ build*/
 artifacts/
 dist/
 site/
+# Local release automation.
+scripts/release.ps1
