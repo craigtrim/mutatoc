@@ -462,3 +462,54 @@ J *tokenize_text(const char *text)
 	}
 	return result;
 }
+
+/*
+ * Letters and digits separated by single spaces, with underscores only inside
+ * words, come back from the tokenizer unchanged apart from case.
+ */
+static int plain(const char *s)
+{
+	uint32_t prev = ' ';
+	const char *p = s;
+	while (*p) {
+		uint32_t c = uread(&p),
+			 next = *p ? (uint32_t)(unsigned char)*p : ' ';
+		if (c == ' ' ? prev == ' ' || next == ' ' :
+		    c == '_' ? prev == ' ' || next == ' ' :
+			       !ualpha(c) && !numeric(c))
+			return 0;
+		prev = c;
+	}
+	return 1;
+}
+
+/*
+ * The window text the exact matcher builds when its window covers every token
+ * of text, or NULL when text is plain or already equals it. Synonyms are
+ * stored as written, so "well/health/physical education" must be looked up as
+ * "well / health / physical education" (craigtrim/mutatoc#5).
+ */
+char *tokenize_key(const char *text)
+{
+	if (plain(text))
+		return NULL;
+	J *ts = tokenize_text(text);
+	Buf b = { 0 };
+	int words = 0;
+	EACH(t, ts) {
+		const char *normal = S(GET(t, "normal"));
+		if (!*normal)
+			continue;
+		if (words++)
+			buf_put(&b, " ");
+		buf_put(&b, normal);
+	}
+	DEL(ts);
+	char *key = norm(b.p ? b.p : "", 1, 0);
+	free(b.p);
+	if (!*key || !strcmp(key, text)) {
+		free(key);
+		return NULL;
+	}
+	return key;
+}

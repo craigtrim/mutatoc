@@ -42,6 +42,7 @@ struct MatchIndex {
 	int word_cap;
 	Map sparse_words; /* decimal word count to Map, above DENSE_WORDS */
 	Map prefixes; /* Synonym prefixes ending before whitespace. */
+	Map aliases; /* Tokenized synonym to the lookup word it came from. */
 	Map fwd, rev, spans, entities, ner;
 	int entity_count, live;
 };
@@ -69,6 +70,99 @@ static Map *words_at(const MatchIndex *x, int n)
 	return map_get((Map *)&x->sparse_words, key);
 }
 
+static int add_length(MatchIndex *x, int n, int *cap)
+{
+	int *grown = realloc(x->lengths,
+			     (size_t)(x->length_count + 1) * sizeof(*grown));
+	if (!grown)
+		return 0;
+	x->lengths = grown;
+	x->lengths[x->length_count++] = n;
+	if (n <= DENSE_WORDS && n > *cap)
+		*cap = n;
+	return 1;
+}
+
+static void add_prefixes(MatchIndex *x, const char *s)
+{
+	const char *p = s;
+	while (*p) {
+		const char *at = p;
+		uint32_t c = uread(&p);
+		if (at > s && uspace(c)) {
+			char *prefix = slice(s, (size_t)(at - s));
+			map_put(&x->prefixes, prefix, (void *)1);
+			free(prefix);
+		}
+	}
+}
+
+/*
+ * Input text is tokenized and synonyms are not, so a synonym written with
+ * punctuation never equals the window text of its own tokens. Each one is also
+ * indexed under that window text, resolving back to the lookup word it came
+ * from. An alias never displaces a lookup word, and the first lookup word to
+ * claim an alias keeps it (craigtrim/mutatoc#5).
+ */
+typedef struct {
+	char *key;
+	const char *word;
+	int words;
+} Alias;
+
+static int index_words(MatchIndex *x, J *lookup, int cap, const Alias *aliases,
+		       int alias_count)
+{
+	if (x->length_count > 1)
+		qsort(x->lengths, (size_t)x->length_count, sizeof(*x->lengths),
+		      cmp_int);
+	int unique_count = 0;
+	for (int i = 0; i < x->length_count; i++)
+		if (!unique_count ||
+		    x->lengths[unique_count - 1] != x->lengths[i])
+			x->lengths[unique_count++] = x->lengths[i];
+	x->length_count = unique_count;
+	x->words = calloc((size_t)cap + 1, sizeof(*x->words));
+	if (!x->words)
+		return 0;
+	x->word_cap = cap;
+	for (int i = 0; i < x->length_count; i++) {
+		int n = x->lengths[i];
+		char key[16];
+		snprintf(key, sizeof(key), "%d", n);
+		Map *words = &x->words[n];
+		if (n > DENSE_WORDS) {
+			words = calloc(1, sizeof(*words));
+			if (!words)
+				return 0;
+			map_put(&x->sparse_words, key, words);
+		}
+		EACH(word, GET(lookup, key))
+			map_put(words, S(word), (void *)1);
+	}
+	/*
+	 * A window's normalized text is a prefix of every longer window from
+	 * the same token, ending before whitespace: norm() lowercases and
+	 * trims, and neither the final-sigma rule nor trimming looks past the
+	 * space that joins tokens. A window whose text is not such a prefix of
+	 * any synonym therefore cannot grow into one.
+	 */
+	EACH(group, lookup) {
+		EACH(word, group)
+			add_prefixes(x, S(word));
+	}
+	for (int i = 0; i < alias_count; i++) {
+		const Alias *a = &aliases[i];
+		Map *words = words_at(x, a->words);
+		if (map_get(words, a->key) || map_get(&x->aliases, a->key))
+			continue;
+		map_put(words, a->key, (void *)1);
+		map_put(&x->aliases, a->key, (void *)a->word);
+		add_prefixes(x, a->key);
+	}
+	return 1;
+}
+
 static int index_lookup(MatchIndex *x, J *lookup)
 {
 	if (!lookup)
@@ -87,69 +181,42 @@ static int index_lookup(MatchIndex *x, J *lookup)
 		long n = strtol(group->string, &end, 10);
 		if (*end || n <= 0 || n > INT_MAX || !SIZE(group))
 			continue;
-		int *grown = realloc(x->lengths, (size_t)(x->length_count + 1) *
-							 sizeof(*grown));
-		if (!grown)
+		if (!add_length(x, (int)n, &cap))
 			return 0;
-		x->lengths = grown;
-		x->lengths[x->length_count++] = (int)n;
-		if (n <= DENSE_WORDS && n > cap)
-			cap = (int)n;
 	}
-	if (x->length_count > 1)
-		qsort(x->lengths, (size_t)x->length_count, sizeof(*x->lengths),
-		      cmp_int);
-	int unique_count = 0;
-	for (int i = 0; i < x->length_count; i++)
-		if (!unique_count ||
-		    x->lengths[unique_count - 1] != x->lengths[i])
-			x->lengths[unique_count++] = x->lengths[i];
-	x->length_count = unique_count;
-	x->words = calloc((size_t)cap + 1, sizeof(*x->words));
-	if (!x->words)
-		return 0;
-	x->word_cap = cap;
-	for (int i = 0; i < x->length_count; i++) {
-		int n = x->lengths[i];
-		char key[16];
-		snprintf(key, sizeof(key), "%d", n);
-		J *group = GET(lookup, key);
-		if (!group)
-			continue;
-		Map *words = &x->words[n];
-		if (n > DENSE_WORDS) {
-			words = calloc(1, sizeof(*words));
-			if (!words)
-				return 0;
-			map_put(&x->sparse_words, key, words);
-		}
-		EACH(word, group)
-			map_put(words, S(word), (void *)1);
-	}
-	/*
-	 * A window's normalized text is a prefix of every longer window from
-	 * the same token, ending before whitespace: norm() lowercases and
-	 * trims, and neither the final-sigma rule nor trimming looks past the
-	 * space that joins tokens. A window whose text is not such a prefix of
-	 * any synonym therefore cannot grow into one.
-	 */
+	Alias *aliases = NULL;
+	int alias_count = 0, ok = 1;
 	EACH(group, lookup) {
 		EACH(word, group) {
-			const char *s = S(word), *p = s;
-			while (*p) {
-				const char *at = p;
-				uint32_t c = uread(&p);
-				if (at > s && uspace(c)) {
-					char *prefix =
-						slice(s, (size_t)(at - s));
-					map_put(&x->prefixes, prefix,
-						(void *)1);
-					free(prefix);
-				}
+			char *key = cJSON_IsString(word) ?
+					    tokenize_key(S(word)) :
+					    NULL;
+			if (!key)
+				continue;
+			int words = 1;
+			for (const char *p = key; *p; p++)
+				words += *p == ' ';
+			Alias *grown =
+				realloc(aliases, (size_t)(alias_count + 1) *
+							 sizeof(*grown));
+			if (grown)
+				aliases = grown;
+			if (!grown || !add_length(x, words, &cap)) {
+				free(key);
+				ok = 0;
+				break;
 			}
+			aliases[alias_count++] = (Alias){ key, S(word), words };
 		}
+		if (!ok)
+			break;
 	}
-	return 1;
+	if (ok)
+		ok = index_words(x, lookup, cap, aliases, alias_count);
+	for (int i = 0; i < alias_count; i++)
+		free(aliases[i].key);
+	free(aliases);
+	return ok;
 }
 
 static int index_spans(MatchIndex *x, J *rules)
@@ -201,6 +268,7 @@ void match_index_free(MatchIndex *x)
 		}
 	map_free(&x->sparse_words);
 	map_free(&x->prefixes);
+	map_free(&x->aliases);
 	for (size_t i = 0; i < x->spans.cap; i++)
 		if (x->spans.slots[i].key) {
 			SpanList *list = x->spans.slots[i].value;
@@ -436,6 +504,13 @@ static J *exact(const MatchIndex *x, J *ts, const J *names, mc_error *e)
 			break;
 		char *s = exact_sequence(windows[start].token, length);
 		J *canon = canonical(x, s);
+		const char *alias = cJSON_IsString(canon) ?
+					    NULL :
+					    map_get((Map *)&x->aliases, s);
+		if (alias) {
+			DEL(canon);
+			canon = canonical(x, alias);
+		}
 		if (!canon || !cJSON_IsString(canon)) {
 			fail(e, 4, "Canonical form not found for %s", s);
 			DEL(canon);
