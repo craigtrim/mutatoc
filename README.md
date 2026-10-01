@@ -10,7 +10,7 @@
 [![Sanitizers: ASan and UBSan](https://img.shields.io/badge/sanitizers-ASan%20%7C%20UBSan-brightgreen)](.github/workflows/test.yml)
 [![Upstream tests](https://img.shields.io/badge/Mutato%20tests-961%20replayed-brightgreen)](docs/compatibility.md)
 
-<!-- craigtrim/mutatoc#1 -->
+<!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2 -->
 
 Mutatoc is the C17 port of [Mutato](https://github.com/craigtrim/mutato). It takes plain text and returns the ontology entities it contains. It accepts the same Turtle-encoded OWL ontologies and MDA JSON snapshots as Mutato, and everything from ontology extraction and the finder queries to tokenization and matching runs in process in C. Nothing else is installed or started at run time.
 
@@ -58,6 +58,7 @@ The reference is Mutato revision `da6bfa5df80b208a3271e111f2921ad281d0da98`. `ct
 
 | Suite | What it covers |
 | --- | --- |
+| `gold` | 11 hand-written paragraphs and documents across all seven fixture ontologies, whose 132 expected entities were written down before the engine ran |
 | `upstream` | Mutato's 961 upstream tests, replayed request by request (3,930 recorded calls) |
 | `parity` | 393 reference cases as prepared tokens and as raw text |
 | `public_api` | 1,659 finder calls across 140 methods, plus match index lifecycle |
@@ -67,5 +68,7 @@ The reference is Mutato revision `da6bfa5df80b208a3271e111f2921ad281d0da98`. `ct
 | `tokenize` | The native tokenizer contract |
 | `concurrency` | 24 engines on 8 threads through the public C API |
 | `native`, `text`, `embedding` | Ontology loading, caller metadata, Unicode and URI handling, the embedding example |
+| `cli_json`, `cli_jsonf`, `cli_stopwatch` | The one-shot CLI's output formats |
+| `performance` | Ceilings on load, first parse, parse and peak memory, run in optimized builds without sanitizers |
 
-Test fixtures keep their exact bytes on every platform (see `.gitattributes`), so Windows and Linux checkouts parse the same graphs. [Compatibility notes](docs/compatibility.md) distinguish retained behavior, adaptations and repaired upstream defects. [Validation results](tests/validation.json) record the executed checks. [The implementation map](docs/implementation-map.json) accounts for Mutato's 91 source modules. [Performance](docs/performance.md) covers the benchmark and earlier optimizations.
+The gold corpus checks correctness rather than agreement: each text was audited against its ontology's vocabulary read straight from the OWL file, and its expectations were frozen before the first engine run. The one correction since then keeps the original expectation next to the OWL facts that justify the change (`tests/fixtures/gold/corpus.json`). Test fixtures keep their exact bytes on every platform (see `.gitattributes`), so Windows and Linux checkouts parse the same graphs. [Compatibility notes](docs/compatibility.md) distinguish retained behavior, adaptations and repaired upstream defects. [Validation results](tests/validation.json) record the executed checks. [The implementation map](docs/implementation-map.json) accounts for Mutato's 91 source modules. [Performance](docs/performance.md) covers the benchmark and earlier optimizations.

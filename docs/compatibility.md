@@ -1,6 +1,6 @@
 # Compatibility contract
 
-<!-- Rewritten for the native-only runtime: craigtrim/mutatoc#1 -->
+<!-- Rewritten for the native-only runtime: craigtrim/mutatoc#1; gold corpus and performance gate: craigtrim/mutatoc#2 -->
 
 Reference: Mutato `da6bfa5df80b208a3271e111f2921ad281d0da98`.
 
@@ -12,6 +12,7 @@ Everything runs in process, with no interpreter, model or worker. Since 0.3.0 ra
 
 ## Evidence
 
+- The gold corpus (`tests/fixtures/gold/corpus.json`) holds 11 hand-written paragraphs and documents, at least one for each of the seven distinct fixture ontologies, with 132 expected entities. Each text was audited against its ontology's vocabulary read from the OWL source with an independent parser, and its expectations were frozen before the engine first ran on it. On that first run 10 of the 11 texts matched exactly. The eleventh had a span rule the audit had not modelled (`abdominal_wound+penetrating_wound` on `Penetrating_Abdominal_Wound`), and the fixture records the original expectation, the correction and its derivation. The `gold` suite requires the same entities in the same order, with equal canonical form, match type, NER label and covered text.
 - Mutato's 961 upstream tests were recorded request by request against 0.2.3 (3,930 requests in 252 engine sessions, `tests/fixtures/upstream/trace.json`). The `upstream` suite replays every session in a fresh engine and compares each response structurally, and each parse on its entities and rendered text. The real 961 tests also passed against 0.3.0 before the harness was retired.
 - The matching corpus contains 393 cases. The `parity` suite compares complete prepared-token output and, for the same texts, the entities and rendered text of a raw parse.
 - The public finder corpus contains 1,659 calls across 140 methods on four interfaces.

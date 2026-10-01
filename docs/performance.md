@@ -19,6 +19,23 @@ Peak memory for the benchmark process fell from 74.0 MB to 67.6 MB. 0.2.3 also r
 
 The same shift shows up in larger runs driven through `--serve`. Parsing 12,382 texts against seven ontologies plus the 393 parity texts (87,067 parses) took 23 seconds with 0.3.0 and about 25 minutes with 0.2.3. Mutato's 961 upstream tests took 81 seconds against 0.3.0 and 242 seconds against 0.2.3.
 
+## Performance gate
+
+<!-- craigtrim/mutatoc#2 -->
+
+`mutatoc_bench --check` turns the benchmark into a CTest gate named `performance`. It runs in optimized builds (Release, RelWithDebInfo, MinSizeRel) without sanitizers, and fails when any median passes its ceiling:
+
+| Measurement | Ceiling | Measured when the gate was set |
+| --- | ---: | ---: |
+| Load: animals-test, econ-20160218 | 500 ms | 3 ms, 68 ms |
+| Load: medicopilot | 700 ms | 112 ms |
+| Load: courses-20251028 | 6,000 ms | 929 ms |
+| First parse of the 2,400-character document | 300 ms | 9 to 26 ms |
+| Warm parse of the same document | 150 ms | 9 to 26 ms |
+| Peak memory of the process | 128 MB | 67 MB |
+
+The ceilings are user-facing limits with room for slow shared CI runners, not tight regression factors. They fail the regressions that matter most here: a return to an out-of-process tokenizer (122 to 248 ms per parse and about 1.9 s for the first one), an accidentally quadratic matcher, or a footprint like 0.2.3's 211 MB. A smaller slowdown, such as a load time that grows fivefold but stays under its ceiling, passes; every run prints its measurements so CI logs show the trend.
+
 ## Earlier releases
 
 Version 0.2.1 retains the matching rules and complete token results from 0.2.0. Exact matching uses hash membership and records which token windows can match. After a replacement, it recomputes only windows that contain the replacement. Selection still starts with the longest window and then the leftmost match. Unrelated tokens retain their objects instead of being copied after each replacement. Nested swap histories still own complete copies of their original tokens.
