@@ -1,0 +1,89 @@
+# Synonyms written with punctuation that the input tokenizer splits into
+# separate tokens. Each one must match as a single exact entity when the text
+# spells it out. craigtrim/mutatoc#5
+
+@prefix : <http://example.org/punctuated#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/punctuated> rdf:type owl:Ontology .
+
+# The reported case: a slash-delimited seeAlso around an existing label, and a
+# colon synonym on the same class.
+:Physical_Education rdf:type owl:Class ;
+    rdfs:label "Physical Education" ;
+    rdfs:seeAlso "Well/Health/Physical Education" , "PE:PE" .
+
+:Anatomy_Physiology rdf:type owl:Class ;
+    rdfs:label "Anatomy and Physiology" ;
+    rdfs:seeAlso "ANAT/PHYS" , "A&P" .
+
+:Career_Planning rdf:type owl:Class ;
+    rdfs:label "Career Planning" ;
+    rdfs:seeAlso "Career Exploration/Planning" .
+
+:Calculus rdf:type owl:Class ;
+    rdfs:label "Calculus" ;
+    rdfs:seeAlso "Calc (Honors)" , "AP Calc!" .
+
+:Precalculus rdf:type owl:Class ;
+    rdfs:label "Precalculus" ;
+    rdfs:seeAlso "Pre-Calculus" , "Pre-Calc/Trig" .
+
+:Computer_Aided_Manufacturing rdf:type owl:Class ;
+    rdfs:label "Computer-Aided Manufacturing" .
+
+:Spanish rdf:type owl:Class ;
+    rdfs:label "Spanish" ;
+    rdfs:seeAlso "Spanish I/II" .
+
+:Womens_Studies rdf:type owl:Class ;
+    rdfs:label "Women’s Studies" .
+
+:Drivers_Education rdf:type owl:Class ;
+    rdfs:label "Driver's Education" ;
+    rdfs:seeAlso "Driver's Ed/Safety" .
+
+:Consumer_Price_Index rdf:type owl:Class ;
+    rdfs:label "Consumer Price Index" ;
+    rdfs:seeAlso "Consumer Price Index (CPI)" .
+
+:Logic rdf:type owl:Class ;
+    rdfs:label "Logic" ;
+    rdfs:seeAlso "Intro to Logic: Part 1" .
+
+:Math_Lab rdf:type owl:Class ;
+    rdfs:label "Math Lab" ;
+    rdfs:seeAlso "Math Lab [Remedial]" .
+
+:Studio_Art rdf:type owl:Class ;
+    rdfs:label "Studio Art" ;
+    rdfs:seeAlso "Studio Art #2" , "Arts/Crafts" .
+
+# A synonym written with spaces keeps its spelling when another class lists
+# the same words without them.
+:Craft_Workshop rdf:type owl:Class ;
+    rdfs:label "Craft Workshop" ;
+    rdfs:seeAlso "Arts / Crafts" .
+
+# Twelve tokens once the slashes are split off.
+:Health_Science rdf:type owl:Class ;
+    rdfs:label "Health Science" ;
+    rdfs:seeAlso "Health/Wellness/Fitness/Nutrition/Recreation/Sport Science" .
+
+# Two classes listing the same punctuated synonym.
+:Music_Theater rdf:type owl:Class ;
+    rdfs:label "Music Theater" ;
+    rdfs:seeAlso "Music/Theater" .
+
+:Theater_Arts rdf:type owl:Class ;
+    rdfs:label "Theater Arts" ;
+    rdfs:seeAlso "Music/Theater" .
+
+# Punctuation that matched before this change.
+:US_History rdf:type owl:Class ;
+    rdfs:label "U.S. History" .
+
+:Human_Growth rdf:type owl:Class ;
+    rdfs:label "Human Growth & Development" .

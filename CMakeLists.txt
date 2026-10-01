@@ -87,6 +87,9 @@ if(BUILD_TESTING)
   # Hand-written entity expectations and the performance ceilings (craigtrim/mutatoc#2).
   mutatoc_program(mutatoc_gold tests/test_gold.c)
   add_test(NAME gold COMMAND mutatoc_gold ${CMAKE_CURRENT_SOURCE_DIR})
+  # Synonyms written with punctuation the tokenizer splits (craigtrim/mutatoc#5).
+  mutatoc_program(mutatoc_punctuated_synonyms tests/test_punctuated_synonyms.c)
+  add_test(NAME punctuated_synonyms COMMAND mutatoc_punctuated_synonyms ${CMAKE_CURRENT_SOURCE_DIR})
   # Timing ceilings only mean something in optimized builds without sanitizers.
   # Build type names are case-insensitive in CMake, so compare them uppercased.
   set(optimized_configurations Release RelWithDebInfo MinSizeRel)
