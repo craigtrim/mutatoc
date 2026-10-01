@@ -52,4 +52,4 @@ Construction of the whole-ontology entity, subentity and lookup lists also uses 
 
 About 11 ms of the last row is JSON transport of the 219 KB token array in each direction.
 
-Token results are unchanged. The CTest suite, including byte-equivalent snapshot parity and 1,665 public API cases, all 961 upstream Mutato tests, and the Linux address/undefined-behavior sanitizer suite with leak detection passed. `tests/test_api.c` adds checks that a reload replaces the index in snapshot and live mode and that malformed view members do not break matching. [The changelog](../CHANGELOG.md#023) records the 0.2.3 speed comparison with Mutato.
+Token results are unchanged. The CTest suite, including byte-equivalent snapshot parity and 1,665 public API cases, all 961 upstream Mutato tests, and the Linux address/undefined-behavior sanitizer suite with leak detection passed. `tests/test_api.c` adds checks that a reload replaces the index in snapshot and live mode and that malformed view members do not break matching. [The changelog](https://github.com/craigtrim/mutatoc/blob/master/CHANGELOG.md#023) records the 0.2.3 speed comparison with Mutato.

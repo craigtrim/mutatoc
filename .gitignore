@@ -3,3 +3,4 @@ build*/
 .reference/
 artifacts/
 dist/
+site/

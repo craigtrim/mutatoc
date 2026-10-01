@@ -1,0 +1,55 @@
+# Documentation site, published to GitHub Pages by .github/workflows/docs.yml.
+# Build locally with: pip install mkdocs==1.6.1 mkdocs-material==9.7.7 && mkdocs serve
+site_name: mutatoc
+site_description: C17 port of Mutato. Plain text in, ontology entities out.
+site_url: https://craigtrim.github.io/mutatoc/
+repo_url: https://github.com/craigtrim/mutatoc
+repo_name: craigtrim/mutatoc
+edit_uri: edit/master/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - content.code.copy
+    - navigation.footer
+
+plugins:
+  - search
+
+exclude_docs: |
+  implementation-map.json
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+nav:
+  - Home: index.md
+  - JSON and C integration: protocol.md
+  - Compatibility: compatibility.md
+  - Performance: performance.md
+  - Punctuation: punctuation.md
+  - Windows distribution: packaging.md
+  - Coding style: coding-style.md
+  - Changelog: https://github.com/craigtrim/mutatoc/blob/master/CHANGELOG.md
+
+markdown_extensions:
+  - tables
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
