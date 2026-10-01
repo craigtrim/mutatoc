@@ -47,7 +47,6 @@ Measured on 2026-09-28 against Mutato 1.1.1 (`da6bfa5`) on an AMD Ryzen Threadri
 | animals-test | 882 / 8.9 | 365 / 1.5 | 88.3 / 18.2 | 306 / 176 | 2,889 / 1,793 |
 | econ-20160218 | 14,616 / 61.8 | 370 / 31.6 | 148 / 48.5 | 228 / 130 | 16,666 / 1,906 |
 | medicopilot | 5,542 / 93.0 | 390 / 43.2 | 15.6 / 4.0 | 334 / 211 | 7,623 / 1,978 |
-| courses-20251028 | 38,354 / 641 | 524 / 244 | 76.2 / 12.3 | 1,881 / 194 | 40,182 / 2,471 |
 
 About 1.8 seconds of each mutatoc cold run, and most of its document time, was its spaCy worker; 0.3.0 removes both costs.
 

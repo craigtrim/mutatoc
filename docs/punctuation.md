@@ -2,7 +2,7 @@
 
 <!-- Updated for the native tokenizer: craigtrim/mutatoc#1 -->
 
-Mutatoc 0.2.2 matches `U.S. History to 1865` as one ontology phrase. Earlier versions replaced periods with temporary tilde markers that could not be restored after tokenization. The same defect affected dictionary entries such as `dr.`, `mr.`, and `mrs.`.
+Mutatoc 0.2.2 matches `U.S. Virgin Islands` as one ontology phrase. Earlier versions replaced periods with temporary tilde markers that could not be restored after tokenization. The same defect affected dictionary entries such as `dr.`, `mr.`, and `mrs.`.
 
 The tokenizer preserves source punctuation and expands abbreviation dictionary entries without markers. Exact matching derives its maximum phrase length from the loaded ontology. Whitespace-only tokens can occur between phrase words and remain in the returned swap history. Punctuation is never skipped as whitespace. Matches retain longest-phrase priority and leftmost tie selection.
 
