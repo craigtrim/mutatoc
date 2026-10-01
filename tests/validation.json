@@ -73,7 +73,7 @@
     "parse_ms": {"0.2.3": [211.86, 121.89, 247.57, 151.35], "0.3.0": [21.95, 8.80, 25.28, 15.89]},
     "first_parse_ms": {"0.2.3": [1925.0, 1896.9, 1974.3, 1824.8], "0.3.0": [22.1, 8.9, 25.7, 15.6]},
     "load_ms": {"0.2.3": [3.1, 67.3, 109.5, 885.9], "0.3.0": [3.1, 66.6, 109.9, 861.1]},
-    "ontologies": ["animals-test", "econ-20160218", "medicopilot", "courses-20251028"],
+    "ontologies": ["animals-test", "econ-20160218", "medicopilot", "acanames-20251028"],
     "peak_memory_mb": {"0.2.3_engine": 74.0, "0.2.3_worker": 133.4, "0.2.3_launcher": 3.4, "0.3.0": 67.6}
   },
   "windows_package": {"zip_kilobytes": 580, "version_check": "passed", "packaged_parse": "passed"},

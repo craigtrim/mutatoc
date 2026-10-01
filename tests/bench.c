@@ -21,7 +21,7 @@
 #define DOCUMENT_CHARS 2400
 
 static const char *ontologies[] = { "animals-test", "econ-20160218",
-				    "medicopilot", "courses-20251028" };
+				    "medicopilot", "acanames-20251028" };
 
 static double now_ms(void)
 {
