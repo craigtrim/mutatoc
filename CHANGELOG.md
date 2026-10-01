@@ -2,7 +2,7 @@
 
 <!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2, craigtrim/mutatoc#5 -->
 
-## Unreleased
+## 0.3.1 (2026-10-01)
 
 ### Fixed
 

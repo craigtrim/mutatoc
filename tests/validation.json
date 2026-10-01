@@ -1,7 +1,7 @@
 {
-  "version": "0.3.0",
+  "version": "0.3.1",
   "reference_revision": "da6bfa5df80b208a3271e111f2921ad281d0da98",
-  "validation_date": "2026-09-30",
+  "validation_date": "2026-10-01",
   "issue": "https://github.com/craigtrim/mutatoc/issues/1",
   "runtime": "Native only: no interpreter, model or worker at build, test or run time",
   "platforms": [
@@ -9,33 +9,33 @@
       "platform": "Windows x64",
       "compiler": "MSVC 19.29 (Visual Studio 2019)",
       "configuration": "Release, static C runtime",
-      "ctest_passed": 11,
+      "ctest_passed": 17,
       "ctest_failed": 0,
-      "elapsed_seconds": 78.58
+      "elapsed_seconds": 88.48
     },
     {
       "platform": "Windows x64",
       "compiler": "MSVC 19.29 (Visual Studio 2019)",
       "configuration": "Release, shared library (DLL)",
-      "ctest_run": ["concurrency", "tokenize", "native", "parity"],
+      "ctest_run": ["concurrency", "tokenize", "native", "parity", "punctuated_synonyms"],
       "ctest_failed": 0
     },
     {
       "platform": "Windows x64",
       "compiler": "GCC 16.1.0 (Ninja)",
       "configuration": "Release",
-      "ctest_passed": 11,
+      "ctest_passed": 17,
       "ctest_failed": 0,
-      "elapsed_seconds": 90.66
+      "elapsed_seconds": 98.64
     },
     {
-      "platform": "Linux x64, Ubuntu 20.04 under WSL",
-      "compiler": "GCC 9.4",
+      "platform": "Linux x64, Ubuntu 24.04 under Docker",
+      "compiler": "GCC 13.3.0",
       "configuration": "Debug, AddressSanitizer and UndefinedBehaviorSanitizer (non-recoverable), leak detection, LF fixtures",
-      "ctest_passed": 11,
+      "ctest_passed": 16,
       "ctest_failed": 0,
       "sanitizer_reports": 0,
-      "elapsed_seconds": 679.45
+      "elapsed_seconds": 724.88
     }
   ],
   "suites": {
@@ -67,6 +67,14 @@
       "measured_when_set": {"load_ms": [3.2, 68.0, 112.3, 929.2], "first_parse_ms": [24.1, 9.1, 26.0, 16.0], "parse_ms": [22.7, 9.1, 26.0, 16.1], "peak_mb": 67.4},
       "verified_failing": "a copy with a 1 ms parse ceiling exits 1"
     },
+    "punctuated_synonyms": {
+      "issue": "https://github.com/craigtrim/mutatoc/issues/5",
+      "fixture": "tests/fixtures/ontologies/punctuated-synonyms-test.ttl",
+      "load_paths": ["owl", "data", "snapshot"],
+      "assertions": 4001, "generated_cases": 3780, "tokenize_key_cases": 38,
+      "passed": 4001,
+      "passed_before_fix": 452
+    },
     "cli": {"tests": ["cli_json", "cli_jsonf", "cli_stopwatch"]}
   },
   "migration_evidence": {
@@ -84,14 +92,14 @@
   "benchmark": {
     "harness": "tests/bench.c (mutatoc_bench), median of 5 fresh engines, 2,400-character documents",
     "machine": "AMD Ryzen Threadripper 3960X, Windows 10, GCC Release builds",
-    "parse_ms": {"0.2.3": [211.86, 121.89, 247.57, 151.35], "0.3.0": [21.95, 8.80, 25.28, 15.89]},
-    "first_parse_ms": {"0.2.3": [1925.0, 1896.9, 1974.3, 1824.8], "0.3.0": [22.1, 8.9, 25.7, 15.6]},
-    "load_ms": {"0.2.3": [3.1, 67.3, 109.5, 885.9], "0.3.0": [3.1, 66.6, 109.9, 861.1]},
+    "parse_ms": {"0.2.3": [211.86, 121.89, 247.57, 151.35], "0.3.0": [21.95, 8.80, 25.28, 15.89], "0.3.1": [21.9, 9.0, 25.5, 15.7]},
+    "first_parse_ms": {"0.2.3": [1925.0, 1896.9, 1974.3, 1824.8], "0.3.0": [22.1, 8.9, 25.7, 15.6], "0.3.1": [21.9, 9.2, 25.6, 15.9]},
+    "load_ms": {"0.2.3": [3.1, 67.3, 109.5, 885.9], "0.3.0": [3.1, 66.6, 109.9, 861.1], "0.3.1": [2.9, 77.8, 110.0, 907.8]},
     "ontologies": ["animals-test", "econ-20160218", "medicopilot", "acanames-20251028"],
-    "peak_memory_mb": {"0.2.3_engine": 74.0, "0.2.3_worker": 133.4, "0.2.3_launcher": 3.4, "0.3.0": 67.6}
+    "peak_memory_mb": {"0.2.3_engine": 74.0, "0.2.3_worker": 133.4, "0.2.3_launcher": 3.4, "0.3.0": 67.6, "0.3.1": 67.3}
   },
-  "windows_package": {"zip_kilobytes": 580, "version_check": "passed", "packaged_parse": "passed"},
-  "earlier_releases": "Records for 0.2.x are in the repository history (commit f10e679).",
+  "windows_package": {"zip_kilobytes": 584, "version_check": "passed", "packaged_parse": "passed"},
+  "earlier_releases": "Records for 0.2.x are in the repository history at commit f10e679, and for 0.3.0 at commit d80ad11.",
   "contract": "docs/compatibility.md",
   "implementation_map": "docs/implementation-map.json",
   "limitations": "Evidence covers the recorded upstream calls and checked-in corpora; it is not a proof of equivalence for every ontology or sentence. macOS and other architectures are unvalidated."
