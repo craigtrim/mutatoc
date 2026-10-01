@@ -5,7 +5,12 @@
  * of a fixed document built from the parity corpus. Any leading --setup
  * requests run in every fresh engine before loading, so older builds that
  * need configuration can be measured with the same program.
- * craigtrim/mutatoc#1
+ *
+ * --check turns the benchmark into a gate: each median must stay under a
+ * user-facing ceiling, wide enough for slow shared CI runners and tight
+ * enough to fail an order-of-magnitude regression. CTest runs it as
+ * `performance` in optimized, unsanitized builds.
+ * craigtrim/mutatoc#1, craigtrim/mutatoc#2
  */
 
 #ifdef _WIN32
@@ -22,6 +27,27 @@
 
 static const char *ontologies[] = { "animals-test", "econ-20160218",
 				    "medicopilot", "courses-20251028" };
+
+/*
+ * Ceilings for --check, on medians. Loads allow six times the time measured
+ * when the gate was set (3, 67, 110 and 861 ms), with a 500 ms floor. Parses
+ * of the 2,400-character document measured 9 to 26 ms; the out-of-process
+ * tokenizer that 0.3.0 replaced took 122 to 248 ms warm and about 1.9 s for
+ * the first parse, and about 211 MB across its two processes.
+ */
+static const double load_budget_ms[] = { 500, 500, 700, 6000 };
+#define FIRST_PARSE_BUDGET_MS 300.0
+#define PARSE_BUDGET_MS 150.0
+#define PEAK_BUDGET_MB 128.0
+
+static int within(const char *what, const char *ontology, double value,
+		  double budget, const char *unit)
+{
+	int ok = value <= budget;
+	printf("%-4s %-17s %-12s %8.1f %s (ceiling %.0f %s)\n",
+	       ok ? "ok" : "OVER", ontology, what, value, unit, budget, unit);
+	return ok;
+}
 
 static double now_ms(void)
 {
@@ -114,18 +140,25 @@ int main(int argc, char **argv)
 {
 	if (argc < 2) {
 		fprintf(stderr,
-			"usage: mutatoc_bench ROOT [--runs N] [--setup JSON]...\n");
+			"usage: mutatoc_bench ROOT [--runs N] [--check] [--setup JSON]...\n");
 		return 2;
 	}
 	const char *root = argv[1];
-	int runs = 5;
+	int runs = 5, check = 0, over = 0;
 	const char *setup[16];
 	int setups = 0;
-	for (int i = 2; i + 1 < argc; i += 2) {
-		if (!strcmp(argv[i], "--runs"))
-			runs = atoi(argv[i + 1]);
-		else if (!strcmp(argv[i], "--setup") && setups < 16)
-			setup[setups++] = argv[i + 1];
+	for (int i = 2; i < argc; i++) {
+		if (!strcmp(argv[i], "--check"))
+			check = 1;
+		else if (!strcmp(argv[i], "--runs") && i + 1 < argc)
+			runs = atoi(argv[++i]);
+		else if (!strcmp(argv[i], "--setup") && i + 1 < argc &&
+			 setups < 16)
+			setup[setups++] = argv[++i];
+		else {
+			fprintf(stderr, "Unknown option: %s\n", argv[i]);
+			return 2;
+		}
 	}
 	if (runs < 1)
 		runs = 1;
@@ -168,7 +201,17 @@ int main(int argc, char **argv)
 			}
 			mc_destroy(e);
 		}
-		if (!failed)
+		if (!failed && check) {
+			over += !within("load", ontologies[o],
+					median(load, runs), load_budget_ms[o],
+					"ms");
+			over += !within("first parse", ontologies[o],
+					median(first, runs),
+					FIRST_PARSE_BUDGET_MS, "ms");
+			over += !within("parse", ontologies[o],
+					median(warm, runs * 4), PARSE_BUDGET_MS,
+					"ms");
+		} else if (!failed)
 			printf("{\"ontology\":\"%s\",\"document_chars\":%zu,\"runs\":%d,"
 			       "\"load_ms\":%.1f,\"first_parse_ms\":%.1f,\"parse_ms\":%.2f}\n",
 			       ontologies[o], doc ? strlen(doc) : 0, runs,
@@ -182,9 +225,17 @@ int main(int argc, char **argv)
 		if (failed)
 			break;
 	}
-	printf("{\"peak_working_set_mb\":%.1f}\n", peak_mb());
+	if (check) {
+		over += !within("peak memory", "all", peak_mb(), PEAK_BUDGET_MB,
+				"MB");
+		printf("Performance gate: %s.\n",
+		       failed ? "a request failed" :
+		       over   ? "a ceiling was exceeded" :
+				"every median is under its ceiling");
+	} else
+		printf("{\"peak_working_set_mb\":%.1f}\n", peak_mb());
 	free(load);
 	free(first);
 	free(warm);
-	return failed;
+	return failed || over;
 }
