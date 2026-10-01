@@ -28,7 +28,7 @@ The same shift shows up in larger runs driven through `--serve`. Parsing 12,382 
 | --- | ---: | ---: |
 | Load: animals-test, econ-20160218 | 500 ms | 3 ms, 68 ms |
 | Load: medicopilot | 700 ms | 112 ms |
-| Load: courses-20251028 | 6,000 ms | 929 ms |
+| Load: acanames-20251028 | 6,000 ms | 929 ms |
 | First parse of the 2,400-character document | 300 ms | 9 to 26 ms |
 | Warm parse of the same document | 150 ms | 9 to 26 ms |
 | Peak memory of the process | 128 MB | 67 MB |

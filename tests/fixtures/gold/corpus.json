@@ -875,8 +875,8 @@
       ]
     },
     {
-      "id": "courses-paragraph",
-      "ontology": "courses-20251028",
+      "id": "acanames-paragraph",
+      "ontology": "acanames-20251028",
       "kind": "paragraph",
       "text": "Her transcript lists English composition, calculus and general psychology in the first year, followed by organic chemistry and statistics.",
       "expected": [
