@@ -88,12 +88,15 @@ if(BUILD_TESTING)
   mutatoc_program(mutatoc_gold tests/test_gold.c)
   add_test(NAME gold COMMAND mutatoc_gold ${CMAKE_CURRENT_SOURCE_DIR})
   # Timing ceilings only mean something in optimized builds without sanitizers.
+  # Build type names are case-insensitive in CMake, so compare them uppercased.
   set(optimized_configurations Release RelWithDebInfo MinSizeRel)
+  set(optimized_build_types RELEASE RELWITHDEBINFO MINSIZEREL)
+  string(TOUPPER "${CMAKE_BUILD_TYPE}" build_type)
   if(NOT MUTATOC_SANITIZE)
     if(CMAKE_CONFIGURATION_TYPES)
       add_test(NAME performance COMMAND mutatoc_bench ${CMAKE_CURRENT_SOURCE_DIR} --runs 5 --check
         CONFIGURATIONS ${optimized_configurations})
-    elseif(CMAKE_BUILD_TYPE IN_LIST optimized_configurations)
+    elseif(build_type IN_LIST optimized_build_types)
       add_test(NAME performance COMMAND mutatoc_bench ${CMAKE_CURRENT_SOURCE_DIR} --runs 5 --check)
     endif()
     if(TEST performance)
