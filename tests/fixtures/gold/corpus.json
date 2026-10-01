@@ -1,0 +1,916 @@
+{
+  "contract": "Hand-written expectations for plain-text parsing against the fixture ontologies, loaded with a plain `load` of the OWL path. Each text was written first, audited against its ontology vocabulary read straight from the OWL source with an independent RDF parser, and its expected entities were written down and frozen before the engine ever ran on it. Expected entities follow the stated matching contract: an entity's canonical form is its IRI local name, lowercased; its synonyms are the rdfs:label, rdfs:seeAlso, skos:altLabel and inflection values split on commas; the longest window matches first, then the leftmost; an ambiguous synonym resolves to the first entity in declaration order that lists it; exact matches have a null ner. A correction keeps the original expectation and records the OWL facts and rule that justify it.",
+  "frozen": "2026-10-01T00:08:56Z",
+  "comparison": "Same entities in the same order: canon, type and ner exactly; surface after collapsing whitespace, rebuilt from the leaf tokens of each swap history.",
+  "issue": "https://github.com/craigtrim/mutatoc/issues/2",
+  "texts": [
+    {
+      "id": "animals-paragraph",
+      "ontology": "animals-test",
+      "kind": "paragraph",
+      "text": "Our neighbor keeps two dogs, a poodle and a German shepherd, and a Persian cat that sleeps all day. Last summer the family drove to the coast to watch a humpback whale breach, then visited an aquarium where a great white shark circled past clownfish and a lone sea turtle.",
+      "expected": [
+        {
+          "canon": "dog",
+          "surface": "dogs",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "poodle",
+          "surface": "poodle",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "german_shepherd",
+          "surface": "German shepherd",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "persian_cat",
+          "surface": "Persian cat",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "humpback_whale",
+          "surface": "humpback whale",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "great_white_shark",
+          "surface": "great white shark",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "clownfish",
+          "surface": "clownfish",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "turtle",
+          "surface": "turtle",
+          "type": "exact",
+          "ner": null
+        }
+      ]
+    },
+    {
+      "id": "animals-document",
+      "ontology": "animals-test",
+      "kind": "document",
+      "text": "Field notes from the river camp. At dawn a grizzly waded into the shallows to fish for salmon while a bald eagle watched from a dead pine. Downstream the guide pointed out a croc sunning itself, and later a python slid across the trail, which sent two hikers back to camp. A ranger said that the valley also shelters a small herd of horses, but we only saw one steed tied near the gate.\n\nIn the afternoon we counted insects for the survey: a monarch butterfly, three honeybees, a dragonfly and far too many mosquito bites to tally. The children kept asking whether a big cat might come down from the ridge. The ranger laughed and said the only feline in camp was the cook's Siamese, though a stray canine sometimes raids the bins at night.\n\nBefore dinner we sent water samples to the lab in town. One student, who studies cetaceans, compared the river to the bay where she once tagged a blue whale and a pod of smaller whales. Another kept a tortoise as a child and still talks about it. Nobody mentioned the macaw that greets visitors at the ranger station, but everyone remembers its voice.",
+      "expected": [
+        {
+          "canon": "bear",
+          "surface": "grizzly",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "fish",
+          "surface": "fish",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "salmon",
+          "surface": "salmon",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "bald_eagle",
+          "surface": "bald eagle",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "crocodile",
+          "surface": "croc",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "python",
+          "surface": "python",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "horse",
+          "surface": "steed",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "monarch_butterfly",
+          "surface": "monarch butterfly",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "dragonfly",
+          "surface": "dragonfly",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "mosquito",
+          "surface": "mosquito",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "lion",
+          "surface": "big cat",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "cat",
+          "surface": "feline",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "siamese",
+          "surface": "Siamese",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "dog",
+          "surface": "canine",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "labrador",
+          "surface": "lab",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "blue_whale",
+          "surface": "blue whale",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "turtle",
+          "surface": "tortoise",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "parrot",
+          "surface": "macaw",
+          "type": "exact",
+          "ner": null
+        }
+      ]
+    },
+    {
+      "id": "colors-paragraph",
+      "ontology": "colors-test",
+      "kind": "paragraph",
+      "text": "The designer painted the hallway a pale grey, framed the doors in navy blue and hung crimson curtains in the study. For accents she chose brass handles, a turquoise vase and a single emerald cushion, then repainted the kitchen chairs in a warm color that her client described as tangerine.",
+      "expected": [
+        {
+          "canon": "gray",
+          "surface": "grey",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "navy",
+          "surface": "navy blue",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "red",
+          "surface": "crimson",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "turquoise",
+          "surface": "turquoise",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "green",
+          "surface": "emerald",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "warm_color",
+          "surface": "warm color",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "orange",
+          "surface": "tangerine",
+          "type": "exact",
+          "ner": null
+        }
+      ]
+    },
+    {
+      "id": "colors-document",
+      "ontology": "colors-test",
+      "kind": "document",
+      "text": "Notes on the autumn collection. The palette starts from a neutral color base: charcoal wool, linen and plain white cotton. Against it the studio layers deep reds, a burgundy velvet and a lavender silk that reads as violet under warm light.\n\nSeveral pieces use metallic thread. The gold metallic trim on the jackets catches the light without looking cheap, and a few scarves carry a chrome finish that the buyers called silver. Accessories stay quiet: black leather, a navy belt and a cobalt clasp that only shows when the coat is open.\n\nThe spring line will move toward a cool color story. The team is testing teal, mint green and a soft azure, with coral and magenta reserved for the evening range. The one primary color the director refuses to use is yellow, though she allows amber buttons and a single rose lining.\n\nSwatches arrive on Monday. Anything that fades to gray after washing goes back to the mill.",
+      "expected": [
+        {
+          "canon": "neutral_color",
+          "surface": "neutral color",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "white",
+          "surface": "white",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "red",
+          "surface": "reds",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "maroon",
+          "surface": "burgundy",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "purple",
+          "surface": "lavender",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "purple",
+          "surface": "violet",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "gold_metallic",
+          "surface": "gold metallic",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "silver",
+          "surface": "chrome",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "silver",
+          "surface": "silver",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "black",
+          "surface": "black",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "navy",
+          "surface": "navy",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "blue",
+          "surface": "cobalt",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "cool_color",
+          "surface": "cool color",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "teal",
+          "surface": "teal",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "mint",
+          "surface": "mint green",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "blue",
+          "surface": "azure",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "coral",
+          "surface": "coral",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "pink",
+          "surface": "magenta",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "primary_color",
+          "surface": "primary color",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "yellow",
+          "surface": "yellow",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "yellow",
+          "surface": "amber",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "pink",
+          "surface": "rose",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "gray",
+          "surface": "gray",
+          "type": "exact",
+          "ner": null
+        }
+      ]
+    },
+    {
+      "id": "geography-paragraph",
+      "ontology": "geography-test",
+      "kind": "paragraph",
+      "text": "After a week in Paris the group took the train to Berlin, then flew to Tokyo to climb Mount Fuji before the rainy season. Two of them had already seen Mount Everest from a base camp in Nepal, and one had crossed the Atlantic Ocean by ship to reach New York.",
+      "expected": [
+        {
+          "canon": "paris",
+          "surface": "Paris",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "berlin",
+          "surface": "Berlin",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "tokyo",
+          "surface": "Tokyo",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "mount_fuji",
+          "surface": "Mount Fuji",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "mount_everest",
+          "surface": "Mount Everest",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "atlantic_ocean",
+          "surface": "Atlantic Ocean",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "new_york",
+          "surface": "New York",
+          "type": "exact",
+          "ner": null
+        }
+      ]
+    },
+    {
+      "id": "geography-document",
+      "ontology": "geography-test",
+      "kind": "document",
+      "text": "Travel log, part two. We left London on a grey morning and crossed to France, where a friend who grew up in a small town near the Alps drove us to see Mont Blanc. From there the plan was simple: Rome for the Colosseum, then a ferry to Spain and a flight across the ocean.\n\nThe second half of the trip covered the Americas. In Mexico City we met a teacher who had lived in Chicago and LA and who described the United States as a nation of long drives. She told us to skip New York and head south instead, so we went on to Brazil and Argentina, which together made South America feel larger than any map suggests.\n\nOn the way home we spent a night in Sydney, though nobody in the group would call that Oceania in conversation. Next year the plan is Asia: Beijing, the Great Wall of China and a few days in Mumbai, which my grandmother still calls Bombay. England can wait.",
+      "expected": [
+        {
+          "canon": "london",
+          "surface": "London",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "france",
+          "surface": "France",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "city",
+          "surface": "town",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "united_states",
+          "surface": "us",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "mont_blanc",
+          "surface": "Mont Blanc",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "rome",
+          "surface": "Rome",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "colosseum",
+          "surface": "Colosseum",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "spain",
+          "surface": "Spain",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "ocean",
+          "surface": "ocean",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "mexico",
+          "surface": "Mexico",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "city",
+          "surface": "City",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "chicago",
+          "surface": "Chicago",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "los_angeles",
+          "surface": "LA",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "united_states",
+          "surface": "United States",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "country",
+          "surface": "nation",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "united_states",
+          "surface": "us",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "new_york",
+          "surface": "New York",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "brazil",
+          "surface": "Brazil",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "argentina",
+          "surface": "Argentina",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "south_america",
+          "surface": "South America",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "sydney",
+          "surface": "Sydney",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "australia_continent",
+          "surface": "Oceania",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "asia",
+          "surface": "Asia",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "beijing",
+          "surface": "Beijing",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "great_wall",
+          "surface": "Great Wall of China",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "mumbai",
+          "surface": "Mumbai",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "mumbai",
+          "surface": "Bombay",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "united_kingdom",
+          "surface": "England",
+          "type": "exact",
+          "ner": null
+        }
+      ]
+    },
+    {
+      "id": "music-paragraph",
+      "ontology": "music-test",
+      "kind": "paragraph",
+      "text": "The quartet opened with a slow movement for violin and cello, then the pianist switched to a harpsichord for two baroque dances. After the interval a guest played alto saxophone over a walking bass line, and the evening closed with a jazz standard that had the whole room clapping on the beat.",
+      "expected": [
+        {
+          "canon": "violin",
+          "surface": "violin",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "cello",
+          "surface": "cello",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "harpsichord",
+          "surface": "harpsichord",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "baroque",
+          "surface": "baroque",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "alto_saxophone",
+          "surface": "alto saxophone",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "bass_guitar",
+          "surface": "bass",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "jazz",
+          "surface": "jazz",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "rhythm",
+          "surface": "beat",
+          "type": "exact",
+          "ner": null
+        }
+      ]
+    },
+    {
+      "id": "music-document",
+      "ontology": "music-test",
+      "kind": "document",
+      "text": "Liner notes. This record started as a folk project and drifted toward rock music over two years of sessions. The first side keeps an acoustic guitar, a mandolin and a fiddle at the center, with a banjo on the faster tunes and a harmonica that never made the credits.\n\nThe second side is louder. An electric guitar carries most of the melody, the drums are close and dry, and a synth fills the space where an organ might once have gone. One track borrows a reggae rhythm, another leans into heavy metal for its final minute, and the closing song is closer to soul than anything the band had tried before.\n\nThe producer kept the arrangements sparse: no strings, a single trumpet on the bridge of the title track and a tuba doubling the bass on the waltz. Several reviewers have called the record pop with country roots, and the band does not mind the label as long as people listen to the whole thing.",
+      "expected": [
+        {
+          "canon": "folk_music",
+          "surface": "folk",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "rock_music",
+          "surface": "rock music",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "acoustic_guitar",
+          "surface": "acoustic guitar",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "mandolin",
+          "surface": "mandolin",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "violin",
+          "surface": "fiddle",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "banjo",
+          "surface": "banjo",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "electric_guitar",
+          "surface": "electric guitar",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "melody",
+          "surface": "melody",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "drum",
+          "surface": "drums",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "synthesizer",
+          "surface": "synth",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "organ",
+          "surface": "organ",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "reggae",
+          "surface": "reggae",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "rhythm",
+          "surface": "rhythm",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "heavy_metal",
+          "surface": "heavy metal",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "soul",
+          "surface": "soul",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "trumpet",
+          "surface": "trumpet",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "tuba",
+          "surface": "tuba",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "bass_guitar",
+          "surface": "bass",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "pop_music",
+          "surface": "pop",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "country_music",
+          "surface": "country",
+          "type": "exact",
+          "ner": null
+        }
+      ]
+    },
+    {
+      "id": "econ-paragraph",
+      "ontology": "econ-20160218",
+      "kind": "paragraph",
+      "text": "The new hire will own inflation analysis and market analysis for the regional team. She will also support labor market analysis and help draft the department's fiscal policy analysis each quarter.",
+      "expected": [
+        {
+          "canon": "inflation_analysis",
+          "surface": "inflation analysis",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "market_analysis",
+          "surface": "market analysis",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "labor_market_analysis",
+          "surface": "labor market analysis",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "fiscal_policy_analysis",
+          "surface": "fiscal policy analysis",
+          "type": "exact",
+          "ner": null
+        }
+      ]
+    },
+    {
+      "id": "medicopilot-paragraph",
+      "ontology": "medicopilot",
+      "kind": "paragraph",
+      "text": "The medic placed an IV line in the right leg, noted a penetrating wound to the abdomen and recorded the total body surface area of the burns before transport.",
+      "corrections": [
+        {
+          "original": [
+            {
+              "canon": "penetrating_wound",
+              "surface": "penetrating wound",
+              "type": "exact",
+              "ner": null
+            },
+            {
+              "canon": "abdominal_wound",
+              "surface": "to the abdomen",
+              "type": "exact",
+              "ner": null
+            }
+          ],
+          "corrected": [
+            {
+              "canon": "penetrating_abdominal_wound",
+              "surface": "penetrating wound to the abdomen",
+              "type": "spans",
+              "ner": null
+            }
+          ],
+          "derivation": "medicopilot.owl declares :Penetrating_Abdominal_Wound rdfs:seeAlso \"abdominal_wound+penetrating_wound\". A '+' synonym is a span rule: the first part is the key and the rest is content, matched in either order within 4 tokens, after the exact stage. The exact stage first makes \"penetrating wound\" penetrating_wound and \"to the abdomen\" abdominal_wound (a synonym of :Abdominal_Wound); the two are adjacent, so the span rule replaces both with penetrating_abdominal_wound, type spans. Outside live mode a span match takes its ner from the view's NER map by canonical form, which has no entry for penetrating_abdominal_wound, so ner is null. The audit missed it because it listed literal synonyms and did not model '+' span rules.",
+          "found": "first engine run"
+        }
+      ],
+      "expected": [
+        {
+          "canon": "intravenous_access",
+          "surface": "IV line",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "right_lower_limb",
+          "surface": "right leg",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "penetrating_abdominal_wound",
+          "surface": "penetrating wound to the abdomen",
+          "type": "spans",
+          "ner": null
+        },
+        {
+          "canon": "total_body_surface_area",
+          "surface": "total body surface area",
+          "type": "exact",
+          "ner": null
+        }
+      ]
+    },
+    {
+      "id": "courses-paragraph",
+      "ontology": "courses-20251028",
+      "kind": "paragraph",
+      "text": "Her transcript lists English composition, calculus and general psychology in the first year, followed by organic chemistry and statistics.",
+      "expected": [
+        {
+          "canon": "english_composition",
+          "surface": "English composition",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "calculus",
+          "surface": "calculus",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "general_psychology",
+          "surface": "general psychology",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "organic_chemistry",
+          "surface": "organic chemistry",
+          "type": "exact",
+          "ner": null
+        },
+        {
+          "canon": "statistics",
+          "surface": "statistics",
+          "type": "exact",
+          "ner": null
+        }
+      ]
+    }
+  ]
+}
