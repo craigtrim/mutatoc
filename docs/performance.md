@@ -57,6 +57,8 @@ Exact matching also stops extending a window once its text cannot begin any syno
 
 Construction of the whole-ontology entity, subentity and lookup lists also uses hashed membership instead of scanning the list on each insert. Their contents and order are unchanged.
 
+The index also holds each synonym written with punctuation under the text its tokens produce, so `Well/Health/Physical Education` can match the window `well / health / physical education` ([#5](https://github.com/craigtrim/mutatoc/issues/5)). Building the index runs the tokenizer over those synonyms only; a synonym of plain words skips it. On the largest fixture ontology this adds about 30 ms to a load of about 860 ms, and parse times do not change.
+
 | Measurement on Windows | 0.2.2 | 0.2.3 |
 | --- | ---: | ---: |
 | econ-20160218, 92 prepared-token requests | 136 ms | 44 ms |

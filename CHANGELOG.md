@@ -1,6 +1,12 @@
 # Changelog
 
-<!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2 -->
+<!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2, craigtrim/mutatoc#5 -->
+
+## Unreleased
+
+### Fixed
+
+- A synonym written with punctuation now matches as one entity when the text spells it out ([#5](https://github.com/craigtrim/mutatoc/issues/5)). The tokenizer splits punctuation into its own tokens, so `Well/Health/Physical Education`, `PE:PE`, `Calc (Honors)` and `Math Lab [Remedial]` never matched whole; at most a shorter synonym inside them did. The match index now also holds each such synonym in its tokenized form, which makes spaces around the punctuation irrelevant too. Hyphenated synonyms such as `Computer-Aided Manufacturing` now match as `exact` with a null `ner`, where some matched only through `spans` before. Views, queries and span rules are unchanged.
 
 ## 0.3.0 (2026-09-30)
 
