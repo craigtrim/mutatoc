@@ -89,7 +89,7 @@
           "canon": "womens_choir",
           "type": "exact",
           "ontologies": [
-            "courses-20241213"
+            "acanames-20241213"
           ],
           "confidence": 100.0
         }

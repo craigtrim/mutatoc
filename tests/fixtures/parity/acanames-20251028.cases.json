@@ -61,7 +61,7 @@
           "canon": "gender_and_society",
           "type": "exact",
           "ontologies": [
-            "courses-20251028"
+            "acanames-20251028"
           ],
           "confidence": 100.0
         }

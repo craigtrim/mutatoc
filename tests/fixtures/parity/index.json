@@ -1,8 +1,8 @@
 [
   {
-    "name": "courses-20250122",
-    "snapshot": "courses-20250122.snapshot.json",
-    "cases": "courses-20250122.cases.json",
+    "name": "acanames-20250122",
+    "snapshot": "acanames-20250122.snapshot.json",
+    "cases": "acanames-20250122.cases.json",
     "count": 24
   },
   {
@@ -36,21 +36,21 @@
     "count": 82
   },
   {
-    "name": "courses-20241129",
-    "snapshot": "courses-20241129.snapshot.json",
-    "cases": "courses-20241129.cases.json",
+    "name": "acanames-20241129",
+    "snapshot": "acanames-20241129.snapshot.json",
+    "cases": "acanames-20241129.cases.json",
     "count": 2
   },
   {
-    "name": "courses-20241213",
-    "snapshot": "courses-20241213.snapshot.json",
-    "cases": "courses-20241213.cases.json",
+    "name": "acanames-20241213",
+    "snapshot": "acanames-20241213.snapshot.json",
+    "cases": "acanames-20241213.cases.json",
     "count": 1
   },
   {
-    "name": "courses-20250131",
-    "snapshot": "courses-20250131.snapshot.json",
-    "cases": "courses-20250131.cases.json",
+    "name": "acanames-20250131",
+    "snapshot": "acanames-20250131.snapshot.json",
+    "cases": "acanames-20250131.cases.json",
     "count": 1
   },
   {
@@ -60,21 +60,21 @@
     "count": 10
   },
   {
-    "name": "courses-20251028",
-    "snapshot": "courses-20251028.snapshot.json",
-    "cases": "courses-20251028.cases.json",
+    "name": "acanames-20251028",
+    "snapshot": "acanames-20251028.snapshot.json",
+    "cases": "acanames-20251028.cases.json",
     "count": 1
   },
   {
-    "name": "courses-20240709",
-    "snapshot": "courses-20240709.snapshot.json",
-    "cases": "courses-20240709.cases.json",
+    "name": "acanames-20240709",
+    "snapshot": "acanames-20240709.snapshot.json",
+    "cases": "acanames-20240709.cases.json",
     "count": 4
   },
   {
-    "name": "courses-20241023",
-    "snapshot": "courses-20241023.snapshot.json",
-    "cases": "courses-20241023.cases.json",
+    "name": "acanames-20241023",
+    "snapshot": "acanames-20241023.snapshot.json",
+    "cases": "acanames-20241023.cases.json",
     "count": 1
   },
   {

@@ -75,7 +75,7 @@
           "canon": "computers_in_society",
           "type": "exact",
           "ontologies": [
-            "courses-20250131"
+            "acanames-20250131"
           ],
           "confidence": 100.0
         }

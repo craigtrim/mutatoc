@@ -33,7 +33,7 @@
           "canon": "geometry",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -101,7 +101,7 @@
           "canon": "geometry",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -157,7 +157,7 @@
           "canon": "anova",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -213,7 +213,7 @@
           "canon": "inflection",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -283,7 +283,7 @@
           "canon": "abstract_algebra",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -353,7 +353,7 @@
           "canon": "abnormal_psychology",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -423,7 +423,7 @@
           "canon": "academic_english",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -514,7 +514,7 @@
           "canon": "geometry",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -633,7 +633,7 @@
           "canon": "abstract_algebra",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -815,7 +815,7 @@
           "canon": "abstract_algebra",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -892,7 +892,7 @@
           "canon": "geometry",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -931,7 +931,7 @@
           "canon": "abstract_algebra",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1052,7 +1052,7 @@
           "canon": "abstract_algebra",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1084,7 +1084,7 @@
           "canon": "geometry",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1163,7 +1163,7 @@
           "canon": "womens_choir",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1233,7 +1233,7 @@
           "canon": "womens_choir",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1352,7 +1352,7 @@
           "canon": "geometry",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1436,7 +1436,7 @@
           "canon": "geometry",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1475,7 +1475,7 @@
           "canon": "algebra",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1540,7 +1540,7 @@
           "canon": "geometry",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1603,7 +1603,7 @@
           "canon": "geometry",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1628,7 +1628,7 @@
           "canon": "algebra",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1707,7 +1707,7 @@
           "canon": "womens_choir",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1777,7 +1777,7 @@
           "canon": "geometry",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
@@ -1861,7 +1861,7 @@
           "canon": "geometry",
           "type": "exact",
           "ontologies": [
-            "courses-20250122"
+            "acanames-20250122"
           ],
           "confidence": 100.0
         }
