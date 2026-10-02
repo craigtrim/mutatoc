@@ -227,15 +227,24 @@ static int split_at(Pieces *ps, int i, size_t at)
  */
 static int quotes(Pieces *ps, const char *s)
 {
+	/* One pass into a new list, so many closing quotes stay linear. */
+	Pieces out = { 0 };
 	for (int i = 0; i < ps->n; i++) {
-		const Piece *pc = &ps->p[i];
-		size_t at = pc->space ? 0 : closing(s, pc);
-		if (!at || (i + 1 < ps->n && !ps->p[i + 1].space))
-			continue;
-		uint32_t before = char_at(s, char_start(s, pc->start, at));
-		if (before != 's' && before != 'S' && !split_at(ps, i++, at))
+		Piece pc = ps->p[i];
+		int last = i + 1 == ps->n || ps->p[i + 1].space;
+		size_t at = pc.space || !last ? 0 : closing(s, &pc);
+		uint32_t before = at ? char_at(s, char_start(s, pc.start, at)) :
+				       's';
+		if (before != 's' && before != 'S' ?
+			    !push(&out, pc.start, at, 0) ||
+				    !push(&out, at, pc.end, 0) :
+			    !push(&out, pc.start, pc.end, pc.space)) {
+			free(out.p);
 			return 0;
+		}
 	}
+	free(ps->p);
+	*ps = out;
 	int singles = 0, last_single = -1, first_suffix = -1;
 	for (int i = 0; i < ps->n; i++) {
 		if (lone_apostrophe(s, &ps->p[i])) {
@@ -348,6 +357,7 @@ J *tokenize_text(const char *text)
 	}
 	J *result = ARR();
 	size_t pos = 0;
+	int count = 0; /* SIZE walks the whole list, so count instead. */
 	for (int i = 0; i < ps.n; i++) {
 		Piece pc = ps.p[i];
 		if (pc.start == pc.end)
@@ -363,7 +373,7 @@ J *tokenize_text(const char *text)
 		     *trim = norm(t, 0, 0), *normal = normal_form(t);
 		char id[48];
 		snprintf(id, sizeof(id), "%" PRIu64 "#%d", text_hash(s),
-			 SIZE(result));
+			 count++);
 		J *token = OBJ();
 		PUT(token, "id", STR(id));
 		PUT(token, "text", STR(t));
