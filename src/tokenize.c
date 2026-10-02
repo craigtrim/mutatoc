@@ -431,7 +431,8 @@ void source_entities(J *tokens, const char *text)
 
 /*
  * Letters and digits separated by single spaces, with underscores only inside
- * words, come back from the tokenizer unchanged apart from case.
+ * words, come back from the tokenizer unchanged apart from case. U+02BC is
+ * not a letter here either, so a synonym written with it is folded too.
  */
 static int plain(const char *s)
 {
@@ -442,7 +443,7 @@ static int plain(const char *s)
 			 next = *p ? (uint32_t)(unsigned char)*p : ' ';
 		if (c == ' ' ? prev == ' ' || next == ' ' :
 		    c == '_' ? prev == ' ' || next == ' ' :
-			       !ualpha(c) && !numeric(c))
+			       !letter(c) && !numeric(c))
 			return 0;
 		prev = c;
 	}
