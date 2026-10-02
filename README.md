@@ -78,7 +78,7 @@ The reference is Mutato revision `da6bfa5df80b208a3271e111f2921ad281d0da98`. `ct
 | `rdf` | The W3C RDF 1.1 Turtle suite (313 tests), 19 ontology graph fingerprints, typed literals |
 | `extensions` | Optional stages, exact-window regressions, collections, external synonyms, prefixes |
 | `tokenize` | The native tokenizer contract |
-| `token_fidelity` | 3,103 cases that hold every token and entity to the input's exact text and offsets, across apostrophe, quote and dash variants, whitespace, contractions, abbreviations, Unicode and invalid input |
+| `token_fidelity` | 3,244 cases that hold every token and entity to the input's exact text and offsets, across apostrophe, quote and dash variants in the input and in stored synonyms, whitespace, contractions, abbreviations, Unicode and invalid input |
 | `concurrency` | 24 engines on 8 threads through the public C API |
 | `native`, `text`, `embedding` | Ontology loading, caller metadata, Unicode and URI handling, the embedding example |
 | `cli_json`, `cli_jsonf`, `cli_stopwatch` | The one-shot CLI's output formats |
