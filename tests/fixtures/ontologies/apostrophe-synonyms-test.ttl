@@ -47,6 +47,49 @@
     rdfs:label "Photography" ;
     rdfs:seeAlso "Say \"Cheese\"" .
 
+# One synonym stored with each apostrophe that folds to ', then one with curly
+# double quotes and one with an en dash, so the index folds what it stores the
+# same way it folds input.
+:Pilots_Log rdf:type owl:Class ;
+    rdfs:label "Pilot’s Log" .
+
+:Bakers_Dozen rdf:type owl:Class ;
+    rdfs:label "Baker‘s Dozen" .
+
+:Miners_Lamp rdf:type owl:Class ;
+    rdfs:label "Miner‛s Lamp" .
+
+:Sailors_Knot rdf:type owl:Class ;
+    rdfs:label "Sailor‚s Knot" .
+
+:Guilds_Hall rdf:type owl:Class ;
+    rdfs:label "Guildʼs Hall" .
+
+:Weavers_Loom rdf:type owl:Class ;
+    rdfs:label "Weaver‹s Loom" .
+
+:Potters_Wheel rdf:type owl:Class ;
+    rdfs:label "Potter›s Wheel" .
+
+:Smiths_Forge rdf:type owl:Class ;
+    rdfs:label "Smith＇s Forge" .
+
+:Archers_Bow rdf:type owl:Class ;
+    rdfs:label "Archer`s Bow" .
+
+:Tailors_Chalk rdf:type owl:Class ;
+    rdfs:label "Tailor´s Chalk" .
+
+:Hunters_Moon rdf:type owl:Class ;
+    rdfs:label "Hunter′s Moon" .
+
+:Portraits rdf:type owl:Class ;
+    rdfs:label "Portraits" ;
+    rdfs:seeAlso "Say “Smile”" .
+
+:Data_Driven_Design rdf:type owl:Class ;
+    rdfs:label "Data–Driven Design" .
+
 # Plain entities whose offsets show whether earlier text drifted.
 :Biology rdf:type owl:Class ;
     rdfs:label "Biology" .

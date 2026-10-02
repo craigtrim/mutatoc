@@ -28,7 +28,7 @@ static Family families[] = {
 	{ "tables", 1068 },	    { "ascii sweep", 475 },
 	{ "unicode", 80 },	    { "drift", 30 },
 	{ "degenerate", 40 },	    { "invalid utf-8", 10 },
-	{ "fold table", 160 },
+	{ "fold table", 160 },	    { "stored glyphs", 141 },
 };
 #define FAMILY_COUNT ((int)(sizeof(families) / sizeof(*families)))
 static int assertions, failures;
@@ -1098,6 +1098,77 @@ static void fold_table(mc_engine *e)
 }
 
 /* ---------------------------------------------------------------------- */
+/* Synonyms stored with each variant, matched by input with every variant. */
+
+static void stored_glyphs(const mc_engine *const *loads, int load_count)
+{
+	/* The fixture stores each with a different apostrophe that folds to '. */
+	static const char *stored[][2] = {
+		{ "Pilot's Log", "pilots_log" },
+		{ "Baker's Dozen", "bakers_dozen" },
+		{ "Miner's Lamp", "miners_lamp" },
+		{ "Sailor's Knot", "sailors_knot" },
+		{ "Guild's Hall", "guilds_hall" },
+		{ "Weaver's Loom", "weavers_loom" },
+		{ "Potter's Wheel", "potters_wheel" },
+		{ "Smith's Forge", "smiths_forge" },
+		{ "Archer's Bow", "archers_bow" },
+		{ "Tailor's Chalk", "tailors_chalk" },
+		{ "Hunter's Moon", "hunters_moon" },
+	};
+	J *inputs = ARR(); /* Each entry: phrase, canon or null. */
+	for (size_t i = 0; i < COUNT(stored); i++)
+		for (int g = 0; g < (int)COUNT(glyphs); g++) {
+			J *pair = ARR();
+			char *phrase = with_glyph(stored[i][0], glyphs[g]);
+			ADD(pair, STR(phrase));
+			ADD(pair, g < APOSTROPHES ? STR(stored[i][1]) : NIL());
+			ADD(inputs, pair);
+			free(phrase);
+		}
+	/* Stored as Say “Smile”, sent with every double quote. */
+	for (size_t i = 0; i < COUNT(dquotes) + 3; i++) {
+		char *q = i < COUNT(dquotes)	  ? utf8(dquotes[i]) :
+			  i == COUNT(dquotes)	  ? copy("\"") :
+			  i == COUNT(dquotes) + 1 ? copy("``") :
+						    copy("´´");
+		char *open = concat("Say ", q, "Smile"),
+		     *phrase = concat(open, q, "");
+		J *pair = ARR();
+		ADD(pair, STR(phrase));
+		ADD(pair, STR("portraits"));
+		ADD(inputs, pair);
+		free(q);
+		free(open);
+		free(phrase);
+	}
+	/* Stored as Data–Driven Design, sent with every hyphen and dash. */
+	for (size_t i = 0; i <= COUNT(dashes); i++) {
+		char *d = i < COUNT(dashes) ? utf8(dashes[i]) : copy("-"),
+		     *phrase = concat("Data", d, "Driven Design");
+		J *pair = ARR();
+		ADD(pair, STR(phrase));
+		ADD(pair, STR("data_driven_design"));
+		ADD(inputs, pair);
+		free(d);
+		free(phrase);
+	}
+	EACH(pair, inputs) {
+		begin("stored glyphs");
+		const char *phrase = S(AT(pair, 0));
+		J *canon = AT(pair, 1);
+		char *text = format("We offer %s on Mondays.", phrase);
+		J *expected = one_entity(
+			text, cJSON_IsString(canon) ? S(canon) : NULL, phrase);
+		for (int l = 0; l < load_count; l++)
+			expect_entities((mc_engine *)loads[l], text, expected);
+		DEL(expected);
+		free(text);
+	}
+	DEL(inputs);
+}
+
+/* ---------------------------------------------------------------------- */
 
 static mc_engine *load_path(const char *path, const char *interface)
 {
@@ -1167,6 +1238,7 @@ int main(int argc, char **argv)
 	degenerate(owl);
 	invalid_utf8(owl);
 	fold_table(owl);
+	stored_glyphs(loads, 3);
 	int total = 0, short_family = 0;
 	for (int i = 0; i < FAMILY_COUNT; i++) {
 		printf("%-16s %5d (minimum %d)\n", families[i].name,
