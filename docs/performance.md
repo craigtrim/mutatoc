@@ -18,6 +18,21 @@ Peak memory for the benchmark process fell from 74.0 MB to 67.6 MB. 0.2.3 also r
 
 The same shift shows up in larger runs driven through `--serve`. Parsing 12,382 texts against seven ontologies plus the 393 parity texts (87,067 parses) took 23 seconds with 0.3.0 and about 25 minutes with 0.2.3. Mutato's 961 upstream tests took 81 seconds against 0.3.0 and 242 seconds against 0.2.3.
 
+## Tokens as input slices
+
+<!-- craigtrim/mutatoc#7 -->
+
+The tokenizer builds each token as a span of the input in one pass. It used to split, rewrite and re-join token texts and fold each one with thirty string replacements ([#7](https://github.com/craigtrim/mutatoc/issues/7)). The same benchmark, run on 2026-10-02 on the same machine with MSVC Release builds of 0.3.1 and the change, gives these parse medians:
+
+| Ontology | Parse, 0.3.1 | Parse, after #7 |
+| --- | ---: | ---: |
+| animals-test | 21.9 ms | 6.3 ms |
+| econ-20160218 | 9.0 ms | 3.4 ms |
+| medicopilot | 25.7 ms | 4.9 ms |
+| acanames-20251028 | 15.7 ms | 5.5 ms |
+
+Loads and peak memory (67.3 MB) do not change.
+
 ## Performance gate
 
 <!-- craigtrim/mutatoc#2 -->

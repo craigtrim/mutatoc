@@ -1,6 +1,20 @@
 # Changelog
 
-<!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2, craigtrim/mutatoc#5 -->
+<!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2, craigtrim/mutatoc#5, craigtrim/mutatoc#7 -->
+
+## Unreleased
+
+### Fixed
+
+- Token text and offsets now match the input exactly ([#7](https://github.com/craigtrim/mutatoc/issues/7)). Every token's `text` is a slice of the input and `x` and `y` are code point offsets into it. They used to count positions in rewritten token texts, so one stray quote, tab or repeated space shifted every offset after it: in `say 'hi' now`, `now` was reported at 7 when it starts at 9. A matched entity's `text` from `parse` is the input from its `x` to its `y`, so `U.S. GOV'T & POL` comes back as written instead of as `U . S . GOV'T & POL`.
+- Apostrophes and quotes of any form match alike, as hyphens and dashes already did. `Driver’s Ed`, `Driverʼs Ed`, ``Driver`s Ed`` and `Driver´s Ed` all match the synonym `Driver's Ed`, and a synonym written with a curly apostrophe matches straight-apostrophe input. The output keeps whichever character the input used.
+- A closing apostrophe after a word is split off wherever the word ends, including at the end of the input and before a tab or line break, not only before a space.
+
+### Breaking changes
+
+- **Offsets:** `x` and `y` index the input in code points. Callers that read positions after a rewritten token see different values, and token ids change for any token whose text changed.
+- **No rewriting:** a lone `'` keeps its glyph in `text` and `normal` instead of becoming `"`. Words keep the space before `)`, `"`, `!` and `?`, and line breaks and repeated spaces stay as sent. `can't` and the other contractions stay one token, and abbreviations such as `dept.` split into `dept` and `.`, wherever they fall; 0.3.1 expanded them only when they ended the input. A consumer that wants them expanded does that before sending the text.
+- **Curly possessives:** `dog’s collar` no longer matches `dog`, because `dog’s` is now one token, as `dog's` already was.
 
 ## 0.3.1 (2026-10-01)
 

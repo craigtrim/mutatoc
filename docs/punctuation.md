@@ -4,7 +4,7 @@
 
 Mutatoc 0.2.2 matches `U.S. Virgin Islands` as one ontology phrase. Earlier versions replaced periods with temporary tilde markers that could not be restored after tokenization. The same defect affected dictionary entries such as `dr.`, `mr.`, and `mrs.`.
 
-The tokenizer preserves source punctuation and expands abbreviation dictionary entries without markers. Exact matching derives its maximum phrase length from the loaded ontology. Whitespace-only tokens can occur between phrase words and remain in the returned swap history. Punctuation is never skipped as whitespace. Matches retain longest-phrase priority and leftmost tie selection.
+The tokenizer preserves source punctuation and keeps abbreviations as written ([#7](https://github.com/craigtrim/mutatoc/issues/7)). Exact matching derives its maximum phrase length from the loaded ontology. Whitespace-only tokens can occur between phrase words and remain in the returned swap history. Punctuation is never skipped as whitespace. Matches retain longest-phrase priority and leftmost tie selection.
 
 `tests/test_punctuation.c` constructs hypothetical ontologies with `rdfs:label`, `rdfs:seeAlso`, and `skos:altLabel`. Expected matches come from the authored phrases. Original text and arbitrary token metadata are checked independently of canonical output. Source preservation compares every non-whitespace character, because whitespace becomes its own tokens.
 

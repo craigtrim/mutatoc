@@ -38,6 +38,18 @@ This prints the canonical text, `dog walks through London .`, where `dog` is the
 
 `scripts/package.cmake` assembles a relocatable Windows distribution from the static and shared builds, with a checksum manifest. See [packaging](docs/packaging.md).
 
+## Input text
+
+<!-- craigtrim/mutatoc#7 -->
+
+Mutatoc tokenizes and matches text exactly as it is sent. The consumer knows why it sent the text in the form it did, so mutatoc makes no assumptions about how that text should have been written. A consumer that wants any of these does them before sending the text:
+
+- Rejoining a spaced apostrophe, so `Driver ' s Ed` reads as `Driver's Ed`.
+- Expanding contractions and abbreviations, such as `can't` to `can not` or `dept.` to `department`.
+- Correcting spelling, OCR errors or transcription artifacts.
+
+Every token's `text` is a slice of the input, the tokens concatenate back to it, and `x` and `y` are code point offsets into it. A matched entity's `text` is the input from its `x` to its `y`. Matching compares each token's `normal`, mutatoc's internal form of the text. It is lowercased, with every hyphen and dash folded to `-`, every apostrophe and single quote folded to `'`, and every double quote folded to `"`, so `Driver’s Ed` and `Driver's Ed` match the same synonym. The folding never touches `text`, `x` or `y`, so whatever hyphen, apostrophe or quote the input used is the one the output shows.
+
 ## Axiom and C integration
 
 `--serve` reads one UTF-8 JSON request per line and retains the loaded ontologies:
@@ -66,6 +78,7 @@ The reference is Mutato revision `da6bfa5df80b208a3271e111f2921ad281d0da98`. `ct
 | `rdf` | The W3C RDF 1.1 Turtle suite (313 tests), 19 ontology graph fingerprints, typed literals |
 | `extensions` | Optional stages, exact-window regressions, collections, external synonyms, prefixes |
 | `tokenize` | The native tokenizer contract |
+| `token_fidelity` | 3,103 cases that hold every token and entity to the input's exact text and offsets, across apostrophe, quote and dash variants, whitespace, contractions, abbreviations, Unicode and invalid input |
 | `concurrency` | 24 engines on 8 threads through the public C API |
 | `native`, `text`, `embedding` | Ontology loading, caller metadata, Unicode and URI handling, the embedding example |
 | `cli_json`, `cli_jsonf`, `cli_stopwatch` | The one-shot CLI's output formats |
