@@ -90,6 +90,9 @@ if(BUILD_TESTING)
   # Synonyms written with punctuation the tokenizer splits (craigtrim/mutatoc#5).
   mutatoc_program(mutatoc_punctuated_synonyms tests/test_punctuated_synonyms.c)
   add_test(NAME punctuated_synonyms COMMAND mutatoc_punctuated_synonyms ${CMAKE_CURRENT_SOURCE_DIR})
+  # Tokens and entities that keep the text the input sent (craigtrim/mutatoc#7).
+  mutatoc_program(mutatoc_token_fidelity tests/test_token_fidelity.c)
+  add_test(NAME token_fidelity COMMAND mutatoc_token_fidelity ${CMAKE_CURRENT_SOURCE_DIR})
   # Timing ceilings only mean something in optimized builds without sanitizers.
   # Build type names are case-insensitive in CMake, so compare them uppercased.
   set(optimized_configurations Release RelWithDebInfo MinSizeRel)

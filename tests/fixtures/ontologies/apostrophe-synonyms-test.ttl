@@ -1,0 +1,58 @@
+# Synonyms written with apostrophes, double quotes and hyphens. Every glyph
+# that folds to the same ASCII character must match the same entity, while
+# every token and entity keeps the text the input sent. craigtrim/mutatoc#7
+
+@prefix : <http://example.org/apostrophes#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/apostrophes> rdf:type owl:Ontology .
+
+# The reported case.
+:Drivers_Education rdf:type owl:Class ;
+    rdfs:label "Driver Education" ;
+    rdfs:seeAlso "Driver's Ed" .
+
+:Womens_Studies rdf:type owl:Class ;
+    rdfs:label "Women's Studies" .
+
+# Written with a curly apostrophe, so ASCII input must still match it.
+:Mens_Choir rdf:type owl:Class ;
+    rdfs:label "Men’s Choir" .
+
+:Taijiquan rdf:type owl:Class ;
+    rdfs:label "Taijiquan" ;
+    rdfs:seeAlso "T'ai Chi Ch'uan" .
+
+:Childrens_Literature rdf:type owl:Class ;
+    rdfs:label "Children's Literature" .
+
+:Contemporary_Health rdf:type owl:Class ;
+    rdfs:label "Contemporary Health" ;
+    rdfs:seeAlso "Today's Health Care" .
+
+:OBrien_Hall rdf:type owl:Class ;
+    rdfs:label "O'Brien Hall" .
+
+# Lone quotes around a word rather than an apostrophe inside one.
+:Rock_Music rdf:type owl:Class ;
+    rdfs:label "Rock Music" ;
+    rdfs:seeAlso "Rock 'n' Roll" .
+
+:Computer_Aided_Manufacturing rdf:type owl:Class ;
+    rdfs:label "Computer-Aided Manufacturing" .
+
+:Photography rdf:type owl:Class ;
+    rdfs:label "Photography" ;
+    rdfs:seeAlso "Say \"Cheese\"" .
+
+# Plain entities whose offsets show whether earlier text drifted.
+:Biology rdf:type owl:Class ;
+    rdfs:label "Biology" .
+
+:Chemistry rdf:type owl:Class ;
+    rdfs:label "Chemistry" .
+
+:Art_History rdf:type owl:Class ;
+    rdfs:label "Art History" .
