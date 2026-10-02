@@ -593,7 +593,10 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 			fail(err, 2, "tokenize requires string text");
 			return NULL;
 		}
-		return tokenize_text(S(GET(q, "text")));
+		J *tokens = tokenize_text(S(GET(q, "text")));
+		if (!tokens)
+			fail(err, 1, "Cannot allocate tokens");
+		return tokens;
 	}
 	if (!strcmp(op, "generate_spans"))
 		return generate_spans(
@@ -730,6 +733,8 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 				return NULL;
 			}
 			tokens = tokenize_text(S(GET(q, "text")));
+			if (!tokens)
+				fail(err, 1, "Cannot allocate tokens");
 		}
 		if (!tokens)
 			return NULL;
@@ -738,6 +743,12 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 			GET(q, "ctr") ? GET(q, "ctr")->valueint : 0, err);
 		if (!out)
 			return NULL;
+		/*
+		 * Raw text has a source to slice; prepared tokens keep their
+		 * text (craigtrim/mutatoc#7).
+		 */
+		if (!strcmp(op, "parse"))
+			source_entities(out, S(GET(q, "text")));
 		J *r = OBJ();
 		char *s = render(out);
 		PUT(r, "text", STR(s));

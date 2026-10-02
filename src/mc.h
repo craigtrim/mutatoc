@@ -115,6 +115,8 @@ J *generate_spans(J *, int, int);
 J *generate_trie(J *);
 J *tokenize_text(const char *);
 char *tokenize_key(const char *);
+/* Entity text from the input between x and y (craigtrim/mutatoc#7). */
+void source_entities(J *, const char *);
 typedef struct MatchIndex MatchIndex;
 MatchIndex *match_index_build(const J *);
 const J *match_index_view(const MatchIndex *);

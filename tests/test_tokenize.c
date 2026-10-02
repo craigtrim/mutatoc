@@ -54,10 +54,10 @@ int main(void)
 	       "[\"_\",\"_\",\"main\",\"_\",\"_ \",\"and \",\"Muslin\",\"_\"]");
 	expect(e, "snake_case", "[\"snake_case\"]");
 	/*
-	 * A lone single quote reads as a double quote, and a word sits
-	 * directly against a closing quote, parenthesis, ! or ?.
+	 * A lone quote keeps its glyph, and every token keeps the space the
+	 * input put after it (craigtrim/mutatoc#7).
 	 */
-	expect(e, "say 'hi' now", "[\"say\",\"\\\"\",\"hi\",\"\\\"\",\"now\"]");
+	expect(e, "say 'hi' now", "[\"say \",\"'\",\"hi\",\"' \",\"now\"]");
 	/* These stay whole. */
 	expect(e, "I cannot", "[\"I \",\"cannot\"]");
 	expect(e, "id card", "[\"id \",\"card\"]");
@@ -65,11 +65,11 @@ int main(void)
 	       "[\"5G \",\"at \",\"9am\",\", \",\"500mg\"]");
 	expect(e, "y'all and guv'nor's", "[\"y'all \",\"and \",\"guv'nor's\"]");
 	expect(e, "don't O'Brien", "[\"don't \",\"O'Brien\"]");
-	/* Contractions in the expansion list become their words. */
-	expect(e, "can't", "[\"can\",\"not\"]");
-	/* Other whitespace is kept as a separate zero-width token. */
+	/* A contraction stays whole, even as the last word. */
+	expect(e, "can't", "[\"can't\"]");
+	/* Other whitespace is kept, as written, as its own zero-width token. */
 	expect(e, "Dog\tcat\nPoodle",
-	       "[\"Dog\",\"\\t \",\"cat\",\" \",\"Poodle\"]");
+	       "[\"Dog\",\"\\t\",\"cat\",\"\\n\",\"Poodle\"]");
 	expect(e, "", "[]");
 	/* Ids: the text's MurmurHash64A (seed 1) and the token's position. */
 	J *r = test_call(e, "{\"op\":\"tokenize\",\"text\":\"Dog walks\"}");

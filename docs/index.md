@@ -22,6 +22,18 @@ ctest --test-dir build-msvc -C Release --output-on-failure
 
 This prints `dog walks through London .`, where `dog` is the matched entity. `--json` prints the full result as compact JSON and `--jsonf` prints it indented. `--serve` keeps an engine open and reads one JSON request per line.
 
+## Input text
+
+<!-- craigtrim/mutatoc#7 -->
+
+Mutatoc tokenizes and matches text exactly as it is sent. The consumer knows why it sent the text in the form it did, so mutatoc makes no assumptions about how that text should have been written. A consumer that wants any of these does them before sending the text:
+
+- Rejoining a spaced apostrophe, so `Driver ' s Ed` reads as `Driver's Ed`.
+- Expanding contractions and abbreviations, such as `can't` to `can not` or `dept.` to `department`.
+- Correcting spelling, OCR errors or transcription artifacts.
+
+Every token's `text` is a slice of the input, the tokens concatenate back to it, and `x` and `y` are code point offsets into it. A matched entity's `text` is the input from its `x` to its `y`. [Raw-text tokens](protocol.md#raw-text-tokens) gives the full rules. Matching compares each token's `normal`, mutatoc's internal form of the text. It is lowercased, with every hyphen and dash folded to `-`, every apostrophe and single quote folded to `'`, and every double quote folded to `"`, so `Driver’s Ed` and `Driver's Ed` match the same synonym. The folding never touches `text`, `x` or `y`, so whatever hyphen, apostrophe or quote the input used is the one the output shows.
+
 ## Embed
 
 The C API is `mc_create`, `mc_request`, `mc_free` and `mc_destroy`. Each engine owns its state, so serialize access to one engine; independent engines can run concurrently. Requests and responses use the same JSON as `--serve`. See [JSON and C integration](protocol.md) and [the public header](https://github.com/craigtrim/mutatoc/blob/master/include/mutatoc.h).

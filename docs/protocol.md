@@ -26,16 +26,18 @@ The `query` interface defaults to cached JSON finder behavior. `owl` and `data` 
 
 ## Raw-text tokens
 
-`parse` and `tokenize` split plain text natively. Each token is `{id, text, x, y, normal}`:
+<!-- craigtrim/mutatoc#7 -->
 
-- `text` is the token as it appears, with a single trailing space when a space follows it. Whitespace other than one space between tokens (tabs, line breaks, repeated spaces) becomes its own token, whose `normal` is empty.
-- `x` and `y` are the token's start and end in the stream of token texts; `y` excludes the trailing space.
-- `normal` is the lowercased text with typographic hyphens and quotes folded to ASCII.
-- `id` is `<hash>#<index>`: the MurmurHash64A (seed 1) of the token's text and its position in the result. Treat ids as opaque identifiers scoped to one tokenization result; they are not stable across tokenizer changes.
+`parse` and `tokenize` split plain text natively, as sent. A consumer that wants spaced apostrophes rejoined, or contractions and abbreviations expanded, does that before sending the text (see [Input text](index.md#input-text)). Each token is `{id, text, x, y, normal}`:
 
-Punctuation becomes its own token, except a period or comma inside a number, an apostrophe inside a word, and an ampersand between letters. A period or comma that ends a number is split off (`2020.` becomes `2020` and `.`), and so are underscores that open or close a word (`_name_`). A lone single quote reads as a double quote. Words sit directly against a following `)`, `"`, `!` or `?`. Contractions stay whole (`don't`, `y'all`, `O'Brien`), except for listed expansions such as `can't` to `can not`. Numbers written with units (`5G`, `9am`, `500mg`) and words such as `cannot` also stay whole. `tests/test_tokenize.c` pins these cases.
+- `text` is a slice of the input, and concatenating every token's `text` reproduces the input. A word keeps the one space that follows it. Any other run of whitespace (tabs, line breaks, further spaces) is its own token, whose `normal` is empty.
+- `x` and `y` are code point offsets into the input: `x` is where the token starts and `y` is where it ends without its trailing whitespace, so a whitespace token has `y` equal to `x`.
+- `normal` is the text lowercased, with every hyphen and dash folded to `-`, every apostrophe and single quote folded to `'`, and every double quote, including the pairs ``` `` ``` and `´´`, folded to `"`. Matching reads only `normal`.
+- `id` is `<hash>#<index>`: the MurmurHash64A (seed 1) of the token's text without its trailing space, and its position in the result. Treat ids as opaque identifiers scoped to one tokenization result; they are not stable across tokenizer changes.
 
-A matched entity is a new token `{id, x, y, ner, text, normal, swaps}` whose `normal` is the canonical form and whose `swaps.tokens` holds the original tokens. `ner` comes from the ontology; a `hierarchy` match with no ontology label has a null `ner`.
+Punctuation becomes its own token, except a period or comma inside a number, an apostrophe inside a word, and an ampersand between letters. A period or comma that ends a number is split off (`2020.` becomes `2020` and `.`), and so are underscores that open or close a word (`_name_`). An apostrophe that ends a word is split off as a closing quote, except after a plural `s` (`dogs'`). A pair of backticks or acute accents is one token. Every character that folds to `'` behaves as `'` in these rules, so `Driver’s` is one token just as `Driver's` is. Contractions stay whole (`don't`, `can't`, `y'all`, `O'Brien`), and so do numbers written with units (`5G`, `9am`, `500mg`) and words such as `cannot`. Abbreviations split at their periods (`dept.` becomes `dept` and `.`). `tests/test_tokenize.c` pins these cases, and `tests/test_token_fidelity.c` holds every token and entity to the input.
+
+A matched entity is a new token `{id, x, y, ner, text, normal, swaps}` whose `normal` is the canonical form and whose `swaps.tokens` holds the original tokens. For `parse`, its `text` is the input from its `x` to its `y`; for `parse_tokens`, it is its tokens' trimmed texts joined by single spaces. `ner` comes from the ontology; a `hierarchy` match with no ontology label has a null `ner`.
 
 ## Errors and ownership
 

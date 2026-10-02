@@ -2,12 +2,14 @@
  * tokenize.c - Native raw-text tokenizer.
  *
  * Splits plain text into the tokens the matcher reads: id, text, x, y and
- * normal. Punctuation becomes its own token, except periods and commas inside
- * numbers, apostrophes inside words and ampersands between letters. A period
- * or comma that ends a number, and underscores that open or close a word, are
- * split off. Whitespace other than single spaces between tokens is kept as
- * its own zero-width token so offsets and phrase windows stay aligned.
- * craigtrim/mutatoc#1
+ * normal. A token's text is always a slice of the input, so the tokens
+ * concatenate back to it, and x and y are code point offsets into it. Only
+ * normal is folded, for matching. Punctuation becomes its own token, except
+ * periods and commas inside numbers, apostrophes inside words and ampersands
+ * between letters. A period or comma that ends a number, and underscores that
+ * open or close a word, are split off. A word keeps the one space that follows
+ * it; any other run of whitespace is its own token with an empty normal.
+ * craigtrim/mutatoc#1, craigtrim/mutatoc#7
  */
 
 #include "mc.h"
@@ -29,271 +31,233 @@ static int numeric(uint32_t c)
 	return 0;
 }
 
-static int ends_with(const char *s, const char *tail)
+/*
+ * Every hyphen and dash folds to -, every apostrophe and single quote to ',
+ * and every double quote to ", so look-alike input matches alike.
+ */
+static const uint32_t dashes[] = { 0x058a, 0x1806, 0x2010, 0x2011, 0x2012,
+				   0x2013, 0x2014, 0x2015, 0x2053, 0x207b,
+				   0x208b, 0x2212, 0x2e3a, 0x2e3b, 0x301c,
+				   0x3030, 0xfe58, 0xfe63, 0xff0d };
+static const uint32_t squotes[] = { '\'',   '`',    0x00b4, 0x02bc,
+				    0x2018, 0x2019, 0x201a, 0x201b,
+				    0x2032, 0x2039, 0x203a, 0xff07 };
+static const uint32_t dquotes[] = { '"',    0x00ab, 0x00bb, 0x201c, 0x201d,
+				    0x201e, 0x201f, 0x2033, 0xff02 };
+
+static int in_set(uint32_t c, const uint32_t *set, size_t n)
 {
-	size_t a = strlen(s), b = strlen(tail);
-	return a >= b && !strcmp(s + a - b, tail);
+	for (size_t i = 0; i < n; i++)
+		if (c == set[i])
+			return 1;
+	return 0;
 }
 
-static const Contraction *contraction(const char *word)
+static int apostrophe(uint32_t c)
 {
-	for (size_t i = 0; i < sizeof(contractions) / sizeof(*contractions);
-	     i++)
-		if (!strcmp(word, contractions[i].word))
-			return &contractions[i];
-	return NULL;
+	return in_set(c, squotes, sizeof(squotes) / sizeof(*squotes));
 }
 
-static const char *abbreviation(const char *word)
+/* An apostrophe is never a letter, so every apostrophe splits words alike. */
+static int letter(uint32_t c)
 {
-	for (size_t i = 0; i < sizeof(abbreviations) / sizeof(*abbreviations);
-	     i++)
-		if (!strcmp(word, abbreviations[i].word))
-			return abbreviations[i].expansion;
-	return NULL;
+	return ualpha(c) && !apostrophe(c);
 }
 
-/* Words keep their trailing space; every other character is weighed alone. */
-static J *pre_split(const char *text)
+static uint32_t char_at(const char *s, size_t at)
 {
-	J *split_tokens = ARR();
-	const char *start = text, *p = text;
+	const char *p = s + at;
+	return uread(&p);
+}
+
+/* The start of the code point that ends s[lo..end). */
+static size_t char_start(const char *s, size_t lo, size_t end)
+{
+	size_t at = end > lo ? end - 1 : lo;
+	while (at > lo && ((unsigned char)s[at] & 0xc0) == 0x80)
+		at--;
+	return at;
+}
+
+/* A byte span of the input; space marks a run of whitespace. */
+typedef struct {
+	size_t start, end;
+	int space;
+} Piece;
+typedef struct {
+	Piece *p;
+	int n, cap;
+} Pieces;
+
+static int push(Pieces *ps, size_t start, size_t end, int space)
+{
+	if (ps->n == ps->cap) {
+		int cap = ps->cap ? ps->cap * 2 : 64;
+		Piece *grown = realloc(ps->p, (size_t)cap * sizeof(*grown));
+		if (!grown)
+			return 0;
+		ps->p = grown;
+		ps->cap = cap;
+	}
+	ps->p[ps->n++] = (Piece){ start, end, space };
+	return 1;
+}
+
+/*
+ * Underscores that open or close a piece, and a period or comma that ends a
+ * number, become their own pieces.
+ */
+static int edges(Pieces *ps, const char *s, size_t a, size_t b)
+{
+	size_t lead = a, trail = b;
+	while (trail - lead > 1 && s[lead] == '_')
+		lead++;
+	while (trail - lead > 1 && s[trail - 1] == '_')
+		trail--;
+	size_t middle = trail;
+	if (trail - lead > 1 && (s[trail - 1] == '.' || s[trail - 1] == ',') &&
+	    numeric(char_at(s, char_start(s, lead, trail - 1))))
+		middle = trail - 1;
+	for (size_t i = a; i < lead; i++)
+		if (!push(ps, i, i + 1, 0))
+			return 0;
+	if (!push(ps, lead, middle, 0) ||
+	    (middle < trail && !push(ps, middle, trail, 0)))
+		return 0;
+	for (size_t i = trail; i < b; i++)
+		if (!push(ps, i, i + 1, 0))
+			return 0;
+	return 1;
+}
+
+/* Splits one word, s[start..end) with no whitespace, at its punctuation. */
+static int split_word(Pieces *ps, const char *s, size_t start, size_t end)
+{
+	const char *p = s + start;
+	uint32_t prev = 0;
+	size_t open = start;
+	int building = 0;
+	while ((size_t)(p - s) < end) {
+		size_t at = (size_t)(p - s);
+		uint32_t ch = uread(&p);
+		size_t after = (size_t)(p - s);
+		uint32_t next = after < end ? char_at(s, after) : 0;
+		/* A pair of backticks or acute accents is one double quote. */
+		if ((ch == '`' || ch == 0x00b4) && next == ch) {
+			if (building && !edges(ps, s, open, at))
+				return 0;
+			building = 0;
+			uread(&p);
+			if (!push(ps, at, (size_t)(p - s), 0))
+				return 0;
+		} else if (letter(ch) || numeric(ch) || ch == '_' ||
+			   ((ch == '.' || ch == ',') && numeric(prev)) ||
+			   (apostrophe(ch) && letter(prev)) ||
+			   (ch == '&' && letter(prev) && letter(next))) {
+			if (!building)
+				open = at;
+			building = 1;
+		} else {
+			if (building && !edges(ps, s, open, at))
+				return 0;
+			building = 0;
+			if (!push(ps, at, after, 0))
+				return 0;
+		}
+		prev = ch;
+	}
+	return !building || edges(ps, s, open, end);
+}
+
+static int scan(Pieces *ps, const char *s)
+{
+	const char *p = s;
 	while (*p) {
-		if (*p++ == ' ') {
-			char *s = slice(start, (size_t)(p - start));
-			ADD(split_tokens, STR(s));
-			free(s);
-			start = p;
+		size_t start = (size_t)(p - s);
+		const char *q = p;
+		int space = uspace(uread(&q));
+		while (*q) {
+			const char *r = q;
+			if (uspace(uread(&r)) != space)
+				break;
+			q = r;
+		}
+		size_t end = (size_t)(q - s);
+		if (space ? !push(ps, start, end, 1) :
+			    !split_word(ps, s, start, end))
+			return 0;
+		p = q;
+	}
+	return 1;
+}
+
+/* Where the apostrophe ending a word starts, or 0 when no word ends in one. */
+static size_t closing(const char *s, const Piece *pc)
+{
+	size_t at = char_start(s, pc->start, pc->end);
+	return at > pc->start && apostrophe(char_at(s, at)) &&
+			       letter(char_at(s,
+					      char_start(s, pc->start, at))) ?
+		       at :
+		       0;
+}
+
+static int lone_apostrophe(const char *s, const Piece *pc)
+{
+	return !pc->space && char_start(s, pc->start, pc->end) == pc->start &&
+	       apostrophe(char_at(s, pc->start));
+}
+
+static int split_at(Pieces *ps, int i, size_t at)
+{
+	if (!push(ps, 0, 0, 0))
+		return 0;
+	memmove(ps->p + i + 2, ps->p + i + 1,
+		(size_t)(ps->n - i - 2) * sizeof(*ps->p));
+	ps->p[i + 1] = (Piece){ at, ps->p[i].end, 0 };
+	ps->p[i].end = at;
+	return 1;
+}
+
+/*
+ * A closing apostrophe after a word is split off, except after a plural s,
+ * wherever the word ends. Then, when an odd number of lone apostrophes comes
+ * before the first word that still ends in one, that apostrophe closes the
+ * quote and is split off too.
+ */
+static int quotes(Pieces *ps, const char *s)
+{
+	/* One pass into a new list, so many closing quotes stay linear. */
+	Pieces out = { 0 };
+	for (int i = 0; i < ps->n; i++) {
+		Piece pc = ps->p[i];
+		int last = i + 1 == ps->n || ps->p[i + 1].space;
+		size_t at = pc.space || !last ? 0 : closing(s, &pc);
+		uint32_t before = at ? char_at(s, char_start(s, pc.start, at)) :
+				       's';
+		if (before != 's' && before != 'S' ?
+			    !push(&out, pc.start, at, 0) ||
+				    !push(&out, at, pc.end, 0) :
+			    !push(&out, pc.start, pc.end, pc.space)) {
+			free(out.p);
+			return 0;
 		}
 	}
-	if (*start)
-		ADD(split_tokens, STR(start));
-	J *expanded = ARR();
-	EACH(t, split_tokens) {
-		const Contraction *c = strchr(S(t), '\'') ? contraction(S(t)) :
-							    NULL;
-		if (c) {
-			ADD(expanded, STR(c->first));
-			if (c->second)
-				ADD(expanded, STR(c->second));
-		} else
-			ADD(expanded, DUP(t));
-	}
-	DEL(split_tokens);
-	J *punct = ARR();
-	EACH(t, expanded) {
-		int dots = 0;
-		for (const char *a = S(t); *a; a++)
-			dots += *a == '.';
-		/* Multi-period words such as initialisms keep every period. */
-		const char *abbr = dots < 2 ? abbreviation(S(t)) : NULL;
-		char *word = copy(abbr ? abbr : S(t));
-		Buf b = { 0 };
-		uint32_t prev = 0;
-		const char *a = word;
-		while (*a) {
-			uint32_t ch = uread(&a);
-			const char *peek = a;
-			uint32_t next = *peek ? uread(&peek) : 0;
-			if (ualpha(ch) || numeric(ch) || ch == ' ' ||
-			    ch == '_' ||
-			    ((ch == '.' || ch == ',') && numeric(prev)) ||
-			    (ch == '\'' && ualpha(prev)) ||
-			    (ch == '&' && ualpha(prev) && ualpha(next)))
-				uwrite(&b, ch);
-			else {
-				if (b.n) {
-					ADD(punct, STR(b.p));
-					free(buf_take(&b));
-				}
-				Buf single = { 0 };
-				uwrite(&single, ch);
-				ADD(punct, STR(single.p));
-				free(single.p);
-			}
-			prev = ch;
-		}
-		if (b.n)
-			ADD(punct, STR(b.p));
-		free(b.p);
-		free(word);
-	}
-	DEL(expanded);
-	J *spaces = ARR();
-	for (int i = 0; i < SIZE(punct); i++) {
-		char *word = copy(S(AT(punct, i)));
-		if (i + 1 < SIZE(punct) && !strcmp(S(AT(punct, i + 1)), " ")) {
-			Buf b = { 0 };
-			buf_put(&b, word);
-			buf_put(&b, " ");
-			free(word);
-			word = buf_take(&b);
-			i++;
-		}
-		ADD(spaces, STR(word));
-		free(word);
-	}
-	DEL(punct);
-	/* A closing quote after a word is split off, except after a plural s. */
-	J *quotes = ARR();
-	EACH(t, spaces) {
-		const char *word = S(t);
-		if (strchr(word, '\'') && !ends_with(word, "s' ") &&
-		    ends_with(word, "' ")) {
-			char *prefix = slice(word, strlen(word) - 2);
-			Buf b = { 0 };
-			buf_put(&b, prefix);
-			buf_put(&b, " ");
-			ADD(quotes, STR(b.p));
-			ADD(quotes, STR("'"));
-			free(prefix);
-			free(b.p);
-		} else
-			ADD(quotes, DUP(t));
-	}
-	DEL(spaces);
-	int singles = 0, last_single = -1, first_suffix = -1, i = 0;
-	EACH(t, quotes) {
-		const char *s = S(t);
-		if (!strcmp(s, "'")) {
+	free(ps->p);
+	*ps = out;
+	int singles = 0, last_single = -1, first_suffix = -1;
+	for (int i = 0; i < ps->n; i++) {
+		if (lone_apostrophe(s, &ps->p[i])) {
 			singles++;
 			last_single = i;
-		}
-		char *trim = norm(s, 0, 0);
-		if (ulen(s) > 1 && ends_with(trim, "'") && first_suffix < 0)
+		} else if (first_suffix < 0 && !ps->p[i].space &&
+			   closing(s, &ps->p[i]))
 			first_suffix = i;
-		free(trim);
-		i++;
 	}
-	if (first_suffix >= 0 && singles % 2 == 1 &&
-	    last_single <= first_suffix) {
-		J *out = ARR();
-		i = 0;
-		EACH(t, quotes) {
-			if (i++ == first_suffix) {
-				char *prefix = slice(S(t), strlen(S(t)) - 1);
-				Buf b = { 0 };
-				buf_put(&b, prefix);
-				buf_put(&b, " ");
-				ADD(out, STR(b.p));
-				ADD(out, STR("'"));
-				free(prefix);
-				free(b.p);
-			} else
-				ADD(out, DUP(t));
-		}
-		DEL(quotes);
-		quotes = out;
-	}
-	return quotes;
-}
-
-/* The code point that ends s[0..end), where end is a character boundary. */
-static uint32_t last_char(const char *s, size_t end)
-{
-	size_t start = end;
-	while (start && ((unsigned char)s[start - 1] & 0xc0) == 0x80)
-		start--;
-	if (start)
-		start--;
-	while (start && ((unsigned char)s[start] & 0xc0) == 0x80)
-		start--;
-	const char *p = s + start;
-	return end > start ? uread(&p) : 0;
-}
-
-static void add_piece(J *out, const char *s, size_t n)
-{
-	char *piece = slice(s, n);
-	ADD(out, STR(piece));
-	free(piece);
-}
-
-/*
- * A lone single quote reads as a double quote. Underscores that open or close
- * a word, and a period or comma that ends a number, become their own tokens;
- * the word's trailing space moves to its last piece.
- */
-static J *split_edges(J *pre)
-{
-	J *out = ARR();
-	EACH(t, pre) {
-		const char *s = S(t);
-		if (!strcmp(s, "'")) {
-			ADD(out, STR("\""));
-			continue;
-		}
-		size_t end = strlen(s), a = 0;
-		while (end && s[end - 1] == ' ')
-			end--;
-		size_t b = end, trailing = 0;
-		int punct = 0;
-		if (!end) {
-			ADD(out, DUP(t));
-			continue;
-		}
-		size_t lead = 0;
-		while (b - a > 1 && s[a] == '_') {
-			a++;
-			lead++;
-		}
-		while (b - a > 1 && s[b - 1] == '_') {
-			b--;
-			trailing++;
-		}
-		if (b - a > 1 && (s[b - 1] == '.' || s[b - 1] == ',') &&
-		    numeric(last_char(s + a, b - a - 1)))
-			punct = s[--b];
-		J *pieces = ARR();
-		for (size_t i = 0; i < lead; i++)
-			ADD(pieces, STR("_"));
-		add_piece(pieces, s + a, b - a);
-		if (punct) {
-			char p[2] = { (char)punct, 0 };
-			ADD(pieces, STR(p));
-		}
-		for (size_t i = 0; i < trailing; i++)
-			ADD(pieces, STR("_"));
-		int count = SIZE(pieces), index = 0;
-		EACH(piece, pieces) {
-			if (++index < count || !s[end])
-				ADD(out, DUP(piece));
-			else {
-				Buf last = { 0 };
-				buf_put(&last, S(piece));
-				buf_put(&last, s + end);
-				ADD(out, STR(last.p));
-				free(last.p);
-			}
-		}
-		DEL(pieces);
-	}
-	return out;
-}
-
-/*
- * Tokens are joined with single spaces. The first space after a token
- * separates it from the next; any other run of whitespace becomes its own
- * token.
- */
-static J *segments(const char *s)
-{
-	J *out = ARR();
-	int in_space = 0;
-	const char *start = s, *p = s;
-	while (*p) {
-		const char *at = p;
-		uint32_t c = uread(&p);
-		if (uspace(c) != in_space) {
-			if (start < at)
-				add_piece(out, start, (size_t)(at - start));
-			start = c == ' ' ? p : at;
-			in_space = !in_space;
-		}
-	}
-	if (*start)
-		ADD(out, STR(start));
-	return out;
+	if (first_suffix >= 0 && singles % 2 == 1 && last_single < first_suffix)
+		return split_at(ps, first_suffix,
+				closing(s, &ps->p[first_suffix]));
+	return 1;
 }
 
 static uint64_t murmur64a(const char *key, size_t len, uint64_t seed)
@@ -357,115 +321,118 @@ static uint64_t text_hash(const char *s)
 	return h;
 }
 
-static char *collapse(char *s)
-{
-	while (strstr(s, "  ")) {
-		char *next = replace(s, "  ", " ");
-		free(s);
-		s = next;
-	}
-	return s;
-}
-
-/* Lowercase, with typographic hyphens and quotes folded to ASCII. */
+/* Lowercase, with every hyphen, dash and quote folded to its ASCII form. */
 static char *normal_form(const char *text)
 {
-	static const uint32_t hyphens[] = { 0x058a, 0x1806, 0x2010, 0x2011,
-					    0x2012, 0x2013, 0x2014, 0x2015,
-					    0x2053, 0x207b, 0x208b, 0x2212,
-					    0x2e3a, 0x2e3b, 0x301c, 0x3030,
-					    0xfe58, 0xfe63, 0xff0d };
-	static const char *dquotes[] = { "\xe2\x80\x9c",    "\xe2\x80\x9d",
-					 "\xc2\xab",	    "\xc2\xbb",
-					 "\xe2\x80\x9e",    "``",
-					 "\xc2\xb4\xc2\xb4" };
-	static const char *squotes[] = { "\xe2\x80\x99", "\xe2\x80\x98",
-					 "\xe2\x80\x9b", "`" };
-	char *s = copy(text), *next;
-	for (size_t i = 0; i < sizeof(hyphens) / sizeof(*hyphens); i++) {
-		Buf b = { 0 };
-		uwrite(&b, hyphens[i]);
-		next = replace(s, b.p, "-");
-		free(s);
-		free(b.p);
-		s = next;
+	Buf b = { 0 };
+	const char *p = text;
+	while (*p) {
+		const char *at = p;
+		uint32_t c = uread(&p);
+		const char *peek = p;
+		uint32_t next = *p ? uread(&peek) : 0;
+		if ((c == '`' || c == 0x00b4) && next == c) {
+			buf_put(&b, "\"");
+			p = peek;
+		} else if (in_set(c, dashes, sizeof(dashes) / sizeof(*dashes)))
+			buf_put(&b, "-");
+		else if (in_set(c, dquotes, sizeof(dquotes) / sizeof(*dquotes)))
+			buf_put(&b, "\"");
+		else if (apostrophe(c))
+			buf_put(&b, "'");
+		else
+			buf_add(&b, at, (size_t)(p - at));
 	}
-	for (size_t i = 0; i < sizeof(dquotes) / sizeof(*dquotes); i++) {
-		next = replace(s, dquotes[i], "\"");
-		free(s);
-		s = next;
-	}
-	for (size_t i = 0; i < sizeof(squotes) / sizeof(*squotes); i++) {
-		next = replace(s, squotes[i], "'");
-		free(s);
-		s = next;
-	}
-	char *out = norm(s, 1, 0);
-	free(s);
+	char *out = norm(b.p ? b.p : "", 1, 0);
+	free(b.p);
 	return out;
 }
 
 J *tokenize_text(const char *text)
 {
-	J *pre = pre_split(text), *edges = split_edges(pre);
-	char *joined = join(edges, " ");
-	J *raw = segments(joined), *result = ARR();
-	free(joined);
-	DEL(pre);
-	DEL(edges);
-	for (int i = 0; i < SIZE(raw); i++) {
-		const char *source = S(AT(raw, i));
-		int next = i + 1 < SIZE(raw) && !strcmp(S(AT(raw, i + 1)), " ");
-		char *spaced = replace(source, "\n", " "),
-		     *t = collapse(spaced);
-		if (next && !ends_with(t, " ")) {
-			Buf b = { 0 };
-			buf_put(&b, t);
-			buf_put(&b, " ");
-			free(t);
-			t = buf_take(&b);
-		}
+	Pieces ps = { 0 };
+	if (!scan(&ps, text) || !quotes(&ps, text)) {
+		free(ps.p);
+		return NULL;
+	}
+	J *result = ARR();
+	size_t pos = 0;
+	int count = 0; /* SIZE walks the whole list, so count instead. */
+	for (int i = 0; i < ps.n; i++) {
+		Piece pc = ps.p[i];
+		if (pc.start == pc.end)
+			continue;
+		/* A word keeps the one space after it; whitespace runs stay whole. */
+		size_t end = pc.end, source = pc.end;
+		Piece *next = i + 1 < ps.n ? &ps.p[i + 1] : NULL;
+		if (!pc.space && next && next->space &&
+		    text[next->start] == ' ')
+			end = ++next->start;
+		char *t = slice(text + pc.start, end - pc.start),
+		     *s = slice(text + pc.start, source - pc.start),
+		     *trim = norm(t, 0, 0), *normal = normal_form(t);
 		char id[48];
-		snprintf(id, sizeof(id), "%" PRIu64 "#%d", text_hash(source),
-			 SIZE(result));
+		snprintf(id, sizeof(id), "%" PRIu64 "#%d", text_hash(s),
+			 count++);
 		J *token = OBJ();
 		PUT(token, "id", STR(id));
 		PUT(token, "text", STR(t));
+		PUT(token, "x", NUM((double)pos));
+		PUT(token, "y", NUM((double)(pos + ulen(trim))));
+		PUT(token, "normal", STR(normal));
 		ADD(result, token);
+		pos += ulen(t);
 		free(t);
-		if (next)
-			i++;
-	}
-	DEL(raw);
-	size_t pos = 0;
-	for (int i = 0; i < SIZE(result); i++) {
-		J *t = AT(result, i);
-		const char *next = i + 1 < SIZE(result) ?
-					   S(GET(AT(result, i + 1), "text")) :
-					   "";
-		/* Closing punctuation sits directly against the preceding word. */
-		if (!strcmp(next, ")") || !strcmp(next, "\"") ||
-		    !strcmp(next, "!") || !strcmp(next, "?")) {
-			char *trim = norm(S(GET(t, "text")), 0, 0);
-			set(t, "text", STR(trim));
-			free(trim);
-		}
-		const char *surface = S(GET(t, "text"));
-		char *trim = norm(surface, 0, 0),
-		     *normal = normal_form(surface);
-		PUT(t, "x", NUM((double)pos));
-		PUT(t, "y", NUM((double)(pos + ulen(trim))));
-		PUT(t, "normal", STR(normal));
-		pos += ulen(surface);
+		free(s);
 		free(trim);
 		free(normal);
 	}
+	free(ps.p);
 	return result;
+}
+
+static void slice_entities(J *tokens, const char *text, const size_t *at,
+			   size_t n)
+{
+	EACH(t, tokens) {
+		J *swaps = GET(t, "swaps");
+		if (!swaps)
+			continue;
+		double x = GET(t, "x")->valuedouble,
+		       y = GET(t, "y")->valuedouble;
+		if (x >= 0 && x <= y && y <= (double)n) {
+			char *s = slice(text + at[(size_t)x],
+					at[(size_t)y] - at[(size_t)x]);
+			set(t, "text", STR(s));
+			free(s);
+		}
+		slice_entities(GET(swaps, "tokens"), text, at, n);
+	}
+}
+
+/*
+ * A matched entity's text is the input from its x to its y, so it shows what
+ * the consumer sent rather than its tokens joined by spaces.
+ */
+void source_entities(J *tokens, const char *text)
+{
+	size_t n = ulen(text), *at = malloc((n + 1) * sizeof(*at));
+	if (!at)
+		return;
+	const char *p = text;
+	for (size_t i = 0; i <= n; i++) {
+		at[i] = (size_t)(p - text);
+		if (*p)
+			uread(&p);
+	}
+	slice_entities(tokens, text, at, n);
+	free(at);
 }
 
 /*
  * Letters and digits separated by single spaces, with underscores only inside
- * words, come back from the tokenizer unchanged apart from case.
+ * words, come back from the tokenizer unchanged apart from case. U+02BC is
+ * not a letter here either, so a synonym written with it is folded too.
  */
 static int plain(const char *s)
 {
@@ -476,7 +443,7 @@ static int plain(const char *s)
 			 next = *p ? (uint32_t)(unsigned char)*p : ' ';
 		if (c == ' ' ? prev == ' ' || next == ' ' :
 		    c == '_' ? prev == ' ' || next == ' ' :
-			       !ualpha(c) && !numeric(c))
+			       !letter(c) && !numeric(c))
 			return 0;
 		prev = c;
 	}
@@ -494,6 +461,8 @@ char *tokenize_key(const char *text)
 	if (plain(text))
 		return NULL;
 	J *ts = tokenize_text(text);
+	if (!ts)
+		return NULL;
 	Buf b = { 0 };
 	int words = 0;
 	EACH(t, ts) {

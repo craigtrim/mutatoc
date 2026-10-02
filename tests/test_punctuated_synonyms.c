@@ -194,7 +194,8 @@ static void keys(void)
 		/* Other punctuation. */
 		{ "ap calc!", "ap calc !" },
 		{ "studio art #2", "studio art # 2" },
-		{ "women’s studies", "women ' s studies" },
+		/* A curly apostrophe folds into its word (craigtrim/mutatoc#7). */
+		{ "women’s studies", "women's studies" },
 		{ "u.s. history", "u . s . history" },
 		/* Underscores at a word edge and irregular spacing. */
 		{ "a_", "a _" },
