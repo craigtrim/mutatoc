@@ -4965,8 +4965,8 @@
           "canon": "cat",
           "type": "exact",
           "ner": null,
-          "x": 5,
-          "y": 8,
+          "x": 4,
+          "y": 7,
           "text": "cat",
           "confidence": 100
         },
@@ -4974,8 +4974,8 @@
           "canon": "poodle",
           "type": "exact",
           "ner": null,
-          "x": 9,
-          "y": 15,
+          "x": 8,
+          "y": 14,
           "text": "Poodle",
           "confidence": 100
         }
@@ -5276,18 +5276,8 @@
     ],
     "expected_text": "dog ’ s collar",
     "raw": {
-      "entities": [
-        {
-          "canon": "dog",
-          "type": "exact",
-          "ner": null,
-          "x": 0,
-          "y": 3,
-          "text": "dog",
-          "confidence": 100
-        }
-      ],
-      "text": "dog ’ s collar"
+      "entities": [],
+      "text": "dog’s collar"
     }
   },
   {
@@ -5545,8 +5535,8 @@
           "canon": "cat",
           "type": "exact",
           "ner": null,
-          "x": 4,
-          "y": 7,
+          "x": 7,
+          "y": 10,
           "text": "cat",
           "confidence": 100
         }

@@ -1,115 +1,12 @@
 /*
- * tokenize_data.h - Tokenizer dictionaries and Unicode numeric ranges.
+ * tokenize_data.h - Unicode numeric ranges for the tokenizer.
  *
- * Contractions expand to their words; abbreviations expand to a full word or
- * keep their period. The numeric ranges list the characters that have a
- * Unicode Numeric_Type (see vendor/unicode/provenance.json).
+ * The numeric ranges list the characters that have a Unicode Numeric_Type
+ * (see vendor/unicode/provenance.json). The contraction and abbreviation
+ * expansions are gone: the consumer expands text before sending it
+ * (craigtrim/mutatoc#7).
  * craigtrim/mutatoc#1
  */
-
-typedef struct {
-	const char *word, *first, *second;
-} Contraction;
-
-static const Contraction contractions[] = {
-	{ "can't", "can", "not" },
-	{ "could've", "could", "have" },
-	{ "everyone's", "everyone", "has" },
-	{ "he'd", "he", "would" },
-	{ "he'll", "he", "will" },
-	{ "he's", "he", "is" },
-	{ "here's", "here", "is" },
-	{ "how've", "how", "have" },
-	{ "i'll", "i", "will" },
-	{ "i'm", "I", "am" },
-	{ "it's", "it", "is" },
-	{ "let's", "let", "us" },
-	{ "she'd", "she", "would" },
-	{ "she's", "she", "is" },
-	{ "should've", "should", "have" },
-	{ "that's", "that", "is" },
-	{ "the're", "there", NULL },
-	{ "there's", "there", "has" },
-	{ "they'd", "they", "would" },
-	{ "they'll", "they", "will" },
-	{ "they're", "they", "are" },
-	{ "they've", "they", "have" },
-	{ "wander'd", "wandered", NULL },
-	{ "we'd", "we", "had" },
-	{ "we'll", "we", "will" },
-	{ "we're", "we", "are" },
-	{ "what're", "what", "are" },
-	{ "what's", "what", "is" },
-	{ "where's", "where", "is" },
-	{ "who's", "who", "has" },
-	{ "why're", "why", "are" },
-	{ "won't", "will", "not" },
-	{ "would've", "would", "have" },
-	{ "y'all", "you", "all" },
-	{ "you'd", "you", "would" },
-	{ "you're", "you", "are" },
-	{ "you've", "you", "have" },
-};
-
-typedef struct {
-	const char *word, *expansion;
-} Abbreviation;
-
-/* An expansion ending in a period keeps the abbreviation's own period. */
-static const Abbreviation abbreviations[] = {
-	{ "abbr.", "abbreviation" },
-	{ "abr.", "abridged" },
-	{ "acad.", "academic" },
-	{ "adj.", "adjective" },
-	{ "adm.", "administration" },
-	{ "aka.", "aka" },
-	{ "approx.", "approximately" },
-	{ "appt.", "appointment" },
-	{ "apt.", "apartment" },
-	{ "assoc.", "association" },
-	{ "ave.", "avenue" },
-	{ "bibliog.", "bibliography" },
-	{ "biol.", "biology" },
-	{ "blvd.", "boulevard" },
-	{ "bot.", "botany" },
-	{ "cap.", "capital" },
-	{ "chap.", "chapter" },
-	{ "chem.", "chemical" },
-	{ "co.", "company" },
-	{ "colloq.", "colloquial" },
-	{ "com.", "commercial" },
-	{ "conf.", "conference" },
-	{ "cont.", "containing" },
-	{ "cp.", "compare" },
-	{ "cr.", "credit" },
-	{ "crit.", "criticism" },
-	{ "cyn.", "canyon" },
-	{ "def.", "definition" },
-	{ "dept.", "department" },
-	{ "diff.", "different" },
-	{ "dr.", "dr." },
-	{ "e.g.", "example" },
-	{ "ea.", "each" },
-	{ "est.", "established" },
-	{ "etc.", "etc" },
-	{ "gen.", "general" },
-	{ "impt.", "important" },
-	{ "ln.", "lane" },
-	{ "min.", "minute" },
-	{ "misc.", "miscellaneous" },
-	{ "mr.", "mr." },
-	{ "mrs.", "mrs." },
-	{ "nec.", "necessary" },
-	{ "no.", "number" },
-	{ "rd.", "road" },
-	{ "re.", "regarding" },
-	{ "sim.", "similar" },
-	{ "st.", "street" },
-	{ "tel.", "telephone" },
-	{ "temp.", "temp" },
-	{ "vet.", "vet" },
-	{ "vs.", "versus" },
-};
 
 static const uint32_t numeric_ranges[][2] = {
 	{ 48, 57 },	    { 178, 179 },	{ 185, 185 },
