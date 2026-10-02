@@ -75,6 +75,14 @@
       "passed": 4001,
       "passed_before_fix": 452
     },
+    "token_fidelity": {
+      "issue": "https://github.com/craigtrim/mutatoc/issues/7",
+      "fixture": "tests/fixtures/ontologies/apostrophe-synonyms-test.ttl",
+      "load_paths": ["owl", "data", "snapshot"],
+      "assertions": 173090, "cases": 3244, "families": 12,
+      "passed": 173090,
+      "against_0_3_1_tokenizer": {"assertions": 49609, "passed": 35568, "note": "a case stops checking tokens at the first one that breaks the contract, so fewer assertions run"}
+    },
     "cli": {"tests": ["cli_json", "cli_jsonf", "cli_stopwatch"]}
   },
   "migration_evidence": {
