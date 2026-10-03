@@ -1,7 +1,7 @@
 # Everything builds and tests natively; no interpreter or model at any stage (craigtrim/mutatoc#1).
 cmake_minimum_required(VERSION 3.20)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-project(mutatoc VERSION 0.4.0 LANGUAGES C)
+project(mutatoc VERSION 0.5.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)

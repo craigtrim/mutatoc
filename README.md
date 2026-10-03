@@ -2,7 +2,7 @@
 
 [![C port compatibility](https://github.com/craigtrim/mutatoc/actions/workflows/test.yml/badge.svg)](https://github.com/craigtrim/mutatoc/actions/workflows/test.yml)
 [![Documentation](https://github.com/craigtrim/mutatoc/actions/workflows/docs.yml/badge.svg)](https://craigtrim.github.io/mutatoc/)
-[![Version](https://img.shields.io/badge/version-0.4.0-blue)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.5.0-blue)](CHANGELOG.md)
 [![TTL input](https://img.shields.io/badge/input-TTL-brightgreen)](docs/input-formats.md#ttl)
 [![JSON input](https://img.shields.io/badge/input-JSON-brightgreen)](docs/input-formats.md#json)
 [![Source parity checks](https://img.shields.io/badge/source%20parity-5%2C804%20checks-brightgreen)](docs/input-formats.md#implementation-and-verification)
