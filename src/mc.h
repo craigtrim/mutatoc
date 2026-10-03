@@ -61,6 +61,7 @@ void fail(mc_error *, int, const char *, ...);
 FILE *mc_fopen(const char *, const char *);
 char *read_file(const char *, mc_error *);
 J *json_parse(const char *, mc_error *);
+J *json_parse_record(const char *, size_t, const char **, mc_error *);
 void set(J *, const char *, J *);
 J *ensure(J *, const char *, int);
 void unique(J *, const char *);
@@ -96,7 +97,16 @@ typedef struct {
 	Map triple_keys;
 } Graph;
 void literal_normalize(Term *);
+Term rdf_term(const char *, int);
+Term rdf_term_copy(const Term *);
+void rdf_term_free(Term *);
+Graph *rdf_create(mc_error *);
+void rdf_add(Graph *, const Term *, const Term *, const Term *);
+void rdf_bind_prefix(Graph *, const char *, const char *);
 Graph *rdf_parse(const char *, const char *, mc_error *);
+/* Source readers return a graph, or a legacy prepared snapshot, atomically. */
+Graph *source_read(const char *, const char *, const char *, J **, mc_error *);
+Graph *json_graph_read(const char *, const char *, int, J **, mc_error *);
 void rdf_free(Graph *);
 Graph *rdf_merge(Graph **, size_t);
 J *rdf_values(Graph *, const char *, const char *);

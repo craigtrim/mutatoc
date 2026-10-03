@@ -1,0 +1,11 @@
+{"format":"mutatoc/1","namespace":"http://test/#","prefixes":{"source":"http://test/#"}}
+{"id":"Root","type":"owl:Class","label":"Root","ner":"ROOT"}
+{"id":"Animal","type":"owl:Class","label":["Animal","Living creature"],"parents":["Root"],"ner":"ANIMAL"}
+{"id":"Dog","type":"owl:Class","label":["Dog","Domestic dog"],"parents":["Animal"],"see_also":["hound","canine"],"requires":["Food"],"similar_to":["Cat"],"uses":["Collar"],"implies":["Pet"],"effects":["Happiness"],"ner":"DOG"}
+{"id":"Cat","type":"owl:Class","label":"Cat","parents":["Animal"],"similar_to":["Dog"]}
+{"id":"Food","type":"owl:Class","label":"Food","parents":["Root"]}
+{"id":"Pet","type":"owl:Class","label":"Pet","parents":["Animal"],"equivalents":["Companion"]}
+{"id":"Companion","type":"owl:Class","label":"Companion","parents":["Animal"]}
+{"id":"dog_collar","type":"owl:Class","label":"dog collar","spans":["hound + collar"],"parents":["Root"]}
+{"id":"Unlabelled","type":"owl:Class","parents":["Dog"]}
+{"id":"Ghost","parents":["Unlabelled"]}

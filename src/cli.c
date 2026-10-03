@@ -129,7 +129,7 @@ static void usage(void)
 {
 	puts("mutatoc " MUTATOC_VERSION "\nUsage:\n"
 	     "  mutatoc --ontology FILE --input-text TEXT [--json | --jsonf] [--live]\n"
-	     "          [--stopwatch]\n"
+	     "          [--stopwatch] [--format auto|turtle|json|jsonl|snapshot]\n"
 	     "  mutatoc --ontology FILE --snapshot FILE [--stopwatch]\n"
 	     "  mutatoc --serve\n  mutatoc --version\n\n"
 	     "--json prints the full result as compact JSON; --jsonf pretty-prints it.\n"
@@ -144,6 +144,7 @@ static int run(int argc, char **argv)
 {
 	double start = now_seconds();
 	const char *path = NULL, *text = NULL, *snapshot = NULL;
+	const char *format = NULL;
 	int serve = 0, json = 0, live = 0, force = 0, stopwatch = 0;
 	for (int i = 1; i < argc; i++) {
 		const char *a = argv[i];
@@ -167,7 +168,7 @@ static int run(int argc, char **argv)
 			force = 1;
 		else if (!strcmp(a, "--stopwatch"))
 			stopwatch = 1;
-		else if (!strcmp(a, "--ontology") ||
+		else if (!strcmp(a, "--ontology") || !strcmp(a, "--format") ||
 			 !strcmp(a, "--input-text") ||
 			 !strcmp(a, "--snapshot") ||
 			 !strcmp(a, "--namespace")) {
@@ -181,6 +182,8 @@ static int run(int argc, char **argv)
 				text = argv[i];
 			else if (!strcmp(a, "--snapshot"))
 				snapshot = argv[i];
+			else if (!strcmp(a, "--format"))
+				format = argv[i];
 		} else if (strcmp(a, "parse")) {
 			fprintf(stderr, "Unknown option: %s\n", a);
 			return 2;
@@ -191,7 +194,7 @@ static int run(int argc, char **argv)
 		      stderr);
 		return 2;
 	}
-	if (serve && (path || text || snapshot || stopwatch)) {
+	if (serve && (path || text || snapshot || stopwatch || format)) {
 		fputs("--serve cannot be combined with one-shot options\n",
 		      stderr);
 		return 2;
@@ -224,6 +227,8 @@ static int run(int argc, char **argv)
 	J *q = OBJ();
 	PUT(q, "op", STR("load"));
 	PUT(q, "path", STR(path));
+	if (format)
+		PUT(q, "format", STR(format));
 	PUT(q, "class_based", BOOL(live));
 	if (live)
 		PUT(q, "interface", STR("data"));

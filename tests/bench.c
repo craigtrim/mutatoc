@@ -140,10 +140,11 @@ int main(int argc, char **argv)
 {
 	if (argc < 2) {
 		fprintf(stderr,
-			"usage: mutatoc_bench ROOT [--runs N] [--check] [--setup JSON]...\n");
+			"usage: mutatoc_bench ROOT [--runs N] [--check] [--source-dir DIR] [--extension EXT] [--setup JSON]...\n");
 		return 2;
 	}
 	const char *root = argv[1];
+	const char *source_dir = NULL, *extension = ".owl";
 	int runs = 5, check = 0, over = 0;
 	const char *setup[16];
 	int setups = 0;
@@ -152,6 +153,10 @@ int main(int argc, char **argv)
 			check = 1;
 		else if (!strcmp(argv[i], "--runs") && i + 1 < argc)
 			runs = atoi(argv[++i]);
+		else if (!strcmp(argv[i], "--source-dir") && i + 1 < argc)
+			source_dir = argv[++i];
+		else if (!strcmp(argv[i], "--extension") && i + 1 < argc)
+			extension = argv[++i];
 		else if (!strcmp(argv[i], "--setup") && i + 1 < argc &&
 			 setups < 16)
 			setup[setups++] = argv[++i];
@@ -167,12 +172,14 @@ int main(int argc, char **argv)
 	       *warm = calloc((size_t)runs * 4, sizeof(double));
 	int failed = 0;
 	for (size_t o = 0; o < sizeof(ontologies) / sizeof(*ontologies); o++) {
-		char *owl = path_join(root, "/tests/fixtures/ontologies/",
-				      ontologies[o]);
+		char *owl = path_join(
+			source_dir ? source_dir : root,
+			source_dir ? "/" : "/tests/fixtures/ontologies/",
+			ontologies[o]);
 		char *doc = document(root, ontologies[o]);
 		J *q = OBJ();
 		PUT(q, "op", STR("load"));
-		char *owl_path = path_join(owl, ".owl", "");
+		char *owl_path = path_join(owl, extension, "");
 		PUT(q, "path", STR(owl_path));
 		PUT(q, "class_based", BOOL(1));
 		PUT(q, "interface", STR("data"));

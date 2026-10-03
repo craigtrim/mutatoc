@@ -423,6 +423,39 @@ J *json_parse(const char *s, mc_error *e)
 	return j;
 }
 
+/* Parse one value without copying or building a tree for the source document. */
+J *json_parse_record(const char *s, size_t length, const char **end,
+		     mc_error *e)
+{
+	J *value = cJSON_ParseWithLengthOpts(s, length, end, 0);
+	if (!value)
+		fail(e, 2, "Invalid JSON record at byte %zu",
+		     *end ? (size_t)(*end - s) : 0);
+	else if (!valid_utf8((const unsigned char *)s, (size_t)(*end - s))) {
+		fail(e, 2, "JSON record is not valid UTF-8");
+		DEL(value);
+		value = NULL;
+	}
+	/* cJSON's whitespace scanner also accepts non-JSON control bytes. */
+	int quoted = 0, escaped = 0;
+	for (const char *p = s; value && p < *end; p++) {
+		unsigned char c = (unsigned char)*p;
+		if (c < 32 &&
+		    (quoted || (c != '\t' && c != '\r' && c != '\n'))) {
+			fail(e, 2, "Invalid control character in JSON record");
+			*end = p;
+			DEL(value);
+			value = NULL;
+		} else if (escaped)
+			escaped = 0;
+		else if (quoted && c == '\\')
+			escaped = 1;
+		else if (c == '"')
+			quoted = !quoted;
+	}
+	return value;
+}
+
 void set(J *j, const char *k, J *v)
 {
 	if (!v)

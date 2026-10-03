@@ -462,6 +462,27 @@ static J *load_collection(mc_engine *e, J *q, mc_error *err)
 	return result;
 }
 
+static Graph *request_graph(J *q, mc_error *err)
+{
+	J *text = GET(q, "content");
+	if (!text)
+		text = GET(q, "turtle");
+	if (!cJSON_IsString(text) ||
+	    (GET(q, "format") && !cJSON_IsString(GET(q, "format")))) {
+		fail(err, 2, "Source content and format must be strings");
+		return NULL;
+	}
+	J *snapshot = NULL;
+	Graph *g = source_read(
+		S(text), GET(q, "content") ? S(GET(q, "format")) : "turtle",
+		S(GET(q, "base")), &snapshot, err);
+	if (snapshot) {
+		DEL(snapshot);
+		fail(err, 2, "Prepared snapshots do not contain an RDF graph");
+	}
+	return g;
+}
+
 static J *dispatch(mc_engine *e, J *q, mc_error *err)
 {
 	const char *op = S(GET(q, "op"));
@@ -491,38 +512,38 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 			}
 			next = DUP(d);
 		} else {
-			char *data = GET(q, "turtle") ?
-					     copy(S(GET(q, "turtle"))) :
-					     read_file(path, err);
+			J *inline_text = GET(q, "content");
+			if (!inline_text)
+				inline_text = GET(q, "turtle");
+			if ((inline_text && !cJSON_IsString(inline_text)) ||
+			    (GET(q, "format") &&
+			     !cJSON_IsString(GET(q, "format")))) {
+				fail(err, 2,
+				     "Source content and format must be strings");
+				return NULL;
+			}
+			char *owned = inline_text ? NULL : read_file(path, err);
+			const char *data = inline_text ? S(inline_text) : owned;
 			if (!data)
 				return NULL;
-			const char *p = data;
-			while (isspace((unsigned char)*p))
-				p++;
-			if (*p == '{')
-				next = json_parse(data, err);
-			else {
-				char *base =
-					GET(q, "base") ?
-						copy(S(GET(q, "base"))) :
-						file_uri(*path ? path : ".");
-				g = rdf_parse(data, base, err);
-				free(base);
-				if (g && cJSON_IsTrue(GET(q, "graph_only"))) {
-					next = OBJ();
-					PUT(next, "synonyms", OBJ());
-				} else if (g)
-					next = ontology_build(
-						g,
-						GET(q, "distance") ?
-							GET(q, "distance")
-								->valueint :
-							e->distance,
-						cJSON_IsTrue(
-							GET(q, "class_based")),
-						err);
-			}
-			free(data);
+			char *base = GET(q, "base") ?
+					     copy(S(GET(q, "base"))) :
+					     file_uri(*path ? path : ".");
+			g = source_read(data, S(GET(q, "format")), base, &next,
+					err);
+			free(base);
+			free(owned);
+			if (g && cJSON_IsTrue(GET(q, "graph_only"))) {
+				next = OBJ();
+				PUT(next, "synonyms", OBJ());
+			} else if (g)
+				next = ontology_build(
+					g,
+					GET(q, "distance") ?
+						GET(q, "distance")->valueint :
+						e->distance,
+					cJSON_IsTrue(GET(q, "class_based")),
+					err);
 		}
 		if (!next || err->code) {
 			DEL(next);
@@ -572,8 +593,7 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 		return r;
 	}
 	if (!strcmp(op, "read_rdf")) {
-		Graph *g =
-			rdf_parse(S(GET(q, "turtle")), S(GET(q, "base")), err);
+		Graph *g = request_graph(q, err);
 		if (!g)
 			return NULL;
 		J *out = rdf_json(g);
@@ -581,7 +601,7 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 		return out;
 	}
 	if (!strcmp(op, "detect_schema")) {
-		Graph *g = rdf_parse(S(GET(q, "turtle")), "", err);
+		Graph *g = request_graph(q, err);
 		if (!g)
 			return NULL;
 		J *r = STR(schema(g));
