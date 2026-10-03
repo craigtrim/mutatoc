@@ -1,6 +1,19 @@
 # mutatoc
 
-Mutatoc is the C17 port of [Mutato](https://github.com/craigtrim/mutato). It takes plain text and returns the ontology entities it contains. It accepts the same Turtle-encoded OWL ontologies and MDA JSON snapshots as Mutato, and ontology extraction, the finder queries, tokenization and matching all run in process in C. Nothing else is installed or started at run time.
+[![TTL input](https://img.shields.io/badge/input-TTL-brightgreen)](input-formats.md#ttl)
+[![JSON input](https://img.shields.io/badge/input-JSON-brightgreen)](input-formats.md#json)
+[![Source parity checks](https://img.shields.io/badge/source%20parity-5%2C804%20checks-brightgreen)](input-formats.md#implementation-and-verification)
+
+Mutatoc takes plain text and returns the ontology entities it contains. Supply an ontology in **TTL or JSON**. Both are native inputs with the same graph queries and matching behavior, and a collection can contain both formats.
+
+It is the C17 port of [Mutato](https://github.com/craigtrim/mutato). Each reader adds facts directly to the shared runtime graph. Ontology extraction, tokenization, and matching run in process in C, without a whole-document conversion or converter process.
+
+| Ontology input | How to write it |
+| --- | --- |
+| [TTL](input-formats.md#ttl) | Turtle statements with prefixes and RDF predicates; Turtle-encoded `.owl` files also work |
+| [JSON](input-formats.md#json) | An array of ontology records, with fields such as `id`, `label`, `synonyms`, and `parents`, plus arbitrary RDF facts |
+
+[Ontology input formats](input-formats.md) shows the same ontology in both forms and defines the JSON record schema. JSONL uses those records one object per line. Prepared MDA snapshots remain available for storing and restoring extracted matching views.
 
 ## Build
 
@@ -14,13 +27,18 @@ ctest --test-dir build-msvc -C Release --output-on-failure
 
 `-DBUILD_SHARED_LIBS=ON` produces a DLL and import library.
 
+JSON ontology sources are included in the current source build. The published 0.4.0 binaries predate this addition; see the [changelog](https://github.com/craigtrim/mutatoc/blob/master/CHANGELOG.md).
+
 ## Run
 
 ```powershell
-.\build-msvc\Release\mutatoc.exe --ontology tests/fixtures/ontologies/animals-test.owl --input-text "Dog walks through London."
+.\build-msvc\Release\mutatoc.exe --ontology examples/animals.ttl --input-text "a canine"
+.\build-msvc\Release\mutatoc.exe --ontology examples/animals.json --input-text "a canine"
 ```
 
-This prints `dog walks through London .`, where `dog` is the matched entity. `--json` prints the full result as compact JSON and `--jsonf` prints it indented. `--serve` keeps an engine open and reads one JSON request per line.
+Both commands print `a dog`. The files are included in the repository's `examples` directory and contain the same facts. Mutatoc detects the source format from the content; `--format ttl` and `--format json` select it explicitly.
+
+`--json` prints the full result as compact JSON and `--jsonf` prints it indented, with either source format. These are output flags. `--serve` keeps an engine open and reads one JSON request per line. See [loading an ontology](protocol.md#load-ttl-or-json) for the corresponding API requests.
 
 ## Input text
 
@@ -40,6 +58,7 @@ The C API is `mc_create`, `mc_request`, `mc_free` and `mc_destroy`. Each engine 
 
 ## Pages
 
+- [Ontology input formats](input-formats.md) describes TTL and JSON, JSONL framing, complete RDF terms, and mixed-format collections.
 - [JSON and C integration](protocol.md) lists every operation with its inputs and results, and covers errors and buffer ownership.
 - [Compatibility](compatibility.md) states what matches Mutato, what was adapted for C, and which upstream defects were repaired.
 - [Performance](performance.md) has the benchmark for native tokenization and the earlier matching optimizations.

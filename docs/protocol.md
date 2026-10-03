@@ -5,12 +5,12 @@ Each request is one JSON object. The CLI's `--serve` mode accepts newline-delimi
 | Operation | Inputs | Result |
 | --- | --- | --- |
 | `version` | none | library version |
-| `load` | `path`, inline `turtle`, `snapshot`, `paths`, or `sources`; optional `name`, `base`, `class_based`, `distance`, `interface`, `graph_only` | loaded ontology metadata |
+| `load` | `path`, inline `content` or `turtle`, `snapshot`, `paths`, or `sources`; optional `format`, `name`, `base`, `class_based`, `distance`, `interface`, `graph_only` | loaded ontology metadata |
 | `snapshot` | none | generated MDA object |
-| `read_rdf` | `turtle`, optional `base` | typed RDF triples without changing the loaded ontology |
-| `triples` | none | parsed RDF graph; unavailable after loading JSON alone |
+| `read_rdf` | `content` and optional `format`, or `turtle`; optional `base` | typed RDF triples without changing the loaded ontology |
+| `triples` | none | parsed RDF graph; unavailable after loading a prepared MDA snapshot alone |
 | `schema` | none | ontology schema |
-| `detect_schema` | `turtle` | schema without changing loaded ontology |
+| `detect_schema` | `content` and optional `format`, or `turtle`; optional `base` | schema without changing loaded ontology |
 | `query` | `method`, `args`, optional `kwargs`, `interface` | finder/query result |
 | `parse` | `text`, optional `ctr` | canonical `text` and complete matched `tokens` |
 | `transform_tokens` | `stage`, `tokens` | one optional service: `exact`, `spans`, `hierarchy`, or `augment` |
@@ -23,6 +23,28 @@ Each request is one JSON object. The CLI's `--serve` mode accepts newline-delimi
 The `query` interface defaults to cached JSON finder behavior. `owl` and `data` select direct graph and live finder semantics when an RDF graph is loaded. `ask_json` selects the low-level stored JSON views. Unknown operations and methods return errors. The complete exercised method list is recorded in `tests/fixtures/api/queries.json`.
 
 `load` constructs the new graph and snapshot before replacing the existing ontology. Failed loads retain the previous ontology.
+
+`format` accepts `auto` (default), `turtle`/`ttl`, `json`, `jsonl`, or `snapshot`. Inline `content` is a source-text string. JSON arrays and JSONL ontology records load directly into the same graph as Turtle; prepared MDA snapshots remain distinct. See [Ontology input formats](input-formats.md) for the schema and examples.
+
+## Load TTL or JSON
+
+Load a TTL source:
+
+```json
+{"op":"load","path":"examples/animals.ttl","format":"ttl"}
+```
+
+Or load the equivalent JSON source:
+
+```json
+{"op":"load","path":"examples/animals.json","format":"json"}
+```
+
+Both are ordinary ontology loads. Omitting `format` enables content detection. `read_rdf` and `detect_schema` accept either format through an inline `content` string, and `triples` returns the complete graph after either source load.
+
+The `interface` option selects query and matching behavior independently of the source format. `owl` and `data` queries work with JSON sources as well as TTL sources. A JSON request or response is also independent of the ontology's format: the protocol carries both TTL and JSON source loads.
+
+A prepared MDA snapshot stores extracted matching views. Loading one does not restore an RDF graph. Use TTL or JSON ontology records when the caller needs direct graph queries as well as matching.
 
 ## Raw-text tokens
 
@@ -47,7 +69,7 @@ The C library's result buffers belong to the caller. Always use `mc_free`, inclu
 
 ## Ontology collections
 
-`paths` is an ordered array of file paths. `sources` is an ordered array of ordinary load objects, allowing paths, inline Turtle or prepared snapshots with explicit names. Collection loads are atomic. Arrays merge without duplicate values; canonical ties use source order. A merged RDF graph is available only when every source includes an RDF graph. `interface: "data"` selects live matching and external `<ontology>.owl.txt` synonyms. `class_based` controls extraction independently.
+`paths` is an ordered array of file paths. `sources` is an ordered array of ordinary load objects, allowing paths, inline Turtle/JSON/JSONL or prepared snapshots with explicit names and per-source formats. Collection loads are atomic. Arrays merge without duplicate values; canonical ties use source order. A merged RDF graph is available only when every source includes an RDF graph. `interface: "data"` selects live matching and external synonyms at the source filename plus `.txt`, such as `animals.owl.txt` or `animals.jsonl.txt`. `class_based` controls extraction independently.
 
 ## Graph queries
 

@@ -1,0 +1,6 @@
+[
+  {"format":"mutatoc/1", "namespace":"http://example.org/animals#"},
+  {"id":"Animal", "type":"owl:Class", "label":"animal"},
+  {"id":"Dog", "type":"owl:Class", "label":"dog",
+   "synonyms":["canine", "hound"], "parents":["Animal"], "ner":"ANIMAL"}
+]

@@ -1,6 +1,21 @@
 # Matching performance
 
-<!-- 0.3.0 section: craigtrim/mutatoc#1 -->
+## Native JSON and JSONL sources
+
+JSON arrays and JSONL feed the same graph builder and matching engine as Turtle. Each JSON record is released after its facts are inserted. The source buffer and runtime graph remain in memory, but there is no full-document JSON tree or intermediate serialization.
+
+On 2026-10-02, a Windows MSVC Release build measured these medians over seven fresh engines for `acanames-20251028`, the largest fixture used by `mutatoc_bench`:
+
+| Measurement | Turtle | JSON | JSONL |
+| --- | ---: | ---: | ---: |
+| File load, extraction, and matching indexes | 937.1 ms | 1,084.4 ms | 1,067.9 ms |
+| First parse, 2,418-character document | 5.7 ms | 5.8 ms | 5.5 ms |
+| Repeated parse | 5.34 ms | 5.46 ms | 5.25 ms |
+| Peak benchmark process memory, all four ontologies | 67.5 MB | 67.7 MB | 67.9 MB |
+
+The generated JSON fixtures use explicit RDF term objects and ordered facts, preserving every triple and literal attribute. They are more verbose than hand-authored flat entity records. Fixture generation runs in a separate test process before timing; the measured loaders read each supplied file directly. The additional JSON load cost in this run is about 14 to 16%, with similar matching time and peak memory. These are local timing observations, not a guarantee that one syntax is faster on every input; JSONL mainly changes record framing.
+
+[Ontology input formats](input-formats.md#implementation-and-verification) gives the fixture-generation and benchmark commands. The existing Turtle performance gate remains enabled. Cross-format tests separately compare graph order, terms, prefix bindings, snapshots, finder responses, and matching results.
 
 ## Native tokenization
 

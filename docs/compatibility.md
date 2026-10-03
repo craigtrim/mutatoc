@@ -1,14 +1,12 @@
 # Compatibility contract
 
-<!-- Rewritten for the native-only runtime: craigtrim/mutatoc#1; gold corpus and performance gate: craigtrim/mutatoc#2 -->
-
 Reference: Mutato `da6bfa5df80b208a3271e111f2921ad281d0da98`.
 
-The logical port preserves ontology extraction and matching, including the differences between direct OWL queries, the live finder, the JSON finder and the low-level JSON API. The same OWL files and prepared snapshots remain inputs. Mutato's class instances and callbacks are represented by an opaque C engine and JSON operations.
+The logical port preserves ontology extraction and matching, including the differences between direct OWL queries, the live finder, the JSON finder and the low-level JSON API. The same OWL files and prepared snapshots remain inputs, alongside native [JSON and JSONL ontology sources](input-formats.md). Mutato's class instances and callbacks are represented by an opaque C engine and JSON operations.
 
 ## Runtime
 
-Everything runs in process, with no interpreter, model or worker. Since 0.3.0 raw text is tokenized natively (see [the protocol](protocol.md#raw-text-tokens)); tokens carry `id`, `text`, `x`, `y` and `normal`, the fields matching reads. The C RDF reader parses Turtle, builds and indexes triples, and resolves relative IRIs, and every finder query runs natively. Arbitrary SPARQL is not provided; `triples` exports the graph.
+Everything runs in process, with no interpreter, model or worker. Since 0.3.0 raw text is tokenized natively (see [the protocol](protocol.md#raw-text-tokens)); tokens carry `id`, `text`, `x`, `y` and `normal`, the fields matching reads. Native TTL and JSON readers build the same graph and indexes, including relative IRI resolution, and every finder query runs natively. Arbitrary SPARQL is not provided; `triples` exports the graph from either input format. JSONL supplies the same ontology records as JSON, one per line.
 
 ## Evidence
 
@@ -18,6 +16,7 @@ Everything runs in process, with no interpreter, model or worker. Since 0.3.0 ra
 - The public finder corpus contains 1,659 calls across 140 methods on four interfaces.
 - Optional matching stages and live matching have 81 reference cases, and exact windows have 266. Collection loading, external synonyms and blank-node separation have explicit regressions.
 - All 313 retained W3C RDF 1.1 Turtle tests run against expected graphs converted once from the W3C result files. All 19 ontology graphs keep their triple counts and a fingerprint that no blank-node relabeling can change; both were recorded after a final isomorphism check against an independent parser.
+- The `sources` suite runs 5,804 checks across native JSON and JSONL readers: 328 graph round-trips from TTL, 3,318 finder comparisons, 1,572 raw/prepared matching comparisons, and checks for optional stages, mixed collections, malformed input, and atomic reloads. Both formats retain the same graph terms, prefix bindings, triple order, and matching views.
 - URI resolution, Unicode case conversion, whitespace, embedded NUL values, typed literals, caller metadata and concurrent use of the public C API have additional checks.
 
 Unordered extraction and query collections are compared as multisets, preserving multiplicity and scalar types. Token arrays and histories are compared in order. Graph results are compared modulo blank-node identifiers.
@@ -40,11 +39,11 @@ Typed literals of the common XSD types are normalized as Mutato normalized them.
 
 The native runtime uses explicit snapshots instead of Mutato's pickle/joblib caches or implicit cache directories. `--snapshot` writes the generated MDA object; `load` can restore it. `--force-cache` rebuilds from OWL. Callable arguments to `transitive` become method names. Empty results retain Mutato's null conventions. Mutato's `swap_input_text("")` returns None; the C protocol returns empty tokens.
 
-Input paths are explicit UTF-8 paths. Namespace arguments remain ineffective, matching the disabled namespace binding in the reference; Turtle prefix declarations determine IRIs. External synonyms use `<ontology>.owl.txt`, as the source actually does.
+Input paths are explicit UTF-8 paths. The legacy namespace argument remains ineffective, matching the disabled namespace binding in the reference; source namespace declarations determine IRIs. External synonyms use the source filename plus `.txt`, including the original `<ontology>.owl.txt` convention.
 
 ## Resource and platform boundaries
 
-The supported input serialization is Turtle-encoded OWL, which is also what the original loader selects. OWL/XML and RDF/XML are not added by this port. This engine preserves Mutato's matching rules; it does not add a general OWL reasoner.
+Supported ontology serializations are Turtle-encoded OWL and the `mutatoc/1` JSON/JSONL record schema. All readers populate the same runtime graph directly. The structured schema includes arbitrary triples and complete RDF terms so it can retain every graph fact the Turtle reader accepts. Prepared MDA snapshots remain supported separately. YAML, OWL/XML and RDF/XML readers are not included. This engine preserves Mutato's matching rules; it does not add a general OWL reasoner.
 
 Input files and protocol messages are bounded at 256 MiB. Turtle/blank-node recursion is bounded at 128 levels; hierarchy traversal and matching have explicit cycle/work guards. Resource-limit failures return diagnostics rather than silently truncated results. No finite corpus proves equivalence for every possible ontology or sentence; the recorded results describe the exercised contract.
 

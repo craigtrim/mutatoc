@@ -2,6 +2,14 @@
 
 <!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2, craigtrim/mutatoc#5, craigtrim/mutatoc#7 -->
 
+## Unreleased
+
+### Added
+
+- Native JSON and JSONL ontology sources, with flat entity records, namespace declarations, arbitrary predicates, ordered facts, and complete RDF terms. Each reader populates the shared C graph directly and releases each parsed record; loading does not convert the document into Turtle or another intermediate format.
+- `load`, `read_rdf`, and `detect_schema` accept inline `content` and explicit `format`; the CLI accepts `--format`. JSON arrays and JSONL can be mixed with Turtle in collections and retain graph queries, live matching, optional stages, external synonyms, and atomic reload behavior. Prepared MDA snapshots remain supported separately.
+- Cross-format graph, finder, matching, and integration tests, plus reproducible file-load benchmarks. See [Ontology input formats](docs/input-formats.md) for the schema and examples.
+
 ## 0.4.0 (2026-10-02)
 
 ### Fixed

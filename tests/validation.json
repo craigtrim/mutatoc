@@ -85,6 +85,29 @@
     },
     "cli": {"tests": ["cli_json", "cli_jsonf", "cli_stopwatch"]}
   },
+  "source_input_validation": {
+    "status": "unreleased source build",
+    "validation_date": "2026-10-02",
+    "formats": ["ttl", "json", "jsonl"],
+    "suite": "sources",
+    "windows_checks": 5804,
+    "failed_checks": 0,
+    "graph_round_trips": 328,
+    "finder_comparisons": 3318,
+    "raw_and_prepared_matching_comparisons": 1572,
+    "optional_stage_comparisons": 162,
+    "additional_coverage": ["typed literals", "prefixes", "blank nodes", "mixed collections", "failed loads retain the previous ontology", "malformed records"],
+    "platforms": [
+      {"platform": "Windows x64", "compiler": "MSVC 19.29", "configuration": "Release", "ctest_passed": 19, "ctest_failed": 0},
+      {"platform": "Windows x64", "compiler": "GCC 16.1.0", "configuration": "Release", "ctest_passed": 19, "ctest_failed": 0},
+      {"platform": "Linux x64, Ubuntu 20.04 under WSL", "compiler": "GCC 9.4.0", "configuration": "Debug, AddressSanitizer and UndefinedBehaviorSanitizer", "ctest_passed": 18, "ctest_failed": 0, "sanitizer_reports": 0,
+       "source_checks_in_full_run": 5795, "final_public_api_smoke_checks": 21,
+       "note": "The full sanitizer run preceded the final control-character validation change. The final CLI passed 21 public API smoke checks under sanitizers with leak detection, including malformed source files."}
+    ],
+    "documentation": {"validation_date": "2026-10-03", "build": "mkdocs build --strict", "build_passed": true, "example_cli_and_api_checks": 28, "example_failures": 0},
+    "contract": "docs/input-formats.md",
+    "benchmark": "docs/performance.md#native-json-and-jsonl-sources"
+  },
   "migration_evidence": {
     "tokenizer_texts_compared": 12386,
     "tokenizer_texts_identical": 12295,

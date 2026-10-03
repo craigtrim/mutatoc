@@ -1,7 +1,11 @@
 # mutatoc
 
 [![C port compatibility](https://github.com/craigtrim/mutatoc/actions/workflows/test.yml/badge.svg)](https://github.com/craigtrim/mutatoc/actions/workflows/test.yml)
+[![Documentation](https://github.com/craigtrim/mutatoc/actions/workflows/docs.yml/badge.svg)](https://craigtrim.github.io/mutatoc/)
 [![Version](https://img.shields.io/badge/version-0.4.0-blue)](CHANGELOG.md)
+[![TTL input](https://img.shields.io/badge/input-TTL-brightgreen)](docs/input-formats.md#ttl)
+[![JSON input](https://img.shields.io/badge/input-JSON-brightgreen)](docs/input-formats.md#json)
+[![Source parity checks](https://img.shields.io/badge/source%20parity-5%2C804%20checks-brightgreen)](docs/input-formats.md#implementation-and-verification)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![C17](https://img.shields.io/badge/C-17-00599C?logo=c&logoColor=white)](CMakeLists.txt)
 [![CMake 3.20+](https://img.shields.io/badge/CMake-3.20%2B-064F8C?logo=cmake&logoColor=white)](CMakeLists.txt)
@@ -12,9 +16,11 @@
 
 <!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2 -->
 
-Mutatoc is the C17 port of [Mutato](https://github.com/craigtrim/mutato). It takes plain text and returns the ontology entities it contains. It accepts the same Turtle-encoded OWL ontologies and MDA JSON snapshots as Mutato, and everything from ontology extraction and the finder queries to tokenization and matching runs in process in C. Nothing else is installed or started at run time.
+Mutatoc takes plain text and returns the ontology entities it contains. Supply an ontology in **TTL or JSON**. Both are native inputs with the same graph queries and matching behavior, and a collection can contain both formats.
 
-Version 0.3.0 tokenizes raw text in C instead of in a separate model process. On [the benchmark](docs/performance.md#native-tokenization), a parse of a 2,400-character document takes 9 to 25 ms where 0.2.3 took 122 to 248 ms, and the first parse after loading takes under 26 ms instead of about 1.9 seconds. Peak memory falls from about 211 MB across two processes to 68 MB. Across the 87,067 parses compared, every entity 0.2.3 found is still found. The release also removes operations that served general NLP rather than ontology matching, which breaks some callers; [the changelog](CHANGELOG.md) lists each one.
+It is the C17 port of [Mutato](https://github.com/craigtrim/mutato). Ontology loading, tokenization, and matching run in process in C. Each reader adds facts directly to the shared runtime graph, without a whole-document conversion, temporary format, or converter process.
+
+The [documentation site](https://craigtrim.github.io/mutatoc/) covers the input formats and C API. [Performance](docs/performance.md) records load and matching measurements, and the [changelog](CHANGELOG.md) records release changes.
 
 ## Build
 
@@ -28,13 +34,57 @@ ctest --test-dir build-msvc -C Release --output-on-failure
 
 Use the installed Visual Studio generator, or `-G Ninja -DCMAKE_BUILD_TYPE=Release` with an available compiler. The Windows MSVC build uses the static C runtime. `-DBUILD_SHARED_LIBS=ON` produces a DLL and import library. [examples/embed.c](examples/embed.c) compiles against the public header and demonstrates buffer ownership and prepared-token matching.
 
-## Running
+## TTL or JSON
 
-```powershell
-.\build-msvc\Release\mutatoc.exe --ontology tests/fixtures/ontologies/animals-test.owl --input-text "Dog walks through London."
+These two files describe the same ontology. `canine` and `hound` both match `dog`, whose parent is `animal`.
+
+### TTL
+
+Save as `animals.ttl`, or use [examples/animals.ttl](examples/animals.ttl):
+
+```turtle
+@prefix : <http://example.org/animals#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+:Animal a owl:Class;
+    rdfs:label "animal" .
+
+:Dog a owl:Class;
+    rdfs:label "dog";
+    skos:altLabel "canine", "hound";
+    rdfs:subClassOf :Animal;
+    owl:backwardCompatibleWith "ANIMAL" .
 ```
 
-This prints the canonical text, `dog walks through London .`, where `dog` is the matched entity. Add `--json` for the full result as compact JSON, or `--jsonf` for the same result indented for reading. It lists every token with its `id`, `text`, `x`, `y` and `normal`, and each matched entity with its canonical form, match type and the tokens it replaced. `--stopwatch` adds the total run time after the output, such as `Elapsed: 23.4 ms`, on stderr so piped JSON stays valid. `--ontology FILE --snapshot OUT` writes the generated MDA object to `OUT`, and `--serve` keeps an engine open for JSON requests.
+### JSON
+
+Save as `animals.json`, or use [examples/animals.json](examples/animals.json):
+
+```json
+[
+  {"format":"mutatoc/1", "namespace":"http://example.org/animals#"},
+  {"id":"Animal", "type":"owl:Class", "label":"animal"},
+  {"id":"Dog", "type":"owl:Class", "label":"dog",
+   "synonyms":["canine", "hound"], "parents":["Animal"], "ner":"ANIMAL"}
+]
+```
+
+JSON uses the `mutatoc/1` ontology record schema. Fields such as `label`, `synonyms`, and `parents` name RDF predicates. Arbitrary predicates, typed literals, blank nodes, and ordered facts are available through the [full schema](docs/input-formats.md). JSONL accepts the same records one object per line.
+
+### Run either file
+
+```powershell
+.\build-msvc\Release\mutatoc.exe --ontology examples/animals.ttl --input-text "a canine"
+.\build-msvc\Release\mutatoc.exe --ontology examples/animals.json --input-text "a canine"
+```
+
+Both commands print `a dog`. Mutatoc detects the input format from the content. Use `--format ttl` or `--format json` to require one explicitly. Existing Turtle-encoded `.owl` files also work.
+
+Add `--json` for the full result as compact JSON, or `--jsonf` for indented JSON. These flags select the output format for either ontology input. Each result includes the matched entity and its original tokens. `--stopwatch` writes elapsed time to stderr, and `--serve` keeps an engine open for JSON requests.
+
+`--ontology FILE --snapshot OUT` writes a prepared MDA snapshot from either source format. A snapshot stores extracted matching views; a JSON ontology source retains the full RDF graph, including the facts used by direct graph queries. See [input formats](docs/input-formats.md) for the distinction and complete examples. JSON ontology sources are included in the current source build; the published 0.4.0 binaries predate this addition.
 
 `scripts/package.cmake` assembles a relocatable Windows distribution from the static and shared builds, with a checksum manifest. See [packaging](docs/packaging.md).
 
@@ -55,7 +105,7 @@ Every token's `text` is a slice of the input, the tokens concatenate back to it,
 `--serve` reads one UTF-8 JSON request per line and retains the loaded ontologies:
 
 ```json
-{"op":"load","paths":["animals.owl","colors.owl"],"interface":"data","class_based":true}
+{"op":"load","paths":["animals.ttl","colors.json"],"interface":"data","class_based":true}
 {"op":"parse","text":"Dog walks through London."}
 {"op":"query","interface":"data","method":"synonyms","args":[]}
 ```
@@ -76,6 +126,7 @@ The reference is Mutato revision `da6bfa5df80b208a3271e111f2921ad281d0da98`. `ct
 | `public_api` | 1,659 finder calls across 140 methods, plus match index lifecycle |
 | `punctuation` | 16,165 authored punctuation and phrase-window contracts |
 | `rdf` | The W3C RDF 1.1 Turtle suite (313 tests), 19 ontology graph fingerprints, typed literals |
+| `sources` | 5,804 checks for JSON and JSONL, including 328 graph round-trips, 3,318 finder comparisons, 1,572 raw/prepared matching comparisons, optional stages, mixed collections, and failed loads |
 | `extensions` | Optional stages, exact-window regressions, collections, external synonyms, prefixes |
 | `tokenize` | The native tokenizer contract |
 | `token_fidelity` | 3,244 cases that hold every token and entity to the input's exact text and offsets, across apostrophe, quote and dash variants in the input and in stored synonyms, whitespace, contractions, abbreviations, Unicode and invalid input |

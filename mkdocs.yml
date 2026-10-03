@@ -1,7 +1,7 @@
 # Documentation site, published to GitHub Pages by .github/workflows/docs.yml.
 # Build locally with: pip install mkdocs==1.6.1 mkdocs-material==9.7.7 && mkdocs serve
 site_name: mutatoc
-site_description: C17 port of Mutato. Plain text in, ontology entities out.
+site_description: Match ontology entities in plain text with native TTL or JSON input, entirely in C.
 site_url: https://craigtrim.github.io/mutatoc/
 repo_url: https://github.com/craigtrim/mutatoc
 repo_name: craigtrim/mutatoc
@@ -38,6 +38,7 @@ validation:
 
 nav:
   - Home: index.md
+  - TTL and JSON inputs: input-formats.md
   - JSON and C integration: protocol.md
   - Compatibility: compatibility.md
   - Performance: performance.md
