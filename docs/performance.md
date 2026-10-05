@@ -48,6 +48,21 @@ The tokenizer builds each token as a span of the input in one pass. It used to s
 
 Loads and peak memory (67.3 MB) do not change.
 
+## Span windows
+
+<!-- craigtrim/mutatoc#9 -->
+
+The span stage groups the positions of each normal form once per sweep, and for each rule that could outrank the current best it looks for the closest occurrence of every word ([#9](https://github.com/craigtrim/mutatoc/issues/9)). It used to keep only the last position of each form and compare two of them. The same benchmark, run on 2026-10-05 on the same machine with GCC Release builds of 0.5.0 and the change, gives these parse medians:
+
+| Ontology | Parse, 0.5.0 | Parse, after #9 |
+| --- | ---: | ---: |
+| animals-test | 6.2 ms | 6.3 ms |
+| econ-20160218 | 3.4 ms | 3.5 ms |
+| medicopilot | 4.3 ms | 4.3 ms |
+| acanames-20251028 | 5.5 ms | 5.3 ms |
+
+The differences are within run-to-run noise. Loads and peak memory (68 MB) do not change.
+
 ## Performance gate
 
 <!-- craigtrim/mutatoc#2 -->

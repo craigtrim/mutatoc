@@ -1,0 +1,45 @@
+# Labels of two to six words whose span rules must hold every content word
+# within the rule's distance. The words are made up and appear in no other
+# label, so a text names one class unless a case means to name two.
+# craigtrim/mutatoc#9
+
+@prefix : <http://example.org/spandistance#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/spandistance> rdf:type owl:Ontology .
+
+# One label of each width.
+:Glacier_Survey rdf:type owl:Class ;
+    rdfs:label "Glacier Survey" .
+
+:Marine_Pottery_Workshop rdf:type owl:Class ;
+    rdfs:label "Marine Pottery Workshop" .
+
+:Orbital_Weaving_Canvas_Studio rdf:type owl:Class ;
+    rdfs:label "Orbital Weaving Canvas Studio" .
+
+:Nordic_Choral_Ferry_Garden_Clinic rdf:type owl:Class ;
+    rdfs:label "Nordic Choral Ferry Garden Clinic" .
+
+:Copper_Harbor_Violin_Repair_Guild_Annex rdf:type owl:Class ;
+    rdfs:label "Copper Harbor Violin Repair Guild Annex" .
+
+# Stopwords drop out of the rule but still take a position in the text.
+:Office_of_Tidal_Records rdf:type owl:Class ;
+    rdfs:label "Office of Tidal Records" .
+
+:Ceramics_and_Kiln_Safety rdf:type owl:Class ;
+    rdfs:label "Ceramics and Kiln Safety" .
+
+# A three-word rule outranks the two-word rule inside it.
+:Harmonic_Analysis rdf:type owl:Class ;
+    rdfs:label "Harmonic Analysis" .
+
+:Applied_Harmonic_Analysis rdf:type owl:Class ;
+    rdfs:label "Applied Harmonic Analysis" .
+
+# An exact entity that collapses to one position inside a span's gap.
+:Tea_Ceremony rdf:type owl:Class ;
+    rdfs:label "Tea Ceremony" .

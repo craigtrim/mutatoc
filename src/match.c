@@ -548,58 +548,153 @@ static J *exact(const MatchIndex *x, J *ts, const J *names, mc_error *e)
 	return ts;
 }
 
-static J *spans(const MatchIndex *index, J *ts, const J *names)
+/* Ascending token positions of one normal form. */
+typedef struct {
+	int *at, n;
+} Occurrences;
+
+/* The first position in o at or after v, or -1 when there is none. */
+static int occurrence_from(const Occurrences *o, int v)
+{
+	int lo = 0, hi = o->n;
+	while (lo < hi) {
+		int mid = lo + (hi - lo) / 2;
+		if (o->at[mid] < v)
+			lo = mid + 1;
+		else
+			hi = mid;
+	}
+	return lo < o->n ? o->at[lo] : -1;
+}
+
+/*
+ * Chooses one occurrence of every content word so that the chosen positions
+ * lie as close together as possible, preferring the leftmost window on ties.
+ * The distance bounds every chosen position, not only the first and last
+ * content words, and a repeated word may use any of its occurrences. The
+ * direction flags keep their meaning over the length-sorted content: forward
+ * lets the first content word follow the last, and reverse lets it precede
+ * the last. craigtrim/mutatoc#9
+ */
+static int span_window(Occurrences *const *words, int k, const SpanRule *r,
+		       int *x, int *y)
+{
+	const Occurrences *a = words[0], *b = words[k - 1];
+	int found = 0;
+	for (int w = 0; w < k; w++)
+		for (int i = 0; i < words[w]->n; i++) {
+			int s = words[w]->at[i], pa, pb;
+			/* One word in both places is never out of order. */
+			if (a == b) {
+				pa = pb = s;
+			} else if (r->forward && r->reverse) {
+				pa = occurrence_from(a, s);
+				pb = occurrence_from(b, s);
+			} else if (r->reverse) {
+				pa = occurrence_from(a, s);
+				pb = pa < 0 ? -1 : occurrence_from(b, pa + 1);
+			} else if (r->forward) {
+				pb = occurrence_from(b, s);
+				pa = pb < 0 ? -1 : occurrence_from(a, pb + 1);
+			} else {
+				return 0;
+			}
+			if (pa < 0 || pb < 0)
+				continue;
+			int lo = pa < pb ? pa : pb, hi = pa < pb ? pb : pa;
+			for (int j = 1; j < k - 1 && lo >= 0; j++) {
+				int p = occurrence_from(words[j], s);
+				if (p < 0)
+					lo = -1;
+				else if (p < lo)
+					lo = p;
+				else if (p > hi)
+					hi = p;
+			}
+			if (lo < 0 || hi - lo > r->distance)
+				continue;
+			if (!found || hi - lo < *y - *x ||
+			    (hi - lo == *y - *x && lo < *x)) {
+				*x = lo;
+				*y = hi;
+				found = 1;
+			}
+		}
+	return found;
+}
+
+static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 {
 	const SpanRule *best = NULL;
-	int bx = 0, by = 0, score = -1, count = 0;
+	int bx = 0, by = 0, score = -1, count = SIZE(ts), groups = 0, n = 0;
 	Map positions = { 0 };
 	J *keys = ARR();
+	/* Every position of every normal form, grouped by form. */
+	int *group = malloc((size_t)(count ? count : 1) * sizeof(*group));
+	int *at = malloc((size_t)(count ? count : 1) * sizeof(*at));
+	Occurrences *occurrences =
+		calloc((size_t)(count ? count : 1), sizeof(*occurrences));
+	Occurrences **words = NULL;
+	int word_cap = 0;
+	if (!group || !at || !occurrences) {
+		fail(e, 1, "Cannot allocate span positions");
+		goto done;
+	}
 	EACH(t, ts) {
-		const char *n = S(GET(t, "normal"));
-		if (!map_get(&positions, n))
-			ADD(keys, STR(n));
-		map_put(&positions, n, (void *)(uintptr_t)(++count));
+		const char *normal = S(GET(t, "normal"));
+		int g = (int)(uintptr_t)map_get(&positions, normal);
+		if (!g) {
+			g = ++groups;
+			map_put(&positions, normal, (void *)(uintptr_t)g);
+			ADD(keys, STR(normal));
+		}
+		group[n++] = g - 1;
+		occurrences[g - 1].n++;
+	}
+	for (int g = 0, offset = 0; g < groups; g++) {
+		occurrences[g].at = at + offset;
+		offset += occurrences[g].n;
+		occurrences[g].n = 0;
+	}
+	for (int i = 0; i < count; i++) {
+		Occurrences *o = &occurrences[group[i]];
+		o->at[o->n++] = i;
 	}
 	sort_strings(keys, 0);
 	EACH(key, keys) {
 		const SpanList *list = map_get((Map *)&index->spans, S(key));
 		for (int i = 0; list && i < list->n; i++) {
 			const SpanRule *r = &list->rules[i];
-			J *content = r->content;
-			int valid = 1;
-			EACH(v, content)
-				if (!map_get(&positions, S(v)))
-					valid = 0;
-			if (!valid)
+			int k = SIZE(r->content), valid = k > 0;
+			/* A rule that cannot outrank the best one changes nothing. */
+			if (!valid || r->rank <= score)
 				continue;
-			int x = count, y = -1, first = -1, last = -1;
-			EACH(v, content) {
-				int pos = (int)(uintptr_t)map_get(&positions,
-								  S(v)) -
-					  1;
-				if (pos < 0) {
+			if (k > word_cap) {
+				Occurrences **grown = realloc(
+					words, (size_t)k * sizeof(*words));
+				if (!grown) {
+					fail(e, 1,
+					     "Cannot allocate span positions");
+					goto done;
+				}
+				words = grown;
+				word_cap = k;
+			}
+			int w = 0;
+			EACH(v, r->content) {
+				int g = (int)(uintptr_t)map_get(&positions,
+								S(v));
+				if (!g) {
 					valid = 0;
 					break;
 				}
-				if (first < 0)
-					first = pos;
-				last = pos;
-				if (pos < x)
-					x = pos;
-				if (pos > y)
-					y = pos;
+				words[w++] = &occurrences[g - 1];
 			}
-			int delta = first - last;
-			if (abs(delta) > r->distance)
-				valid = 0;
-			if (delta < 0 && !r->reverse)
-				valid = 0;
-			if (delta > 0 && !r->forward)
-				valid = 0;
 			EACH(v, r->context)
-				if (!map_get(&positions, S(v)))
+				if (valid && !map_get(&positions, S(v)))
 					valid = 0;
-			if (valid && r->rank > score) {
+			int x = 0, y = 0;
+			if (valid && span_window(words, k, r, &x, &y)) {
 				best = r;
 				bx = x;
 				by = y + 1;
@@ -607,8 +702,15 @@ static J *spans(const MatchIndex *index, J *ts, const J *names)
 			}
 		}
 	}
+done:
+	free(words);
+	free(occurrences);
+	free(at);
+	free(group);
 	map_free(&positions);
 	DEL(keys);
+	if (e->code)
+		return ts;
 	if (best) {
 		const char *canon = best->canon;
 		J *ner = index->live ? STR("NER") :
@@ -770,7 +872,7 @@ J *match_tokens(const MatchIndex *x, J *ts, const J *names, int ctr,
 	for (int i = 0; i < sweeps && !e->code; i++) {
 		ts = exact(x, ts, names, e);
 		if (!e->code)
-			ts = spans(x, ts, names);
+			ts = spans(x, ts, names, e);
 		if (!e->code)
 			ts = hierarchy(x, ts, names, e);
 	}
@@ -790,7 +892,7 @@ J *transform_tokens(J *d, const MatchIndex *x, const J *input, const J *names,
 	if (!strcmp(stage, "exact"))
 		return exact(x, ts, names, err);
 	if (!strcmp(stage, "spans"))
-		return spans(x, ts, names);
+		return spans(x, ts, names, err);
 	if (!strcmp(stage, "hierarchy"))
 		return hierarchy(x, ts, names, err);
 	if (!strcmp(stage, "augment")) {

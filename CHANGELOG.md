@@ -1,6 +1,16 @@
 # Changelog
 
-<!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2, craigtrim/mutatoc#5, craigtrim/mutatoc#7 -->
+<!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2, craigtrim/mutatoc#5, craigtrim/mutatoc#7, craigtrim/mutatoc#9 -->
+
+## Unreleased
+
+### Fixed
+
+- A span rule now holds every word of a label within its distance ([#9](https://github.com/craigtrim/mutatoc/issues/9)). For a label of three or more words, the check compared only two of them, picked by word length, so the others could sit anywhere and the match stretched over everything between them: one `spans` match for a three-word label covered 588 lines of a pasted list that never contained the label. A repeated word also counted only at its last occurrence, which could hide a valid group of words earlier in the text, for two-word labels as well. A rule now uses the closest occurrence of each word and requires all of them within the distance. See [Span rules](docs/protocol.md#span-rules).
+
+### Breaking changes
+
+- **Fewer, tighter spans:** a span that relied on an unbounded word no longer matches, and a label that needs more words than the distance plus one, not counting stopwords, matches only as its exact phrase. A span that a later repeat of a word used to hide now matches. Token positions, the default distance of 4 and the `forward` and `reverse` flags keep their meaning.
 
 ## 0.5.0 (2026-10-03)
 
