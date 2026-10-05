@@ -10,7 +10,7 @@
 
 ### Breaking changes
 
-- **Fewer, tighter spans:** a span that relied on an unbounded word no longer matches, and a label with more words than the distance plus one matches only as its exact phrase. A span that a later repeat of a word used to hide now matches. Token positions, the default distance of 4 and the `forward` and `reverse` flags keep their meaning.
+- **Fewer, tighter spans:** a span that relied on an unbounded word no longer matches, and a label that needs more words than the distance plus one, not counting stopwords, matches only as its exact phrase. A span that a later repeat of a word used to hide now matches. Token positions, the default distance of 4 and the `forward` and `reverse` flags keep their meaning.
 
 ## 0.5.0 (2026-10-03)
 
