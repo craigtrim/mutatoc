@@ -88,9 +88,9 @@
       "fixture": "tests/fixtures/ontologies/span-distance-test.ttl",
       "load_paths": ["owl", "data", "snapshot", "authored snapshot"],
       "validation_date": "2026-10-05",
-      "cases": 29442, "assertions": 69580, "families": 21,
-      "passed": 69580,
-      "against_0_5_0_matcher": {"assertions": 70172, "passed": 49280, "note": "the monotone family compares neighboring distances only after a match, so fewer of its assertions run against the fixed matcher"}
+      "cases": 29444, "assertions": 69586, "families": 21,
+      "passed": 69586,
+      "against_0_5_0_matcher": {"assertions": 70178, "passed": 49283, "note": "the monotone family compares neighboring distances only after a match, so fewer of its assertions run against the fixed matcher"}
     },
     "cli": {"tests": ["cli_json", "cli_jsonf", "cli_stopwatch"]}
   },

@@ -748,6 +748,11 @@ static const Literal accepted[] = {
 	  "records of the tidal office",
 	  { { "office_of_tidal_records", "spans", 0, 27 } } },
 	{ 4, "records of the old tidal office", { { NULL } } },
+	/* Four label words, but the rule needs three, which fit distance 2. */
+	{ 2,
+	  "records tidal office",
+	  { { "office_of_tidal_records", "spans", 0, 20 } } },
+	{ 1, "records tidal office", { { NULL } } },
 	{ 4,
 	  "ceramics, kiln and safety",
 	  { { "ceramics_and_kiln_safety", "spans", 0, 25 } } },
