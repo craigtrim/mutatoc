@@ -130,6 +130,7 @@ The reference is Mutato revision `da6bfa5df80b208a3271e111f2921ad281d0da98`. `ct
 | `extensions` | Optional stages, exact-window regressions, collections, external synonyms, prefixes |
 | `tokenize` | The native tokenizer contract |
 | `token_fidelity` | 3,244 cases that hold every token and entity to the input's exact text and offsets, across apostrophe, quote and dash variants in the input and in stored synonyms, whitespace, contractions, abbreviations, Unicode and invalid input |
+| `span_distance` | 29,442 cases that hold every word of a span rule within its distance, across label widths, word orders, repeated words, punctuation and whitespace, pasted lists, stopwords, competing rules, direction flags and context words, checked against an oracle that tries every choice of occurrences |
 | `concurrency` | 24 engines on 8 threads through the public C API |
 | `native`, `text`, `embedding` | Ontology loading, caller metadata, Unicode and URI handling, the embedding example |
 | `cli_json`, `cli_jsonf`, `cli_stopwatch` | The one-shot CLI's output formats |

@@ -61,6 +61,21 @@ Punctuation becomes its own token, except a period or comma inside a number, an 
 
 A matched entity is a new token `{id, x, y, ner, text, normal, swaps}` whose `normal` is the canonical form and whose `swaps.tokens` holds the original tokens. For `parse`, its `text` is the input from its `x` to its `y`; for `parse_tokens`, it is its tokens' trimmed texts joined by single spaces. `ner` comes from the ontology; a `hierarchy` match with no ontology label has a null `ner`.
 
+## Span rules
+
+<!-- craigtrim/mutatoc#9 -->
+
+A span rule matches the words of a multiword label when they appear near each other in any order rather than as the exact phrase. The snapshot's `spans` view keys each rule by the label's first word and lists the label's other words, without stopwords, as `content`. A rule matches when the text holds the key and every content word, and one occurrence of each can be chosen so that the first and last chosen positions are at most `distance` apart. The distance is 4 unless `load` or `generate_spans` sets another value. The `spans` entity covers the tokens from the first chosen occurrence to the last.
+
+- Every word of the rule is held to the distance, not only two of them. A label with more words than `distance + 1` can therefore match only as its exact phrase.
+- Positions count tokens. Punctuation is a token, and so is each run of whitespace beyond the single space after a word: a second space, a tab or a line break. In `marine, pottery, workshop` the first and last words are four positions apart; in `marine pottery workshop` they are two. An entity matched exactly earlier in the parse is one position.
+- When a word occurs more than once, the rule uses the occurrences that lie closest together, and the leftmost of equally close sets.
+- A stopword the rule leaves out is not required, but it takes a position when the text contains it.
+- `context` words must appear somewhere in the text and are not held to the distance.
+- `forward` and `reverse` matter only for rules authored into a prepared snapshot, because generated rules set both to true. The key and content are sorted by length and then by bytes; `forward` lets the first of them follow the last in the text, and `reverse` lets it precede the last. The flags order only those two words.
+
+When more than one rule matches, the rule whose canonical form has the most underscores wins. `tests/test_span_distance.c` holds these rules.
+
 ## Errors and ownership
 
 Responses are JSON objects. Error code 1 covers I/O and allocation failures, 2 invalid input, 3 RDF syntax, and 4 ontology and matching operations. Error responses contain a message and may include line and column information.
