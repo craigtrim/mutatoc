@@ -10,7 +10,7 @@
  * user-facing ceiling, wide enough for slow shared CI runners and tight
  * enough to fail an order-of-magnitude regression. CTest runs it as
  * `performance` in optimized, unsanitized builds.
- * craigtrim/mutatoc#1, craigtrim/mutatoc#2
+ * craigtrim/mutatoc#1, craigtrim/mutatoc#2, craigtrim/mutatoc#11
  */
 
 #ifdef _WIN32
@@ -39,6 +39,17 @@ static const double load_budget_ms[] = { 500, 500, 700, 6000 };
 #define FIRST_PARSE_BUDGET_MS 300.0
 #define PARSE_BUDGET_MS 150.0
 #define PEAK_BUDGET_MB 128.0
+
+/*
+ * A pasted list of 1,442 titles from acanames-20251028, every other one with
+ * its words reversed so that it matches only as a span. Its parse produces
+ * hundreds of spans; running the span stage to a fixpoint by rebuilding its
+ * index after every span took about 3.4 s here, and the indexed loop about
+ * 0.4 s.
+ */
+#define SPAN_LIST "tests/fixtures/bench/acanames-span-list.txt"
+#define SPAN_LIST_ONTOLOGY "acanames-20251028"
+#define SPAN_LIST_BUDGET_MS 2000.0
 
 static int within(const char *what, const char *ontology, double value,
 		  double budget, const char *unit)
@@ -169,7 +180,8 @@ int main(int argc, char **argv)
 		runs = 1;
 	double *load = calloc((size_t)runs, sizeof(double)),
 	       *first = calloc((size_t)runs, sizeof(double)),
-	       *warm = calloc((size_t)runs * 4, sizeof(double));
+	       *warm = calloc((size_t)runs * 4, sizeof(double)),
+	       *listed = calloc((size_t)runs, sizeof(double));
 	int failed = 0;
 	for (size_t o = 0; o < sizeof(ontologies) / sizeof(*ontologies); o++) {
 		char *owl = path_join(
@@ -190,6 +202,23 @@ int main(int argc, char **argv)
 		PUT(q, "text", STR(doc ? doc : ""));
 		char *parse_wire = cJSON_PrintUnformatted(q);
 		DEL(q);
+		char *list_wire = NULL;
+		if (!strcmp(ontologies[o], SPAN_LIST_ONTOLOGY)) {
+			char *list_path = path_join(root, "/", SPAN_LIST);
+			mc_error err = { 0 };
+			char *list = read_file(list_path, &err);
+			free(list_path);
+			if (!list) {
+				fprintf(stderr, "cannot read %s\n", SPAN_LIST);
+				failed = 1;
+			}
+			q = OBJ();
+			PUT(q, "op", STR("parse"));
+			PUT(q, "text", STR(list ? list : ""));
+			list_wire = cJSON_PrintUnformatted(q);
+			DEL(q);
+			free(list);
+		}
 		for (int r = 0; r < runs && !failed; r++) {
 			mc_engine *e = mc_create();
 			for (int s = 0; s < setups && !failed; s++)
@@ -206,6 +235,11 @@ int main(int argc, char **argv)
 				failed |= !request(e, parse_wire);
 				warm[r * 4 + w] = now_ms() - t3;
 			}
+			if (list_wire && !failed) {
+				double t4 = now_ms();
+				failed |= !request(e, list_wire);
+				listed[r] = now_ms() - t4;
+			}
 			mc_destroy(e);
 		}
 		if (!failed && check) {
@@ -218,7 +252,18 @@ int main(int argc, char **argv)
 			over += !within("parse", ontologies[o],
 					median(warm, runs * 4), PARSE_BUDGET_MS,
 					"ms");
-		} else if (!failed)
+			if (list_wire)
+				over += !within("span list", ontologies[o],
+						median(listed, runs),
+						SPAN_LIST_BUDGET_MS, "ms");
+		} else if (!failed && list_wire)
+			printf("{\"ontology\":\"%s\",\"document_chars\":%zu,\"runs\":%d,"
+			       "\"load_ms\":%.1f,\"first_parse_ms\":%.1f,\"parse_ms\":%.2f,"
+			       "\"span_list_parse_ms\":%.1f}\n",
+			       ontologies[o], doc ? strlen(doc) : 0, runs,
+			       median(load, runs), median(first, runs),
+			       median(warm, runs * 4), median(listed, runs));
+		else if (!failed)
 			printf("{\"ontology\":\"%s\",\"document_chars\":%zu,\"runs\":%d,"
 			       "\"load_ms\":%.1f,\"first_parse_ms\":%.1f,\"parse_ms\":%.2f}\n",
 			       ontologies[o], doc ? strlen(doc) : 0, runs,
@@ -229,6 +274,7 @@ int main(int argc, char **argv)
 		free(doc);
 		free(load_wire);
 		free(parse_wire);
+		free(list_wire);
 		if (failed)
 			break;
 	}
@@ -244,5 +290,6 @@ int main(int argc, char **argv)
 	free(load);
 	free(first);
 	free(warm);
+	free(listed);
 	return failed || over;
 }
