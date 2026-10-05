@@ -410,7 +410,8 @@ static void search(Search *q, int c)
 	}
 }
 
-static void oracle_spans(Stream *st, const Rule *r)
+/* Collapses the rule's tightest window and says whether there was one. */
+static int oracle_spans(Stream *st, const Rule *r)
 {
 	Search q = { 0 };
 	q.r = r;
@@ -438,13 +439,15 @@ static void oracle_spans(Stream *st, const Rule *r)
 		free(q.at[c]);
 	if (q.found)
 		collapse_slots(st, q.lo, q.hi, r->canon, "spans");
+	return q.found;
 }
 
 enum { PARSE, SPANS_ONLY };
 
 /*
- * The entities a parse returns: up to three sweeps of exact matching and
- * then one span each. The spans stage alone runs one span search.
+ * The entities a parse returns: three sweeps of exact matching, each followed
+ * by spans until none fits. The spans stage alone runs only the spans, also
+ * until none fits (craigtrim/mutatoc#11).
  */
 static J *oracle(const Text *t, const Rule *r, int mode)
 {
@@ -455,7 +458,8 @@ static J *oracle(const Text *t, const Rule *r, int mode)
 	for (int sweep = 0; sweep < (mode == PARSE ? 3 : 1); sweep++) {
 		if (mode == PARSE)
 			oracle_exact(&st, r);
-		oracle_spans(&st, r);
+		while (oracle_spans(&st, r))
+			;
 	}
 	J *out = ARR();
 	for (int i = 0; i < st.n; i++)
@@ -574,14 +578,22 @@ static J *found(const J *tokens)
 	return out;
 }
 
-static J *parse(mc_engine *e, const char *text)
+/* A parse with the request's ctr field, which sets the number of sweeps. */
+static J *parse_ctr(mc_engine *e, const char *text, int ctr)
 {
 	J *q = OBJ();
 	PUT(q, "op", STR("parse"));
 	PUT(q, "text", STR(text));
+	if (ctr)
+		PUT(q, "ctr", NUM(ctr));
 	J *r = request(e, q), *out = r ? found(GET(r, "tokens")) : NIL();
 	DEL(r);
 	return out;
+}
+
+static J *parse(mc_engine *e, const char *text)
+{
+	return parse_ctr(e, text, 0);
 }
 
 /* One case: the same text at one distance on every load path. */
@@ -1837,6 +1849,191 @@ static void context(void)
 }
 
 /* ---------------------------------------------------------------------- */
+/* Every group of span words becomes a span, however many a text holds.   */
+/* craigtrim/mutatoc#11                                                   */
+
+static const int grouped[] = { GLACIER, MARINE, ORBITAL, NORDIC, OFFICE };
+#define GROUPED ((int)(sizeof(grouped) / sizeof(*grouped)))
+
+/* One group: the rule's words in reverse order, which only a span matches. */
+static J *text_group(Text *t, int label)
+{
+	const Label *l = &labels[label];
+	int k = count_words(l->rule), first = t->n;
+	for (int i = k - 1; i >= 0; i--)
+		text_styled(t, l->rule[i], 1);
+	return entity(l->canon, "spans", t->x[first], t->y[t->n - 1]);
+}
+
+/* Between groups: fillers, fillers inside commas, or a list's tab, count and break. */
+static void text_between(Text *t, int style)
+{
+	if (style == 1)
+		text_sep(t, SEP_COMMA);
+	if (style <= 1)
+		for (int f = 0; f < 5; f++)
+			text_filler(t);
+	if (style == 1)
+		text_sep(t, SEP_COMMA);
+	if (style >= 2) {
+		text_sep(t, SEP_TAB);
+		text_word(t, "12");
+		text_sep(t, style == 2 ? SEP_LF : SEP_CRLF);
+	}
+}
+
+/* Groups of one label; returns the expected spans. */
+static J *same_groups(Text *t, int label, int n, int style)
+{
+	J *expected = ARR();
+	for (int g = 0; g < n; g++) {
+		if (g)
+			text_between(t, style);
+		ADD(expected, text_group(t, label));
+	}
+	return expected;
+}
+
+static J *stage(mc_engine *e, const Text *t)
+{
+	J *q = OBJ();
+	PUT(q, "op", STR("transform_tokens"));
+	PUT(q, "stage", STR("spans"));
+	PUT(q, "tokens", tokens_of(t));
+	J *result = request(e, q), *out = result ? found(result) : NIL();
+	DEL(result);
+	return out;
+}
+
+static void many_groups(void)
+{
+	static const int distances[] = { 4, 6 };
+	for (int w = 0; w < GROUPED; w++)
+		for (int n = 1; n <= 30; n++)
+			for (int style = 0; style < 4; style++)
+				for (int d = 0; d < 2; d++) {
+					Text t = { 0 };
+					J *expected = same_groups(
+						&t, grouped[w], n, style);
+					expect_text("many groups", distances[d],
+						    text_of(&t), expected);
+					count_case("many groups, spans stage");
+					for (int l = 0; l < LOADS; l++) {
+						char where[32];
+						snprintf(where, sizeof(where),
+							 "%s d=%d",
+							 load_names[l],
+							 distances[d]);
+						J *actual = stage(
+							engines[distances[d]][l],
+							&t);
+						check("many groups, spans stage",
+						      where, text_of(&t),
+						      actual, expected);
+						DEL(actual);
+					}
+					DEL(expected);
+					text_free(&t);
+				}
+}
+
+/* The ctr field sets the number of sweeps; no sweep count limits the spans. */
+static void sweeps(void)
+{
+	static const int ctrs[] = { 2, 1, 0, -1, -5 };
+	for (int w = 0; w < GROUPED; w++)
+		for (int n = 1; n <= 12; n++)
+			for (int c = 0; c < 5; c++) {
+				Text t = { 0 };
+				J *expected = same_groups(&t, grouped[w], n, 0);
+				count_case("ctr");
+				for (int l = 0; l < LOADS; l++) {
+					char where[32];
+					snprintf(where, sizeof(where),
+						 "%s ctr=%d", load_names[l],
+						 ctrs[c]);
+					J *actual = parse_ctr(engines[4][l],
+							      text_of(&t),
+							      ctrs[c]);
+					check("ctr", where, text_of(&t), actual,
+					      expected);
+					DEL(actual);
+				}
+				DEL(expected);
+				text_free(&t);
+			}
+}
+
+/* Pasted lists as long as the reported one, every title a span. */
+static void span_lists(void)
+{
+	static const int sizes[] = { 50, 100, 200, 400, 800, 1442 };
+	for (int s = 0; s < 6; s++)
+		for (int w = 0; w < GROUPED; w++)
+			for (int style = 2; style < 4; style++) {
+				Text t = { 0 };
+				J *expected = same_groups(&t, grouped[w],
+							  sizes[s], style);
+				expect_text("span lists", 4, text_of(&t),
+					    expected);
+				DEL(expected);
+				text_free(&t);
+			}
+}
+
+/* Groups of different labels and ranks, in random order and separation. */
+static void mixed_groups(void)
+{
+	for (int c = 0; c < 600; c++) {
+		Text t = { 0 };
+		J *expected = ARR();
+		t.filler = rnd(FILLERS);
+		for (int g = 0, n = 2 + rnd(19); g < n; g++) {
+			if (g)
+				text_between(&t, rnd(4));
+			ADD(expected, text_group(&t, grouped[rnd(GROUPED)]));
+		}
+		expect_text("mixed groups", 4 + rnd(3), text_of(&t), expected);
+		DEL(expected);
+		text_free(&t);
+	}
+}
+
+/* Every case filed with the issue, expected entities as the issue gives them. */
+static void fixpoint_cases(const char *root)
+{
+	J *doc = test_read_json(root,
+				"tests/fixtures/api/span-fixpoint-cases.json");
+	J *cases = GET(doc, "cases");
+	if (!test_require_cases(cases, "span-fixpoint-cases.json")) {
+		failures++;
+		DEL(doc);
+		return;
+	}
+	EACH(c, cases) {
+		int d = GET(c, "distance")->valueint,
+		    ctr = GET(c, "ctr")->valueint;
+		const char *text = S(GET(c, "text"));
+		J *expected = ARR();
+		EACH(e, GET(c, "expected"))
+			ADD(expected,
+			    entity(S(AT(e, 0)), S(AT(e, 1)), AT(e, 2)->valueint,
+				   AT(e, 3)->valueint));
+		count_case("issue 11 cases");
+		for (int l = 0; l < LOADS; l++) {
+			char where[48];
+			snprintf(where, sizeof(where), "%s d=%d ctr=%d",
+				 load_names[l], d, ctr);
+			J *actual = parse_ctr(engines[d][l], text, ctr);
+			check("issue 11 cases", where, text, actual, expected);
+			DEL(actual);
+		}
+		DEL(expected);
+	}
+	DEL(doc);
+}
+
+/* ---------------------------------------------------------------------- */
 /* Metamorphic families.                                                  */
 
 /* A larger distance keeps every match a smaller one found. */
@@ -2026,6 +2223,11 @@ int main(int argc, char **argv)
 	context();
 	monotone();
 	shift();
+	many_groups();
+	sweeps();
+	span_lists();
+	mixed_groups();
+	fixpoint_cases(argv[1]);
 	for (int i = 0; i < category_count; i++)
 		printf("%-22s %6d cases %6d failed assertions\n",
 		       categories[i].name, categories[i].cases,
