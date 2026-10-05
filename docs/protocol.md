@@ -63,7 +63,7 @@ A matched entity is a new token `{id, x, y, ner, text, normal, swaps}` whose `no
 
 ## Span rules
 
-<!-- craigtrim/mutatoc#9 -->
+<!-- craigtrim/mutatoc#9, craigtrim/mutatoc#11 -->
 
 A span rule matches the words of a multiword label when they appear near each other in any order rather than as the exact phrase. The snapshot's `spans` view keys each rule by the label's first word and lists the label's other words, without stopwords, as `content`. A rule matches when the text holds the key and every content word, and one occurrence of each can be chosen so that the first and last chosen positions are at most `distance` apart. The distance is 4 unless `load` or `generate_spans` sets another value. The `spans` entity covers the tokens from the first chosen occurrence to the last.
 
@@ -74,7 +74,9 @@ A span rule matches the words of a multiword label when they appear near each ot
 - `context` words must appear somewhere in the text and are not held to the distance.
 - `forward` and `reverse` matter only for rules authored into a prepared snapshot, because generated rules set both to true. The key and content are sorted by length and then by bytes; `forward` lets the first of them follow the last in the text, and `reverse` lets it precede the last. The flags order only those two words.
 
-When more than one rule matches, the rule whose canonical form has the most underscores wins. `tests/test_span_distance.c` holds these rules.
+The spans stage applies rules one at a time until none fits. Each round takes the rule whose canonical form has the most underscores, at its tightest window, and collapses that window, so a text gets every span its words allow. A parse runs three sweeps of exact, span and hierarchy matching (the request's `ctr` field changes the count), and the number of sweeps does not limit the spans; `transform_tokens` with `stage: "spans"` runs the same loop. A collapsed match is one position, so a later span may cover an earlier match, as `Psychology Behavioral` covers the exact match `psychology` with the span `behavioral_psychology`. The distance bounds each window in the stream as it stands, so nested spans can cover more of the original text than the distance suggests. A stage that applies 100,000 spans fails with code 4, as exact matching does.
+
+`tests/test_span_distance.c` holds these rules.
 
 ## Errors and ownership
 
