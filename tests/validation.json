@@ -1,7 +1,7 @@
 {
-  "version": "0.5.0",
+  "version": "0.5.1",
   "reference_revision": "da6bfa5df80b208a3271e111f2921ad281d0da98",
-  "validation_date": "2026-10-03",
+  "validation_date": "2026-10-05",
   "issue": "https://github.com/craigtrim/mutatoc/issues/1",
   "runtime": "Native only: no interpreter, model or worker at build, test or run time",
   "platforms": [
@@ -9,9 +9,9 @@
       "platform": "Windows x64",
       "compiler": "MSVC 19.29 (Visual Studio 2019)",
       "configuration": "Release, static C runtime",
-      "ctest_passed": 19,
+      "ctest_passed": 20,
       "ctest_failed": 0,
-      "elapsed_seconds": 183.76
+      "elapsed_seconds": 212.74
     },
     {
       "platform": "Windows x64",
@@ -24,18 +24,18 @@
       "platform": "Windows x64",
       "compiler": "GCC 16.1.0 (Ninja)",
       "configuration": "Release",
-      "ctest_passed": 19,
+      "ctest_passed": 20,
       "ctest_failed": 0,
-      "elapsed_seconds": 188.04
+      "elapsed_seconds": 235.68
     },
     {
       "platform": "Linux x64, Ubuntu 24.04 under Docker",
       "compiler": "GCC 13.3.0",
       "configuration": "Debug, AddressSanitizer and UndefinedBehaviorSanitizer (non-recoverable), leak detection, LF fixtures",
-      "ctest_passed": 18,
+      "ctest_passed": 19,
       "ctest_failed": 0,
       "sanitizer_reports": 0,
-      "elapsed_seconds": 779.17
+      "elapsed_seconds": 977.08
     }
   ],
   "suites": {
@@ -136,13 +136,13 @@
   "benchmark": {
     "harness": "tests/bench.c (mutatoc_bench), median of 5 fresh engines, 2,400-character documents",
     "machine": "AMD Ryzen Threadripper 3960X, Windows 10, GCC Release builds",
-    "parse_ms": {"0.2.3": [211.86, 121.89, 247.57, 151.35], "0.3.0": [21.95, 8.80, 25.28, 15.89], "0.3.1": [21.9, 9.0, 25.5, 15.7], "0.4.0": [6.4, 3.6, 4.5, 5.5], "0.5.0": [6.3, 3.5, 4.3, 5.5]},
-    "first_parse_ms": {"0.2.3": [1925.0, 1896.9, 1974.3, 1824.8], "0.3.0": [22.1, 8.9, 25.7, 15.6], "0.3.1": [21.9, 9.2, 25.6, 15.9], "0.4.0": [7.2, 3.9, 4.9, 5.7], "0.5.0": [6.3, 3.8, 4.7, 5.7]},
-    "load_ms": {"0.2.3": [3.1, 67.3, 109.5, 885.9], "0.3.0": [3.1, 66.6, 109.9, 861.1], "0.3.1": [2.9, 77.8, 110.0, 907.8], "0.4.0": [2.9, 78.2, 124.9, 962.1], "0.5.0": [3.0, 72.5, 111.7, 891.9]},
+    "parse_ms": {"0.2.3": [211.86, 121.89, 247.57, 151.35], "0.3.0": [21.95, 8.80, 25.28, 15.89], "0.3.1": [21.9, 9.0, 25.5, 15.7], "0.4.0": [6.4, 3.6, 4.5, 5.5], "0.5.0": [6.3, 3.5, 4.3, 5.5], "0.5.1": [7.7, 3.8, 4.8, 6.1]},
+    "first_parse_ms": {"0.2.3": [1925.0, 1896.9, 1974.3, 1824.8], "0.3.0": [22.1, 8.9, 25.7, 15.6], "0.3.1": [21.9, 9.2, 25.6, 15.9], "0.4.0": [7.2, 3.9, 4.9, 5.7], "0.5.0": [6.3, 3.8, 4.7, 5.7], "0.5.1": [9.1, 4.2, 5.2, 6.1]},
+    "load_ms": {"0.2.3": [3.1, 67.3, 109.5, 885.9], "0.3.0": [3.1, 66.6, 109.9, 861.1], "0.3.1": [2.9, 77.8, 110.0, 907.8], "0.4.0": [2.9, 78.2, 124.9, 962.1], "0.5.0": [3.0, 72.5, 111.7, 891.9], "0.5.1": [3.3, 84.4, 128.5, 1013.9]},
     "ontologies": ["animals-test", "econ-20160218", "medicopilot", "acanames-20251028"],
-    "peak_memory_mb": {"0.2.3_engine": 74.0, "0.2.3_worker": 133.4, "0.2.3_launcher": 3.4, "0.3.0": 67.6, "0.3.1": 67.3, "0.4.0": 67.7, "0.5.0": 67.9}
+    "peak_memory_mb": {"0.2.3_engine": 74.0, "0.2.3_worker": 133.4, "0.2.3_launcher": 3.4, "0.3.0": 67.6, "0.3.1": 67.3, "0.4.0": 67.7, "0.5.0": 67.9, "0.5.1": 79.0}
   },
-  "windows_package": {"zip_kilobytes": 617, "version_check": "passed", "packaged_parse": "passed"},
+  "windows_package": {"zip_kilobytes": 628, "version_check": "passed", "packaged_parse": "passed"},
   "earlier_releases": "Records for 0.2.x are in the repository history at commit f10e679, and for 0.3.0 at commit d80ad11.",
   "contract": "docs/compatibility.md",
   "implementation_map": "docs/implementation-map.json",

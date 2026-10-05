@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#define MUTATOC_VERSION "0.5.0"
+#define MUTATOC_VERSION "0.5.1"
 
 typedef struct mc_engine mc_engine;
 typedef struct {
