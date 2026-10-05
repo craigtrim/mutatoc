@@ -95,6 +95,9 @@ if(BUILD_TESTING)
   # Tokens and entities that keep the text the input sent (craigtrim/mutatoc#7).
   mutatoc_program(mutatoc_token_fidelity tests/test_token_fidelity.c)
   add_test(NAME token_fidelity COMMAND mutatoc_token_fidelity ${CMAKE_CURRENT_SOURCE_DIR})
+  # Span rules that hold every content word within the distance (craigtrim/mutatoc#9).
+  mutatoc_program(mutatoc_span_distance tests/test_span_distance.c)
+  add_test(NAME span_distance COMMAND mutatoc_span_distance ${CMAKE_CURRENT_SOURCE_DIR})
   # Timing ceilings only mean something in optimized builds without sanitizers.
   # Build type names are case-insensitive in CMake, so compare them uppercased.
   set(optimized_configurations Release RelWithDebInfo MinSizeRel)
