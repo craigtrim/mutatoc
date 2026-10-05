@@ -85,14 +85,15 @@
     },
     "span_distance": {
       "issue": "https://github.com/craigtrim/mutatoc/issues/9",
-      "issues": ["https://github.com/craigtrim/mutatoc/issues/9", "https://github.com/craigtrim/mutatoc/issues/11"],
-      "filed_cases": {"tests/fixtures/api/span-fixpoint-cases.json": 541},
-      "against_9ab1dd4_matcher": {"assertions": 81289, "passed": 71044, "note": "the matcher before #11, which applied at most three spans per parse"},
+      "issues": ["https://github.com/craigtrim/mutatoc/issues/9", "https://github.com/craigtrim/mutatoc/issues/11", "https://github.com/craigtrim/mutatoc/issues/12"],
+      "filed_cases": {"tests/fixtures/api/span-fixpoint-cases.json": 541, "tests/fixtures/api/span-whitespace-cases.json": 935},
+      "against_9ab1dd4_matcher": {"assertions": 81289, "passed": 71044, "note": "the matcher before #11, which applied at most three spans per parse, against the suite as #11 left it"},
+      "against_c43093c_matcher": {"assertions": 100087, "passed": 92237, "note": "the matcher before #12, where whitespace-only tokens took a position"},
       "fixture": "tests/fixtures/ontologies/span-distance-test.ttl",
       "load_paths": ["owl", "data", "snapshot", "authored snapshot"],
       "validation_date": "2026-10-05",
-      "cases": 33345, "assertions": 81289, "families": 27,
-      "passed": 81289,
+      "cases": 39111, "assertions": 100136, "families": 30,
+      "passed": 100136,
       "against_0_5_0_matcher": {"assertions": 70178, "passed": 49283, "note": "the monotone family compares neighboring distances only after a match, so fewer of its assertions run against the fixed matcher"}
     },
     "cli": {"tests": ["cli_json", "cli_jsonf", "cli_stopwatch"]}

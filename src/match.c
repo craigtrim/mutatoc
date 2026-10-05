@@ -710,7 +710,9 @@ static void forms_free(Forms *f)
  * allow rather than one per sweep (craigtrim/mutatoc#11). Each round takes the
  * best-ranked rule's tightest window, as a single pass always did. The forms
  * and their positions are indexed once and updated after each collapse
- * instead of being rebuilt from the token list.
+ * instead of being rebuilt from the token list. Whitespace-only tokens take
+ * no position, just as they never interrupt an exact phrase, but a span
+ * still covers those between its words (craigtrim/mutatoc#12).
  */
 static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 {
@@ -718,12 +720,16 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 	Forms f = { 0 };
 	int *form = malloc((size_t)(n ? n : 1) * sizeof(*form));
 	int *at = malloc((size_t)(n ? n : 1) * sizeof(*at));
+	/* Whether each token is whitespace only, and the token at each position. */
+	int *spacing = malloc((size_t)(n ? n : 1) * sizeof(*spacing));
+	int *token = malloc((size_t)(n ? n : 1) * sizeof(*token));
 	Occurrences **words = NULL;
-	if (!form || !at) {
+	if (!form || !at || !spacing || !token) {
 		fail(e, 1, "Cannot allocate span positions");
 		goto done;
 	}
 	EACH(t, ts) {
+		spacing[i] = spacing_token(t);
 		if ((form[i++] = form_id(&f, index, S(GET(t, "normal")))) < 0) {
 			fail(e, 1, "Cannot allocate span positions");
 			goto done;
@@ -733,15 +739,19 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 		for (int g = 0; g < f.count; g++)
 			f.forms[g].at.n = 0;
 		for (i = 0; i < n; i++)
-			f.forms[form[i]].at.n++;
+			if (!spacing[i])
+				f.forms[form[i]].at.n++;
 		for (int g = 0, offset = 0; g < f.count; g++) {
 			f.forms[g].at.at = at + offset;
 			offset += f.forms[g].at.n;
 			f.forms[g].at.n = 0;
 		}
-		for (i = 0; i < n; i++) {
+		for (int position = i = 0; i < n; i++) {
+			if (spacing[i])
+				continue;
 			Occurrences *o = &f.forms[form[i]].at;
-			o->at[o->n++] = i;
+			token[position] = i;
+			o->at[o->n++] = position++;
 		}
 		const SpanRule *best = NULL;
 		int bx = 0, by = 0, score = -1;
@@ -787,8 +797,8 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 				int x = 0, y = 0;
 				if (valid && span_window(words, k, r, &x, &y)) {
 					best = r;
-					bx = x;
-					by = y + 1;
+					bx = token[x];
+					by = token[y] + 1;
 					score = r->rank;
 				}
 			}
@@ -811,12 +821,17 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 		DEL(ner);
 		ts = collapse(ts, bx, by, r);
 		form[bx] = id;
+		spacing[bx] = 0;
 		memmove(form + bx + 1, form + by,
 			(size_t)(n - by) * sizeof(*form));
+		memmove(spacing + bx + 1, spacing + by,
+			(size_t)(n - by) * sizeof(*spacing));
 		n -= by - bx - 1;
 	}
 done:
 	free(words);
+	free(token);
+	free(spacing);
 	free(at);
 	free(form);
 	forms_free(&f);

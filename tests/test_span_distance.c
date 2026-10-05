@@ -410,22 +410,29 @@ static void search(Search *q, int c)
 	}
 }
 
-/* Collapses the rule's tightest window and says whether there was one. */
+/*
+ * Collapses the rule's tightest window and says whether there was one.
+ * Whitespace-only tokens take no position (craigtrim/mutatoc#12).
+ */
 static int oracle_spans(Stream *st, const Rule *r)
 {
 	Search q = { 0 };
 	q.r = r;
 	long combinations = 1;
-	int ok = 1, context = !r->context;
+	int ok = 1, context = !r->context, counted = 0;
+	int *piece = malloc((size_t)(st->n ? st->n : 1) * sizeof(int));
 	for (int i = 0; i < st->n; i++)
 		if (r->context && !strcmp(st->s[i].normal, r->context))
 			context = 1;
+	for (int i = 0; i < st->n; i++)
+		if (!st->s[i].space)
+			piece[counted++] = i;
 	for (int c = 0; c < r->k; c++) {
-		q.at[c] = malloc((size_t)(st->n ? st->n : 1) * sizeof(int));
-		for (int i = 0; i < st->n; i++)
-			if (!st->s[i].canon &&
-			    !strcmp(st->s[i].normal, r->content[c]))
-				q.at[c][q.count[c]++] = i;
+		q.at[c] = malloc((size_t)(counted ? counted : 1) * sizeof(int));
+		for (int p = 0; p < counted; p++)
+			if (!st->s[piece[p]].canon &&
+			    !strcmp(st->s[piece[p]].normal, r->content[c]))
+				q.at[c][q.count[c]++] = p;
 		combinations *= q.count[c];
 		ok = ok && q.count[c];
 	}
@@ -438,7 +445,8 @@ static int oracle_spans(Stream *st, const Rule *r)
 	for (int c = 0; c < r->k; c++)
 		free(q.at[c]);
 	if (q.found)
-		collapse_slots(st, q.lo, q.hi, r->canon, "spans");
+		collapse_slots(st, piece[q.lo], piece[q.hi], r->canon, "spans");
+	free(piece);
 	return q.found;
 }
 
@@ -708,7 +716,7 @@ static const Literal accepted[] = {
 	{ 4,
 	  "marine pottery amber workshop marine pottery",
 	  { { "marine_pottery_workshop", "spans", 21, 44 } } },
-	/* Punctuation and extra whitespace each take a position. */
+	/* Punctuation takes a position; extra whitespace does not (#12). */
 	{ 4,
 	  "marine, pottery, workshop",
 	  { { "marine_pottery_workshop", "spans", 0, 25 } } },
@@ -716,8 +724,16 @@ static const Literal accepted[] = {
 	{ 4,
 	  "marine amber pottery workshop",
 	  { { "marine_pottery_workshop", "spans", 0, 29 } } },
-	{ 4, "marine  amber  pottery workshop", { { NULL } } },
-	{ 4, "marine\tamber\tpottery workshop", { { NULL } } },
+	{ 4,
+	  "marine  amber  pottery workshop",
+	  { { "marine_pottery_workshop", "spans", 0, 31 } } },
+	{ 4,
+	  "marine\tamber\tpottery workshop",
+	  { { "marine_pottery_workshop", "spans", 0, 29 } } },
+	{ 4,
+	  "marine  amber  birch  pottery workshop",
+	  { { "marine_pottery_workshop", "spans", 0, 38 } } },
+	{ 4, "marine  amber  birch  cobalt  pottery workshop", { { NULL } } },
 	/* Whitespace never interrupts an exact phrase. */
 	{ 4,
 	  "marine\r\npottery\r\nworkshop",
@@ -725,9 +741,19 @@ static const Literal accepted[] = {
 	{ 4,
 	  "Marine Pottery\r\nWorkshop",
 	  { { "marine_pottery_workshop", "exact", 0, 24 } } },
-	/* Items of a pasted list sit a tab, a count and a break apart. */
-	{ 4, "Marine Biology\t12\r\nPottery Workshop Basics\t30", { { NULL } } },
-	{ 4, "Marine Pottery\t12\r\nWorkshop Basics\t30", { { NULL } } },
+	/*
+	 * Items of a pasted list sit only a count apart once tabs and breaks
+	 * take no position, so a title split across two lines can match (#12).
+	 */
+	{ 4,
+	  "Marine Biology\t12\r\nPottery Workshop Basics\t30",
+	  { { "marine_pottery_workshop", "spans", 0, 35 } } },
+	{ 4,
+	  "Marine Pottery\t12\r\nWorkshop Basics\t30",
+	  { { "marine_pottery_workshop", "spans", 0, 27 } } },
+	{ 4,
+	  "Marine Biology\t12\r\nOak Elm\t7\r\nPottery Workshop",
+	  { { NULL } } },
 	{ 8,
 	  "Marine Pottery\t12\r\nWorkshop Basics\t30",
 	  { { "marine_pottery_workshop", "spans", 0, 27 } } },
@@ -1999,38 +2025,221 @@ static void mixed_groups(void)
 	}
 }
 
-/* Every case filed with the issue, expected entities as the issue gives them. */
-static void fixpoint_cases(const char *root)
+/* Every case filed with an issue, expected entities as the issue gives them. */
+static void filed_cases(const char *root, const char *path,
+			const char *category)
 {
-	J *doc = test_read_json(root,
-				"tests/fixtures/api/span-fixpoint-cases.json");
+	J *doc = test_read_json(root, path);
 	J *cases = GET(doc, "cases");
-	if (!test_require_cases(cases, "span-fixpoint-cases.json")) {
+	if (!test_require_cases(cases, path)) {
 		failures++;
 		DEL(doc);
 		return;
 	}
 	EACH(c, cases) {
 		int d = GET(c, "distance")->valueint,
-		    ctr = GET(c, "ctr")->valueint;
+		    ctr = GET(c, "ctr") ? GET(c, "ctr")->valueint : 0;
 		const char *text = S(GET(c, "text"));
 		J *expected = ARR();
 		EACH(e, GET(c, "expected"))
 			ADD(expected,
 			    entity(S(AT(e, 0)), S(AT(e, 1)), AT(e, 2)->valueint,
 				   AT(e, 3)->valueint));
-		count_case("issue 11 cases");
+		count_case(category);
 		for (int l = 0; l < LOADS; l++) {
 			char where[48];
 			snprintf(where, sizeof(where), "%s d=%d ctr=%d",
 				 load_names[l], d, ctr);
 			J *actual = parse_ctr(engines[d][l], text, ctr);
-			check("issue 11 cases", where, text, actual, expected);
+			check(category, where, text, actual, expected);
 			DEL(actual);
 		}
 		DEL(expected);
 	}
 	DEL(doc);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Whitespace takes no position in span distance. craigtrim/mutatoc#12    */
+
+/* The separators that are whitespace only. */
+static const int spaces[] = { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 };
+#define SPACES ((int)(sizeof(spaces) / sizeof(*spaces)))
+
+/*
+ * Gaps of whitespace runs (w) and filler words (f) between the label's words
+ * in every order. Only fillers move words apart, and whitespace never stops
+ * an exact phrase.
+ */
+static void whitespace_gaps(void)
+{
+	static const char *patterns[] = { "",	"w",   "f",  "wf",
+					  "fw", "wfw", "ff", "fwf" };
+	static const struct {
+		int label, patterns, kinds, low, high;
+	} plans[] = {
+		{ GLACIER, 8, SPACES, 1, 4 },
+		{ MARINE, 8, 3, 4, 4 },
+		{ ORBITAL, 4, 1, 4, 4 },
+	};
+	for (size_t p = 0; p < sizeof(plans) / sizeof(*plans); p++) {
+		const Label *l = &labels[plans[p].label];
+		int k = count_words(l->label), perm[8];
+		identity(perm, k);
+		do {
+			int gaps[8] = { 0 };
+			for (;;) {
+				for (int kind = 0; kind < plans[p].kinds;
+				     kind++) {
+					Text t = { 0 };
+					int fillers = 0;
+					for (int i = 0; i < k; i++) {
+						for (const char *c =
+							     i ? patterns[gaps[i -
+									       1]] :
+								 "";
+						     *c; c++)
+							if (*c == 'w')
+								text_sep(
+									&t,
+									spaces[(kind +
+										i) %
+									       SPACES]);
+							else {
+								text_filler(&t);
+								fillers++;
+							}
+						text_styled(&t,
+							    l->label[perm[i]],
+							    1);
+					}
+					for (int d = plans[p].low;
+					     d <= plans[p].high; d++) {
+						J *expected =
+							is_identity(
+								perm,
+								k) && !fillers ?
+								covering(
+									&t, 0,
+									t.n - 1,
+									l->canon,
+									"exact") :
+							k - 1 + fillers <= d ?
+								covering(
+									&t, 0,
+									t.n - 1,
+									l->canon,
+									"spans") :
+								ARR();
+						expect_text("whitespace gaps",
+							    d, text_of(&t),
+							    expected);
+						DEL(expected);
+					}
+					text_free(&t);
+				}
+				int g = 0;
+				while (g < k - 1 &&
+				       ++gaps[g] >= plans[p].patterns)
+					gaps[g++] = 0;
+				if (g == k - 1)
+					break;
+			}
+		} while (next_permutation(perm, k));
+	}
+}
+
+/* Each entity as its canon, type and the word positions it covers. */
+static J *word_spans(const Text *t, const J *entities)
+{
+	J *out = ARR();
+	EACH(e, entities) {
+		int first = -1, last = -1;
+		for (int i = 0, word = 0; i < t->n; i++) {
+			if (t->space[i])
+				continue;
+			if (t->x[i] == GET(e, "x")->valueint && first < 0)
+				first = word;
+			if (t->y[i] == GET(e, "y")->valueint)
+				last = word;
+			word++;
+		}
+		J *s = ARR();
+		ADD(s, DUP(GET(e, "canon")));
+		ADD(s, DUP(GET(e, "type")));
+		ADD(s, NUM(first));
+		ADD(s, NUM(last));
+		ADD(out, s);
+	}
+	return out;
+}
+
+/*
+ * Whitespace between two words never changes what matches: the same words
+ * joined by single spaces and by runs of tabs, spaces and line breaks give
+ * the same entities over the same words.
+ */
+static void whitespace_invariance(void)
+{
+	static const int which[] = { GLACIER, MARINE, ORBITAL, OFFICE };
+	for (int c = 0; c < 1500; c++) {
+		int label = which[c % 4], d = 1 + rnd(MAX_DISTANCE), items[40],
+		    n = 3 + rnd(20);
+		const Label *l = &labels[label];
+		int words = count_words(l->label);
+		/* Word indexes into the label, -1 for a filler, -2 - s for separator s. */
+		for (int i = 0; i < n; i++) {
+			int r = rnd(100);
+			items[i] = r < 50 ? rnd(words) :
+				   r < 60 && i && items[i - 1] > -2 ?
+					    -2 - rnd(8) :
+					    -1;
+		}
+		Text single = { 0 }, spaced = { 0 };
+		single.filler = spaced.filler = rnd(FILLERS);
+		uint32_t keep = seed;
+		for (int pass = 0; pass < 2; pass++) {
+			Text *t = pass ? &spaced : &single;
+			seed = keep;
+			for (int i = 0; i < n; i++) {
+				if (items[i] <= -2) {
+					text_sep(t, -2 - items[i]);
+					continue;
+				}
+				int ws = rnd(SPACES), insert = rnd(2);
+				if (pass && t->word && insert)
+					text_sep(t, spaces[ws]);
+				if (items[i] < 0)
+					text_filler(t);
+				else
+					text_styled(t, l->label[items[i]],
+						    rnd(4));
+			}
+		}
+		Rule r = label_rule(label, d);
+		J *expected = oracle(&single, &r, PARSE),
+		  *base = parse(engines[d][0], text_of(&single)),
+		  *want = word_spans(&single, base);
+		count_case("whitespace invariance");
+		check("whitespace invariance", "owl single spaces",
+		      text_of(&single), base, expected);
+		for (int ld = 0; ld < LOADS; ld++) {
+			char where[32];
+			snprintf(where, sizeof(where), "%s d=%d",
+				 load_names[ld], d);
+			J *actual = parse(engines[d][ld], text_of(&spaced)),
+			  *got = word_spans(&spaced, actual);
+			check("whitespace invariance", where, text_of(&spaced),
+			      got, want);
+			DEL(got);
+			DEL(actual);
+		}
+		DEL(want);
+		DEL(base);
+		DEL(expected);
+		text_free(&single);
+		text_free(&spaced);
+	}
 }
 
 /* ---------------------------------------------------------------------- */
@@ -2227,7 +2436,12 @@ int main(int argc, char **argv)
 	sweeps();
 	span_lists();
 	mixed_groups();
-	fixpoint_cases(argv[1]);
+	filed_cases(argv[1], "tests/fixtures/api/span-fixpoint-cases.json",
+		    "issue 11 cases");
+	filed_cases(argv[1], "tests/fixtures/api/span-whitespace-cases.json",
+		    "issue 12 cases");
+	whitespace_gaps();
+	whitespace_invariance();
 	for (int i = 0; i < category_count; i++)
 		printf("%-22s %6d cases %6d failed assertions\n",
 		       categories[i].name, categories[i].cases,
