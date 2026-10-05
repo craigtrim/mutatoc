@@ -130,7 +130,7 @@ The reference is Mutato revision `da6bfa5df80b208a3271e111f2921ad281d0da98`. `ct
 | `extensions` | Optional stages, exact-window regressions, collections, external synonyms, prefixes |
 | `tokenize` | The native tokenizer contract |
 | `token_fidelity` | 3,244 cases that hold every token and entity to the input's exact text and offsets, across apostrophe, quote and dash variants in the input and in stored synonyms, whitespace, contractions, abbreviations, Unicode and invalid input |
-| `span_distance` | 33,345 cases that hold every word of a span rule within its distance and turn every group of span words into a span, across label widths, word orders, repeated words, punctuation and whitespace, pasted lists up to 1,442 lines, stopwords, competing rules, `ctr` values, the spans stage on its own, direction flags and context words, checked against an oracle that tries every choice of occurrences and against the 541 cases filed with #11 |
+| `span_distance` | 39,111 cases that hold every word of a span rule within its distance, turn every group of span words into a span and give whitespace no position, across label widths, word orders, repeated words, punctuation and whitespace, pasted lists up to 1,442 lines, stopwords, competing rules, `ctr` values, the spans stage on its own, direction flags and context words, checked against an oracle that tries every choice of occurrences and against the 541 cases filed with #11 and the 935 filed with #12 |
 | `concurrency` | 24 engines on 8 threads through the public C API |
 | `native`, `text`, `embedding` | Ontology loading, caller metadata, Unicode and URI handling, the embedding example |
 | `cli_json`, `cli_jsonf`, `cli_stopwatch` | The one-shot CLI's output formats |

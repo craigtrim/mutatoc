@@ -79,6 +79,8 @@ Measured on 2026-10-05 on the same machine with GCC Release builds:
 
 The first column does less work, since it stops after three spans. Peak memory in the benchmark rises to 79 MB because it now also holds the parse of the 1,442-line list.
 
+Giving whitespace-only tokens no position ([#12](https://github.com/craigtrim/mutatoc/issues/12)) adds one flag per token to that index and numbers positions over the remaining tokens. Run back to back with the build before it on 2026-10-05, the four benchmark documents parsed in 3.4 to 6.5 ms with and without the change, and the span list in 450 to 466 ms against 465 to 494 ms.
+
 ## Performance gate
 
 <!-- craigtrim/mutatoc#2 -->

@@ -63,12 +63,13 @@ A matched entity is a new token `{id, x, y, ner, text, normal, swaps}` whose `no
 
 ## Span rules
 
-<!-- craigtrim/mutatoc#9, craigtrim/mutatoc#11 -->
+<!-- craigtrim/mutatoc#9, craigtrim/mutatoc#11, craigtrim/mutatoc#12 -->
 
 A span rule matches the words of a multiword label when they appear near each other in any order rather than as the exact phrase. The snapshot's `spans` view keys each rule by the label's first word and lists the label's other words, without stopwords, as `content`. A rule matches when the text holds the key and every content word, and one occurrence of each can be chosen so that the first and last chosen positions are at most `distance` apart. The distance is 4 unless `load` or `generate_spans` sets another value. The `spans` entity covers the tokens from the first chosen occurrence to the last.
 
 - Every word of the rule is held to the distance, not only two of them. A rule whose key and content words, after stopwords are dropped, number more than `distance + 1` can therefore match only as its exact phrase: `Office of Tidal Records` needs three words, not four.
-- Positions count tokens. Punctuation is a token, and so is each run of whitespace beyond the single space after a word: a second space, a tab or a line break. In `marine, pottery, workshop` the first and last words are four positions apart; in `marine pottery workshop` they are two. An entity matched exactly earlier in the parse is one position.
+- Positions count every token except whitespace. Punctuation takes a position, while a run of whitespace beyond the single space after a word (a second space, a tab or a line break) takes none, just as it never interrupts an exact phrase. In `marine, pottery, workshop` the first and last words are four positions apart; in `marine pottery workshop` they are two, and they stay two when tabs or line breaks replace the spaces. A span still covers the whitespace between its words, so its `text`, `x` and `y` are those of the input. An entity matched exactly earlier in the parse is one position.
+- Because line breaks take no position, words at the end of one line of a pasted list and the start of the next sit only a count or so apart and can match. Treating a line break as a boundary would be segmentation, which mutatoc does not do; a caller that wants lines matched apart can send each line on its own.
 - When a word occurs more than once, the rule uses the occurrences that lie closest together, and the leftmost of equally close sets.
 - A stopword the rule leaves out is not required, but it takes a position when the text contains it.
 - `context` words must appear somewhere in the text and are not held to the distance.
