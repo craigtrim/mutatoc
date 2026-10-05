@@ -580,145 +580,246 @@ static int span_window(Occurrences *const *words, int k, const SpanRule *r,
 		       int *x, int *y)
 {
 	const Occurrences *a = words[0], *b = words[k - 1];
-	int found = 0;
-	for (int w = 0; w < k; w++)
-		for (int i = 0; i < words[w]->n; i++) {
-			int s = words[w]->at[i], pa, pb;
-			/* One word in both places is never out of order. */
-			if (a == b) {
-				pa = pb = s;
-			} else if (r->forward && r->reverse) {
-				pa = occurrence_from(a, s);
-				pb = occurrence_from(b, s);
-			} else if (r->reverse) {
-				pa = occurrence_from(a, s);
-				pb = pa < 0 ? -1 : occurrence_from(b, pa + 1);
-			} else if (r->forward) {
-				pb = occurrence_from(b, s);
-				pa = pb < 0 ? -1 : occurrence_from(a, pb + 1);
-			} else {
-				return 0;
-			}
-			if (pa < 0 || pb < 0)
-				continue;
-			int lo = pa < pb ? pa : pb, hi = pa < pb ? pb : pa;
-			for (int j = 1; j < k - 1 && lo >= 0; j++) {
-				int p = occurrence_from(words[j], s);
-				if (p < 0)
-					lo = -1;
-				else if (p < lo)
-					lo = p;
-				else if (p > hi)
-					hi = p;
-			}
-			if (lo < 0 || hi - lo > r->distance)
-				continue;
-			if (!found || hi - lo < *y - *x ||
-			    (hi - lo == *y - *x && lo < *x)) {
-				*x = lo;
-				*y = hi;
-				found = 1;
-			}
+	int found = 0, tightest = -1;
+	if (a != b && !r->forward && !r->reverse)
+		return 0;
+	/*
+	 * No window is tighter than one position per distinct word. Starts are
+	 * taken in ascending order, so the first window that tight which begins
+	 * at its own start is the leftmost of the tightest. craigtrim/mutatoc#11
+	 */
+	for (int w = 0; w < k; w++) {
+		int seen = 0;
+		for (int v = 0; v < w && !seen; v++)
+			seen = words[v] == words[w];
+		tightest += !seen;
+	}
+	for (int s = -1;;) {
+		int next = -1;
+		for (int w = 0; w < k; w++) {
+			int p = occurrence_from(words[w], s + 1);
+			if (p >= 0 && (next < 0 || p < next))
+				next = p;
 		}
+		if (next < 0)
+			break;
+		s = next;
+		int pa, pb;
+		/* One word in both places is never out of order. */
+		if (a == b) {
+			pa = pb = s;
+		} else if (r->forward && r->reverse) {
+			pa = occurrence_from(a, s);
+			pb = occurrence_from(b, s);
+		} else if (r->reverse) {
+			pa = occurrence_from(a, s);
+			pb = pa < 0 ? -1 : occurrence_from(b, pa + 1);
+		} else {
+			pb = occurrence_from(b, s);
+			pa = pb < 0 ? -1 : occurrence_from(a, pb + 1);
+		}
+		if (pa < 0 || pb < 0)
+			continue;
+		int lo = pa < pb ? pa : pb, hi = pa < pb ? pb : pa;
+		for (int j = 1; j < k - 1 && lo >= 0; j++) {
+			int p = occurrence_from(words[j], s);
+			if (p < 0)
+				lo = -1;
+			else if (p < lo)
+				lo = p;
+			else if (p > hi)
+				hi = p;
+		}
+		if (lo < 0 || hi - lo > r->distance)
+			continue;
+		if (!found || hi - lo < *y - *x ||
+		    (hi - lo == *y - *x && lo < *x)) {
+			*x = lo;
+			*y = hi;
+			found = 1;
+		}
+		if (*y - *x == tightest && *x == s)
+			break;
+	}
 	return found;
 }
 
+/* One distinct normal form in the token stream and its current positions. */
+typedef struct {
+	char *name;
+	const SpanList *rules; /* the span rules this form keys, or NULL */
+	Occurrences at;
+} Form;
+
+typedef struct {
+	Map ids; /* normal form to its index plus one */
+	Form *forms;
+	int count, cap;
+	int *keyed, keyed_count; /* forms that key span rules, in byte order */
+} Forms;
+
+/* The index of a normal form, added on first sight; -1 if memory runs out. */
+static int form_id(Forms *f, const MatchIndex *index, const char *name)
+{
+	int id = (int)(uintptr_t)map_get(&f->ids, name);
+	if (id)
+		return id - 1;
+	if (f->count == f->cap) {
+		int cap = f->cap ? f->cap * 2 : 64;
+		Form *forms = realloc(f->forms, (size_t)cap * sizeof(*forms));
+		int *keyed = realloc(f->keyed, (size_t)cap * sizeof(*keyed));
+		if (forms)
+			f->forms = forms;
+		if (keyed)
+			f->keyed = keyed;
+		if (!forms || !keyed)
+			return -1;
+		f->cap = cap;
+	}
+	Form *x = &f->forms[f->count];
+	x->name = copy(name);
+	if (!x->name)
+		return -1;
+	x->rules = map_get((Map *)&index->spans, name);
+	x->at = (Occurrences){ 0 };
+	map_put(&f->ids, name, (void *)(uintptr_t)(f->count + 1));
+	if (x->rules) {
+		int at = f->keyed_count;
+		while (at > 0 &&
+		       strcmp(f->forms[f->keyed[at - 1]].name, name) > 0)
+			at--;
+		memmove(f->keyed + at + 1, f->keyed + at,
+			(size_t)(f->keyed_count - at) * sizeof(*f->keyed));
+		f->keyed[at] = f->count;
+		f->keyed_count++;
+	}
+	return f->count++;
+}
+
+static void forms_free(Forms *f)
+{
+	for (int i = 0; i < f->count; i++)
+		free(f->forms[i].name);
+	free(f->forms);
+	free(f->keyed);
+	map_free(&f->ids);
+}
+
+/*
+ * Applies span rules until none fits, so a text gets every span its words
+ * allow rather than one per sweep (craigtrim/mutatoc#11). Each round takes the
+ * best-ranked rule's tightest window, as a single pass always did. The forms
+ * and their positions are indexed once and updated after each collapse
+ * instead of being rebuilt from the token list.
+ */
 static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 {
-	const SpanRule *best = NULL;
-	int bx = 0, by = 0, score = -1, count = SIZE(ts), groups = 0, n = 0;
-	Map positions = { 0 };
-	J *keys = ARR();
-	/* Every position of every normal form, grouped by form. */
-	int *group = malloc((size_t)(count ? count : 1) * sizeof(*group));
-	int *at = malloc((size_t)(count ? count : 1) * sizeof(*at));
-	Occurrences *occurrences =
-		calloc((size_t)(count ? count : 1), sizeof(*occurrences));
+	int n = SIZE(ts), applications = 0, word_cap = 0, i = 0;
+	Forms f = { 0 };
+	int *form = malloc((size_t)(n ? n : 1) * sizeof(*form));
+	int *at = malloc((size_t)(n ? n : 1) * sizeof(*at));
 	Occurrences **words = NULL;
-	int word_cap = 0;
-	if (!group || !at || !occurrences) {
+	if (!form || !at) {
 		fail(e, 1, "Cannot allocate span positions");
 		goto done;
 	}
 	EACH(t, ts) {
-		const char *normal = S(GET(t, "normal"));
-		int g = (int)(uintptr_t)map_get(&positions, normal);
-		if (!g) {
-			g = ++groups;
-			map_put(&positions, normal, (void *)(uintptr_t)g);
-			ADD(keys, STR(normal));
+		if ((form[i++] = form_id(&f, index, S(GET(t, "normal")))) < 0) {
+			fail(e, 1, "Cannot allocate span positions");
+			goto done;
 		}
-		group[n++] = g - 1;
-		occurrences[g - 1].n++;
 	}
-	for (int g = 0, offset = 0; g < groups; g++) {
-		occurrences[g].at = at + offset;
-		offset += occurrences[g].n;
-		occurrences[g].n = 0;
-	}
-	for (int i = 0; i < count; i++) {
-		Occurrences *o = &occurrences[group[i]];
-		o->at[o->n++] = i;
-	}
-	sort_strings(keys, 0);
-	EACH(key, keys) {
-		const SpanList *list = map_get((Map *)&index->spans, S(key));
-		for (int i = 0; list && i < list->n; i++) {
-			const SpanRule *r = &list->rules[i];
-			int k = SIZE(r->content), valid = k > 0;
-			/* A rule that cannot outrank the best one changes nothing. */
-			if (!valid || r->rank <= score)
+	while (!e->code) {
+		for (int g = 0; g < f.count; g++)
+			f.forms[g].at.n = 0;
+		for (i = 0; i < n; i++)
+			f.forms[form[i]].at.n++;
+		for (int g = 0, offset = 0; g < f.count; g++) {
+			f.forms[g].at.at = at + offset;
+			offset += f.forms[g].at.n;
+			f.forms[g].at.n = 0;
+		}
+		for (i = 0; i < n; i++) {
+			Occurrences *o = &f.forms[form[i]].at;
+			o->at[o->n++] = i;
+		}
+		const SpanRule *best = NULL;
+		int bx = 0, by = 0, score = -1;
+		for (int key = 0; key < f.keyed_count; key++) {
+			const Form *keyed = &f.forms[f.keyed[key]];
+			if (!keyed->at.n)
 				continue;
-			if (k > word_cap) {
-				Occurrences **grown = realloc(
-					words, (size_t)k * sizeof(*words));
-				if (!grown) {
-					fail(e, 1,
-					     "Cannot allocate span positions");
-					goto done;
+			for (int r_at = 0; r_at < keyed->rules->n; r_at++) {
+				const SpanRule *r = &keyed->rules->rules[r_at];
+				int k = SIZE(r->content), valid = k > 0;
+				/* A rule that cannot outrank the best one changes nothing. */
+				if (!valid || r->rank <= score)
+					continue;
+				if (k > word_cap) {
+					Occurrences **grown = realloc(
+						words,
+						(size_t)k * sizeof(*words));
+					if (!grown) {
+						fail(e, 1,
+						     "Cannot allocate span positions");
+						goto done;
+					}
+					words = grown;
+					word_cap = k;
 				}
-				words = grown;
-				word_cap = k;
-			}
-			int w = 0;
-			EACH(v, r->content) {
-				int g = (int)(uintptr_t)map_get(&positions,
-								S(v));
-				if (!g) {
-					valid = 0;
-					break;
+				int w = 0;
+				EACH(v, r->content) {
+					int id = (int)(uintptr_t)map_get(&f.ids,
+									 S(v));
+					if (!id || !f.forms[id - 1].at.n) {
+						valid = 0;
+						break;
+					}
+					words[w++] = &f.forms[id - 1].at;
 				}
-				words[w++] = &occurrences[g - 1];
-			}
-			EACH(v, r->context)
-				if (valid && !map_get(&positions, S(v)))
-					valid = 0;
-			int x = 0, y = 0;
-			if (valid && span_window(words, k, r, &x, &y)) {
-				best = r;
-				bx = x;
-				by = y + 1;
-				score = r->rank;
+				EACH(v, r->context) {
+					int id = (int)(uintptr_t)map_get(&f.ids,
+									 S(v));
+					if (valid &&
+					    (!id || !f.forms[id - 1].at.n))
+						valid = 0;
+				}
+				int x = 0, y = 0;
+				if (valid && span_window(words, k, r, &x, &y)) {
+					best = r;
+					bx = x;
+					by = y + 1;
+					score = r->rank;
+				}
 			}
 		}
-	}
-done:
-	free(words);
-	free(occurrences);
-	free(at);
-	free(group);
-	map_free(&positions);
-	DEL(keys);
-	if (e->code)
-		return ts;
-	if (best) {
+		if (!best)
+			break;
+		if (++applications > 100000) {
+			fail(e, 4, "Matching operation limit exceeded");
+			break;
+		}
 		const char *canon = best->canon;
+		int id = form_id(&f, index, canon);
+		if (id < 0) {
+			fail(e, 1, "Cannot allocate span positions");
+			break;
+		}
 		J *ner = index->live ? STR("NER") :
 				       DUP(map_get((Map *)&index->ner, canon));
 		J *r = swap(ts, bx, by, canon, "spans", names, ner, 100.0);
 		DEL(ner);
-		return collapse(ts, bx, by, r);
+		ts = collapse(ts, bx, by, r);
+		form[bx] = id;
+		memmove(form + bx + 1, form + by,
+			(size_t)(n - by) * sizeof(*form));
+		n -= by - bx - 1;
 	}
+done:
+	free(words);
+	free(at);
+	free(form);
+	forms_free(&f);
 	return ts;
 }
 

@@ -63,6 +63,22 @@ The span stage groups the positions of each normal form once per sweep, and for 
 
 The differences are within run-to-run noise. Loads and peak memory (68 MB) do not change.
 
+## Spans until none fits
+
+<!-- craigtrim/mutatoc#11 -->
+
+The span stage now applies rules until none fits instead of once per sweep ([#11](https://github.com/craigtrim/mutatoc/issues/11)). Repeating the single pass would rebuild the position map, sort the distinct forms and walk the token list after every span. The stage instead groups the text's forms into integer ids once, keeps the forms that key span rules in byte order, and after each span moves the later positions down and adds the canonical form. The window search takes starts in ascending order and stops at the first window as tight as the rule allows that begins at its own start. Over 45,486 generated parse, `parse_tokens` and spans stage requests on two ontologies at three distances, the indexed loop and the simple repeated pass returned identical responses.
+
+Measured on 2026-10-05 on the same machine with GCC Release builds:
+
+| Workload | 9ab1dd4 (three spans at most) | Repeated single pass | Indexed loop |
+| --- | ---: | ---: | ---: |
+| 1,442 `Survey Glacier` lines, 1,442 spans | 75 ms | 1,030 ms | 120 ms |
+| `tests/fixtures/bench/acanames-span-list.txt`, about 700 spans | 110 ms | 3,400 ms | 440 ms |
+| The four 2,400-character benchmark documents | 3.4 to 6.2 ms | | 3.3 to 6.0 ms |
+
+The first column does less work, since it stops after three spans. Peak memory in the benchmark rises to 79 MB because it now also holds the parse of the 1,442-line list.
+
 ## Performance gate
 
 <!-- craigtrim/mutatoc#2 -->
@@ -76,6 +92,7 @@ The differences are within run-to-run noise. Loads and peak memory (68 MB) do no
 | Load: acanames-20251028 | 6,000 ms | 929 ms |
 | First parse of the 2,400-character document | 300 ms | 9 to 26 ms |
 | Warm parse of the same document | 150 ms | 9 to 26 ms |
+| Parse of `tests/fixtures/bench/acanames-span-list.txt` ([#11](https://github.com/craigtrim/mutatoc/issues/11)) | 2,000 ms | 435 ms |
 | Peak memory of the process | 128 MB | 67 MB |
 
 The ceilings are user-facing limits with room for slow shared CI runners, not tight regression factors. They fail the regressions that matter most here: a return to an out-of-process tokenizer (122 to 248 ms per parse and about 1.9 s for the first one), an accidentally quadratic matcher, or a footprint like 0.2.3's 211 MB. A smaller slowdown, such as a load time that grows fivefold but stays under its ceiling, passes; every run prints its measurements so CI logs show the trend.
