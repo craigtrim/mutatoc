@@ -279,8 +279,52 @@ static void ordinary_rule(J *d, const char *canon, const char *term,
 	DEL(ts);
 }
 
-J *generate_spans(J *raw, int distance, int plus_only)
+/* Commas delimit opt-in lists, except between numeric code points (#15). */
+static J *literal_parts(const char *text, int comma_lists)
 {
+	J *parts = ARR();
+	const char *start = text, *p = text;
+	uint32_t prev = 0;
+	for (;;) {
+		const char *at = p;
+		uint32_t c = *p ? uread(&p) : 0;
+		const char *next = p;
+		if (!c ||
+		    (comma_lists && c == ',' &&
+		     !(unumeric(prev) && unumeric(*next ? uread(&next) : 0)))) {
+			char *piece = slice(start, (size_t)(at - start));
+			char *clean = norm(piece, 0, 0);
+			if (*clean)
+				ADD(parts, STR(clean));
+			free(clean);
+			free(piece);
+			start = p;
+		}
+		if (!c)
+			return parts;
+		prev = c;
+	}
+}
+
+J *generate_spans(J *raw, int distance, int plus_only, int comma_lists)
+{
+	/* Both the plus and ordinary passes consume the same list items. */
+	if (comma_lists) {
+		J *expanded = OBJ();
+		EACH(k, raw) {
+			J *values = ARR();
+			EACH(v, k) {
+				J *parts = literal_parts(S(v), 1);
+				EACH(part, parts)
+					unique(values, S(part));
+				DEL(parts);
+			}
+			PUT(expanded, k->string, values);
+		}
+		J *out = generate_spans(expanded, distance, plus_only, 0);
+		DEL(expanded);
+		return out;
+	}
 	J *d = OBJ();
 	Map seen = { 0 }, raw_index = { 0 };
 	index_members(&raw_index, raw);
@@ -339,13 +383,9 @@ J *generate_spans(J *raw, int distance, int plus_only)
 		ordinary_rule(d, k->string, k->string, distance, &seen);
 		J *values = ARR();
 		EACH(v, k) {
-			J *parts = split(S(v), ",");
-			EACH(t, parts) {
-				char *s = norm(S(t), 0, 0);
-				unique(values, s);
-				free(s);
-			}
-			DEL(parts);
+			char *s = norm(S(v), 0, 0);
+			unique(values, s);
+			free(s);
 		}
 		sort_strings(values, 0);
 		EACH(v, values) {
@@ -441,7 +481,8 @@ static char *predicate_key(const char *p)
 	return buf_take(&b);
 }
 
-J *ontology_build(Graph *g, int distance, int force_class, mc_error *e)
+J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
+		  mc_error *e)
 {
 	J *r = OBJ(), *raw = OBJ(), *synraw = OBJ(), *by = OBJ(),
 	  *labels = OBJ(), *ner = OBJ(), *parents = OBJ(), *children = OBJ(),
@@ -509,7 +550,7 @@ J *ontology_build(Graph *g, int distance, int force_class, mc_error *e)
 				if (!*S(v) || !strcmp(S(v), "nil"))
 					continue;
 				indexed_push(raw, &raw_index, key, S(v));
-				J *parts = split(S(v), ",");
+				J *parts = literal_parts(S(v), comma_lists);
 				EACH(p, parts) {
 					char *s = norm(S(p), 0, 0);
 					if (*s)
@@ -634,7 +675,7 @@ J *ontology_build(Graph *g, int distance, int force_class, mc_error *e)
 	PUT(r, "parents", parents);
 	PUT(r, "trie", generate_trie(subentities));
 	PUT(r, "ngrams", grams);
-	PUT(r, "spans", generate_spans(raw, distance, 0));
+	PUT(r, "spans", generate_spans(raw, distance, 0, comma_lists));
 	PUT(r, "labels", labels);
 	if (!SIZE(equivs)) {
 		DEL(equivs);

@@ -1,0 +1,700 @@
+{
+  "issue": "https://github.com/craigtrim/mutatoc/issues/15",
+  "reason": "Upstream replay opts into comma_lists to retain historical synonym lists. These six span buckets apply the corrected plus-list expansion; the original trace is unchanged.",
+  "changes": [
+    {
+      "ontology": "medic-copilot-20230801",
+      "blob": "5e205efd04be9a78",
+      "key": "respiratory_distress",
+      "before": [
+        {
+          "content": [
+            "syndrome, adult"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "acute_respiratory_distress_syndrome"
+        }
+      ],
+      "after": [
+        {
+          "content": [
+            "syndrome"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "acute_respiratory_distress_syndrome"
+        }
+      ],
+      "source_literal": "Respiratory Distress Syndrome, Adult"
+    },
+    {
+      "ontology": "medic-copilot-20230801",
+      "blob": "5e205efd04be9a78",
+      "key": "penetrate",
+      "before": [
+        {
+          "content": [
+            "eye"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        },
+        {
+          "content": [
+            "eye_trauma"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        }
+      ],
+      "after": [
+        {
+          "content": [
+            "eye"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        },
+        {
+          "content": [
+            "eye_trauma"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        },
+        {
+          "content": [
+            "injury"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_wound"
+        }
+      ],
+      "source_literal": "stab+injury, penetrate+injury"
+    },
+    {
+      "ontology": "medic-copilot-20230801",
+      "blob": "5e205efd04be9a78",
+      "key": "eye_trauma",
+      "before": [
+        {
+          "content": [
+            "penetrate"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        }
+      ],
+      "after": [
+        {
+          "content": [
+            "penetrate"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        },
+        {
+          "content": [
+            "penetrating_wound"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        }
+      ],
+      "source_literal": "eye_wound+penetrating_wound, eye_trauma+penetrating_wound"
+    },
+    {
+      "ontology": "medic-copilot-20230801",
+      "blob": "5e205efd04be9a78",
+      "key": "eye_wound",
+      "before": [
+        {
+          "content": [
+            "penetrate"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        },
+        {
+          "content": [
+            "stab"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        },
+        {
+          "content": [
+            "penetrating_wound",
+            "penetrating_wound, eye_trauma"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        }
+      ],
+      "after": [
+        {
+          "content": [
+            "penetrate"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        },
+        {
+          "content": [
+            "stab"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        },
+        {
+          "content": [
+            "penetrating_wound"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_eye_trauma"
+        }
+      ],
+      "source_literal": "eye_wound+penetrating_wound, eye_trauma+penetrating_wound"
+    },
+    {
+      "ontology": "medic-copilot-20230801",
+      "blob": "5e205efd04be9a78",
+      "key": "stab",
+      "before": [
+        {
+          "content": [
+            "injury",
+            "injury, penetrate"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_wound"
+        },
+        {
+          "content": [
+            "wound"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "stab_wound"
+        },
+        {
+          "content": [
+            "leg",
+            "wound"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "stab_wound_to_the_leg"
+        }
+      ],
+      "after": [
+        {
+          "content": [
+            "injury"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "penetrating_wound"
+        },
+        {
+          "content": [
+            "wound"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "stab_wound"
+        },
+        {
+          "content": [
+            "leg",
+            "wound"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "stab_wound_to_the_leg"
+        }
+      ],
+      "source_literal": "stab+injury, penetrate+injury"
+    },
+    {
+      "ontology": "medic-copilot-20230726",
+      "blob": "391d4e1ca240afd4",
+      "key": "decrease",
+      "before": [
+        {
+          "content": [
+            "heart rate"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "bradycardia"
+        },
+        {
+          "content": [
+            "loc"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_level_of_consciousness"
+        },
+        {
+          "content": [
+            "attentiveness"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_level_of_consciousness"
+        },
+        {
+          "content": [
+            "awareness"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_level_of_consciousness"
+        },
+        {
+          "content": [
+            "cognitive awareness"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_level_of_consciousness"
+        },
+        {
+          "content": [
+            "mental activity"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_level_of_consciousness"
+        },
+        {
+          "content": [
+            "mental_state"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_state"
+        },
+        {
+          "content": [
+            "brain function"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            "cognitive function"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            "mental function"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            "alertness"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            "cognitive status"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            "mental capacity"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            ", decreases, decreasing, decreasingly"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "decrease"
+        },
+        {
+          "content": [
+            "bp"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypotension"
+        },
+        {
+          "content": [
+            "blood pressure"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypotension"
+        },
+        {
+          "content": [
+            "body heat"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypothermia"
+        },
+        {
+          "content": [
+            "temperature"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypothermia"
+        },
+        {
+          "content": [
+            "arterial o2"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypoxemia"
+        },
+        {
+          "content": [
+            "oxygen level"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypoxemia"
+        },
+        {
+          "content": [
+            "breathing"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "respiratory_depression"
+        },
+        {
+          "content": [
+            "breathing rate"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "respiratory_depression"
+        },
+        {
+          "content": [
+            "respiration"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "respiratory_depression"
+        },
+        {
+          "content": [
+            "respiratory function"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "respiratory_depression"
+        }
+      ],
+      "after": [
+        {
+          "content": [
+            "heart rate"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "bradycardia"
+        },
+        {
+          "content": [
+            "loc"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_level_of_consciousness"
+        },
+        {
+          "content": [
+            "attentiveness"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_level_of_consciousness"
+        },
+        {
+          "content": [
+            "awareness"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_level_of_consciousness"
+        },
+        {
+          "content": [
+            "cognitive awareness"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_level_of_consciousness"
+        },
+        {
+          "content": [
+            "mental activity"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_level_of_consciousness"
+        },
+        {
+          "content": [
+            "mental_state"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_state"
+        },
+        {
+          "content": [
+            "brain function"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            "cognitive function"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            "mental function"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            "alertness"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            "cognitive status"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            "mental capacity"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "declining_mental_status"
+        },
+        {
+          "content": [
+            ""
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "decrease"
+        },
+        {
+          "content": [
+            "bp"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypotension"
+        },
+        {
+          "content": [
+            "blood pressure"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypotension"
+        },
+        {
+          "content": [
+            "body heat"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypothermia"
+        },
+        {
+          "content": [
+            "temperature"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypothermia"
+        },
+        {
+          "content": [
+            "arterial o2"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypoxemia"
+        },
+        {
+          "content": [
+            "oxygen level"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "hypoxemia"
+        },
+        {
+          "content": [
+            "breathing"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "respiratory_depression"
+        },
+        {
+          "content": [
+            "breathing rate"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "respiratory_depression"
+        },
+        {
+          "content": [
+            "respiration"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "respiratory_depression"
+        },
+        {
+          "content": [
+            "respiratory function"
+          ],
+          "distance": 4,
+          "forward": true,
+          "reverse": true,
+          "canon": "respiratory_depression"
+        }
+      ],
+      "source_literal": "decrease+, Decreases, Decreasing, Decreasingly"
+    }
+  ]
+}

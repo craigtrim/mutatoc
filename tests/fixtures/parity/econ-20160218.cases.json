@@ -7357,6 +7357,46 @@
       },
       {
         "id": "17053192215331816304#11",
+        "text": "global ",
+        "x": 34,
+        "y": 40,
+        "normal": "global"
+      },
+      {
+        "id": "6925186535361154114#13",
+        "text": "commodity ",
+        "x": 41,
+        "y": 50,
+        "normal": "commodity"
+      },
+      {
+        "id": "2870879175698587936#14",
+        "text": "sectors",
+        "x": 51,
+        "y": 58,
+        "normal": "sectors"
+      }
+    ],
+    "expected_text": "supply_and_demand_analysis across global commodity sectors",
+    "raw": {
+      "entities": [
+        {
+          "canon": "supply_and_demand_analysis",
+          "type": "exact",
+          "ner": null,
+          "x": 0,
+          "y": 26,
+          "text": "Supply and demand analysis",
+          "confidence": 100
+        }
+      ],
+      "text": "supply_and_demand_analysis across global commodity sectors"
+    },
+    "previous_global_match": {
+      "issue": 15,
+      "reason": "global was a comma piece of Economic strategy, global",
+      "token": {
+        "id": "17053192215331816304#11",
         "x": 34,
         "y": 40,
         "ner": null,
@@ -7379,45 +7419,7 @@
           ],
           "confidence": 100.0
         }
-      },
-      {
-        "id": "6925186535361154114#13",
-        "text": "commodity ",
-        "x": 41,
-        "y": 50,
-        "normal": "commodity"
-      },
-      {
-        "id": "2870879175698587936#14",
-        "text": "sectors",
-        "x": 51,
-        "y": 58,
-        "normal": "sectors"
       }
-    ],
-    "expected_text": "supply_and_demand_analysis across global_economic_strategy commodity sectors",
-    "raw": {
-      "entities": [
-        {
-          "canon": "supply_and_demand_analysis",
-          "type": "exact",
-          "ner": null,
-          "x": 0,
-          "y": 26,
-          "text": "Supply and demand analysis",
-          "confidence": 100
-        },
-        {
-          "canon": "global_economic_strategy",
-          "type": "exact",
-          "ner": null,
-          "x": 34,
-          "y": 40,
-          "text": "global",
-          "confidence": 100
-        }
-      ],
-      "text": "supply_and_demand_analysis across global_economic_strategy commodity sectors"
     }
   },
   {

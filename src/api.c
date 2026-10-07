@@ -102,7 +102,7 @@ static J *materialize(mc_engine *e, mc_error *err)
 {
 	if (e->graph_only) {
 		J *next = ontology_build(e->graph, e->distance, e->force_class,
-					 err);
+					 e->comma_lists, err);
 		if (!next || err->code) {
 			DEL(next);
 			return NULL;
@@ -410,8 +410,8 @@ static J *load_collection(mc_engine *e, J *q, mc_error *err)
 		}
 		set(request, "op", STR("load"));
 		const char *options[] = { "class_based", "distance",
-					  "interface" };
-		for (size_t i = 0; i < 3; i++)
+					  "interface", "comma_lists" };
+		for (size_t i = 0; i < sizeof(options) / sizeof(*options); i++)
 			if (!GET(request, options[i]) && GET(q, options[i]))
 				PUT(request, options[i],
 				    DUP(GET(q, options[i])));
@@ -492,6 +492,11 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 	}
 	if (!strcmp(op, "version"))
 		return STR(MUTATOC_VERSION);
+	if ((!strcmp(op, "load") || !strcmp(op, "generate_spans")) &&
+	    GET(q, "comma_lists") && !cJSON_IsBool(GET(q, "comma_lists"))) {
+		fail(err, 2, "comma_lists must be a boolean");
+		return NULL;
+	}
 	if (!strcmp(op, "load")) {
 		if (GET(q, "sources") || GET(q, "paths")) {
 			if (cJSON_IsTrue(GET(q, "graph_only"))) {
@@ -543,6 +548,7 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 						GET(q, "distance")->valueint :
 						e->distance,
 					cJSON_IsTrue(GET(q, "class_based")),
+					cJSON_IsTrue(GET(q, "comma_lists")),
 					err);
 		}
 		if (!next || err->code) {
@@ -561,6 +567,7 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 		e->graph = g;
 		e->graph_only = g && cJSON_IsTrue(GET(q, "graph_only"));
 		e->force_class = cJSON_IsTrue(GET(q, "class_based"));
+		e->comma_lists = cJSON_IsTrue(GET(q, "comma_lists"));
 		if (GET(q, "distance"))
 			e->distance = GET(q, "distance")->valueint;
 		if (*name)
@@ -622,7 +629,8 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 		return generate_spans(
 			GET(q, "data"),
 			GET(q, "distance") ? GET(q, "distance")->valueint : 4,
-			cJSON_IsTrue(GET(q, "plus_only")));
+			cJSON_IsTrue(GET(q, "plus_only")),
+			cJSON_IsTrue(GET(q, "comma_lists")));
 	if (!strcmp(op, "generate_synonyms"))
 		return generate_synonyms(GET(q, "data"),
 					 cJSON_IsTrue(GET(q, "reverse")));

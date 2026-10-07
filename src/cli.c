@@ -136,6 +136,7 @@ static void usage(void)
 	     "--stopwatch prints the total run time to stderr after the output.\n"
 	     "--serve accepts one JSON request per line and retains the ontology.\n"
 	     "--live uses the reference class-based extraction path.\n"
+	     "--comma-lists splits packed synonym lists; commas inside numbers stay intact.\n"
 	     "--force-cache rebuilds from OWL; this runtime has no implicit disk cache.\n"
 	     "--namespace is accepted for compatibility; RDF prefixes define IRIs.");
 }
@@ -146,6 +147,7 @@ static int run(int argc, char **argv)
 	const char *path = NULL, *text = NULL, *snapshot = NULL;
 	const char *format = NULL;
 	int serve = 0, json = 0, live = 0, force = 0, stopwatch = 0;
+	int comma_lists = 0;
 	for (int i = 1; i < argc; i++) {
 		const char *a = argv[i];
 		if (!strcmp(a, "--help") || !strcmp(a, "-h")) {
@@ -164,6 +166,8 @@ static int run(int argc, char **argv)
 			json = 2;
 		else if (!strcmp(a, "--live"))
 			live = 1;
+		else if (!strcmp(a, "--comma-lists"))
+			comma_lists = 1;
 		else if (!strcmp(a, "--force-cache"))
 			force = 1;
 		else if (!strcmp(a, "--stopwatch"))
@@ -194,7 +198,8 @@ static int run(int argc, char **argv)
 		      stderr);
 		return 2;
 	}
-	if (serve && (path || text || snapshot || stopwatch || format)) {
+	if (serve &&
+	    (path || text || snapshot || stopwatch || format || comma_lists)) {
 		fputs("--serve cannot be combined with one-shot options\n",
 		      stderr);
 		return 2;
@@ -230,6 +235,7 @@ static int run(int argc, char **argv)
 	if (format)
 		PUT(q, "format", STR(format));
 	PUT(q, "class_based", BOOL(live));
+	PUT(q, "comma_lists", BOOL(comma_lists));
 	if (live)
 		PUT(q, "interface", STR("data"));
 	J *r = call(e, q);

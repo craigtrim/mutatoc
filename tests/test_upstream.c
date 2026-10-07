@@ -53,6 +53,9 @@ static void replay_session(void *ctx, int index)
 	mc_engine *e = mc_create();
 	EACH(call, run->sessions[index]) {
 		J *q = resolve(GET(call, "request"), run->blobs, run->fixtures);
+		/* Replay the reference's list convention, with repaired plus rules. */
+		if (!strcmp(S(GET(q, "op")), "load"))
+			set(q, "comma_lists", BOOL(1));
 		J *r = test_request(e, q);
 		J *expected = GET(call, "parse") ?
 				      DUP(GET(call, "parse")) :
@@ -88,6 +91,26 @@ int main(int argc, char **argv)
 		test_read_json(argv[1], "tests/fixtures/upstream/trace.json");
 	if (!test_require_cases(GET(trace, "sessions"), "upstream trace"))
 		return 2;
+	/* Keep the frozen trace and check each authored correction's old value. */
+	J *corrections = test_read_json(
+		argv[1], "tests/fixtures/upstream/comma-lists.json");
+	J *changes = GET(corrections, "changes");
+	if (!test_require_cases(changes, "comma-list span corrections"))
+		return 2;
+	EACH(change, changes) {
+		J *blob = GET(GET(trace, "blobs"), S(GET(change, "blob")));
+		const char *key = S(GET(change, "key"));
+		if (!cJSON_Compare(GET(blob, key), GET(change, "before"), 1)) {
+			fprintf(stderr,
+				"Comma-list correction no longer matches reference: %s\n",
+				key);
+			DEL(corrections);
+			DEL(trace);
+			return 2;
+		}
+		set(blob, key, DUP(GET(change, "after")));
+	}
+	DEL(corrections);
 	char *fixtures = test_path(argv[1], "tests/fixtures");
 	int count = SIZE(GET(trace, "sessions"));
 	Replay run = { calloc((size_t)count, sizeof(J *)), GET(trace, "blobs"),

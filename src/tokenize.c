@@ -16,7 +16,7 @@
 #include "tokenize_data.h"
 #include <inttypes.h>
 
-static int numeric(uint32_t c)
+int unumeric(uint32_t c)
 {
 	size_t l = 0, n = sizeof(numeric_ranges) / sizeof(*numeric_ranges);
 	while (l < n) {
@@ -116,7 +116,7 @@ static int edges(Pieces *ps, const char *s, size_t a, size_t b)
 		trail--;
 	size_t middle = trail;
 	if (trail - lead > 1 && (s[trail - 1] == '.' || s[trail - 1] == ',') &&
-	    numeric(char_at(s, char_start(s, lead, trail - 1))))
+	    unumeric(char_at(s, char_start(s, lead, trail - 1))))
 		middle = trail - 1;
 	for (size_t i = a; i < lead; i++)
 		if (!push(ps, i, i + 1, 0))
@@ -150,8 +150,8 @@ static int split_word(Pieces *ps, const char *s, size_t start, size_t end)
 			uread(&p);
 			if (!push(ps, at, (size_t)(p - s), 0))
 				return 0;
-		} else if (letter(ch) || numeric(ch) || ch == '_' ||
-			   ((ch == '.' || ch == ',') && numeric(prev)) ||
+		} else if (letter(ch) || unumeric(ch) || ch == '_' ||
+			   ((ch == '.' || ch == ',') && unumeric(prev)) ||
 			   (apostrophe(ch) && letter(prev)) ||
 			   (ch == '&' && letter(prev) && letter(next))) {
 			if (!building)
@@ -443,7 +443,7 @@ static int plain(const char *s)
 			 next = *p ? (uint32_t)(unsigned char)*p : ' ';
 		if (c == ' ' ? prev == ' ' || next == ' ' :
 		    c == '_' ? prev == ' ' || next == ' ' :
-			       !letter(c) && !numeric(c))
+			       !letter(c) && !unumeric(c))
 			return 0;
 		prev = c;
 	}
