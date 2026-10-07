@@ -41,6 +41,39 @@ Save this as `animals.json`. The repository includes [the complete file](https:/
 ]
 ```
 
+## Comma literals and packed lists
+
+Each `label`, `synonyms`, `see_also` or `inflections` value is one literal, including any commas. The corresponding Turtle predicates are `rdfs:label`, `skos:altLabel`, `rdfs:seeAlso` and `inflection`. For example, `"synonyms": ["Reasoning, quantitative"]` matches the complete phrase; it does not declare `Reasoning` and `quantitative` as separate synonyms. `Top 1,000 Words` also stays whole.
+
+Give several synonyms as separate values:
+
+```turtle
+:BloodProduct skos:altLabel "PRBC", "PRBCs" .
+```
+
+```json
+{"id":"BloodProduct","synonyms":["PRBC","PRBCs"]}
+```
+
+Older ontologies sometimes pack a list into one literal, such as `"PRBC, PRBCs"`. Load those sources with the boolean option `comma_lists`:
+
+```json
+{"op":"load","path":"medical.ttl","comma_lists":true}
+```
+
+The CLI accepts the same choice as `--comma-lists`. The option splits each literal at commas, trims the resulting items and drops empty items. A comma immediately between two numeric characters stays inside its item, including Unicode numeric characters, so `Top 1,000 Words` remains a single synonym. A packed span expression such as `stab+injury, penetrate+injury` becomes two span rules. The same option is available on `generate_spans`.
+
+The default is false on each load, including after a load that enabled it. Collection sources inherit the collection's option unless they supply their own boolean value:
+
+```json
+{"op":"load","comma_lists":false,"sources":[
+  {"path":"courses.json"},
+  {"path":"medical.ttl","comma_lists":true}
+]}
+```
+
+Turtle, JSON and JSONL sources use the same rule, whether loaded from a file or inline, through the live finder or through deferred `graph_only` extraction. This changes the matching views, while graph queries retain the original literals. Prepared snapshots retain the views stored in them; rebuild a snapshot from source to change its comma policy. External `.txt` synonym files retain their separate comma-delimited format.
+
 ## Load either format
 
 After building the CLI, load the saved files directly:

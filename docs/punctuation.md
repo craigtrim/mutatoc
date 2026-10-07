@@ -31,3 +31,11 @@ ctest --test-dir build-msvc -C Release -R punctuation --output-on-failure
 ```
 
 Axiom adds 1,512 complete native parsing cases with independently calculated UTF-16 highlight ranges. Its desktop regression checks full phrase highlighting, Details navigation, repeated spacing, line breaks, and rejection of the wrong year.
+
+## Commas in labels and synonyms
+
+`Equality, Crime, and Justice` matches as one exact entity covering the whole title, with the original commas and offsets. `Crime` alone does not match that title. Commas remain part of each ontology literal; separate values declare separate synonyms. Ontologies using the older packed-list convention can opt into [`comma_lists`](input-formats.md#comma-literals-and-packed-lists).
+
+The `comma_synonyms` suite uses equivalent Turtle, JSON and JSONL fixtures with 24 authored literals across four predicates. Its positive matrix has 19,968 cases spanning six literal shapes, twelve sentence frames, four casings and five comma spacings, loaded from each source format and a reloaded snapshot. The four numeric literals retain their number spacing. Another 5,760 cases reject the isolated comma pieces.
+
+Additional cases cover the reported titles, multi-line lists, Unicode offsets, whitespace, numeric commas mixed with list separators, inline loading in all three source formats, live and deferred loading, collection overrides, failed reloads, and the separate span rules produced by packed `+` lists. Expected entities come from the authored literals and their positions in the input.

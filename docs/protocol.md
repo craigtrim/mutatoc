@@ -5,7 +5,7 @@ Each request is one JSON object. The CLI's `--serve` mode accepts newline-delimi
 | Operation | Inputs | Result |
 | --- | --- | --- |
 | `version` | none | library version |
-| `load` | `path`, inline `content` or `turtle`, `snapshot`, `paths`, or `sources`; optional `format`, `name`, `base`, `class_based`, `distance`, `interface`, `graph_only` | loaded ontology metadata |
+| `load` | `path`, inline `content` or `turtle`, `snapshot`, `paths`, or `sources`; optional `format`, `name`, `base`, `class_based`, `distance`, `interface`, `graph_only`, `comma_lists` | loaded ontology metadata |
 | `snapshot` | none | generated MDA object |
 | `read_rdf` | `content` and optional `format`, or `turtle`; optional `base` | typed RDF triples without changing the loaded ontology |
 | `triples` | none | parsed RDF graph; unavailable after loading a prepared MDA snapshot alone |
@@ -18,11 +18,13 @@ Each request is one JSON object. The CLI's `--serve` mode accepts newline-delimi
 | `tokenize` | `text` | the tokens `parse` would match |
 | `generate_synonyms` | `data`, optional `reverse` | synonym view |
 | `generate_lookup` | `data` | lookup view |
-| `generate_spans` | `data`, optional `distance`, `plus_only` | span rules |
+| `generate_spans` | `data`, optional `distance`, `plus_only`, `comma_lists` | span rules |
 
 The `query` interface defaults to cached JSON finder behavior. `owl` and `data` select direct graph and live finder semantics when an RDF graph is loaded. `ask_json` selects the low-level stored JSON views. Unknown operations and methods return errors. The complete exercised method list is recorded in `tests/fixtures/api/queries.json`.
 
 `load` constructs the new graph and snapshot before replacing the existing ontology. Failed loads retain the previous ontology.
+
+`comma_lists` is a boolean, false by default on every load. Whole literals, including their commas, supply synonyms and span rules. Set it to true for sources that pack lists into literals; commas between numeric characters remain intact. Collections inherit it per source, with explicit source values taking precedence. Deferred `graph_only` extraction retains it, and failed loads preserve the previous setting. It does not rewrite prepared snapshots. See [comma literals and packed lists](input-formats.md#comma-literals-and-packed-lists) for migration examples.
 
 `format` accepts `auto` (default), `turtle`/`ttl`, `json`, `jsonl`, or `snapshot`. Inline `content` is a source-text string. JSON arrays and JSONL ontology records load directly into the same graph as Turtle; prepared MDA snapshots remain distinct. See [Ontology input formats](input-formats.md) for the schema and examples.
 

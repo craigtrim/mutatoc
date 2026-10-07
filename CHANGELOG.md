@@ -2,6 +2,18 @@
 
 <!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2, craigtrim/mutatoc#5, craigtrim/mutatoc#7, craigtrim/mutatoc#9, craigtrim/mutatoc#11, craigtrim/mutatoc#12 -->
 
+## Unreleased
+
+### Fixed
+
+- Labels and synonyms containing commas match as one entity ([#15](https://github.com/craigtrim/mutatoc/issues/15)). `Equality, Crime, and Justice` now produces one exact match covering the whole title; `Crime` alone no longer acquires that title's canonical form. Numeric commas stay intact, so `Top 1,000 Words` matches whole too. This applies to Turtle, JSON and JSONL sources, live matching and newly generated snapshots.
+- With comma lists enabled, each item of `stab+injury, penetrate+injury` generates its own span rule. Commas between numeric characters remain part of the item.
+
+### Breaking changes
+
+- A literal now supplies one synonym. Ontologies that pack several synonyms into a comma-separated literal must set `"comma_lists": true` on their `load` request or use the CLI's `--comma-lists` flag. The option defaults to false on every load and can be overridden per source in a collection. Prefer separate Turtle literals or JSON array entries when authoring new vocabularies. See [comma literals and packed lists](docs/input-formats.md#comma-literals-and-packed-lists).
+- Existing prepared snapshots keep their stored matching views. Rebuild them from source to adopt whole-literal matching; setting `comma_lists` while loading a snapshot does not rewrite it.
+
 ## 0.5.1 (2026-10-05)
 
 ### Fixed

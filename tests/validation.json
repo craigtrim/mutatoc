@@ -121,6 +121,34 @@
     "contract": "docs/input-formats.md",
     "benchmark": "docs/performance.md#native-json-and-jsonl-sources"
   },
+  "comma_literal_sources": {
+    "issue": "https://github.com/craigtrim/mutatoc/issues/15",
+    "validation_date": "2026-10-07",
+    "version": "unreleased",
+    "suite": "comma_synonyms",
+    "cases": 26610,
+    "assertions": 57696,
+    "failed_assertions": 0,
+    "positive_matrix": 19968,
+    "negative_matrix": 5760,
+    "fixture_literals": 24,
+    "fixture_formats": ["Turtle", "JSON", "JSONL"],
+    "load_paths": ["file", "inline", "snapshot", "live", "graph_only", "collection"],
+    "additional_coverage": ["numeric commas including Unicode", "mixed numeric and ordinary comma lists with empty items", "inline Turtle, JSON and JSONL with both comma policies", "comma_lists inheritance and reset", "failed reloads", "plus-only span generation", "original text and offsets", "caller token metadata", "econ headings"],
+    "before_fix": {"cases": 26504, "assertions": 56925, "passed_assertions": 28722, "note": "The suite before four prepared-token cases were added, linked against the unchanged 0.5.1 GCC library."},
+    "legacy_replay": {"comma_lists": true, "recorded_calls_passed": 3930, "span_bucket_corrections": 6, "corrections": "tests/fixtures/upstream/comma-lists.json", "original_trace_changed": false},
+    "parity": {"prepared_cases_passed": 393, "raw_cases_passed": 393, "changed_expectations": 1, "change": "global no longer matches the comma piece from Economic strategy, global; its original expected token remains in the fixture"},
+    "platforms": [
+      {"platform": "Windows x64", "compiler": "MSVC 19.29", "configuration": "Release", "ctest_passed": 24, "ctest_failed": 0, "elapsed_seconds": 119.42},
+      {"platform": "Windows x64", "compiler": "GCC 16.1.0", "configuration": "Release", "ctest_passed": 24, "ctest_failed": 0, "elapsed_seconds": 122.06},
+      {"platform": "Linux x64, Ubuntu 20.04 under WSL", "compiler": "GCC 9.4.0", "configuration": "Debug, AddressSanitizer and UndefinedBehaviorSanitizer, leak detection", "ctest_passed": 23, "ctest_failed": 0, "sanitizer_reports": 0, "elapsed_seconds": 510.11}
+    ],
+    "final_suite_expansion": {"full_ctest_run_cases": 26508, "added_cases": 102, "final_assertions_passed": 57696, "verified_on": ["MSVC Release", "GCC Release", "Linux ASan/UBSan with leak detection"], "note": "The expanded comma suite passed separately on all three builds after the full runs had started; runtime source was unchanged."},
+    "snapshot_audit": {"econ_and_acanames_checked": 8, "matching_views_equal_fresh_build": true, "only_synonyms_and_spans_changed": true, "changed_parity_cases": 1, "medic_snapshots_unchanged": true},
+    "cli_tests": ["cli_comma_literal", "cli_comma_lists", "cli_comma_number"],
+    "documentation": {"build": "mkdocs build --strict", "build_passed": true},
+    "contract": "docs/input-formats.md#comma-literals-and-packed-lists"
+  },
   "migration_evidence": {
     "tokenizer_texts_compared": 12386,
     "tokenizer_texts_identical": 12295,
