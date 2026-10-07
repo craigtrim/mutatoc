@@ -8,6 +8,35 @@ The logical port preserves ontology extraction and matching, including the diffe
 
 Everything runs in process, with no interpreter, model or worker. Since 0.3.0 raw text is tokenized natively (see [the protocol](protocol.md#raw-text-tokens)); tokens carry `id`, `text`, `x`, `y` and `normal`, the fields matching reads. Native TTL and JSON readers build the same graph and indexes, including relative IRI resolution, and every finder query runs natively. Arbitrary SPARQL is not provided; `triples` exports the graph from either input format. JSONL supplies the same ontology records as JSON, one per line.
 
+## Test suites
+
+`ctest` runs every check natively. For an MSVC Release build:
+
+```powershell
+ctest --test-dir build-msvc -C Release --output-on-failure
+```
+
+| Suite | What it covers |
+| --- | --- |
+| `gold` | 11 hand-written paragraphs and documents across all seven fixture ontologies, whose 132 expected entities were written down before the engine ran |
+| `upstream` | Mutato's 961 upstream tests, replayed request by request (3,930 recorded calls) |
+| `parity` | 393 reference cases as prepared tokens and as raw text |
+| `public_api` | 1,659 finder calls across 140 methods, plus match index lifecycle |
+| `punctuation` | 16,165 authored punctuation and phrase-window contracts |
+| `comma_synonyms` | 19,968 whole-literal cases and 5,760 fragment-rejection cases across Turtle, JSON, JSONL and snapshots, plus comma-list options, numeric commas, live matching, collections and reloads |
+| `rdf` | The W3C RDF 1.1 Turtle suite (313 tests), 19 ontology graph fingerprints, typed literals |
+| `sources` | 5,804 checks for JSON and JSONL, including 328 graph round-trips, 3,318 finder comparisons, 1,572 raw/prepared matching comparisons, optional stages, mixed collections, and failed loads |
+| `extensions` | Optional stages, exact-window regressions, collections, external synonyms, prefixes |
+| `tokenize` | The native tokenizer contract |
+| `token_fidelity` | 3,244 cases that hold every token and entity to the input's exact text and offsets, across apostrophe, quote and dash variants in the input and in stored synonyms, whitespace, contractions, abbreviations, Unicode and invalid input |
+| `span_distance` | 39,111 cases that hold every word of a span rule within its distance, turn every group of span words into a span and give whitespace no position, across label widths, word orders, repeated words, punctuation and whitespace, pasted lists up to 1,442 lines, stopwords, competing rules, `ctr` values, the spans stage on its own, direction flags and context words, checked against an oracle that tries every choice of occurrences and against the 541 cases filed with #11 and the 935 filed with #12 |
+| `concurrency` | 24 engines on 8 threads through the public C API |
+| `native`, `text`, `embedding` | Ontology loading, caller metadata, Unicode and URI handling, the embedding example |
+| `cli_json`, `cli_jsonf`, `cli_stopwatch` | The one-shot CLI's output formats |
+| `performance` | Ceilings on load, first parse, parse and peak memory, run in optimized builds without sanitizers |
+
+[Validation results](https://github.com/craigtrim/mutatoc/blob/master/tests/validation.json) record the executed checks. The [implementation map](https://github.com/craigtrim/mutatoc/blob/master/docs/implementation-map.json) accounts for Mutato's 91 source modules. [Performance](performance.md) covers the benchmark and earlier optimizations.
+
 ## Evidence
 
 - The gold corpus (`tests/fixtures/gold/corpus.json`) holds 11 hand-written paragraphs and documents, at least one for each of the seven distinct fixture ontologies, with 132 expected entities. Each text was audited against its ontology's vocabulary read from the OWL source with an independent parser, and its expectations were frozen before the engine first ran on it. On that first run 10 of the 11 texts matched exactly. The eleventh had a span rule the audit had not modelled (`abdominal_wound+penetrating_wound` on `Penetrating_Abdominal_Wound`), and the fixture records the original expectation, the correction and its derivation. The `gold` suite requires the same entities in the same order, with equal canonical form, match type, NER label and covered text.

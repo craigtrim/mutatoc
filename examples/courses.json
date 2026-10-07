@@ -1,0 +1,8 @@
+[
+  {"format":"mutatoc/1", "namespace":"http://example.org/courses#"},
+  {"id":"Mathematics", "type":"owl:Class", "label":"mathematics"},
+  {"id":"Applied_Mathematics", "type":"owl:Class", "label":"applied mathematics",
+   "synonyms":["applied maths"], "parents":["Mathematics"], "ner":"COURSE"},
+  {"id":"Advanced_Applied_Mathematics", "type":"owl:Class", "label":"advanced applied mathematics",
+   "parents":["Applied_Mathematics"], "ner":"COURSE"}
+]
