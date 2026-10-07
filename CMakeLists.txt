@@ -92,6 +92,16 @@ if(BUILD_TESTING)
   # Synonyms written with punctuation the tokenizer splits (craigtrim/mutatoc#5).
   mutatoc_program(mutatoc_punctuated_synonyms tests/test_punctuated_synonyms.c)
   add_test(NAME punctuated_synonyms COMMAND mutatoc_punctuated_synonyms ${CMAKE_CURRENT_SOURCE_DIR})
+  # Comma literals stay whole unless a source opts into lists (craigtrim/mutatoc#15).
+  mutatoc_program(mutatoc_comma_synonyms tests/test_comma_synonyms.c)
+  add_test(NAME comma_synonyms COMMAND mutatoc_comma_synonyms ${CMAKE_CURRENT_SOURCE_DIR})
+  set(comma_fixture ${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/ontologies/comma-synonyms-test.json)
+  add_test(NAME cli_comma_literal COMMAND mutatoc_cli --ontology ${comma_fixture} --input-text "Equality, Crime, and Justice")
+  set_tests_properties(cli_comma_literal PROPERTIES PASS_REGULAR_EXPRESSION "^equalitycrimeandjustice")
+  add_test(NAME cli_comma_lists COMMAND mutatoc_cli --ontology ${comma_fixture} --comma-lists --input-text PRBC)
+  set_tests_properties(cli_comma_lists PROPERTIES PASS_REGULAR_EXPRESSION "^packed_blood")
+  add_test(NAME cli_comma_number COMMAND mutatoc_cli --ontology ${comma_fixture} --comma-lists --input-text "Top 1,000 Words")
+  set_tests_properties(cli_comma_number PROPERTIES PASS_REGULAR_EXPRESSION "^label_number")
   # Tokens and entities that keep the text the input sent (craigtrim/mutatoc#7).
   mutatoc_program(mutatoc_token_fidelity tests/test_token_fidelity.c)
   add_test(NAME token_fidelity COMMAND mutatoc_token_fidelity ${CMAKE_CURRENT_SOURCE_DIR})

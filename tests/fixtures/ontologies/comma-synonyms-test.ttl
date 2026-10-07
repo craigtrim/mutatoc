@@ -1,0 +1,106 @@
+# Comma-bearing literals across all four synonym predicates (craigtrim/mutatoc#15).
+@prefix : <http://example.org/comma#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+:Label_One a owl:Class ;
+    rdfs:label "Cobalt, Meridian" .
+
+:EqualityCrimeAndJustice a owl:Class ;
+    rdfs:label "Equality, Crime, And Justice" .
+
+:Label_Three a owl:Class ;
+    rdfs:label "Amber, Birch, Cedar, Dahlia" .
+
+:Label_Marks a owl:Class ;
+    rdfs:label "Power, Privilege & Diversity" .
+
+:Label_Inverted a owl:Class ;
+    rdfs:label "Economic analysis, comparative" .
+
+:Label_Number a owl:Class ;
+    rdfs:label "Top 1,000 Words" .
+
+:See_One a owl:Class ;
+    rdfs:label "See One" ;
+    rdfs:seeAlso "Dune, Estuary" .
+
+:See_Two a owl:Class ;
+    rdfs:label "See Two" ;
+    rdfs:seeAlso "Falcon, Grove, Harbor" .
+
+:See_Three a owl:Class ;
+    rdfs:label "See Three" ;
+    rdfs:seeAlso "Indigo, Juniper, Kestrel, Lagoon" .
+
+:See_Marks a owl:Class ;
+    rdfs:label "See Marks" ;
+    rdfs:seeAlso "Optics, Lens/Prism" .
+
+:See_Inverted a owl:Class ;
+    rdfs:label "See Inverted" ;
+    rdfs:seeAlso "Data analysis, graphical" .
+
+:See_Number a owl:Class ;
+    rdfs:label "See Number" ;
+    rdfs:seeAlso "First 2,000 Terms" .
+
+:Alt_One a owl:Class ;
+    rdfs:label "Alt One" ;
+    skos:altLabel "Marble, Nebula" .
+
+:Alt_Two a owl:Class ;
+    rdfs:label "Alt Two" ;
+    skos:altLabel "Ochre, Pebble, Quartz" .
+
+:Alt_Three a owl:Class ;
+    rdfs:label "Alt Three" ;
+    skos:altLabel "Raven, Saffron, Thistle, Umber" .
+
+:Alt_Marks a owl:Class ;
+    rdfs:label "Alt Marks" ;
+    skos:altLabel "Signal, Wave & Frequency" .
+
+:Alt_Inverted a owl:Class ;
+    rdfs:label "Alt Inverted" ;
+    skos:altLabel "Reasoning, quantitative" .
+
+:Alt_Number a owl:Class ;
+    rdfs:label "Alt Number" ;
+    skos:altLabel "Beyond 3,000 Entries" .
+
+:Inflect_One a owl:Class ;
+    rdfs:label "Inflect One" ;
+    :inflection "Violet, Willow" .
+
+:Inflect_Two a owl:Class ;
+    rdfs:label "Inflect Two" ;
+    :inflection "Xenon, Yarrow, Zephyr" .
+
+:Inflect_Three a owl:Class ;
+    rdfs:label "Inflect Three" ;
+    :inflection "Acorn, Badger, Coral, Driftwood" .
+
+:Inflect_Marks a owl:Class ;
+    rdfs:label "Inflect Marks" ;
+    :inflection "Minerals, Ore/Rock" .
+
+:Inflect_Inverted a owl:Class ;
+    rdfs:label "Inflect Inverted" ;
+    :inflection "Research methods, experimental" .
+
+:Inflect_Number a owl:Class ;
+    rdfs:label "Inflect Number" ;
+    :inflection "Next 4,000 Samples" .
+
+:CrimeAndPunishment a owl:Class ;
+    rdfs:label "Crime And Punishment" .
+
+:Packed_Blood a owl:Class ;
+    rdfs:label "Blood Products" ;
+    skos:altLabel "PRBC, PRBCs" .
+
+:Packed_Injury a owl:Class ;
+    rdfs:label "Injury Patterns" ;
+    rdfs:seeAlso "stab+injury, penetrate+injury" .

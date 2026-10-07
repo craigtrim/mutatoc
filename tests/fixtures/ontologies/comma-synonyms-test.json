@@ -1,0 +1,201 @@
+[
+  {
+    "format": "mutatoc/1",
+    "namespace": "http://example.org/comma#"
+  },
+  {
+    "id": "Label_One",
+    "type": "owl:Class",
+    "label": "Cobalt, Meridian"
+  },
+  {
+    "id": "EqualityCrimeAndJustice",
+    "type": "owl:Class",
+    "label": "Equality, Crime, And Justice"
+  },
+  {
+    "id": "Label_Three",
+    "type": "owl:Class",
+    "label": "Amber, Birch, Cedar, Dahlia"
+  },
+  {
+    "id": "Label_Marks",
+    "type": "owl:Class",
+    "label": "Power, Privilege & Diversity"
+  },
+  {
+    "id": "Label_Inverted",
+    "type": "owl:Class",
+    "label": "Economic analysis, comparative"
+  },
+  {
+    "id": "Label_Number",
+    "type": "owl:Class",
+    "label": "Top 1,000 Words"
+  },
+  {
+    "id": "See_One",
+    "type": "owl:Class",
+    "label": "See One",
+    "see_also": [
+      "Dune, Estuary"
+    ]
+  },
+  {
+    "id": "See_Two",
+    "type": "owl:Class",
+    "label": "See Two",
+    "see_also": [
+      "Falcon, Grove, Harbor"
+    ]
+  },
+  {
+    "id": "See_Three",
+    "type": "owl:Class",
+    "label": "See Three",
+    "see_also": [
+      "Indigo, Juniper, Kestrel, Lagoon"
+    ]
+  },
+  {
+    "id": "See_Marks",
+    "type": "owl:Class",
+    "label": "See Marks",
+    "see_also": [
+      "Optics, Lens/Prism"
+    ]
+  },
+  {
+    "id": "See_Inverted",
+    "type": "owl:Class",
+    "label": "See Inverted",
+    "see_also": [
+      "Data analysis, graphical"
+    ]
+  },
+  {
+    "id": "See_Number",
+    "type": "owl:Class",
+    "label": "See Number",
+    "see_also": [
+      "First 2,000 Terms"
+    ]
+  },
+  {
+    "id": "Alt_One",
+    "type": "owl:Class",
+    "label": "Alt One",
+    "synonyms": [
+      "Marble, Nebula"
+    ]
+  },
+  {
+    "id": "Alt_Two",
+    "type": "owl:Class",
+    "label": "Alt Two",
+    "synonyms": [
+      "Ochre, Pebble, Quartz"
+    ]
+  },
+  {
+    "id": "Alt_Three",
+    "type": "owl:Class",
+    "label": "Alt Three",
+    "synonyms": [
+      "Raven, Saffron, Thistle, Umber"
+    ]
+  },
+  {
+    "id": "Alt_Marks",
+    "type": "owl:Class",
+    "label": "Alt Marks",
+    "synonyms": [
+      "Signal, Wave & Frequency"
+    ]
+  },
+  {
+    "id": "Alt_Inverted",
+    "type": "owl:Class",
+    "label": "Alt Inverted",
+    "synonyms": [
+      "Reasoning, quantitative"
+    ]
+  },
+  {
+    "id": "Alt_Number",
+    "type": "owl:Class",
+    "label": "Alt Number",
+    "synonyms": [
+      "Beyond 3,000 Entries"
+    ]
+  },
+  {
+    "id": "Inflect_One",
+    "type": "owl:Class",
+    "label": "Inflect One",
+    "inflections": [
+      "Violet, Willow"
+    ]
+  },
+  {
+    "id": "Inflect_Two",
+    "type": "owl:Class",
+    "label": "Inflect Two",
+    "inflections": [
+      "Xenon, Yarrow, Zephyr"
+    ]
+  },
+  {
+    "id": "Inflect_Three",
+    "type": "owl:Class",
+    "label": "Inflect Three",
+    "inflections": [
+      "Acorn, Badger, Coral, Driftwood"
+    ]
+  },
+  {
+    "id": "Inflect_Marks",
+    "type": "owl:Class",
+    "label": "Inflect Marks",
+    "inflections": [
+      "Minerals, Ore/Rock"
+    ]
+  },
+  {
+    "id": "Inflect_Inverted",
+    "type": "owl:Class",
+    "label": "Inflect Inverted",
+    "inflections": [
+      "Research methods, experimental"
+    ]
+  },
+  {
+    "id": "Inflect_Number",
+    "type": "owl:Class",
+    "label": "Inflect Number",
+    "inflections": [
+      "Next 4,000 Samples"
+    ]
+  },
+  {
+    "id": "CrimeAndPunishment",
+    "type": "owl:Class",
+    "label": "Crime And Punishment"
+  },
+  {
+    "id": "Packed_Blood",
+    "type": "owl:Class",
+    "label": "Blood Products",
+    "synonyms": [
+      "PRBC, PRBCs"
+    ]
+  },
+  {
+    "id": "Packed_Injury",
+    "type": "owl:Class",
+    "label": "Injury Patterns",
+    "see_also": [
+      "stab+injury, penetrate+injury"
+    ]
+  }
+]
