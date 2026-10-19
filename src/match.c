@@ -45,6 +45,8 @@ struct MatchIndex {
 	Map aliases; /* Tokenized synonym to the lookup word it came from. */
 	Map fwd, rev, spans, entities, ner;
 	int entity_count, live;
+	Map mutable_words, mutable_aliases, group_ranks, ambiguous_aliases;
+	int mutable_ready;
 };
 static void put_first(Map *m, const char *k, void *v)
 {
@@ -254,6 +256,8 @@ static int index_spans(MatchIndex *x, J *rules)
 	return 1;
 }
 
+static void mutable_free(MatchIndex *x);
+
 void match_index_free(MatchIndex *x)
 {
 	if (!x)
@@ -282,6 +286,7 @@ void match_index_free(MatchIndex *x)
 	map_free(&x->rev);
 	map_free(&x->entities);
 	map_free(&x->ner);
+	mutable_free(x);
 	free(x->lengths);
 	free(x);
 }
@@ -1060,4 +1065,246 @@ char *render(const J *tokens)
 		free(s);
 	}
 	return buf_take(&b);
+}
+
+/* Patch lookup membership and token aliases after edits (craigtrim/axiom#129). */
+typedef struct {
+	char *text, *alias;
+	int words, rank;
+	size_t chars;
+} MutableWord;
+static int mutable_count(const char *s)
+{
+	int n = 1;
+	for (; *s; s++)
+		n += *s == ' ';
+	return n;
+}
+static void counter(Map *map, const char *key, int delta)
+{
+	size_t n = (size_t)(uintptr_t)map_get(map, key);
+	if (delta > 0)
+		map_put(map, key, (void *)(uintptr_t)(n + 1));
+	else if (n > 1)
+		map_put(map, key, (void *)(uintptr_t)(n - 1));
+	else
+		map_delete(map, key);
+}
+static Map *mutable_group(MatchIndex *x, int n)
+{
+	if (n <= DENSE_WORDS && n > x->word_cap) {
+		int old = x->word_cap;
+		x->words =
+			realloc(x->words, ((size_t)n + 1) * sizeof(*x->words));
+		memset(x->words + old + 1, 0,
+		       (size_t)(n - old) * sizeof(*x->words));
+		x->word_cap = n;
+	}
+	Map *m = words_at(x, n);
+	if (!m) {
+		char key[32];
+		snprintf(key, sizeof(key), "%d", n);
+		m = calloc(1, sizeof(*m));
+		map_put(&x->sparse_words, key, m);
+	}
+	int found = 0;
+	for (int i = 0; i < x->length_count; i++)
+		found |= x->lengths[i] == n;
+	if (!found) {
+		int cap = x->word_cap;
+		add_length(x, n, &cap);
+		qsort(x->lengths, (size_t)x->length_count, sizeof(*x->lengths),
+		      cmp_int);
+	}
+	return m;
+}
+static void mutable_prefixes(MatchIndex *x, const char *s, int delta)
+{
+	const char *p = s;
+	while (*p) {
+		const char *at = p;
+		uint32_t c = uread(&p);
+		if (at > s && uspace(c)) {
+			char *prefix = slice(s, (size_t)(at - s));
+			counter(&x->prefixes, prefix, delta);
+			free(prefix);
+		}
+	}
+}
+static void mutable_alias(MatchIndex *x, const char *key)
+{
+	Map *candidates = map_get(&x->mutable_aliases, key);
+	MutableWord *best = NULL;
+	if (!map_get(&x->mutable_words, key) && candidates) {
+		for (size_t i = 0; i < candidates->cap; i++)
+			if (candidates->slots[i].key) {
+				MutableWord *w = candidates->slots[i].value;
+				char wk[32], bk[32];
+				snprintf(wk, sizeof(wk), "%d", w->words);
+				snprintf(bk, sizeof(bk), "%d",
+					 best ? best->words : 0);
+				int rank = (int)(uintptr_t)map_get(
+					&x->group_ranks, wk);
+				int best_rank = (int)(uintptr_t)map_get(
+					&x->group_ranks, bk);
+				if (!best || rank < best_rank ||
+				    (rank == best_rank &&
+				     (w->chars > best->chars ||
+				      (w->chars == best->chars &&
+				       strcmp(w->text, best->text) > 0))))
+					best = w;
+			}
+	}
+	int had = map_get(&x->aliases, key) != NULL;
+	if (best)
+		map_put(&x->aliases, key, best->text);
+	else
+		map_delete(&x->aliases, key);
+	if (!!best != had) {
+		int delta = best ? 1 : -1;
+		counter(mutable_group(x, mutable_count(key)), key, delta);
+		mutable_prefixes(x, key, delta);
+	}
+}
+void match_index_word(void *context, int words, const char *text, int delta)
+{
+	MatchIndex *x = context;
+	if (delta > 0) {
+		MutableWord *w = calloc(1, sizeof(*w));
+		w->text = copy(text);
+		w->alias = tokenize_key(text);
+		w->words = words;
+		w->chars = ulen(text);
+		char key[32];
+		snprintf(key, sizeof(key), "%d", words);
+		w->rank = (int)(uintptr_t)map_get(&x->group_ranks, key);
+		if (!w->rank) {
+			w->rank = (int)x->group_ranks.size + 1;
+			map_put(&x->group_ranks, key,
+				(void *)(uintptr_t)w->rank);
+		}
+		map_put(&x->mutable_words, text, w);
+		counter(mutable_group(x, words), text, 1);
+		mutable_prefixes(x, text, 1);
+		mutable_alias(x, text);
+		if (w->alias) {
+			Map *bucket = map_get(&x->mutable_aliases, w->alias);
+			if (!bucket) {
+				bucket = calloc(1, sizeof(*bucket));
+				map_put(&x->mutable_aliases, w->alias, bucket);
+			}
+			map_put(bucket, text, w);
+			if (bucket->size > 1)
+				map_put(&x->ambiguous_aliases, w->alias,
+					bucket);
+			mutable_alias(x, w->alias);
+		}
+	} else {
+		MutableWord *w = map_get(&x->mutable_words, text);
+		if (!w)
+			return;
+		map_delete(&x->mutable_words, text);
+		counter(mutable_group(x, words), text, -1);
+		mutable_prefixes(x, text, -1);
+		mutable_alias(x, text);
+		if (w->alias) {
+			Map *bucket = map_get(&x->mutable_aliases, w->alias);
+			map_delete(bucket, text);
+			if (bucket->size < 2)
+				map_delete(&x->ambiguous_aliases, w->alias);
+			mutable_alias(x, w->alias);
+			if (!bucket->size) {
+				map_free(bucket);
+				free(bucket);
+				map_delete(&x->mutable_aliases, w->alias);
+			}
+		}
+		free(w->text);
+		free(w->alias);
+		free(w);
+	}
+}
+void match_index_mutable(MatchIndex *x)
+{
+	if (x->mutable_ready)
+		return;
+	x->mutable_ready = 1;
+	for (int n = 0; n <= x->word_cap; n++)
+		map_free(&x->words[n]);
+	for (size_t i = 0; i < x->sparse_words.cap; i++)
+		if (x->sparse_words.slots[i].key)
+			map_free(x->sparse_words.slots[i].value);
+	map_free(&x->aliases);
+	map_free(&x->prefixes);
+	J *lookup = GET(GET(x->view, "synonyms"), "lookup");
+	int rank = 0;
+	EACH(group, lookup)
+		map_put(&x->group_ranks, group->string,
+			(void *)(uintptr_t)++rank);
+	EACH(group, lookup)
+		EACH(word, group)
+			match_index_word(x, atoi(group->string), S(word), 1);
+}
+static void mutable_free(MatchIndex *x)
+{
+	for (size_t i = 0; i < x->mutable_words.cap; i++)
+		if (x->mutable_words.slots[i].key) {
+			MutableWord *w = x->mutable_words.slots[i].value;
+			free(w->text);
+			free(w->alias);
+			free(w);
+		}
+	for (size_t i = 0; i < x->mutable_aliases.cap; i++)
+		if (x->mutable_aliases.slots[i].key) {
+			Map *m = x->mutable_aliases.slots[i].value;
+			map_free(m);
+			free(m);
+		}
+	map_free(&x->mutable_words);
+	map_free(&x->mutable_aliases);
+	map_free(&x->group_ranks);
+	map_free(&x->ambiguous_aliases);
+}
+void match_index_member(MatchIndex *x, const char *kind, const char *key,
+			J *value)
+{
+	Map *m = !strcmp(kind, "rev") ? &x->rev :
+		 !strcmp(kind, "ner") ? &x->ner :
+					      &x->spans;
+	if (m == &x->spans) {
+		SpanList *list = map_get(m, key);
+		if (list) {
+			for (int i = 0; i < list->n; i++)
+				DEL(list->rules[i].content);
+			free(list->rules);
+			free(list);
+		}
+		map_delete(m, key);
+		if (value) {
+			J *one = OBJ();
+			cJSON_AddItemReferenceToObject(one, key, value);
+			index_spans(x, one);
+			DEL(one);
+		}
+	} else if (value)
+		map_put(m, key, value);
+	else
+		map_delete(m, key);
+}
+
+void match_index_group_order(MatchIndex *x, J *order)
+{
+	int rank = 0, changed = 0;
+	EACH(key, order) {
+		rank++;
+		changed |= (int)(uintptr_t)map_get(&x->group_ranks, S(key)) !=
+			   rank;
+		map_put(&x->group_ranks, S(key), (void *)(uintptr_t)rank);
+	}
+	if (!changed)
+		return;
+	/* Only aliases with competing source words can change their winner. */
+	for (size_t i = 0; i < x->ambiguous_aliases.cap; i++)
+		if (x->ambiguous_aliases.slots[i].key)
+			mutable_alias(x, x->ambiguous_aliases.slots[i].key);
 }

@@ -617,3 +617,53 @@ void map_free(Map *m)
 	free(m->slots);
 	memset(m, 0, sizeof(*m));
 }
+
+/* Hashed object construction, preserving member order (craigtrim/axiom#129). */
+J *indexed_ensure(J *object, Map *index, const char *key, int array)
+{
+	J *value = map_get(index, key);
+	if (!value) {
+		value = array ? ARR() : OBJ();
+		PUT(object, key, value);
+		map_put(index, key, value);
+	}
+	return value;
+}
+
+void indexed_set(J *object, Map *index, const char *key, J *value)
+{
+	J *old = map_get(index, key);
+	if (old) {
+		if (!(value->type & cJSON_StringIsConst))
+			free(value->string);
+		value->type &= ~cJSON_StringIsConst;
+		value->string = copy(key);
+		cJSON_ReplaceItemViaPointer(object, old, value);
+	} else
+		PUT(object, key, value);
+	map_put(index, key, value);
+}
+
+/* Backshift deletion keeps probe chains reachable without tombstone buildup. */
+void map_delete(Map *m, const char *key)
+{
+	if (!m->cap)
+		return;
+	size_t mask = m->cap - 1, hole = (size_t)hash(key) & mask;
+	while (m->slots[hole].key && strcmp(m->slots[hole].key, key))
+		hole = (hole + 1) & mask;
+	if (!m->slots[hole].key)
+		return;
+	free(m->slots[hole].key);
+	m->size--;
+	size_t next = (hole + 1) & mask;
+	while (m->slots[next].key) {
+		size_t start = (size_t)hash(m->slots[next].key) & mask;
+		if (((next - start) & mask) >= ((next - hole) & mask)) {
+			m->slots[hole] = m->slots[next];
+			hole = next;
+		}
+		next = (next + 1) & mask;
+	}
+	m->slots[hole] = (Slot){ 0 };
+}

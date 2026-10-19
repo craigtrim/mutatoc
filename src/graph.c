@@ -28,7 +28,7 @@ Term rdf_term_copy(const Term *t)
 	return v;
 }
 
-void rdf_add(Graph *g, const Term *s, const Term *p, const Term *o)
+static char *triple_key(const Term *s, const Term *p, const Term *o)
 {
 	Buf key = { 0 };
 	const Term *terms[] = { s, p, o };
@@ -45,12 +45,18 @@ void rdf_add(Graph *g, const Term *s, const Term *p, const Term *o)
 			buf_put(&key, part);
 		}
 	}
-	if (map_get(&g->triple_keys, key.p)) {
-		free(key.p);
+	return buf_take(&key);
+}
+
+void rdf_add(Graph *g, const Term *s, const Term *p, const Term *o)
+{
+	char *key = triple_key(s, p, o);
+	if (map_get(&g->triple_keys, key)) {
+		free(key);
 		return;
 	}
-	map_put(&g->triple_keys, key.p, (void *)1);
-	free(key.p);
+	map_put(&g->triple_keys, key, (void *)1);
+	free(key);
 
 	if (g->n == g->cap) {
 		g->cap = g->cap ? g->cap * 2 : 256;
@@ -234,4 +240,18 @@ Graph *rdf_merge(Graph **graphs, size_t count)
 		}
 	}
 	return out;
+}
+
+/* Existing subject slots stay stable for vocabulary replacements (craigtrim/axiom#129). */
+void rdf_replace_object(Graph *g, size_t at, const Term *object)
+{
+	Triple *t = &g->ts[at];
+	char *old = triple_key(&t->s, &t->p, &t->o);
+	map_delete(&g->triple_keys, old);
+	free(old);
+	rdf_term_free(&t->o);
+	t->o = rdf_term_copy(object);
+	char *key = triple_key(&t->s, &t->p, &t->o);
+	map_put(&g->triple_keys, key, (void *)1);
+	free(key);
 }

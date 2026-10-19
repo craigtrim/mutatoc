@@ -19,6 +19,8 @@ mc_engine *mc_create(void)
 
 static void clear_ontology(mc_engine *e)
 {
+	update_state_free(e->updates);
+	e->updates = NULL;
 	match_index_free(e->index);
 	e->index = NULL;
 	DEL(e->snapshot);
@@ -497,6 +499,9 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 		fail(err, 2, "comma_lists must be a boolean");
 		return NULL;
 	}
+	/* Atomic entity edits (craigtrim/axiom#129). */
+	if (!strcmp(op, "update"))
+		return ontology_update(e, q, err);
 	if (!strcmp(op, "load")) {
 		if (GET(q, "sources") || GET(q, "paths")) {
 			if (cJSON_IsTrue(GET(q, "graph_only"))) {
@@ -799,8 +804,10 @@ static void warm_index(mc_engine *e)
 		return;
 	mc_error ignored = { 0 };
 	J *view = e->live_mode ? live_view(e, &ignored) : e->snapshot;
-	if (view && !ignored.code)
+	if (view && !ignored.code) {
 		view_index(e, view, &ignored);
+		update_state_build(e);
+	}
 }
 
 char *mc_request(mc_engine *engine, const char *request, mc_error *error)

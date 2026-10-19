@@ -5,6 +5,8 @@
  */
 
 #include "mc.h"
+#include "patterns.h"
+/* Ordered substring rewrites and hashed builders: craigtrim/axiom#129. */
 
 static int count(const char *s, char c)
 {
@@ -14,39 +16,15 @@ static int count(const char *s, char c)
 	return n;
 }
 
-static void push(J *j, const char *k, const char *v)
-{
-	unique(ensure(j, k, 1), v);
-}
 
 /*
  * Each index lives only while its JSON object is being built. JSON remains the
  * public representation, including insertion order and duplicate handling.
  */
-static J *indexed_ensure(J *object, Map *index, const char *key, int array)
-{
-	J *value = map_get(index, key);
-	if (!value) {
-		value = array ? ARR() : OBJ();
-		PUT(object, key, value);
-		map_put(index, key, value);
-	}
-	return value;
-}
-
 static void indexed_push(J *object, Map *index, const char *key,
 			 const char *value)
 {
 	unique(indexed_ensure(object, index, key, 1), value);
-}
-
-static void indexed_set(J *object, Map *index, const char *key, J *value)
-{
-	if (map_get(index, key))
-		set(object, key, value);
-	else
-		PUT(object, key, value);
-	map_put(index, key, value);
 }
 
 static void index_members(Map *index, J *object)
@@ -174,7 +152,6 @@ J *generate_lookup(J *f)
 			free(s);
 		}
 	}
-	map_free(&seen);
 	for (int n = 1; n <= 6; n++) {
 		char k[8];
 		snprintf(k, sizeof(k), "%d", n);
@@ -184,6 +161,7 @@ J *generate_lookup(J *f)
 		char k[8];
 		snprintf(k, sizeof(k), "%d", n + 1);
 		J *values = DUP(GET(d, k)), *grams = ARR();
+		Map gram_set = { 0 };
 		EACH(v, values) {
 			J *ts = split(S(v), " ");
 			for (int i = 0; i + n < SIZE(ts); i++) {
@@ -200,32 +178,36 @@ J *generate_lookup(J *f)
 				}
 				if (valid) {
 					char *s = join(a, " ");
-					unique(grams, s);
+					unique_indexed(grams, &gram_set, s);
 					free(s);
 				}
 				DEL(a);
 			}
 			DEL(ts);
 		}
+		map_free(&gram_set);
+		Patterns *patterns = patterns_build(grams);
 		EACH(v, values) {
-			EACH(g, grams) {
-				if (strstr(S(v), S(g))) {
-					char *u = replace(S(g), " ", "_"),
-					     *s = replace(S(v), S(g), u);
-					int size = count(s, ' ') + 1;
-					if (size >= 2 && size <= 5) {
-						snprintf(k, sizeof(k), "%d",
-							 size);
-						push(d, k, s);
-					}
-					free(u);
-					free(s);
+			int matches = patterns_find(patterns, S(v));
+			for (int i = 0; i < matches; i++) {
+				const char *g =
+					patterns->text[patterns->hits[i]];
+				char *u = replace(g, " ", "_"),
+				     *s = replace(S(v), g, u);
+				int size = count(s, ' ') + 1;
+				if (size >= 2 && size <= 5) {
+					snprintf(k, sizeof(k), "%d", size);
+					lookup_push(d, &seen, k, s);
 				}
+				free(u);
+				free(s);
 			}
 		}
+		patterns_free(patterns);
 		DEL(grams);
 		DEL(values);
 	}
+	map_free(&seen);
 	EACH(k, d)
 		sort_strings(k, -1);
 	return d;
@@ -242,7 +224,8 @@ static J *rule(const char *canon, J *content, int distance)
 	return r;
 }
 
-static void add_rule(J *d, const char *key, J *r, Map *seen, int include_key)
+static void add_rule(J *d, const char *key, J *r, Map *seen, Map *keys,
+		     int include_key)
 {
 	char *json = cJSON_PrintUnformatted(r);
 	Buf b = { 0 };
@@ -252,14 +235,14 @@ static void add_rule(J *d, const char *key, J *r, Map *seen, int include_key)
 	free(json);
 	if (!map_get(seen, b.p)) {
 		map_put(seen, b.p, (void *)1);
-		ADD(ensure(d, key, 1), r);
+		ADD(indexed_ensure(d, keys, key, 1), r);
 	} else
 		DEL(r);
 	free(b.p);
 }
 
 static void ordinary_rule(J *d, const char *canon, const char *term,
-			  int distance, Map *seen)
+			  int distance, Map *seen, Map *keys)
 {
 	J *ts = split(term, "_"), *content = ARR();
 	for (int i = 1; i < SIZE(ts); i++) {
@@ -273,7 +256,7 @@ static void ordinary_rule(J *d, const char *canon, const char *term,
 	sort_strings(content, 0);
 	if (SIZE(content))
 		add_rule(d, S(AT(ts, 0)), rule(canon, content, distance), seen,
-			 0);
+			 keys, 0);
 	else
 		DEL(content);
 	DEL(ts);
@@ -306,7 +289,8 @@ static J *literal_parts(const char *text, int comma_lists)
 	}
 }
 
-J *generate_spans(J *raw, int distance, int plus_only, int comma_lists)
+static J *spans_build(J *raw, int distance, int plus_only, int comma_lists,
+		      Map *external_keys)
 {
 	/* Both the plus and ordinary passes consume the same list items. */
 	if (comma_lists) {
@@ -321,12 +305,13 @@ J *generate_spans(J *raw, int distance, int plus_only, int comma_lists)
 			}
 			PUT(expanded, k->string, values);
 		}
-		J *out = generate_spans(expanded, distance, plus_only, 0);
+		J *out = spans_build(expanded, distance, plus_only, 0,
+				     external_keys);
 		DEL(expanded);
 		return out;
 	}
 	J *d = OBJ();
-	Map seen = { 0 }, raw_index = { 0 };
+	Map seen = { 0 }, raw_index = { 0 }, keys = { 0 };
 	index_members(&raw_index, raw);
 	EACH(k, raw) {
 		J *syns = DUP(k);
@@ -338,7 +323,9 @@ J *generate_spans(J *raw, int distance, int plus_only, int comma_lists)
 				buf_put(&b, S(AT(ts, i)));
 				buf_put(&b, "_");
 				buf_put(&b, S(AT(ts, i + 1)));
-				if (map_get(&raw_index, b.p)) {
+				if (map_get(external_keys ? external_keys :
+								  &raw_index,
+					    b.p)) {
 					char *phrase = replace(b.p, "_", " ");
 					buf_put(&b, " +");
 					char *r = replace(working, phrase, b.p);
@@ -366,7 +353,7 @@ J *generate_spans(J *raw, int distance, int plus_only, int comma_lists)
 			if (SIZE(content))
 				add_rule(d, S(AT(ts, 0)),
 					 rule(k->string, content, distance),
-					 &seen, 1);
+					 &seen, &keys, 1);
 			else
 				DEL(content);
 			DEL(ts);
@@ -375,12 +362,14 @@ J *generate_spans(J *raw, int distance, int plus_only, int comma_lists)
 	}
 	map_free(&seen);
 	map_free(&raw_index);
-	if (plus_only)
+	if (plus_only) {
+		map_free(&keys);
 		return d;
+	}
 	EACH(k, raw) {
 		if (!strchr(k->string, ' ') && !strchr(k->string, '_'))
 			continue;
-		ordinary_rule(d, k->string, k->string, distance, &seen);
+		ordinary_rule(d, k->string, k->string, distance, &seen, &keys);
 		J *values = ARR();
 		EACH(v, k) {
 			char *s = norm(S(v), 0, 0);
@@ -393,32 +382,53 @@ J *generate_spans(J *raw, int distance, int plus_only, int comma_lists)
 				continue;
 			char *l = lower(S(v)), *s = replace(l, " ", "_");
 			if (strcmp(s, k->string))
-				ordinary_rule(d, k->string, s, distance, &seen);
+				ordinary_rule(d, k->string, s, distance, &seen,
+					      &keys);
 			free(l);
 			free(s);
 		}
 		DEL(values);
 	}
 	map_free(&seen);
+	map_free(&keys);
 	J *trimmed = OBJ();
+	Map trimmed_index = { 0 };
 	EACH(k, d) {
 		char *s = norm(k->string, 0, 0);
-		set(trimmed, s, DUP(k));
+		indexed_set(trimmed, &trimmed_index, s, DUP(k));
 		free(s);
 	}
+	map_free(&trimmed_index);
 	DEL(d);
 	return trimmed;
+}
+
+J *generate_spans(J *raw, int distance, int plus_only, int comma_lists)
+{
+	return spans_build(raw, distance, plus_only, comma_lists, NULL);
+}
+J *generate_spans_indexed(J *raw, int distance, int plus_only, int comma_lists,
+			  Map *keys)
+{
+	return spans_build(raw, distance, plus_only, comma_lists, keys);
 }
 
 static J *trie_build(J *a)
 {
 	J *groups = OBJ(), *result = OBJ();
+	Map keys = { 0 }, seen = { 0 };
 	EACH(v, a) {
 		const char *s = S(v), *p = strchr(s, ' ');
 		char *k = p ? slice(s, (size_t)(p - s)) : copy(s);
-		push(groups, k, p ? p + 1 : "");
+		J *group = indexed_ensure(groups, &keys, k, 1);
+		if (!map_get(&seen, s)) {
+			map_put(&seen, s, (void *)1);
+			ADD(group, STR(p ? p + 1 : ""));
+		}
 		free(k);
 	}
+	map_free(&keys);
+	map_free(&seen);
 	EACH(g, groups) {
 		if (strchr(S(g->child), ' '))
 			PUT(result, g->string, trie_build(g));
@@ -437,13 +447,15 @@ J *generate_trie(J *entities)
 	if (!SIZE(entities))
 		return NIL();
 	J *grams = OBJ(), *r = OBJ();
+	Map seen = { 0 };
 	EACH(v, entities) {
 		char *s = replace(S(v), "_", " ");
 		char k[16];
 		snprintf(k, sizeof(k), "%d", count(s, ' ') + 1);
-		push(grams, k, s);
+		lookup_push(grams, &seen, k, s);
 		free(s);
 	}
+	map_free(&seen);
 	for (int i = 1; i <= 6; i++) {
 		char k[16];
 		snprintf(k, sizeof(k), "%d", i);

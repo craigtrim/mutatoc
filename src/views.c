@@ -9,7 +9,9 @@
 J *graph_predicate(Graph *g, const char *predicate, int lc, int rev,
 		   mc_error *err)
 {
+	/* Hash label groups for large vocabularies (craigtrim/axiom#129). */
 	J *out = OBJ();
+	Map keys = { 0 };
 	size_t rows = 0;
 	for (size_t i = 0; i < g->n && !err->code; i++) {
 		Triple *t = &g->ts[i];
@@ -22,7 +24,7 @@ J *graph_predicate(Graph *g, const char *predicate, int lc, int rev,
 			if (!*S(k) || !strcmp(S(k), "nil") ||
 			    !strcmp(S(k), "class"))
 				continue;
-			J *a = ensure(out, S(k), 1);
+			J *a = indexed_ensure(out, &keys, S(k), 1);
 			EACH(v, vs)
 				if (*S(v) && strcmp(S(v), S(k)) &&
 				    strcmp(S(v), "nil"))
@@ -31,6 +33,7 @@ J *graph_predicate(Graph *g, const char *predicate, int lc, int rev,
 		DEL(ks);
 		DEL(vs);
 	}
+	map_free(&keys);
 	EACH(k, out)
 		sort_strings(k, 0);
 	if (!rows)
