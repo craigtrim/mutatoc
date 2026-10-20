@@ -255,6 +255,34 @@ static void indexed_replace(int live)
 	mc_destroy(e);
 	mc_destroy(fresh);
 }
+static void indexed_swap(int live)
+{
+	const char *documents[] = {
+		"<urn:school> <http://www.w3.org/2000/01/rdf-schema#label> \"red green\", \"blue green\" .",
+		"<urn:school> <http://www.w3.org/2000/01/rdf-schema#label> \"blue green\", \"red green\" ."
+	};
+	mc_engine *e = mc_create(), *fresh = mc_create();
+	load(e, documents[0], live);
+	Graph *graph = e->graph;
+	CHECK(e->updates != NULL);
+	for (int step = 1; step <= 4; step++) {
+		J *r = call(e, update("urn:school", documents[step % 2]), 1);
+		DEL(r);
+		CHECK(e->graph == graph);
+		CHECK(e->graph->triple_keys.size == e->graph->n);
+		load(fresh, documents[step % 2], live);
+		equivalent(e, fresh);
+		/* Adding either existing triple must still be a no-op. */
+		size_t n = e->graph->n;
+		for (size_t i = 0; i < fresh->graph->n; i++) {
+			Triple *t = &fresh->graph->ts[i];
+			rdf_add(e->graph, &t->s, &t->p, &t->o);
+		}
+		CHECK(e->graph->n == n);
+	}
+	mc_destroy(e);
+	mc_destroy(fresh);
+}
 static void write_term(Buf *b, const Term *t)
 {
 	if (t->kind == 0) {
@@ -372,6 +400,7 @@ int main(int argc, char **argv)
 	for (int live = 0; live < 2; live++) {
 		sequences(live);
 		indexed_replace(live);
+		indexed_swap(live);
 		if (argc > 1)
 			fixture_updates(argv[1], live);
 	}

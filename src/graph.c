@@ -247,11 +247,17 @@ void rdf_replace_object(Graph *g, size_t at, const Term *object)
 {
 	Triple *t = &g->ts[at];
 	char *old = triple_key(&t->s, &t->p, &t->o);
-	map_delete(&g->triple_keys, old);
+	/* Reordering literals may temporarily give two slots the same key. */
+	size_t references = (size_t)(uintptr_t)map_get(&g->triple_keys, old);
+	if (references > 1)
+		map_put(&g->triple_keys, old, (void *)(uintptr_t)(references - 1));
+	else
+		map_delete(&g->triple_keys, old);
 	free(old);
 	rdf_term_free(&t->o);
 	t->o = rdf_term_copy(object);
 	char *key = triple_key(&t->s, &t->p, &t->o);
-	map_put(&g->triple_keys, key, (void *)1);
+	references = (size_t)(uintptr_t)map_get(&g->triple_keys, key);
+	map_put(&g->triple_keys, key, (void *)(uintptr_t)(references + 1));
 	free(key);
 }
