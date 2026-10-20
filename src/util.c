@@ -610,14 +610,25 @@ static uint64_t hash(const char *s)
 	return h ^ (h >> 33);
 }
 
+/* One-byte fingerprints stay contiguous after the key/value slots. Empty
+ * probes need not fetch a key string or an entire slot from memory. */
+static unsigned char *map_tags(Map *m)
+{
+	return (unsigned char *)(m->slots + m->cap);
+}
+static unsigned char map_tag(uint64_t key_hash)
+{
+	return (unsigned char)((key_hash >> 57) + 1);
+}
 void *map_get(Map *m, const char *k)
 {
 	if (!m->cap)
 		return NULL;
 	uint64_t key_hash = hash(k);
+	unsigned char tag = map_tag(key_hash), *tags = map_tags(m);
 	size_t i = (size_t)key_hash & (m->cap - 1);
-	while (m->slots[i].key) {
-		if (m->slots[i].hash == key_hash && !strcmp(m->slots[i].key, k))
+	while (tags[i]) {
+		if (tags[i] == tag && !strcmp(m->slots[i].key, k))
 			return m->slots[i].value;
 		i = (i + 1) & (m->cap - 1);
 	}
@@ -628,14 +639,17 @@ static void map_resize(Map *m, size_t capacity)
 {
 	Map old = *m;
 	m->cap = capacity;
-	m->slots = calloc(m->cap, sizeof(*m->slots));
+	m->slots = calloc(m->cap, sizeof(*m->slots) + 1);
+	unsigned char *tags = map_tags(m);
 	/* Transfer owned keys in the same probe order. */
 	for (size_t i = 0; i < old.cap; i++)
 		if (old.slots[i].key) {
-			size_t at = (size_t)old.slots[i].hash & (m->cap - 1);
-			while (m->slots[at].key)
+			uint64_t key_hash = hash(old.slots[i].key);
+			size_t at = (size_t)key_hash & (m->cap - 1);
+			while (tags[at])
 				at = (at + 1) & (m->cap - 1);
 			m->slots[at] = old.slots[i];
+			tags[at] = map_tag(key_hash);
 		}
 	free(old.slots);
 }
@@ -652,12 +666,13 @@ void map_reserve(Map *m, size_t entries)
 void map_put(Map *m, const char *k, void *v)
 {
 	uint64_t key_hash = hash(k);
+	unsigned char tag = map_tag(key_hash);
 	size_t i = 0;
 	if (m->cap) {
+		unsigned char *tags = map_tags(m);
 		i = (size_t)key_hash & (m->cap - 1);
-		while (m->slots[i].key) {
-			if (m->slots[i].hash == key_hash &&
-			    !strcmp(m->slots[i].key, k)) {
+		while (tags[i]) {
+			if (tags[i] == tag && !strcmp(m->slots[i].key, k)) {
 				/* Updating an existing key must not rebuild the table. */
 				m->slots[i].value = v;
 				return;
@@ -668,10 +683,11 @@ void map_put(Map *m, const char *k, void *v)
 	if (!m->cap || m->size * 2 >= m->cap) {
 		map_resize(m, m->cap ? m->cap * 2 : 64);
 		i = (size_t)key_hash & (m->cap - 1);
-		while (m->slots[i].key)
+		while (map_tags(m)[i])
 			i = (i + 1) & (m->cap - 1);
 	}
-	m->slots[i] = (Slot){ copy(k), v, key_hash };
+	m->slots[i] = (Slot){ copy(k), v };
+	map_tags(m)[i] = tag;
 	m->size++;
 }
 
@@ -680,7 +696,7 @@ void map_put_small(Map *m, const char *key, void *value)
 {
 	if (!m->cap) {
 		m->cap = 8;
-		m->slots = calloc(m->cap, sizeof(*m->slots));
+		m->slots = calloc(m->cap, sizeof(*m->slots) + 1);
 	}
 	map_put(m, key, value);
 }
@@ -725,9 +741,10 @@ void map_delete(Map *m, const char *key)
 	if (!m->cap)
 		return;
 	uint64_t key_hash = hash(key);
+	unsigned char tag = map_tag(key_hash), *tags = map_tags(m);
 	size_t mask = m->cap - 1, hole = (size_t)key_hash & mask;
-	while (m->slots[hole].key && (m->slots[hole].hash != key_hash ||
-				      strcmp(m->slots[hole].key, key)))
+	while (tags[hole] && (tags[hole] != tag ||
+			      strcmp(m->slots[hole].key, key)))
 		hole = (hole + 1) & mask;
 	if (!m->slots[hole].key)
 		return;
@@ -735,12 +752,14 @@ void map_delete(Map *m, const char *key)
 	m->size--;
 	size_t next = (hole + 1) & mask;
 	while (m->slots[next].key) {
-		size_t start = (size_t)m->slots[next].hash & mask;
+		size_t start = (size_t)hash(m->slots[next].key) & mask;
 		if (((next - start) & mask) >= ((next - hole) & mask)) {
 			m->slots[hole] = m->slots[next];
+			tags[hole] = tags[next];
 			hole = next;
 		}
 		next = (next + 1) & mask;
 	}
 	m->slots[hole] = (Slot){ 0 };
+	tags[hole] = 0;
 }

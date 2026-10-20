@@ -74,7 +74,6 @@ const char *local(const char *);
 typedef struct {
 	char *key;
 	void *value;
-	uint64_t hash;
 } Slot;
 typedef struct {
 	Slot *slots;
