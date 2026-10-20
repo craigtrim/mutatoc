@@ -130,11 +130,11 @@ J *generate_synonyms(J *, int);
 J *generate_lookup(J *);
 typedef struct LookupState LookupState;
 LookupState *lookup_state_build(J *);
+LookupState *lookup_state_reuse(J *, J *);
 void lookup_state_entity(LookupState *, J *, int);
 void lookup_state_flush(LookupState *);
 J *lookup_state_json(LookupState *);
 void lookup_state_free(LookupState *);
-void lookup_state_attach(LookupState *, J *);
 void lookup_state_mirror(LookupState *, J *);
 void lookup_state_order(LookupState *, J *, int);
 void lookup_state_watch(LookupState *, void *,

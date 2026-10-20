@@ -189,7 +189,8 @@ static LookupValue *adjust(LookupState *s, int words, const char *text,
 	assert(delta > 0 || v->refs);
 	if (delta > 0) {
 		if (!v->refs++) {
-			show_value(v);
+			if (!v->entry)
+				show_value(v);
 			map_put(&g->dirty, text, v);
 			if (s->change)
 				s->change(s->context, words, text, 1);
@@ -477,18 +478,64 @@ void lookup_state_entity(LookupState *s, J *fwd, int delta)
 		map_free(&seen);
 	}
 }
-LookupState *lookup_state_build(J *fwd)
+/* Existing lookup arrays already have the required length/lexical order.
+ * Build their Cartesian trees in linear time and retain the JSON nodes. */
+static void seed_lookup(LookupState *s)
+{
+	EACH(array, s->json) {
+		LookupGroup *g = calloc(1, sizeof(*g));
+		g->words = atoi(array->string);
+		g->array = array;
+		map_put(&s->groups, array->string, g);
+		size_t n = (size_t)SIZE(array), depth = 0;
+		LookupValue **stack = malloc((n ? n : 1) * sizeof(*stack));
+		EACH(entry, array) {
+			LookupValue *v = calloc(1, sizeof(*v)), *left = NULL;
+			v->text = copy(S(entry));
+			v->chars = ulen(v->text);
+			v->group = g;
+			v->entry = entry;
+			s->random ^= s->random << 13;
+			s->random ^= s->random >> 17;
+			s->random ^= s->random << 5;
+			v->priority = s->random;
+			while (depth &&
+			       stack[depth - 1]->priority > v->priority)
+				left = stack[--depth];
+			v->left = left;
+			if (depth)
+				stack[depth - 1]->right = v;
+			else
+				g->root = v;
+			stack[depth++] = v;
+			map_put(&g->values, v->text, v);
+		}
+		free(stack);
+	}
+}
+static LookupState *build_lookup(J *fwd, J *existing)
 {
 	LookupState *s = calloc(1, sizeof(*s));
-	s->json = OBJ();
+	s->json = existing ? existing : OBJ();
+	s->attached = existing != NULL;
 	s->random = 129;
 	s->building = 1;
+	if (existing)
+		seed_lookup(s);
 	lookup_state_entity(s, fwd, 1);
 	for (int n = 1; n <= 6; n++)
 		group_at(s, n);
 	lookup_state_flush(s);
 	s->building = 0;
 	return s;
+}
+LookupState *lookup_state_build(J *fwd)
+{
+	return build_lookup(fwd, NULL);
+}
+LookupState *lookup_state_reuse(J *fwd, J *existing)
+{
+	return build_lookup(fwd, existing);
 }
 J *lookup_state_json(LookupState *s)
 {
@@ -515,11 +562,6 @@ void lookup_state_free(LookupState *s)
 	free(s);
 }
 
-void lookup_state_attach(LookupState *s, J *synonyms)
-{
-	set(synonyms, "lookup", s->json);
-	s->attached = 1;
-}
 void lookup_state_watch(LookupState *s, void *context,
 			void (*change)(void *, int, const char *, int))
 {
@@ -531,17 +573,15 @@ void lookup_state_watch(LookupState *s, void *context,
  * ordering while sharing the dependency graph and updating both arrays. */
 void lookup_state_mirror(LookupState *s, J *synonyms)
 {
-	s->mirror = OBJ();
-	EACH(old, GET(synonyms, "lookup")) {
+	s->mirror = GET(synonyms, "lookup");
+	EACH(old, s->mirror) {
 		LookupGroup *g = map_get(&s->groups, old->string);
-		g->mirror = DUP(g->array);
-		PUT(s->mirror, old->string, g->mirror);
+		g->mirror = old;
 		EACH(v, g->mirror) {
 			LookupValue *value = map_get(&g->values, S(v));
 			value->mirror_entry = v;
 		}
 	}
-	set(synonyms, "lookup", s->mirror);
 }
 
 /* Reorder the few word-count groups from their earliest source contribution. */

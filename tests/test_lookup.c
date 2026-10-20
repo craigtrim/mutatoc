@@ -14,15 +14,20 @@ static int check(J *fwd)
 		ok = 0;
 	}
 	free(c);
+	LookupState *reused = lookup_state_reuse(fwd, actual);
 	for (int step = 0; step < 3 && fwd->child; step++) {
 		J *one = OBJ(), *old = fwd->child;
 		PUT(one, old->string, DUP(old));
 		lookup_state_entity(state, one, -1);
+		lookup_state_entity(reused, one, -1);
 		DEL(cJSON_DetachItemViaPointer(fwd, old));
 		DEL(one);
 		lookup_state_flush(state);
+		lookup_state_flush(reused);
 		J *expected_update = generate_lookup(fwd);
 		if (!cJSON_Compare(expected_update, lookup_state_json(state),
+				   1) ||
+		    !cJSON_Compare(expected_update, lookup_state_json(reused),
 				   1)) {
 			fprintf(stderr,
 				"incremental lookup mismatch after removal %d\n",
@@ -32,6 +37,7 @@ static int check(J *fwd)
 		DEL(expected_update);
 	}
 	lookup_state_free(state);
+	lookup_state_free(reused);
 	if (!ok)
 		fprintf(stderr, "lookup mismatch\nexpected: %s\nactual: %s\n",
 			a, b);

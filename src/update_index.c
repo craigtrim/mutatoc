@@ -205,10 +205,9 @@ void update_state_build(mc_engine *e)
 	prepare_view(u, e->snapshot);
 	if (e->live)
 		prepare_view(u, e->live);
-	/* Aliases must own their words before replacing the original lookup JSON. */
+	/* Aliases own their words because updates may remove lookup entries. */
 	match_index_mutable(e->index);
-	u->snapshot = lookup_state_build(GET(syns, "fwd"));
-	lookup_state_attach(u->snapshot, syns);
+	u->snapshot = lookup_state_reuse(GET(syns, "fwd"), GET(syns, "lookup"));
 	if (e->live) {
 		J *live_syns = GET(e->live, "synonyms");
 		lookup_state_mirror(u->snapshot, live_syns);
@@ -266,18 +265,19 @@ static J *base_groups(J *fwd)
 }
 
 typedef struct SourceGroupNode {
-	struct SourceGroupNode *left, *right;
+	struct SourceGroupNode *left, *right, *parent;
 	size_t ordinal;
 	unsigned priority;
 	int sequence;
 } SourceGroupNode;
 typedef struct {
-	SourceGroupNode *root;
+	SourceGroupNode *root, *last;
 	Map members;
 } SourceGroup;
 struct SourceGroups {
 	Map groups;
 	unsigned random;
+	int building;
 };
 static SourceGroupNode *source_merge(SourceGroupNode *a, SourceGroupNode *b)
 {
@@ -351,7 +351,26 @@ static void source_groups_change(SourceGroups *s, J *fwd, Map *ordinals,
 				s->random ^= s->random >> 17;
 				s->random ^= s->random << 5;
 				v->priority = s->random;
-				g->root = source_insert(g->root, v);
+				if (s->building) {
+					/* Source ordinals arrive sorted during load. */
+					SourceGroupNode *at = g->last,
+							*left = NULL;
+					while (at &&
+					       at->priority > v->priority) {
+						left = at;
+						at = at->parent;
+					}
+					v->left = left;
+					if (left)
+						left->parent = v;
+					v->parent = at;
+					if (at)
+						at->right = v;
+					else
+						g->root = v;
+					g->last = v;
+				} else
+					g->root = source_insert(g->root, v);
 				map_put(&g->members, k->string, v);
 			} else {
 				SourceGroupNode *v =
@@ -374,7 +393,9 @@ static SourceGroups *source_groups_build(J *fwd, Map *ordinals, int live)
 {
 	SourceGroups *s = calloc(1, sizeof(*s));
 	s->random = 129;
+	s->building = 1;
 	source_groups_change(s, fwd, ordinals, live, 1);
+	s->building = 0;
 	return s;
 }
 static void source_groups_free(SourceGroups *s)
