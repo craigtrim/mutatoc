@@ -228,6 +228,48 @@ J *merge_views(J *out, const J *source)
 	return out;
 }
 
+/* The data view rebuilds lookup after sorting its forward synonyms (#129).
+ * Keep the original member position without copying entries that are discarded. */
+static J *live_snapshot_copy(J *snapshot)
+{
+	if (!cJSON_IsObject(snapshot))
+		return DUP(snapshot);
+	J *copy = cJSON_Duplicate(snapshot, 0),
+	  *synonyms = GET(snapshot, "synonyms");
+	if (!copy)
+		return NULL;
+	EACH(field, snapshot) {
+		J *value = NULL;
+		if (field == synonyms && cJSON_IsObject(field)) {
+			value = cJSON_Duplicate(field, 0);
+			J *lookup = GET(field, "lookup");
+			if (value)
+				EACH(member, field) {
+					J *part = member == lookup ?
+								NIL() :
+								DUP(member);
+					if (!part ||
+					    !cJSON_AddItemToObject(
+						    value, member->string,
+						    part)) {
+						DEL(part);
+						DEL(value);
+						value = NULL;
+						break;
+					}
+				}
+		} else
+			value = DUP(field);
+		if (!value ||
+		    !cJSON_AddItemToObject(copy, field->string, value)) {
+			DEL(value);
+			DEL(copy);
+			return NULL;
+		}
+	}
+	return copy;
+}
+
 J *live_view(mc_engine *e, mc_error *err)
 {
 	if (e->live)
@@ -250,7 +292,7 @@ J *live_view(mc_engine *e, mc_error *err)
 		e->live = merged;
 		return merged;
 	}
-	J *d = DUP(e->snapshot);
+	J *d = live_snapshot_copy(e->snapshot);
 	if (!d || !e->graph) {
 		DEL(d);
 		fail(err, 4, "Live finder requires a loaded RDF graph");
