@@ -1,3 +1,4 @@
+/* Compare annotation contents across compact source terms (craigtrim/axiom#129). */
 /*
  * test_sources.c - Graph, finder, and matching parity across native readers.
  *
@@ -27,8 +28,8 @@ static int text_equal(const char *a, const char *b)
 static int term_equal(const Term *a, const Term *b)
 {
 	return a->kind == b->kind && text_equal(a->value, b->value) &&
-	       text_equal(a->datatype, b->datatype) &&
-	       text_equal(a->language, b->language);
+	       text_equal(rdf_datatype(a), rdf_datatype(b)) &&
+	       text_equal(rdf_language(a), rdf_language(b));
 }
 
 static int graph_equal(Graph *a, Graph *b)

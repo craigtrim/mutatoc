@@ -134,7 +134,10 @@ size_t ulen(const char *s)
 {
 	size_t n = 0;
 	while (*s) {
-		uread(&s);
+		if ((unsigned char)*s < 128)
+			s++;
+		else
+			uread(&s);
 		n++;
 	}
 	return n;
@@ -192,6 +195,18 @@ static int is_ignorable(uint32_t c)
 
 char *lower(const char *s)
 {
+	/* ASCII needs no contextual Unicode mappings. Keep mixed and non-ASCII
+	 * strings on the existing path, including final-sigma handling. */
+	const unsigned char *ascii = (const unsigned char *)s;
+	while (*ascii && *ascii < 128)
+		ascii++;
+	if (!*ascii) {
+		char *out = copy(s);
+		for (char *p = out; *p; p++)
+			if (*p >= 'A' && *p <= 'Z')
+				*p += 'a' - 'A';
+		return out;
+	}
 	Buf b = { 0 };
 	int preceding_cased = 0;
 	while (*s) {
@@ -260,8 +275,69 @@ char *upper(const char *s)
 	return buf_take(&b);
 }
 
+static int ascii_space(unsigned char c)
+{
+	return c == 32 || (c >= 9 && c <= 13) || (c >= 28 && c <= 31);
+}
+
+const char *norm_view(const char *s, int lc, int spaces, char **owned)
+{
+	const unsigned char *at = (const unsigned char *)s;
+	int previous_space = 1;
+	*owned = NULL;
+	for (; *at; at++) {
+		unsigned char c = *at;
+		int space = ascii_space(c);
+		if (c >= 128 || (lc && c >= 'A' && c <= 'Z') ||
+		    (space && (at == (const unsigned char *)s ||
+			       (spaces && (c != ' ' || previous_space)))))
+			break;
+		previous_space = space;
+	}
+	if (!*at && (!previous_space || !*s))
+		return s;
+	*owned = norm(s, lc, spaces);
+	return *owned;
+}
+
+const char *norm_borrowed(const char *s, char **owned)
+{
+	return norm_view(s, 1, 1, owned);
+}
+
 char *norm(const char *s, int lc, int spaces)
 {
+	/* Common vocabulary text needs one allocation and no Unicode decoding.
+	 * Mixed text keeps the contextual case mappings and Unicode whitespace path. */
+	const unsigned char *ascii = (const unsigned char *)s;
+	while (*ascii && *ascii < 128)
+		ascii++;
+	if (!*ascii) {
+		const unsigned char *begin = (const unsigned char *)s,
+				    *end = ascii;
+		while (begin < end && ascii_space(*begin))
+			begin++;
+		while (end > begin && ascii_space(end[-1]))
+			end--;
+		char *out = malloc((size_t)(end - begin) + 1);
+		size_t length = 0;
+		int pending = 0;
+		for (const unsigned char *at = begin; at < end; at++) {
+			unsigned char c = *at;
+			if (spaces && ascii_space(c)) {
+				pending = 1;
+				continue;
+			}
+			if (pending)
+				out[length++] = ' ';
+			pending = 0;
+			out[length++] = (char)(lc && c >= 'A' && c <= 'Z' ?
+							     c + 'a' - 'A' :
+							     c);
+		}
+		out[length] = 0;
+		return out;
+	}
 	char *v = lc ? lower(s) : copy(s);
 	const char *p = v, *begin = NULL, *end = NULL;
 	while (*p) {
@@ -491,6 +567,29 @@ void unique(J *a, const char *s)
 		ADD(a, STR(s));
 }
 
+/* Maintain lexical predicate buckets while their nodes are hot (#129).
+ * This has the same duplicate rule as unique() followed by sort_strings(0). */
+void unique_sorted(J *array, const char *text)
+{
+	EACH(at, array) {
+		int order = strcmp(text, S(at));
+		if (!order)
+			return;
+		if (order < 0) {
+			J *value = STR(text);
+			value->prev = at->prev;
+			value->next = at;
+			if (at == array->child)
+				array->child = value;
+			else
+				at->prev->next = value;
+			at->prev = value;
+			return;
+		}
+	}
+	ADD(array, STR(text));
+}
+
 /*
  * unique() for arrays that only this set's owner appends to: same order and
  * contents, with a hash check instead of a scan of the whole array.
@@ -508,10 +607,16 @@ static int cmp_lex(const void *a, const void *b)
 	return strcmp(S(*(J *const *)a), S(*(J *const *)b));
 }
 
+typedef struct {
+	J *value;
+	size_t length;
+} SortString;
 static int cmp_len(const void *a, const void *b)
 {
-	size_t x = ulen(S(*(J *const *)a)), y = ulen(S(*(J *const *)b));
-	return x < y ? -1 : x > y ? 1 : cmp_lex(a, b);
+	const SortString *x = a, *y = b;
+	return x->length < y->length ? -1 :
+	       x->length > y->length ? 1 :
+					     strcmp(S(x->value), S(y->value));
 }
 
 void sort_strings(J *a, int mode)
@@ -519,14 +624,47 @@ void sort_strings(J *a, int mode)
 	int n = SIZE(a);
 	if (n < 2)
 		return;
+	if (mode) {
+		/* Count UTF-8 characters once, not on every comparison. */
+		SortString *vs = malloc((size_t)n * sizeof(*vs));
+		if (!vs)
+			return;
+		for (int i = 0; i < n; i++) {
+			vs[i].value = cJSON_DetachItemFromArray(a, 0);
+			vs[i].length = ulen(S(vs[i].value));
+		}
+		/* Keep qsort's tie handling; skip it only for strict input order. */
+		int order = cmp_len(&vs[0], &vs[1]), ordered = order != 0;
+		for (int i = 2; i < n && ordered; i++) {
+			int next = cmp_len(&vs[i - 1], &vs[i]);
+			ordered = next != 0 && (next > 0) == (order > 0);
+		}
+		if (!ordered) {
+			qsort(vs, (size_t)n, sizeof(*vs), cmp_len);
+			order = -1;
+		}
+		int reverse = (mode < 0) != (order > 0);
+		for (int i = 0; i < n; i++)
+			ADD(a, vs[reverse ? n - 1 - i : i].value);
+		free(vs);
+		return;
+	}
 	J **vs = malloc((size_t)n * sizeof(*vs));
 	if (!vs)
 		return;
 	for (int i = 0; i < n; i++)
 		vs[i] = cJSON_DetachItemFromArray(a, 0);
-	qsort(vs, (size_t)n, sizeof(*vs), mode == 0 ? cmp_lex : cmp_len);
+	int order = cmp_lex(&vs[0], &vs[1]), ordered = order != 0;
+	for (int i = 2; i < n && ordered; i++) {
+		int next = cmp_lex(&vs[i - 1], &vs[i]);
+		ordered = next != 0 && (next > 0) == (order > 0);
+	}
+	if (!ordered) {
+		qsort(vs, (size_t)n, sizeof(*vs), cmp_lex);
+		order = -1;
+	}
 	for (int i = 0; i < n; i++)
-		ADD(a, vs[mode < 0 ? n - 1 - i : i]);
+		ADD(a, vs[order > 0 ? n - 1 - i : i]);
 	free(vs);
 }
 
@@ -562,58 +700,264 @@ const char *local(const char *s)
 	return p ? p + 1 : s;
 }
 
-static uint64_t hash(const char *s)
+/* MurmurHash64A (Austin Appleby, public domain), with aligned-safe reads.
+ * https://github.com/aappleby/smhasher/blob/master/src/MurmurHash2.cpp
+ * Hash long vocabulary forms eight bytes at a time. Hashes stay internal;
+ * native byte order does not affect lookup equality or JSON ordering. */
+uint64_t hash_text(const char *s)
 {
-	uint64_t h = 14695981039346656037ull;
-	while (*s) {
-		h ^= (unsigned char)*s++;
-		h *= 1099511628211ull;
+	const uint64_t mix = UINT64_C(0xc6a4a7935bd1e995);
+	size_t length = strlen(s);
+	uint64_t h = UINT64_C(129) ^ ((uint64_t)length * mix);
+	const unsigned char *p = (const unsigned char *)s;
+	while (length >= 8) {
+		uint64_t word;
+		memcpy(&word, p, sizeof(word));
+		word *= mix;
+		word ^= word >> 47;
+		word *= mix;
+		h = (h ^ word) * mix;
+		p += 8;
+		length -= 8;
 	}
-	return h;
+	if (length) {
+		uint64_t tail = 0;
+		for (size_t i = 0; i < length; i++)
+			tail |= (uint64_t)p[i] << (i * 8);
+		h = (h ^ tail) * mix;
+	}
+	h ^= h >> 47;
+	h *= mix;
+	return h ^ (h >> 47);
 }
 
+/* Compact metadata stores a fingerprint and key ownership. A three-quarter
+ * load limit keeps large indexes compact while retaining empty probe slots.
+ * Borrowed keys remain valid until their entry is removed or replaced. */
+enum { MAP_FINGERPRINT = 127, MAP_OWNED = 128 };
+static unsigned char *map_tags(Map *m)
+{
+	return (unsigned char *)(m->slots + m->cap);
+}
+static unsigned char map_tag(uint64_t key_hash)
+{
+	unsigned char tag = (unsigned char)(key_hash >> 57);
+	return tag ? tag : MAP_FINGERPRINT;
+}
+static size_t map_bucket(uint64_t hash, size_t capacity)
+{
+	size_t mask = capacity - 1;
+	return (capacity & mask) ? (size_t)(hash % capacity) :
+					 (size_t)hash & mask;
+}
 void *map_get(Map *m, const char *k)
 {
 	if (!m->cap)
 		return NULL;
-	size_t i = (size_t)hash(k) & (m->cap - 1);
-	while (m->slots[i].key) {
-		if (!strcmp(m->slots[i].key, k))
+	uint64_t key_hash = hash_text(k);
+	unsigned char tag = map_tag(key_hash), *tags = map_tags(m);
+	size_t i = map_bucket(key_hash, m->cap);
+	while (tags[i]) {
+		if ((tags[i] & MAP_FINGERPRINT) == tag &&
+		    !strcmp(m->slots[i].key, k))
 			return m->slots[i].value;
-		i = (i + 1) & (m->cap - 1);
+		i = i + 1 == m->cap ? 0 : i + 1;
 	}
 	return NULL;
 }
 
-void map_put(Map *m, const char *k, void *v)
+static void map_resize(Map *m, size_t capacity)
 {
-	if (!m->cap || m->size * 2 >= m->cap) {
-		Map old = *m;
-		m->cap = m->cap ? m->cap * 2 : 64;
-		m->slots = calloc(m->cap, sizeof(Slot));
-		m->size = 0;
-		for (size_t i = 0; i < old.cap; i++)
-			if (old.slots[i].key) {
-				map_put(m, old.slots[i].key,
-					old.slots[i].value);
-				free(old.slots[i].key);
+	Map old = *m;
+	m->cap = capacity;
+	m->slots = calloc(m->cap, sizeof(*m->slots) + sizeof(unsigned char));
+	unsigned char *tags = map_tags(m);
+	/* Transfer keys and their ownership in the same probe order. */
+	for (size_t i = 0; i < old.cap; i++)
+		if (old.slots[i].key) {
+			uint64_t key_hash = hash_text(old.slots[i].key);
+			size_t at = map_bucket(key_hash, m->cap);
+			while (tags[at])
+				at = at + 1 == m->cap ? 0 : at + 1;
+			m->slots[at] = old.slots[i];
+			tags[at] = map_tags(&old)[i];
+		}
+	free(old.slots);
+}
+void map_reserve(Map *m, size_t entries)
+{
+	if (!entries || entries <= m->cap - m->cap / 4)
+		return;
+	/* Reserve the requested three-quarter occupancy without rounding every
+	 * completed vocabulary up to another power of two. */
+	size_t capacity = entries + (entries + 2) / 3;
+	/* Incremental reservations still grow geometrically, so repeated
+	 * reserve(size + 1) calls cannot cause quadratic rehashing. */
+	if (m->cap && capacity < m->cap + m->cap / 2)
+		capacity = m->cap + m->cap / 2;
+	capacity = (capacity + 7) / 8 * 8;
+	map_resize(m, capacity);
+}
+static void map_store(Map *m, const char *k, void *v, int borrowed)
+{
+	uint64_t key_hash = hash_text(k);
+	unsigned char tag = map_tag(key_hash);
+	size_t i = 0;
+	if (m->cap) {
+		unsigned char *tags = map_tags(m);
+		i = map_bucket(key_hash, m->cap);
+		while (tags[i]) {
+			if ((tags[i] & MAP_FINGERPRINT) == tag &&
+			    !strcmp(m->slots[i].key, k)) {
+				/* Switch ownership before the previous owner can free its key. */
+				if (borrowed) {
+					if (m->slots[i].key != k &&
+					    (tags[i] & MAP_OWNED))
+						free(m->slots[i].key);
+					m->slots[i].key = (char *)k;
+					tags[i] = tag;
+				} else if (!borrowed &&
+					   !(tags[i] & MAP_OWNED)) {
+					m->slots[i].key = copy(k);
+					tags[i] = tag | MAP_OWNED;
+				}
+				m->slots[i].value = v;
+				return;
 			}
-		free(old.slots);
+			i = i + 1 == m->cap ? 0 : i + 1;
+		}
 	}
-	size_t i = (size_t)hash(k) & (m->cap - 1);
-	while (m->slots[i].key && strcmp(m->slots[i].key, k))
-		i = (i + 1) & (m->cap - 1);
-	if (!m->slots[i].key) {
-		m->slots[i].key = copy(k);
-		m->size++;
+	if (!m->cap || m->size >= m->cap - m->cap / 4) {
+		map_resize(m, m->cap ? m->cap * 2 : 64);
+		i = map_bucket(key_hash, m->cap);
+		while (map_tags(m)[i])
+			i = i + 1 == m->cap ? 0 : i + 1;
 	}
-	m->slots[i].value = v;
+	m->slots[i] = (Slot){ borrowed ? (char *)k : copy(k), v };
+	map_tags(m)[i] = tag | (borrowed ? 0 : MAP_OWNED);
+	m->size++;
+}
+
+/* Builders find or insert a borrowed key in one probe (craigtrim/axiom#129).
+ * Callers complete new entries with retained key storage and a nonnull value
+ * before another map operation. Existing entries retain their ownership. */
+Slot *map_entry_ref(Map *m, const char *key)
+{
+	uint64_t hash = hash_text(key);
+	unsigned char tag = map_tag(hash);
+	size_t at = 0;
+	if (m->cap) {
+		unsigned char *tags = map_tags(m);
+		at = map_bucket(hash, m->cap);
+		while (tags[at]) {
+			if ((tags[at] & MAP_FINGERPRINT) == tag &&
+			    !strcmp(m->slots[at].key, key))
+				return &m->slots[at];
+			at = at + 1 == m->cap ? 0 : at + 1;
+		}
+	}
+	if (!m->cap || m->size >= m->cap - m->cap / 4) {
+		map_resize(m, m->cap ? m->cap * 2 : 64);
+		at = map_bucket(hash, m->cap);
+		while (map_tags(m)[at])
+			at = at + 1 == m->cap ? 0 : at + 1;
+	}
+	m->slots[at] = (Slot){ (char *)key, NULL };
+	map_tags(m)[at] = tag;
+	m->size++;
+	return &m->slots[at];
+}
+
+void map_put(Map *m, const char *key, void *value)
+{
+	map_store(m, key, value, 0);
+}
+void map_put_ref(Map *m, const char *key, void *value)
+{
+	map_store(m, key, value, 1);
+}
+
+/* Per-word dependency and alias buckets usually contain only one entry. */
+void map_put_small(Map *m, const char *key, void *value)
+{
+	if (!m->cap) {
+		m->cap = 8;
+		m->slots = calloc(m->cap, sizeof(*m->slots) + sizeof(unsigned char));
+	}
+	map_put(m, key, value);
 }
 
 void map_free(Map *m)
 {
 	for (size_t i = 0; i < m->cap; i++)
-		free(m->slots[i].key);
+		if (map_tags(m)[i] & MAP_OWNED)
+			free(m->slots[i].key);
 	free(m->slots);
 	memset(m, 0, sizeof(*m));
+}
+
+/* Hashed object construction, preserving member order (craigtrim/axiom#129). */
+J *indexed_ensure(J *object, Map *index, const char *key, int array)
+{
+	Slot *entry = map_entry_ref(index, key);
+	if (!entry->value) {
+		J *value = array ? ARR() : OBJ();
+		PUT(object, key, value);
+		entry->key = value->string;
+		entry->value = value;
+	}
+	return entry->value;
+}
+
+void indexed_set(J *object, Map *index, const char *key, J *value)
+{
+	Slot *entry = map_entry_ref(index, key);
+	J *old = entry->value;
+	if (old) {
+		if (!(value->type & cJSON_StringIsConst))
+			free(value->string);
+		value->type &= ~cJSON_StringIsConst;
+		value->string = copy(key);
+		entry->key = value->string;
+		entry->value = value;
+		cJSON_ReplaceItemViaPointer(object, old, value);
+	} else {
+		PUT(object, key, value);
+		entry->key = value->string;
+		entry->value = value;
+	}
+}
+
+/* Backshift deletion keeps probe chains reachable without tombstone buildup. */
+void map_delete(Map *m, const char *key)
+{
+	if (!m->cap)
+		return;
+	uint64_t key_hash = hash_text(key);
+	unsigned char tag = map_tag(key_hash), *tags = map_tags(m);
+	size_t hole = map_bucket(key_hash, m->cap);
+	while (tags[hole] && ((tags[hole] & MAP_FINGERPRINT) != tag ||
+			      strcmp(m->slots[hole].key, key)))
+		hole = hole + 1 == m->cap ? 0 : hole + 1;
+	if (!m->slots[hole].key)
+		return;
+	if (tags[hole] & MAP_OWNED)
+		free(m->slots[hole].key);
+	m->size--;
+	size_t next = hole + 1 == m->cap ? 0 : hole + 1;
+	while (m->slots[next].key) {
+		size_t start =
+			map_bucket(hash_text(m->slots[next].key), m->cap);
+		size_t distance = next >= start ? next - start :
+							next + m->cap - start;
+		size_t gap = next >= hole ? next - hole : next + m->cap - hole;
+		if (distance >= gap) {
+			m->slots[hole] = m->slots[next];
+			tags[hole] = tags[next];
+			hole = next;
+		}
+		next = next + 1 == m->cap ? 0 : next + 1;
+	}
+	m->slots[hole] = (Slot){ 0 };
+	tags[hole] = 0;
 }

@@ -6,65 +6,193 @@
 
 #include "mc.h"
 #include "rdf_namespaces.h"
+#include <assert.h>
+#include <limits.h>
+
+/* Subject lists are append-only until the graph is discarded. Keep their
+ * array/number wrappers together; callers read them but never delete a node. */
+struct GraphIds {
+	struct GraphIds *next;
+	size_t used;
+	J nodes[256];
+};
+static J *graph_id_node(Graph *g, int type)
+{
+	if (!g->subject_ids || g->subject_ids->used == 256) {
+		GraphIds *block = calloc(1, sizeof(*block));
+		block->next = g->subject_ids;
+		g->subject_ids = block;
+	}
+	J *node = &g->subject_ids->nodes[g->subject_ids->used++];
+	node->type = type;
+	return node;
+}
+
+/* Original graph strings have one lifetime. Replacements own their new
+ * strings separately, so repeated edits never append to this initial pool. */
+struct GraphStrings {
+	struct GraphStrings *next;
+	size_t used, capacity;
+	char bytes[];
+};
+static char *graph_string(Graph *g, const char *text)
+{
+	size_t length = strlen(text) + 1;
+	if (!g->strings || g->strings->capacity - g->strings->used < length) {
+		size_t capacity = g->strings ? 65536 : 4096;
+		if (capacity < length)
+			capacity = length;
+		GraphStrings *block = malloc(sizeof(*block) + capacity);
+		block->next = g->strings;
+		block->used = 0;
+		block->capacity = capacity;
+		g->strings = block;
+	}
+	char *value = g->strings->bytes + g->strings->used;
+	memcpy(value, text, length);
+	g->strings->used += length;
+	return value;
+}
 
 Term rdf_term(const char *s, int kind)
 {
-	Term t = { copy(s), NULL, NULL, kind };
+	Term t = { copy(s), NULL, kind, 0 };
 	return t;
+}
+
+/* One allocation owns the optional annotation pair and its strings (#129).
+ * Copy before releasing the old block: either input may point into it. */
+void rdf_term_attributes(Term *t, const char *datatype, const char *language)
+{
+	TermAttributes *attributes = NULL;
+	if (datatype || language) {
+		size_t type_size = datatype ? strlen(datatype) + 1 : 0;
+		size_t language_size = language ? strlen(language) + 1 : 0;
+		attributes =
+			malloc(sizeof(*attributes) + type_size + language_size);
+		char *text = (char *)(attributes + 1);
+		attributes->datatype = type_size ? text : NULL;
+		attributes->language = language_size ? text + type_size : NULL;
+		if (type_size)
+			memcpy(attributes->datatype, datatype, type_size);
+		if (language_size)
+			memcpy(attributes->language, language, language_size);
+	}
+	free(t->attributes);
+	t->attributes = attributes;
 }
 
 void rdf_term_free(Term *t)
 {
-	free(t->value);
-	free(t->datatype);
-	free(t->language);
+	if (!t->shared_value)
+		free(t->value);
+	free(t->attributes);
 	memset(t, 0, sizeof(*t));
 }
 
 Term rdf_term_copy(const Term *t)
 {
-	Term v = { copy(t->value), t->datatype ? copy(t->datatype) : NULL,
-		   t->language ? copy(t->language) : NULL, t->kind };
+	Term v = { copy(t->value), NULL, t->kind, 0 };
+	rdf_term_attributes(&v, rdf_datatype(t), rdf_language(t));
 	return v;
 }
 
-void rdf_add(Graph *g, const Term *s, const Term *p, const Term *o)
+/* Resource terms recur across triples. Keep one graph-owned string while
+ * independent term copies and mutable literal values retain their ownership. */
+static Term graph_term(Graph *g, const Term *source)
 {
-	Buf key = { 0 };
-	const Term *terms[] = { s, p, o };
-	for (size_t i = 0; i < 3; i++) {
-		const char *parts[] = { terms[i]->value, terms[i]->datatype,
-					terms[i]->language };
-		char length[64];
-		snprintf(length, sizeof(length), "%d:", terms[i]->kind);
-		buf_put(&key, length);
-		for (size_t j = 0; j < 3; j++) {
-			const char *part = parts[j] ? parts[j] : "";
-			snprintf(length, sizeof(length), "%zu:", strlen(part));
-			buf_put(&key, length);
-			buf_put(&key, part);
+	char *value;
+	if (source->kind == 1)
+		value = graph_string(g, source->value);
+	else {
+		value = map_get(&g->resources, source->value);
+		if (!value) {
+			value = graph_string(g, source->value);
+			map_put_ref(&g->resources, value, value);
 		}
 	}
-	if (map_get(&g->triple_keys, key.p)) {
-		free(key.p);
-		return;
-	}
-	map_put(&g->triple_keys, key.p, (void *)1);
-	free(key.p);
+	Term term = { value, NULL, source->kind, 1 };
+	rdf_term_attributes(&term, rdf_datatype(source), rdf_language(source));
+	return term;
+}
 
-	if (g->n == g->cap) {
-		g->cap = g->cap ? g->cap * 2 : 256;
-		g->ts = realloc(g->ts, g->cap * sizeof(*g->ts));
+/* Hashes select a chain of stable triple IDs; full terms decide equality.
+ * This avoids retaining a second serialized copy of every RDF statement. */
+static uint64_t triple_hash(const Term *s, const Term *p, const Term *o)
+{
+	const uint64_t mix = UINT64_C(0xc6a4a7935bd1e995);
+	const Term *terms[] = { s, p, o };
+	uint64_t hash = 129;
+	for (size_t i = 0; i < 3; i++) {
+		hash = (hash ^ (unsigned)terms[i]->kind) * mix;
+		const char *parts[] = { terms[i]->value, rdf_datatype(terms[i]),
+					rdf_language(terms[i]) };
+		for (size_t j = 0; j < 3; j++)
+			hash = (hash ^
+				(parts[j] && *parts[j] ? hash_text(parts[j]) :
+							       0)) *
+			       mix;
 	}
+	return hash ^ (hash >> 47);
+}
+static int term_equal(const Term *a, const Term *b)
+{
+	return a->kind == b->kind && !strcmp(a->value, b->value) &&
+	       !strcmp(rdf_datatype(a) ? rdf_datatype(a) : "",
+		       rdf_datatype(b) ? rdf_datatype(b) : "") &&
+	       !strcmp(rdf_language(a) ? rdf_language(a) : "",
+		       rdf_language(b) ? rdf_language(b) : "");
+}
+static void triple_grow(Graph *g)
+{
+	g->cap = g->cap ? g->cap * 2 : 256;
+	g->ts = realloc(g->ts, g->cap * sizeof(*g->ts));
+	g->triple_links =
+		realloc(g->triple_links, g->cap * sizeof(*g->triple_links));
+	g->triple_capacity = g->cap;
+	free(g->triple_heads);
+	g->triple_heads = calloc(g->triple_capacity, sizeof(*g->triple_heads));
+	for (size_t i = 0; i < g->n; i++) {
+		size_t bucket = (size_t)g->triple_links[i].hash &
+				(g->triple_capacity - 1);
+		g->triple_links[i].next = g->triple_heads[bucket];
+		g->triple_heads[bucket] = i + 1;
+	}
+}
+void rdf_add(Graph *g, const Term *s, const Term *p, const Term *o)
+{
+	uint64_t hash = triple_hash(s, p, o);
+	if (g->triple_capacity) {
+		size_t bucket = (size_t)hash & (g->triple_capacity - 1);
+		for (size_t id = g->triple_heads[bucket]; id;
+		     id = g->triple_links[id - 1].next) {
+			if (g->triple_links[id - 1].hash != hash)
+				continue;
+			Triple *t = &g->ts[id - 1];
+			if (term_equal(&t->s, s) && term_equal(&t->p, p) &&
+			    term_equal(&t->o, o))
+				return;
+		}
+	}
+	/* Copy before reallocating: callers may supply terms from this graph. */
+	Triple triple = { graph_term(g, s), graph_term(g, p),
+			  graph_term(g, o) };
+	if (g->n == g->cap)
+		triple_grow(g);
 	size_t n = g->n++;
-	g->ts[n] = (Triple){ rdf_term_copy(s), rdf_term_copy(p),
-			     rdf_term_copy(o) };
-	J *a = map_get(&g->subjects, s->value);
+	g->ts[n] = triple;
+	size_t bucket = (size_t)hash & (g->triple_capacity - 1);
+	g->triple_links[n] = (TripleLink){ hash, g->triple_heads[bucket] };
+	g->triple_heads[bucket] = n + 1;
+	J *a = map_get(&g->subjects, triple.s.value);
 	if (!a) {
-		a = ARR();
-		map_put(&g->subjects, s->value, a);
+		a = graph_id_node(g, cJSON_Array);
+		map_put_ref(&g->subjects, triple.s.value, a);
 	}
-	ADD(a, NUM((double)n));
+	J *id = graph_id_node(g, cJSON_Number);
+	id->valuedouble = (double)n;
+	id->valueint = n > INT_MAX ? INT_MAX : (int)n;
+	ADD(a, id);
 }
 
 void rdf_bind_prefix(Graph *g, const char *prefix, const char *namespace)
@@ -109,16 +237,26 @@ void rdf_free(Graph *g)
 {
 	if (!g)
 		return;
+	lookup_trace_free(g->lookup_trace);
 	for (size_t i = 0; i < g->n; i++) {
 		rdf_term_free(&g->ts[i].s);
 		rdf_term_free(&g->ts[i].p);
 		rdf_term_free(&g->ts[i].o);
 	}
-	for (size_t i = 0; i < g->subjects.cap; i++)
-		if (g->subjects.slots[i].key)
-			DEL(g->subjects.slots[i].value);
+	while (g->subject_ids) {
+		GraphIds *next = g->subject_ids->next;
+		free(g->subject_ids);
+		g->subject_ids = next;
+	}
 	map_free(&g->subjects);
-	map_free(&g->triple_keys);
+	free(g->triple_heads);
+	free(g->triple_links);
+	map_free(&g->resources);
+	while (g->strings) {
+		GraphStrings *next = g->strings->next;
+		free(g->strings);
+		g->strings = next;
+	}
 	free(g->ts);
 	DEL(g->prefixes);
 	free(g);
@@ -177,11 +315,11 @@ static J *term_json(Term *t)
 	PUT(j, "kind",
 	    STR(t->kind == 0 ? "iri" :
 		t->kind == 1 ? "literal" :
-			       "blank"));
-	if (t->datatype)
-		PUT(j, "datatype", STR(t->datatype));
-	if (t->language)
-		PUT(j, "language", STR(t->language));
+				       "blank"));
+	if (rdf_datatype(t))
+		PUT(j, "datatype", STR(rdf_datatype(t)));
+	if (rdf_language(t))
+		PUT(j, "language", STR(rdf_language(t)));
 	return j;
 }
 
@@ -234,4 +372,25 @@ Graph *rdf_merge(Graph **graphs, size_t count)
 		}
 	}
 	return out;
+}
+
+/* Existing subject slots stay stable for vocabulary replacements (craigtrim/axiom#129). */
+void rdf_replace_object(Graph *g, size_t at, const Term *object)
+{
+	Triple *t = &g->ts[at];
+	Term replacement = rdf_term_copy(object);
+	size_t bucket = (size_t)g->triple_links[at].hash &
+			(g->triple_capacity - 1);
+	size_t *link = &g->triple_heads[bucket];
+	while (*link && *link != at + 1)
+		link = &g->triple_links[*link - 1].next;
+	assert(*link == at + 1);
+	*link = g->triple_links[at].next;
+	rdf_term_free(&t->o);
+	t->o = replacement;
+	g->triple_links[at].hash = triple_hash(&t->s, &t->p, &t->o);
+	bucket = (size_t)g->triple_links[at].hash & (g->triple_capacity - 1);
+	/* Every slot has its own link, including temporary duplicates in swaps. */
+	g->triple_links[at].next = g->triple_heads[bucket];
+	g->triple_heads[bucket] = at + 1;
 }

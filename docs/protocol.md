@@ -6,6 +6,7 @@ Each request is one JSON object. The CLI's `--serve` mode accepts newline-delimi
 | --- | --- | --- |
 | `version` | none | library version |
 | `load` | `path`, inline `content` or `turtle`, `snapshot`, `paths`, or `sources`; optional `format`, `name`, `base`, `class_based`, `distance`, `interface`, `graph_only`, `comma_lists` | loaded ontology metadata |
+| `update` | `replace` mapping entity IRIs to Turtle strings, and/or `remove` array of entity IRIs | accepted replacement and removal counts |
 | `snapshot` | none | generated MDA object |
 | `read_rdf` | `content` and optional `format`, or `turtle`; optional `base` | typed RDF triples without changing the loaded ontology |
 | `triples` | none | parsed RDF graph; unavailable after loading a prepared MDA snapshot alone |
@@ -22,11 +23,29 @@ Each request is one JSON object. The CLI's `--serve` mode accepts newline-delimi
 
 The `query` interface defaults to cached JSON finder behavior. `owl` and `data` select direct graph and live finder semantics when an RDF graph is loaded. `ask_json` selects the low-level stored JSON views. Unknown operations and methods return errors. The complete exercised method list is recorded in `tests/fixtures/api/queries.json`.
 
-`load` constructs the new graph and snapshot before replacing the existing ontology. Failed loads retain the previous ontology.
+`load` constructs the new graph and snapshot before replacing the existing ontology. Failed loads retain the previous ontology. Eligible large loads build independent indexes with at most two additional native threads, which finish before `load` returns.
 
 `comma_lists` is a boolean, false by default on every load. Whole literals, including their commas, supply synonyms and span rules. Set it to true for sources that pack lists into literals; commas between numeric characters remain intact. Collections inherit it per source, with explicit source values taking precedence. Deferred `graph_only` extraction retains it, and failed loads preserve the previous setting. It does not rewrite prepared snapshots. See [comma literals and packed lists](input-formats.md#comma-literals-and-packed-lists) for migration examples.
 
 `format` accepts `auto` (default), `turtle`/`ttl`, `json`, `jsonl`, or `snapshot`. Inline `content` is a source-text string. JSON arrays and JSONL ontology records load directly into the same graph as Turtle; prepared MDA snapshots remain distinct. See [Ontology input formats](input-formats.md) for the schema and examples.
+
+## Update entities
+
+`update` applies a batch to one loaded RDF graph. Each `replace` value contains all statements for its subject, including statements the caller wants to retain. An empty string removes that subject's statements. `remove` also removes subject statements; it leaves incoming references from other subjects intact. Removing an absent subject succeeds.
+
+```json
+{"op":"update","replace":{"https://example.org/#school42":"<https://example.org/#school42> rdfs:label \"Regional Science Academy\" ."},"remove":["https://example.org/#school17"]}
+```
+
+The response is `{"ok":true,"result":{"replaced":1,"removed":1}}`. Counts describe accepted request entries. Empty replacement and removal containers are a successful no-op.
+
+Entity identifiers must be absolute IRIs. Each Turtle fragment inherits the loaded graph's prefixes and uses its entity IRI as its base. Prefix declarations inside a fragment apply to that fragment. Statements must use the specified entity IRI as subject and cannot contain blank nodes. A subject may appear only once across the request. Prepared snapshots and source collections do not support `update`.
+
+Every fragment is checked before the batch changes the engine. Invalid Turtle, mismatched subjects, duplicate subjects, and extraction errors leave the graph and matching results unchanged. Replacements occupy the original subject's position; new subjects append in request order. The existing load options remain in effect.
+
+Literal vocabulary replacements can reuse the loaded graph and matching index. Mutatoc maintains references to shared lookup forms, tracks substring dependencies, and patches affected synonym and span buckets. Changing a label's word count also updates lookup ordering and token aliases. The work follows the changed vocabulary and its affected dependencies.
+
+Structural changes, additions, and removals rebuild the derived views transactionally. Mutatoc also uses that path for blank-node graphs, explicit `+` literals, comma-list mode, external synonym files, colliding canonical names, and replacements that change the subject's predicate layout. Both paths produce the results of loading the resulting graph. No consumer changes are needed for faster `load`; a consumer uses incremental edits by sending `update`.
 
 ## Load TTL or JSON
 

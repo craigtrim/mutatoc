@@ -22,6 +22,7 @@
 #include <time.h>
 #endif
 #include "mc.h"
+#include "generated.h"
 
 #define DOCUMENT_CHARS 2400
 
@@ -55,7 +56,7 @@ static int within(const char *what, const char *ontology, double value,
 		  double budget, const char *unit)
 {
 	int ok = value <= budget;
-	printf("%-4s %-17s %-12s %8.1f %s (ceiling %.0f %s)\n",
+	printf("%-4s %-17s %-12s %8.1f %s (ceiling %g %s)\n",
 	       ok ? "ok" : "OVER", ontology, what, value, unit, budget, unit);
 	return ok;
 }
@@ -79,8 +80,8 @@ static double peak_mb(void)
 #ifdef _WIN32
 	PROCESS_MEMORY_COUNTERS c;
 	return GetProcessMemoryInfo(GetCurrentProcess(), &c, sizeof(c)) ?
-		       (double)c.PeakWorkingSetSize / 1048576.0 :
-		       0;
+			     (double)c.PeakWorkingSetSize / 1048576.0 :
+			     0;
 #else
 	struct rusage u;
 	getrusage(RUSAGE_SELF, &u);
@@ -147,11 +148,177 @@ static char *document(const char *root, const char *name)
 	return b.p;
 }
 
+static int generated_parse(mc_engine *e, int revision)
+{
+	char wire[192];
+	snprintf(wire, sizeof(wire),
+		 "{\"op\":\"parse\",\"text\":\"district00042 regional school of applied sciences%d\"}",
+		 revision);
+	mc_error error;
+	char *response = mc_request(e, wire, &error);
+	J *parsed = response ? cJSON_Parse(response) : NULL;
+	int ok = !error.code && cJSON_IsTrue(GET(parsed, "ok")) &&
+		 !strcmp(S(GET(GET(parsed, "result"), "text")), "id42");
+	if (!ok)
+		fprintf(stderr, "updated label did not match id42: %s\n",
+			response ? response : "no response");
+	DEL(parsed);
+	mc_free(response);
+	return ok;
+}
+
+/* Large loads and edit-plus-parse timings exercise craigtrim/axiom#129. */
+static int generated_benchmark(int runs, int check)
+{
+	/* Windows allows additional memory-access overhead for large loads
+	 * (craigtrim/axiom#129); the Linux scaling contract remains 2.2x. */
+#ifdef _WIN32
+	const double scaling_ceiling = 3.0;
+#else
+	const double scaling_ceiling = 2.2;
+#endif
+	int failed = 0, over = 0;
+	double medians[2][2] = { { 0 } };
+	for (int live = 0; live < 2; live++) {
+		char *wires[2];
+		double *times[2], *edits[2];
+		for (int size = 0; size < 2; size++) {
+			char *turtle = generated_turtle(size ? 20000 : 10000);
+			J *q = OBJ();
+			PUT(q, "op", STR("load"));
+			PUT(q, "turtle", STR(turtle));
+			PUT(q, "class_based", BOOL(1));
+			PUT(q, "interface", STR(live ? "data" : "json"));
+			wires[size] = cJSON_PrintUnformatted(q);
+			DEL(q);
+			free(turtle);
+			times[size] = calloc((size_t)runs, sizeof(double));
+			edits[size] = calloc((size_t)runs * 12, sizeof(double));
+		}
+		/* Alternate sizes and their order so their medians sample the same
+		 * allocator history and machine load. Every trial is retained. */
+		for (int run = 0; run < runs && !failed; run++)
+			for (int pass = 0; pass < 2 && !failed; pass++) {
+				int size = (run + pass) % 2;
+				mc_engine *e = mc_create();
+				double start = now_ms();
+				failed |= !request(e, wires[size]);
+				times[size][run] = now_ms() - start;
+				for (int step = 0; step < 12 && !failed;
+				     step++) {
+					char *entity =
+						generated_entity(42, step + 1);
+					J *q = OBJ(), *replacement = OBJ();
+					PUT(q, "op", STR("update"));
+					PUT(replacement,
+					    "http://example.org/#id42",
+					    STR(entity));
+					PUT(q, "replace", replacement);
+					free(entity);
+					char *edit = cJSON_PrintUnformatted(q);
+					DEL(q);
+					start = now_ms();
+					failed |= !request(e, edit);
+					failed |= !generated_parse(e, step + 1);
+					edits[size][run * 12 + step] =
+						now_ms() - start;
+					free(edit);
+				}
+				mc_destroy(e);
+			}
+		for (int size = 0; size < 2; size++) {
+			medians[live][size] = median(times[size], runs);
+			double edit_ms = median(edits[size], runs * 12);
+			printf("{\"ontology\":\"generated-%d\",\"interface\":\"%s\",\"runs\":%d,\"load_ms\":%.2f,\"update_and_parse_ms\":%.3f}\n",
+			       size ? 20000 : 10000, live ? "data" : "json",
+			       runs, medians[live][size], edit_ms);
+			if (check)
+				over += !within("update+parse", "generated",
+						edit_ms, 20, "ms");
+			free(times[size]);
+			free(edits[size]);
+			free(wires[size]);
+		}
+	}
+	for (int live = 0; live < 2; live++) {
+		double ratio = medians[live][0] > 0 ?
+					     medians[live][1] / medians[live][0] :
+					     0;
+		printf("generated %s load doubling ratio: %.3f\n",
+		       live ? "data" : "json", ratio);
+		if (check)
+			over += !within("load scaling",
+					live ? "generated-data" :
+						     "generated-json",
+					ratio, scaling_ceiling, "x");
+	}
+	printf("generated peak working set: %.1f MB\n", peak_mb());
+	if (check)
+		over += !within("peak memory", "generated", peak_mb(), 768,
+				"MB");
+	return failed || over;
+}
+
+/* Stage diagnostics for a failed generated gate (craigtrim/axiom#129).
+ * These separate construction costs without changing the timed API trials. */
+static int generated_profile(int only_entities, int only_live)
+{
+	for (int live = 0; live < 2; live++)
+		for (int entities = 10000; entities <= 20000;
+		     entities += 10000) {
+			if ((only_entities && entities != only_entities) ||
+			    (only_live >= 0 && live != only_live))
+				continue;
+			char *turtle = generated_turtle(entities);
+			mc_engine *e = mc_create();
+			mc_error error = { 0 };
+			e->force_class = 1;
+			e->live_mode = live;
+			e->directory = copy(".");
+			e->source_path = copy("");
+			e->names = ARR();
+			ADD(e->names, STR("ontology"));
+			double start = now_ms();
+			e->graph = rdf_parse(turtle, "http://example.org/",
+					     &error);
+			double parsed = now_ms();
+			if (!error.code)
+				e->snapshot = ontology_build(
+					e->graph, e->distance, 1, 0, &error);
+			double snapshot = now_ms();
+			if (!error.code && live)
+				live_view(e, &error);
+			double view = now_ms();
+			if (!error.code)
+				update_state_build(e);
+			double indexed = now_ms();
+			printf("profile interface=%s entities=%d rdf_ms=%.2f snapshot_ms=%.2f live_ms=%.2f indexes_ms=%.2f total_ms=%.2f error=%d\n",
+			       live ? "data" : "json", entities, parsed - start,
+			       snapshot - parsed, view - snapshot,
+			       indexed - view, indexed - start, error.code);
+			mc_destroy(e);
+			free(turtle);
+			if (error.code)
+				return 1;
+		}
+	return 0;
+}
+
 int main(int argc, char **argv)
 {
+	if (argc >= 2 && !strcmp(argv[1], "--profile-load")) {
+		if (argc == 2)
+			return generated_profile(0, -1);
+		if (argc != 4 ||
+		    (strcmp(argv[2], "10000") && strcmp(argv[2], "20000")) ||
+		    (strcmp(argv[3], "json") && strcmp(argv[3], "data")))
+			return 2;
+		return generated_profile(atoi(argv[2]),
+					 !strcmp(argv[3], "data"));
+	}
 	if (argc < 2) {
 		fprintf(stderr,
-			"usage: mutatoc_bench ROOT [--runs N] [--check] [--source-dir DIR] [--extension EXT] [--setup JSON]...\n");
+			"usage: mutatoc_bench ROOT [--runs N] [--check] [--source-dir DIR] [--extension EXT] [--setup JSON]...\n       mutatoc_bench --profile-load [10000|20000 json|data]\n");
 		return 2;
 	}
 	const char *root = argv[1];
@@ -281,15 +448,19 @@ int main(int argc, char **argv)
 	if (check) {
 		over += !within("peak memory", "all", peak_mb(), PEAK_BUDGET_MB,
 				"MB");
-		printf("Performance gate: %s.\n",
+		printf("Fixture performance gate: %s.\n",
 		       failed ? "a request failed" :
 		       over   ? "a ceiling was exceeded" :
-				"every median is under its ceiling");
+				      "every median is under its ceiling");
 	} else
 		printf("{\"peak_working_set_mb\":%.1f}\n", peak_mb());
 	free(load);
 	free(first);
 	free(warm);
 	free(listed);
+	if (!failed)
+		over += generated_benchmark(runs, check);
+	if (over)
+		generated_profile(0, -1);
 	return failed || over;
 }

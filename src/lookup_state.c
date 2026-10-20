@@ -1,0 +1,1075 @@
+/* Persistent lookup dependencies for entity edits (craigtrim/axiom#129). */
+#include "mc.h"
+#include <assert.h>
+#include "patterns.h"
+#define SLOTS(i, m)                          \
+	for (size_t i = 0; i < (m).cap; i++) \
+		if ((m).slots[i].key)
+/* Record each source-to-output relationship while lookup construction already
+ * has both JSON nodes. Only the records are owned here; strings stay in JSON. */
+struct LookupTrace {
+	Map first, rest;
+};
+LookupTrace *lookup_trace_create(void)
+{
+	return calloc(1, sizeof(LookupTrace));
+}
+void lookup_trace_reserve(LookupTrace *trace, size_t additional)
+{
+	map_reserve(&trace->first, trace->first.size + additional);
+}
+void lookup_trace_add(LookupTrace *trace, J *source, J *output)
+{
+	J *first = map_get(&trace->first, S(source));
+	if (!first)
+		map_put_ref(&trace->first, S(source), output);
+	else if (strcmp(S(first), S(output))) {
+		Map *rest = map_get(&trace->rest, S(source));
+		if (!rest) {
+			rest = calloc(1, sizeof(*rest));
+			map_put_ref(&trace->rest, S(source), rest);
+		}
+		map_reserve(rest, 1);
+		map_put_ref(rest, S(output), output);
+	}
+}
+void lookup_trace_free(LookupTrace *trace)
+{
+	if (!trace)
+		return;
+	SLOTS(i, trace->rest)
+	{
+		Map *rest = trace->rest.slots[i].value;
+		map_free(rest);
+		free(rest);
+	}
+	map_free(&trace->first);
+	map_free(&trace->rest);
+	free(trace);
+}
+
+typedef struct LookupValue LookupValue;
+typedef struct Posting Posting;
+typedef struct {
+	union {
+		char *heap;
+		char small[8];
+	} text;
+	size_t size, length;
+	int parent, child, next;
+	uint32_t head;
+} PostingNode;
+typedef struct {
+	PostingNode *nodes;
+	int count, capacity, available;
+} PostingIndex;
+struct Posting {
+	uint32_t position, next, prev;
+};
+/* Only the first two and last two words need postings for an n-word gram. */
+typedef struct PostingSet {
+	union {
+		LookupValue *value;
+		struct PostingSet *available;
+	} owner;
+	uint32_t base;
+	int count;
+	Posting items[4];
+} PostingSet;
+typedef struct {
+	PostingSet sets[256];
+} PostingBlock;
+typedef struct {
+	Map values, grams, dirty;
+	PostingIndex starts, ends;
+	PostingBlock **posting_blocks;
+	size_t posting_count, posting_capacity;
+	PostingSet *available_postings;
+	LookupValue *root;
+	J *array, *mirror;
+	int words, shared_mirror;
+} LookupGroup;
+/* Most source values produce one distinct rewrite. Keep that reference inline;
+ * additional rewrites use borrowed keys from their retained output values. */
+typedef struct {
+	LookupValue *first;
+	Map *rest;
+} DerivedRefs;
+struct LookupValue {
+	char *text, *gram;
+	size_t chars, refs;
+	unsigned priority;
+	unsigned indexed : 1, owned_text : 1;
+	LookupValue *left, *right;
+	LookupGroup *group;
+	J *entry, *mirror_entry;
+	DerivedRefs derived;
+	PostingSet *postings;
+};
+typedef struct LookupValueBlock {
+	struct LookupValueBlock *next;
+	LookupValue values[256];
+} LookupValueBlock;
+struct LookupState {
+	Map groups;
+	LookupValueBlock *blocks;
+	LookupValue *available;
+	J *json, *mirror;
+	unsigned random;
+	int attached, building;
+	LookupTrace *trace;
+	void *context;
+	void (*change)(void *, int, const char *, int);
+};
+/* Keep mutable lookup records together and recycle removed slots. Loaded
+ * records borrow JSON strings until removal transfers their ownership. */
+static LookupValue *value_create(LookupState *s, const char *text, int borrow)
+{
+	if (!s->available) {
+		LookupValueBlock *block = calloc(1, sizeof(*block));
+		block->next = s->blocks;
+		s->blocks = block;
+		for (int i = 255; i >= 0; i--) {
+			block->values[i].left = s->available;
+			s->available = &block->values[i];
+		}
+	}
+	LookupValue *v = s->available;
+	s->available = v->left;
+	memset(v, 0, sizeof(*v));
+	v->text = borrow ? (char *)text : copy(text);
+	v->owned_text = !borrow;
+	v->chars = ulen(text);
+	return v;
+}
+
+static int word_count(const char *s)
+{
+	int n = 1;
+	for (; *s; s++)
+		n += *s == ' ';
+	return n;
+}
+static int before(LookupValue *a, LookupValue *b)
+{
+	return a->chars != b->chars ? a->chars > b->chars :
+					    strcmp(a->text, b->text) > 0;
+}
+static LookupValue *tree_merge(LookupValue *a, LookupValue *b)
+{
+	if (!a)
+		return b;
+	if (!b)
+		return a;
+	if (a->priority < b->priority) {
+		a->right = tree_merge(a->right, b);
+		return a;
+	}
+	b->left = tree_merge(a, b->left);
+	return b;
+}
+static LookupValue *tree_insert(LookupValue *root, LookupValue *v)
+{
+	if (!root)
+		return v;
+	if (before(v, root)) {
+		root->left = tree_insert(root->left, v);
+		if (root->left->priority < root->priority) {
+			LookupValue *x = root->left;
+			root->left = x->right;
+			x->right = root;
+			return x;
+		}
+	} else {
+		root->right = tree_insert(root->right, v);
+		if (root->right->priority < root->priority) {
+			LookupValue *x = root->right;
+			root->right = x->left;
+			x->left = root;
+			return x;
+		}
+	}
+	return root;
+}
+static LookupValue *tree_remove(LookupValue *root, LookupValue *v)
+{
+	if (root == v)
+		return tree_merge(root->left, root->right);
+	if (before(v, root))
+		root->left = tree_remove(root->left, v);
+	else
+		root->right = tree_remove(root->right, v);
+	return root;
+}
+static LookupGroup *group_at(LookupState *s, int words)
+{
+	char key[32];
+	snprintf(key, sizeof(key), "%d", words);
+	LookupGroup *g = map_get(&s->groups, key);
+	if (!g) {
+		g = calloc(1, sizeof(*g));
+		g->words = words;
+		g->array = ARR();
+		PUT(s->json, key, g->array);
+		map_put(&s->groups, key, g);
+		if (s->mirror) {
+			g->mirror = ARR();
+			PUT(s->mirror, key, g->mirror);
+		}
+	}
+	if (!g->array) {
+		g->array = ARR();
+		PUT(s->json, key, g->array);
+	}
+	if (s->mirror && !g->mirror) {
+		g->shared_mirror = 0;
+		g->mirror = ARR();
+		PUT(s->mirror, key, g->mirror);
+	}
+	return g;
+}
+
+static J *insert_json(J *array, J *prev, const char *text)
+{
+	J *entry = STR(text);
+	if (!array->child)
+		ADD(array, entry);
+	else if (!prev) {
+		J *first = array->child;
+		entry->prev = first->prev;
+		entry->next = first;
+		first->prev = entry;
+		array->child = entry;
+	} else {
+		entry->prev = prev;
+		entry->next = prev->next;
+		if (prev->next)
+			prev->next->prev = entry;
+		else
+			array->child->prev = entry;
+		prev->next = entry;
+	}
+	return entry;
+}
+static void show_value(LookupValue *v)
+{
+	LookupGroup *g = v->group;
+	LookupValue *at = g->root, *prev = NULL;
+	while (at) {
+		if (before(at, v)) {
+			prev = at;
+			at = at->right;
+		} else
+			at = at->left;
+	}
+	v->entry = insert_json(g->array, prev ? prev->entry : NULL, v->text);
+	if (g->shared_mirror)
+		g->mirror->child = g->array->child;
+	else if (g->mirror)
+		v->mirror_entry = insert_json(
+			g->mirror, prev ? prev->mirror_entry : NULL, v->text);
+	v->left = v->right = NULL;
+	g->root = tree_insert(g->root, v);
+}
+
+static LookupValue *adjust(LookupState *s, int words, const char *text,
+			   int delta)
+{
+	LookupGroup *g = group_at(s, words);
+	LookupValue *v = map_get(&g->values, text);
+	if (!v) {
+		/* Reused lookup JSON is complete and remains read-only during load. */
+		assert(!s->building || !s->attached);
+		assert(delta > 0);
+		v = value_create(s, text, 0);
+		v->group = g;
+		s->random ^= s->random << 13;
+		s->random ^= s->random >> 17;
+		s->random ^= s->random << 5;
+		v->priority = s->random;
+		map_put_ref(&g->values, v->text, v);
+	}
+	assert(delta > 0 || v->refs);
+	if (delta > 0) {
+		if (!v->refs++) {
+			if (!v->entry)
+				show_value(v);
+			if (!s->building)
+				map_put_ref(&g->dirty, v->text, v);
+			if (s->change)
+				s->change(s->context, words, S(v->entry), 1);
+		}
+	} else if (!--v->refs) {
+		/* Matching may borrow this JSON string; release its references first. */
+		if (s->change)
+			s->change(s->context, words, S(v->entry), -1);
+		g->root = tree_remove(g->root, v);
+		v->left = v->right = NULL;
+		/* Retain the same address for dependency-map keys after detachment. */
+		if (!v->owned_text) {
+			v->entry->valuestring = NULL;
+			v->owned_text = 1;
+		}
+		DEL(cJSON_DetachItemViaPointer(g->array, v->entry));
+		v->entry = NULL;
+		if (g->shared_mirror)
+			g->mirror->child = g->array->child;
+		if (v->mirror_entry) {
+			DEL(cJSON_DetachItemViaPointer(g->mirror,
+						       v->mirror_entry));
+			v->mirror_entry = NULL;
+		}
+		map_put_ref(&g->dirty, v->text, v);
+	}
+	return v;
+}
+
+/* Stable 32-bit links keep four postings in one cache line. Blocks never move;
+ * their small pointer table can grow without changing any link or owner. */
+static PostingSet *posting_set(LookupGroup *g, uint32_t id)
+{
+	size_t slot = (id - 1) / 4;
+	return &g->posting_blocks[slot / 256]->sets[slot % 256];
+}
+static Posting *posting_at(LookupGroup *g, uint32_t id)
+{
+	return &posting_set(g, id)->items[(id - 1) % 4];
+}
+static PostingSet *postings_create(LookupValue *v)
+{
+	LookupGroup *g = v->group;
+	if (!g->available_postings) {
+		assert(g->posting_count < UINT32_MAX / (256u * 4u));
+		if (g->posting_count == g->posting_capacity) {
+			g->posting_capacity = g->posting_capacity ?
+							    g->posting_capacity * 2 :
+							    8;
+			g->posting_blocks =
+				realloc(g->posting_blocks,
+					g->posting_capacity *
+						sizeof(*g->posting_blocks));
+		}
+		PostingBlock *block = calloc(1, sizeof(*block));
+		size_t first = g->posting_count * 256;
+		g->posting_blocks[g->posting_count++] = block;
+		for (int i = 255; i >= 0; i--) {
+			PostingSet *set = &block->sets[i];
+			set->base = (uint32_t)((first + (size_t)i) * 4 + 1);
+			set->owner.available = g->available_postings;
+			g->available_postings = set;
+		}
+	}
+	PostingSet *set = g->available_postings;
+	g->available_postings = set->owner.available;
+	set->owner.value = v;
+	set->count = 0;
+	memset(set->items, 0, sizeof(set->items));
+	return set;
+}
+
+static char *post_text(PostingNode *node)
+{
+	return node->length <= sizeof(node->text.small) ? node->text.small :
+								node->text.heap;
+}
+static void post_text_free(PostingNode *node)
+{
+	if (node->length > sizeof(node->text.small))
+		free(node->text.heap);
+}
+static void post_text_copy(PostingNode *node, const char *text, size_t length)
+{
+	node->length = length;
+	if (length <= sizeof(node->text.small))
+		memcpy(node->text.small, text, length);
+	else
+		node->text.heap = slice(text, length);
+}
+static int post_node(PostingIndex *index, int parent, const char *text,
+		     size_t length, int reversed)
+{
+	int id;
+	if (index->available) {
+		id = index->available;
+		index->available = index->nodes[id].next;
+	} else {
+		if (index->count == index->capacity) {
+			index->capacity =
+				index->capacity ? index->capacity * 2 : 64;
+			index->nodes = realloc(index->nodes,
+					       (size_t)index->capacity *
+						       sizeof(*index->nodes));
+		}
+		id = index->count++;
+	}
+	index->nodes[id] = (PostingNode){ 0 };
+	index->nodes[id].parent = parent;
+	post_text_copy(&index->nodes[id], text, length);
+	if (reversed)
+		for (size_t i = 0; i < length / 2; i++) {
+			char *label = post_text(&index->nodes[id]);
+			char byte = label[i];
+			label[i] = label[length - i - 1];
+			label[length - i - 1] = byte;
+		}
+	return id;
+}
+static int post_child(PostingIndex *index, int node, unsigned char byte)
+{
+	for (int at = index->nodes[node].child; at; at = index->nodes[at].next)
+		if ((unsigned char)post_text(&index->nodes[at])[0] == byte)
+			return at;
+	return 0;
+}
+/* Compressed edges retain terminal node IDs when split, so existing postings
+ * never need to move. Boundary words still support partial-word substrings. */
+static void post_add(PostingIndex *index, const char *text, size_t length,
+		     int reversed, LookupValue *v)
+{
+	if (!length)
+		return;
+	if (!index->count)
+		post_node(index, 0, "", 0, 0);
+	int node = 0;
+	size_t offset = 0;
+	index->nodes[node].size++;
+	while (offset < length) {
+		int next = post_child(
+			index, node,
+			(unsigned char)
+				text[reversed ? length - offset - 1 : offset]);
+		if (!next) {
+			next = post_node(index, node,
+					 reversed ? text : text + offset,
+					 length - offset, reversed);
+			index->nodes[next].next = index->nodes[node].child;
+			index->nodes[node].child = next;
+			index->nodes[next].size = 1;
+			node = next;
+			break;
+		}
+		PostingNode old = index->nodes[next];
+		const char *old_text = post_text(&old);
+		size_t common = 0;
+		while (common < old.length && offset + common < length &&
+		       old_text[common] ==
+			       text[reversed ? length - offset - common - 1 :
+						     offset + common])
+			common++;
+		if (common < old.length) {
+			int branch =
+				post_node(index, node, old_text, common, 0);
+			int *link = &index->nodes[node].child;
+			while (*link != next)
+				link = &index->nodes[*link].next;
+			*link = branch;
+			index->nodes[branch].next = old.next;
+			index->nodes[branch].child = next;
+			index->nodes[branch].size = old.size;
+			index->nodes[next].parent = branch;
+			index->nodes[next].next = 0;
+			post_text_copy(&index->nodes[next], old_text + common,
+				       old.length - common);
+			post_text_free(&old);
+			next = branch;
+		}
+		node = next;
+		index->nodes[node].size++;
+		offset += common;
+	}
+	if (!v->postings)
+		v->postings = postings_create(v);
+	assert(v->postings->count < 4);
+	uint32_t id = v->postings->base + (uint32_t)v->postings->count;
+	Posting *p = &v->postings->items[v->postings->count++];
+	p->position = (uint32_t)node * 2 + (index == &v->group->ends);
+	p->next = index->nodes[node].head;
+	if (p->next)
+		posting_at(v->group, p->next)->prev = id;
+	index->nodes[node].head = id;
+}
+
+static void post_remove(LookupGroup *g, Posting *p)
+{
+	PostingIndex *index = p->position & 1 ? &g->ends : &g->starts;
+	int node = (int)(p->position >> 1);
+	if (p->prev)
+		posting_at(g, p->prev)->next = p->next;
+	else
+		index->nodes[node].head = p->next;
+	if (p->next)
+		posting_at(g, p->next)->prev = p->prev;
+	while (node) {
+		PostingNode *at = &index->nodes[node];
+		int parent = at->parent;
+		if (!--at->size) {
+			int *link = &index->nodes[parent].child;
+			while (*link != node)
+				link = &index->nodes[*link].next;
+			*link = at->next;
+			post_text_free(at);
+			at->text.heap = NULL;
+			at->length = 0;
+			at->next = index->available;
+			index->available = node;
+		}
+		node = parent;
+	}
+	index->nodes[0].size--;
+}
+static int post_find(PostingIndex *index, const char *text, size_t length,
+		     int reversed)
+{
+	if (!index->count)
+		return 0;
+	int node = 0;
+	size_t offset = 0;
+	while (offset < length) {
+		node = post_child(
+			index, node,
+			(unsigned char)
+				text[reversed ? length - offset - 1 : offset]);
+		if (!node)
+			return 0;
+		PostingNode *edge = &index->nodes[node];
+		for (size_t i = 0; i < edge->length && offset < length;
+		     i++, offset++)
+			if (post_text(edge)[i] !=
+			    text[reversed ? length - offset - 1 : offset])
+				return 0;
+	}
+	/* A query ending inside an edge selects that edge's whole subtree. */
+	return node;
+}
+
+static void post_values(LookupGroup *g, PostingIndex *index, int root,
+			const char *gram, Map *affected)
+{
+	int node = root;
+	for (;;) {
+		for (uint32_t id = index->nodes[node].head; id;) {
+			PostingSet *set = posting_set(g, id);
+			LookupValue *value = set->owner.value;
+			if (strstr(value->text, gram))
+				map_put(affected, value->text, value);
+			id = set->items[(id - 1) % 4].next;
+		}
+		if (index->nodes[node].child) {
+			node = index->nodes[node].child;
+			continue;
+		}
+		while (node != root && !index->nodes[node].next)
+			node = index->nodes[node].parent;
+		if (node == root)
+			break;
+		node = index->nodes[node].next;
+	}
+}
+/* Suffix/prefix postings preserve partial-word substring semantics. */
+static void index_value(LookupValue *v, int add)
+{
+	if (!add) {
+		if (v->postings) {
+			for (int i = 0; i < v->postings->count; i++)
+				post_remove(v->group, &v->postings->items[i]);
+			v->postings->owner.available =
+				v->group->available_postings;
+			v->group->available_postings = v->postings;
+			v->postings = NULL;
+		}
+		return;
+	}
+	if (!lookup_rewritable(v->text, v->group->words))
+		return;
+	const char *start = v->text;
+	int word = 0;
+	for (;;) {
+		const char *space = strchr(start, ' '),
+			   *end = space ? space : start + strlen(start);
+		/* An n-word substring of an (n+1)-word value starts in its
+         * first two words and ends in its last two words. */
+		if (word < 2)
+			post_add(&v->group->starts, start,
+				 (size_t)(end - start), 1, v);
+		if (word >= v->group->words - 2)
+			post_add(&v->group->ends, start, (size_t)(end - start),
+				 0, v);
+		if (!space)
+			break;
+		start = space + 1;
+		word++;
+	}
+}
+
+static void gram_change(LookupGroup *g, const char *gram, int delta,
+			Map *changed)
+{
+	if (!gram)
+		return;
+	size_t n = (size_t)(uintptr_t)map_get(&g->grams, gram);
+	if (delta > 0) {
+		map_put(&g->grams, gram, (void *)(uintptr_t)(n + 1));
+		if (!n && changed)
+			map_put(changed, gram, (void *)1);
+	} else {
+		assert(n);
+		if (n == 1) {
+			map_delete(&g->grams, gram);
+			if (changed)
+				map_put(changed, gram, (void *)1);
+		} else
+			map_put(&g->grams, gram, (void *)(uintptr_t)(n - 1));
+	}
+}
+static void gram_values(LookupGroup *g, const char *gram, Map *affected)
+{
+	const char *space = strchr(gram, ' '), *last = strrchr(gram, ' ');
+	if (!*gram || !space || space == gram || !last[1]) {
+		SLOTS(i, g->values)
+		{
+			LookupValue *v = g->values.slots[i].value;
+			if (v->refs && strstr(v->text, gram))
+				map_put(affected, v->text, v);
+		}
+		return;
+	}
+	int a = post_find(&g->starts, gram, (size_t)(space - gram), 1),
+	    b = post_find(&g->ends, last + 1, strlen(last + 1), 0);
+	if (a && b) {
+		if (g->starts.nodes[a].size < g->ends.nodes[b].size)
+			post_values(g, &g->starts, a, gram, affected);
+		else
+			post_values(g, &g->ends, b, gram, affected);
+	}
+}
+
+static LookupValue *derived_get(DerivedRefs *refs, const char *text)
+{
+	if (refs->first && !strcmp(refs->first->text, text))
+		return refs->first;
+	return refs->rest ? map_get(refs->rest, text) : NULL;
+}
+static void derived_add(DerivedRefs *refs, LookupValue *value)
+{
+	if (!refs->first)
+		refs->first = value;
+	else {
+		if (!refs->rest)
+			refs->rest = calloc(1, sizeof(*refs->rest));
+		map_reserve(refs->rest, 1);
+		map_put_ref(refs->rest, value->text, value);
+	}
+}
+static void derived_free(DerivedRefs *refs)
+{
+	if (refs->rest) {
+		map_free(refs->rest);
+		free(refs->rest);
+	}
+	memset(refs, 0, sizeof(*refs));
+}
+static void derive_traced(LookupState *s, LookupValue *v)
+{
+	J *first = map_get(&s->trace->first, v->text);
+	if (!first || !v->refs)
+		return;
+	const char *text = S(first);
+	derived_add(&v->derived, adjust(s, word_count(text), text, 1));
+	Map *rest = map_get(&s->trace->rest, v->text);
+	if (rest) {
+		SLOTS(i, *rest)
+		{
+			text = rest->slots[i].key;
+			derived_add(&v->derived,
+				    adjust(s, word_count(text), text, 1));
+		}
+	}
+}
+
+static void derive_gram(LookupState *s, LookupValue *v, DerivedRefs *outputs,
+			const char *gram)
+{
+	char *text = lookup_rewrite(v->text, gram);
+	int words = word_count(text);
+	if (words >= 2 && words <= 5 && !derived_get(outputs, text)) {
+		LookupValue *old = derived_get(&v->derived, text);
+		derived_add(outputs, old ? old : adjust(s, words, text, 1));
+	}
+	free(text);
+}
+
+static void derive(LookupState *s, LookupValue *v, Patterns *bulk)
+{
+	DerivedRefs outputs = { 0 };
+	if (v->refs && bulk) {
+		int n = patterns_find(bulk, v->text);
+		for (int i = 0; i < n; i++)
+			derive_gram(s, v, &outputs, bulk->text[bulk->hits[i]]);
+	} else if (v->refs) {
+		/* Only substrings spanning n words can be one of this stage's grams.
+         * Probe the gram hash directly; repeated occurrences produce one form. */
+		int needed = v->group->words - 2;
+		for (const char *a = v->text; *a; a++) {
+			int spaces = 0;
+			for (const char *b = a; *b; b++) {
+				spaces += *b == ' ';
+				if (spaces > needed)
+					break;
+				if (spaces != needed)
+					continue;
+				char *gram = slice(a, (size_t)(b - a + 1));
+				if (map_get(&v->group->grams, gram)) {
+					derive_gram(s, v, &outputs, gram);
+				}
+				free(gram);
+			}
+		}
+	}
+	LookupValue *first = v->derived.first;
+	if (first && !derived_get(&outputs, first->text))
+		adjust(s, first->group->words, first->text, -1);
+	if (v->derived.rest) {
+		SLOTS(i, *v->derived.rest)
+		if (!derived_get(&outputs, v->derived.rest->slots[i].key)) {
+			LookupValue *out = v->derived.rest->slots[i].value;
+			adjust(s, out->group->words, out->text, -1);
+		}
+	}
+	derived_free(&v->derived);
+	v->derived = outputs;
+}
+static void release_value(LookupState *s, LookupValue *v)
+{
+	index_value(v, 0);
+	if (v->owned_text)
+		free(v->text);
+	free(v->gram);
+	derived_free(&v->derived);
+	memset(v, 0, sizeof(*v));
+	v->left = s->available;
+	s->available = v;
+}
+static void index_change(LookupValue *v, Map *changed, size_t reserve)
+{
+	LookupGroup *g = v->group;
+	if ((unsigned)!!v->refs == v->indexed)
+		return;
+	if (v->refs) {
+		v->gram = lookup_leading_gram(v->text, g->words - 1);
+		if (v->gram && !g->grams.cap && reserve)
+			map_reserve(&g->grams, reserve);
+		index_value(v, 1);
+		gram_change(g, v->gram, 1, changed);
+		v->indexed = 1;
+	} else {
+		index_value(v, 0);
+		gram_change(g, v->gram, -1, changed);
+		free(v->gram);
+		v->gram = NULL;
+		v->indexed = 0;
+	}
+}
+void lookup_state_flush(LookupState *s)
+{
+	for (int words = 6; words >= 3; words--) {
+		LookupGroup *g = group_at(s, words);
+		if (s->building) {
+			/* Loading visits every active value in each ordered group.
+			 * Only edits need dirty/affected maps; walking the arrays keeps
+			 * nearby patterns and values together during construction. */
+			size_t reserve = (size_t)SIZE(g->array);
+			EACH(entry, g->array)
+				index_change(map_get(&g->values, S(entry)),
+					     NULL, reserve);
+			if (s->trace) {
+				EACH(entry, g->array)
+					derive_traced(s, map_get(&g->values,
+								 S(entry)));
+				continue;
+			}
+			J *grams = ARR();
+			SLOTS(i, g->grams)
+			ADD(grams, STR(g->grams.slots[i].key));
+			sort_strings(grams, -1);
+			Patterns *bulk = patterns_build(grams);
+			EACH(entry, g->array) {
+				LookupValue *v = map_get(&g->values, S(entry));
+				if (v->refs)
+					derive(s, v, bulk);
+			}
+			patterns_free(bulk);
+			DEL(grams);
+			continue;
+		}
+		Map changed = { 0 }, affected = { 0 };
+		map_reserve(&affected, g->dirty.size);
+		SLOTS(i, g->dirty)
+		{
+			LookupValue *v = g->dirty.slots[i].value;
+			if ((unsigned)!!v->refs == v->indexed)
+				continue;
+			map_put(&affected, v->text, v);
+			index_change(v, &changed, 0);
+		}
+		SLOTS(i, changed)
+		gram_values(g, changed.slots[i].key, &affected);
+		SLOTS(i, affected)
+		derive(s, affected.slots[i].value, NULL);
+		map_free(&changed);
+		map_free(&affected);
+	}
+	SLOTS(i, s->groups)
+	{
+		LookupGroup *g = s->groups.slots[i].value;
+		SLOTS(j, g->dirty)
+		{
+			LookupValue *v = g->dirty.slots[j].value;
+			if (!v->refs) {
+				map_delete(&g->values, v->text);
+				release_value(s, v);
+			}
+		}
+		map_free(&g->dirty);
+	}
+}
+/* Borrow unchanged source strings while collecting the distinct forms of one
+ * entity. Small synonym sets need no JSON nodes or allocated hash table. */
+typedef struct {
+	const char *text;
+	char *owned;
+} BaseForm;
+typedef struct {
+	BaseForm local[8], *items;
+	size_t count, capacity;
+	Map seen;
+} BaseForms;
+static void base_form_add(BaseForms *forms, const char *text, char *owned)
+{
+	int duplicate = 0;
+	if (forms->seen.cap)
+		duplicate = map_get(&forms->seen, text) != NULL;
+	else
+		for (size_t i = 0; i < forms->count && !duplicate; i++)
+			duplicate = !strcmp(forms->items[i].text, text);
+	if (duplicate) {
+		free(owned);
+		return;
+	}
+	if (forms->count == forms->capacity) {
+		size_t capacity = forms->capacity * 2;
+		BaseForm *items = malloc(capacity * sizeof(*items));
+		memcpy(items, forms->items, forms->count * sizeof(*items));
+		if (forms->items != forms->local)
+			free(forms->items);
+		forms->items = items;
+		forms->capacity = capacity;
+		if (!forms->seen.cap) {
+			map_reserve(&forms->seen, capacity);
+			for (size_t i = 0; i < forms->count; i++)
+				map_put_ref(&forms->seen, items[i].text,
+					    (void *)1);
+		}
+	}
+	forms->items[forms->count++] = (BaseForm){ text, owned };
+	if (forms->seen.cap)
+		map_put_ref(&forms->seen, text, (void *)1);
+}
+/* Each canonical contributes its distinct base forms once. Derived entries
+ * carry one reference per source value, regardless of duplicate derivations. */
+void lookup_state_entity(LookupState *s, J *fwd, int delta)
+{
+	EACH(k, fwd) {
+		BaseForms forms = { 0 };
+		forms.items = forms.local;
+		forms.capacity = 8;
+		char *key = strchr(k->string, '_') ?
+					  replace(k->string, "_", " ") :
+					  NULL;
+		base_form_add(&forms, key ? key : k->string, key);
+		EACH(v, k) {
+			char *owned;
+			const char *normalized = norm_borrowed(S(v), &owned);
+			char *base = strchr(normalized, '_') ?
+						   replace(normalized, "_", " ") :
+						   NULL;
+			/* The punctuation form retains underscores, so collect it before
+			 * transferring or freeing the normalized value below. */
+			size_t n = strlen(normalized);
+			char *trimmed = n && strchr("!?.", normalized[n - 1]) ?
+						      slice(normalized, n - 1) :
+						      NULL;
+			if (base) {
+				free(owned);
+				base_form_add(&forms, base, base);
+			} else
+				base_form_add(&forms, normalized, owned);
+			if (trimmed)
+				base_form_add(&forms, trimmed, trimmed);
+		}
+		for (size_t i = 0; i < forms.count; i++)
+			adjust(s, word_count(forms.items[i].text),
+			       forms.items[i].text, delta);
+		map_free(&forms.seen);
+		for (size_t i = 0; i < forms.count; i++)
+			free(forms.items[i].owned);
+		if (forms.items != forms.local)
+			free(forms.items);
+	}
+}
+/* Existing lookup arrays already have the required length/lexical order.
+ * Build their Cartesian trees in linear time and retain the JSON nodes. */
+static void seed_lookup(LookupState *s)
+{
+	EACH(array, s->json) {
+		LookupGroup *g = calloc(1, sizeof(*g));
+		g->words = atoi(array->string);
+		g->array = array;
+		map_put(&s->groups, array->string, g);
+		size_t n = (size_t)SIZE(array), depth = 0;
+		map_reserve(&g->values, n);
+		LookupValue **stack = malloc((n ? n : 1) * sizeof(*stack));
+		EACH(entry, array) {
+			LookupValue *v = value_create(s, S(entry), 1),
+				    *left = NULL;
+			v->group = g;
+			v->entry = entry;
+			s->random ^= s->random << 13;
+			s->random ^= s->random >> 17;
+			s->random ^= s->random << 5;
+			v->priority = s->random;
+			while (depth &&
+			       stack[depth - 1]->priority > v->priority)
+				left = stack[--depth];
+			v->left = left;
+			if (depth)
+				stack[depth - 1]->right = v;
+			else
+				g->root = v;
+			stack[depth++] = v;
+			map_put_ref(&g->values, v->text, v);
+		}
+		free(stack);
+	}
+}
+static LookupState *build_lookup(J *fwd, J *existing, LookupTrace *trace)
+{
+	LookupState *s = calloc(1, sizeof(*s));
+	s->json = existing ? existing : OBJ();
+	s->attached = existing != NULL;
+	s->random = 129;
+	s->building = 1;
+	s->trace = trace;
+	if (existing)
+		seed_lookup(s);
+	lookup_state_entity(s, fwd, 1);
+	for (int n = 1; n <= 6; n++)
+		group_at(s, n);
+	lookup_state_flush(s);
+	s->building = 0;
+	s->trace = NULL;
+	return s;
+}
+LookupState *lookup_state_build(J *fwd)
+{
+	return build_lookup(fwd, NULL, NULL);
+}
+LookupState *lookup_state_reuse(J *fwd, J *existing)
+{
+	return build_lookup(fwd, existing, NULL);
+}
+LookupState *lookup_state_reuse_traced(J *fwd, J *existing, LookupTrace *trace)
+{
+	return build_lookup(fwd, existing, trace);
+}
+J *lookup_state_json(LookupState *s)
+{
+	return s->json;
+}
+void lookup_state_free(LookupState *s)
+{
+	if (!s)
+		return;
+	SLOTS(i, s->groups)
+	{
+		LookupGroup *g = s->groups.slots[i].value;
+		SLOTS(j, g->values) release_value(s, g->values.slots[j].value);
+		for (int n = 0; n < g->starts.count; n++)
+			post_text_free(&g->starts.nodes[n]);
+		for (int n = 0; n < g->ends.count; n++)
+			post_text_free(&g->ends.nodes[n]);
+		free(g->starts.nodes);
+		free(g->ends.nodes);
+		for (size_t n = 0; n < g->posting_count; n++)
+			free(g->posting_blocks[n]);
+		free(g->posting_blocks);
+		map_free(&g->values);
+		map_free(&g->grams);
+		map_free(&g->dirty);
+		free(g);
+	}
+	map_free(&s->groups);
+	while (s->blocks) {
+		LookupValueBlock *next = s->blocks->next;
+		free(s->blocks);
+		s->blocks = next;
+	}
+	if (!s->attached)
+		DEL(s->json);
+	free(s);
+}
+
+void lookup_state_watch(LookupState *s, void *context,
+			void (*change)(void *, int, const char *, int))
+{
+	s->context = context;
+	s->change = change;
+}
+
+/* With no external synonyms the data view has the same forms. Keep its JSON
+ * ordering while sharing the dependency graph and updating both arrays. */
+void lookup_state_mirror(LookupState *s, J *synonyms)
+{
+	s->mirror = GET(synonyms, "lookup");
+	EACH(old, s->mirror) {
+		LookupGroup *g = map_get(&s->groups, old->string);
+		g->mirror = old;
+		g->shared_mirror = (old->type & cJSON_IsReference) &&
+				   old->child == g->array->child;
+		if (g->shared_mirror)
+			continue;
+		EACH(v, g->mirror) {
+			LookupValue *value = map_get(&g->values, S(v));
+			value->mirror_entry = v;
+		}
+	}
+}
+
+/* Reorder the few word-count groups from their earliest source contribution. */
+void lookup_state_order(LookupState *s, J *order, int mirror)
+{
+	J *object = mirror ? s->mirror : s->json;
+	if (!object)
+		return;
+	while (object->child)
+		cJSON_DetachItemFromArray(object, 0);
+	Map retained = { 0 };
+	EACH(key, order) {
+		LookupGroup *g = group_at(s, atoi(S(key)));
+		J *array = mirror ? g->mirror : g->array;
+		/* group_at may have restored a previously absent group. */
+		if (array->next || (object->child == array) ||
+		    (array->prev && array->prev != array))
+			cJSON_DetachItemViaPointer(object, array);
+		ADD(object, array);
+		map_put(&retained, S(key), (void *)1);
+	}
+	SLOTS(i, s->groups) if (!map_get(&retained, s->groups.slots[i].key))
+	{
+		LookupGroup *g = s->groups.slots[i].value;
+		J **array = mirror ? &g->mirror : &g->array;
+		assert(!g->values.size);
+		DEL(*array);
+		*array = NULL;
+	}
+	map_free(&retained);
+}

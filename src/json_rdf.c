@@ -125,20 +125,22 @@ static Term read_term(Source *s, const J *value, int default_kind)
 		Term dt = source_resource(s, S(datatype), 0);
 		if (dt.kind != 0)
 			fail(s->error, 2, "Literal datatype must be an IRI");
-		result.datatype = dt.value;
-		dt.value = NULL;
+		rdf_term_attributes(&result, dt.value, NULL);
 		rdf_term_free(&dt);
 	}
 	if (lang && string(s, lang, "language")) {
 		if (!language(S(lang)))
 			fail(s->error, 2, "Invalid language tag");
-		if (result.datatype &&
-		    strcmp(result.datatype, RDF "langString"))
+		if (rdf_datatype(&result) &&
+		    strcmp(rdf_datatype(&result), RDF "langString"))
 			fail(s->error, 2,
 			     "A language-tagged literal requires rdf:langString");
-		result.language = copy(S(lang));
-		if (!result.datatype)
-			result.datatype = copy(RDF "langString");
+		/* The optional annotation block owns both strings (craigtrim/axiom#129). */
+		rdf_term_attributes(&result,
+				    rdf_datatype(&result) ?
+						  rdf_datatype(&result) :
+						  RDF "langString",
+				    S(lang));
 	}
 	return result;
 }

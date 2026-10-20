@@ -439,11 +439,16 @@ static int plain(const char *s)
 	uint32_t prev = ' ';
 	const char *p = s;
 	while (*p) {
-		uint32_t c = uread(&p),
+		uint32_t c = (unsigned char)*p < 128 ? (unsigned char)*p++ :
+							     uread(&p),
 			 next = *p ? (uint32_t)(unsigned char)*p : ' ';
+		int alphanumeric = c < 128 ? ((c >= 'a' && c <= 'z') ||
+					      (c >= 'A' && c <= 'Z') ||
+					      (c >= '0' && c <= '9')) :
+						   letter(c) || unumeric(c);
 		if (c == ' ' ? prev == ' ' || next == ' ' :
 		    c == '_' ? prev == ' ' || next == ' ' :
-			       !letter(c) && !unumeric(c))
+				     !alphanumeric)
 			return 0;
 		prev = c;
 	}

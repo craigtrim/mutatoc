@@ -48,6 +48,9 @@ char *copy(const char *);
 char *slice(const char *, size_t);
 char *replace(const char *, const char *, const char *);
 char *norm(const char *, int lower, int spaces);
+/* Normalization views borrow unchanged ASCII; caller frees only *owned. */
+const char *norm_view(const char *, int, int, char **owned);
+const char *norm_borrowed(const char *, char **owned);
 char *lower(const char *);
 char *upper(const char *);
 char *uri_resolve(const char *, const char *);
@@ -66,6 +69,7 @@ J *json_parse_record(const char *, size_t, const char **, mc_error *);
 void set(J *, const char *, J *);
 J *ensure(J *, const char *, int);
 void unique(J *, const char *);
+void unique_sorted(J *, const char *);
 int contains(const J *, const char *);
 void sort_strings(J *, int mode);
 char *join(const J *, const char *);
@@ -79,23 +83,73 @@ typedef struct {
 	Slot *slots;
 	size_t size, cap;
 } Map;
+typedef struct PrefixIndex PrefixIndex;
+void prefix_index_change(PrefixIndex **, const char *, int);
+int prefix_index_has(const PrefixIndex *, const char *);
+void prefix_index_free(PrefixIndex *);
+void parallel_three(void (*)(void *), void (*)(void *), void (*)(void *),
+		    void *, int);
+uint64_t hash_text(const char *);
 void *map_get(Map *, const char *);
 void map_put(Map *, const char *, void *);
+/* Referenced keys must outlive their entries; deletion does not free them. */
+void map_put_ref(Map *, const char *, void *);
+/* Construction maps borrow keys; a returned slot lasts until the next mutation. */
+Slot *map_entry_ref(Map *, const char *);
+void map_reserve(Map *, size_t);
+void map_put_small(Map *, const char *, void *);
 void map_free(Map *);
+void map_delete(Map *, const char *);
+/* Indexed builders avoid repeated object scans (craigtrim/axiom#129). */
 void unique_indexed(J *, Map *, const char *);
+J *indexed_ensure(J *, Map *, const char *, int);
+void indexed_set(J *, Map *, const char *, J *);
+/* Optional annotations do not occupy two pointers in every RDF term (#129). */
 typedef struct {
-	char *value, *datatype, *language;
+	char *datatype, *language;
+} TermAttributes;
+typedef struct {
+	char *value;
+	TermAttributes *attributes;
 	int kind;
+	int shared_value; /* Graph-owned string (craigtrim/axiom#129). */
 } Term;
+static inline const char *rdf_datatype(const Term *term)
+{
+	return term->attributes ? term->attributes->datatype : NULL;
+}
+static inline const char *rdf_language(const Term *term)
+{
+	return term->attributes ? term->attributes->language : NULL;
+}
+void rdf_term_attributes(Term *, const char *, const char *);
 typedef struct {
 	Term s, p, o;
 } Triple;
+typedef struct LookupTrace LookupTrace;
+typedef struct GraphIds GraphIds;
+typedef struct GraphStrings GraphStrings;
+LookupTrace *lookup_trace_create(void);
+void lookup_trace_reserve(LookupTrace *, size_t);
+void lookup_trace_add(LookupTrace *, J *, J *);
+void lookup_trace_free(LookupTrace *);
+typedef struct {
+	uint64_t hash;
+	size_t next;
+} TripleLink;
 typedef struct {
 	Triple *ts;
 	size_t n, cap;
 	J *prefixes;
 	Map subjects;
-	Map triple_keys;
+	GraphIds *subject_ids; /* Pooled read-only JSON wrappers for triple IDs. */
+	size_t *triple_heads;
+	TripleLink *triple_links;
+	size_t triple_capacity;
+	Map resources; /* Shared IRI and blank-node values owned by this graph. */
+	LookupTrace *
+		lookup_trace; /* Borrowed JSON strings; owned construction records. */
+	GraphStrings *strings;
 } Graph;
 void literal_normalize(Term *);
 Term rdf_term(const char *, int);
@@ -103,6 +157,7 @@ Term rdf_term_copy(const Term *);
 void rdf_term_free(Term *);
 Graph *rdf_create(mc_error *);
 void rdf_add(Graph *, const Term *, const Term *, const Term *);
+void rdf_replace_object(Graph *, size_t, const Term *);
 void rdf_bind_prefix(Graph *, const char *, const char *);
 Graph *rdf_parse(const char *, const char *, mc_error *);
 /* Source readers return a graph, or a legacy prepared snapshot, atomically. */
@@ -114,6 +169,7 @@ J *rdf_values(Graph *, const char *, const char *);
 J *rdf_flatten(Graph *, Term *, int, mc_error *);
 J *rdf_json(Graph *);
 J *ontology_build(Graph *, int, int, int, mc_error *);
+J *ontology_update(mc_engine *, J *, mc_error *);
 J *graph_predicate(Graph *, const char *, int, int, mc_error *);
 J *merge_views(J *, const J *);
 J *external_synonyms(const char *);
@@ -122,7 +178,26 @@ J *data_query(J *, const char *, const J *, const J *, mc_error *);
 J *ontology_query(J *, const char *, const J *, mc_error *);
 J *generate_synonyms(J *, int);
 J *generate_lookup(J *);
+J *generate_lookup_shared(J *, J *);
+J *generate_lookup_cached(J *, J *, J *);
+J *generate_lookup_traced(J *, LookupTrace **);
+char *lookup_leading_gram(const char *text, int words);
+int lookup_rewritable(const char *text, int words);
+char *lookup_rewrite(const char *text, const char *gram);
+typedef struct LookupState LookupState;
+LookupState *lookup_state_build(J *);
+LookupState *lookup_state_reuse(J *, J *);
+LookupState *lookup_state_reuse_traced(J *, J *, LookupTrace *);
+void lookup_state_entity(LookupState *, J *, int);
+void lookup_state_flush(LookupState *);
+J *lookup_state_json(LookupState *);
+void lookup_state_free(LookupState *);
+void lookup_state_mirror(LookupState *, J *);
+void lookup_state_order(LookupState *, J *, int);
+void lookup_state_watch(LookupState *, void *,
+			void (*)(void *, int, const char *, int));
 J *generate_spans(J *, int, int, int);
+J *generate_spans_indexed(J *, int, int, int, Map *);
 J *generate_trie(J *);
 J *tokenize_text(const char *);
 char *tokenize_key(const char *);
@@ -130,12 +205,21 @@ char *tokenize_key(const char *);
 void source_entities(J *, const char *);
 typedef struct MatchIndex MatchIndex;
 MatchIndex *match_index_build(const J *);
+MatchIndex *match_index_build_mutable(const J *);
 const J *match_index_view(const MatchIndex *);
 void match_index_free(MatchIndex *);
+void match_index_mutable(MatchIndex *);
+void match_index_group_order(MatchIndex *, J *);
+void match_index_word(void *, int, const char *, int);
+void match_index_member(MatchIndex *, const char *, const char *, J *);
 J *match_tokens(const MatchIndex *, J *, const J *, int, mc_error *);
 J *transform_tokens(J *, const MatchIndex *, const J *, const J *, const char *,
 		    mc_error *);
 char *render(const J *);
+typedef struct UpdateState UpdateState;
+void update_state_build(mc_engine *);
+void update_state_free(UpdateState *);
+int update_fast(mc_engine *, Graph *, Map *);
 struct mc_engine {
 	J *snapshot;
 	J *live;
@@ -149,6 +233,7 @@ struct mc_engine {
 	int distance;
 	mc_engine **parts;
 	size_t part_count;
+	UpdateState *updates;
 	MatchIndex *index; /* hash index of the view matching last used; owned */
 };
 #endif
