@@ -16,6 +16,17 @@ jobs:
           cmake --build build --config Release
       - name: Test
         run: ctest --test-dir build -C Release --output-on-failure
+      # Compare cold construction with the repeated-load gate (craigtrim/axiom#129).
+      - name: Diagnose cold load scaling
+        if: failure()
+        shell: bash
+        env:
+          BENCH: ${{ matrix.os == 'windows-latest' && './build/Release/mutatoc_bench.exe' || './build/mutatoc_bench' }}
+        run: |
+          "$BENCH" --profile-load 10000 json
+          "$BENCH" --profile-load 20000 json
+          "$BENCH" --profile-load 10000 data
+          "$BENCH" --profile-load 20000 data
   sanitizers:
     runs-on: ubuntu-latest
     steps:

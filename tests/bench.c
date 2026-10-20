@@ -237,11 +237,14 @@ static int generated_benchmark(int runs, int check)
 
 /* Stage diagnostics for a failed generated gate (craigtrim/axiom#129).
  * These separate construction costs without changing the timed API trials. */
-static int generated_profile(void)
+static int generated_profile(int only_entities, int only_live)
 {
 	for (int live = 0; live < 2; live++)
 		for (int entities = 10000; entities <= 20000;
 		     entities += 10000) {
+			if ((only_entities && entities != only_entities) ||
+			    (only_live >= 0 && live != only_live))
+				continue;
 			char *turtle = generated_turtle(entities);
 			mc_engine *e = mc_create();
 			mc_error error = { 0 };
@@ -279,11 +282,19 @@ static int generated_profile(void)
 
 int main(int argc, char **argv)
 {
-	if (argc == 2 && !strcmp(argv[1], "--profile-load"))
-		return generated_profile();
+	if (argc >= 2 && !strcmp(argv[1], "--profile-load")) {
+		if (argc == 2)
+			return generated_profile(0, -1);
+		if (argc != 4 ||
+		    (strcmp(argv[2], "10000") && strcmp(argv[2], "20000")) ||
+		    (strcmp(argv[3], "json") && strcmp(argv[3], "data")))
+			return 2;
+		return generated_profile(atoi(argv[2]),
+					 !strcmp(argv[3], "data"));
+	}
 	if (argc < 2) {
 		fprintf(stderr,
-			"usage: mutatoc_bench ROOT [--runs N] [--check] [--source-dir DIR] [--extension EXT] [--setup JSON]...\n");
+			"usage: mutatoc_bench ROOT [--runs N] [--check] [--source-dir DIR] [--extension EXT] [--setup JSON]...\n       mutatoc_bench --profile-load [10000|20000 json|data]\n");
 		return 2;
 	}
 	const char *root = argv[1];
@@ -426,6 +437,6 @@ int main(int argc, char **argv)
 	if (!failed)
 		over += generated_benchmark(runs, check);
 	if (over)
-		generated_profile();
+		generated_profile(0, -1);
 	return failed || over;
 }
