@@ -30,6 +30,12 @@ typedef struct {
 	J *array, *mirror;
 	int words;
 } LookupGroup;
+/* Most source values produce one distinct rewrite. Keep that reference inline;
+ * additional rewrites use borrowed keys from their retained output values. */
+typedef struct {
+	LookupValue *first;
+	Map rest;
+} DerivedRefs;
 struct LookupValue {
 	char *text, *gram;
 	size_t chars, refs;
@@ -38,7 +44,7 @@ struct LookupValue {
 	LookupValue *left, *right;
 	LookupGroup *group;
 	J *entry, *mirror_entry;
-	Map derived;
+	DerivedRefs derived;
 	Posting *postings;
 };
 struct LookupState {
@@ -414,15 +420,29 @@ static void gram_values(LookupGroup *g, const char *gram, Map *affected)
 	}
 }
 
-static void derive_gram(LookupState *s, LookupValue *v, Map *outputs,
+static LookupValue *derived_get(DerivedRefs *refs, const char *text)
+{
+	if (refs->first && !strcmp(refs->first->text, text))
+		return refs->first;
+	return map_get(&refs->rest, text);
+}
+static void derived_add(DerivedRefs *refs, LookupValue *value)
+{
+	if (!refs->first)
+		refs->first = value;
+	else {
+		map_reserve(&refs->rest, 1);
+		map_put_ref(&refs->rest, value->text, value);
+	}
+}
+static void derive_gram(LookupState *s, LookupValue *v, DerivedRefs *outputs,
 			const char *gram)
 {
 	char *u = replace(gram, " ", "_"), *text = replace(v->text, gram, u);
 	int words = word_count(text);
-	if (words >= 2 && words <= 5 && !map_get(outputs, text)) {
-		LookupValue *old = map_get(&v->derived, text);
-		map_put_small(outputs, text,
-			      old ? old : adjust(s, words, text, 1));
+	if (words >= 2 && words <= 5 && !derived_get(outputs, text)) {
+		LookupValue *old = derived_get(&v->derived, text);
+		derived_add(outputs, old ? old : adjust(s, words, text, 1));
 	}
 	free(u);
 	free(text);
@@ -430,7 +450,7 @@ static void derive_gram(LookupState *s, LookupValue *v, Map *outputs,
 
 static void derive(LookupState *s, LookupValue *v, Patterns *bulk)
 {
-	Map outputs = { 0 };
+	DerivedRefs outputs = { 0 };
 	if (v->refs && bulk) {
 		int n = patterns_find(bulk, v->text);
 		for (int i = 0; i < n; i++)
@@ -455,12 +475,15 @@ static void derive(LookupState *s, LookupValue *v, Patterns *bulk)
 			}
 		}
 	}
-	SLOTS(i, v->derived) if (!map_get(&outputs, v->derived.slots[i].key))
-	{
-		LookupValue *out = v->derived.slots[i].value;
+	LookupValue *first = v->derived.first;
+	if (first && !derived_get(&outputs, first->text))
+		adjust(s, first->group->words, first->text, -1);
+	SLOTS(i, v->derived.rest)
+	if (!derived_get(&outputs, v->derived.rest.slots[i].key)) {
+		LookupValue *out = v->derived.rest.slots[i].value;
 		adjust(s, out->group->words, out->text, -1);
 	}
-	map_free(&v->derived);
+	map_free(&v->derived.rest);
 	v->derived = outputs;
 }
 static void release_value(LookupValue *v)
@@ -468,7 +491,7 @@ static void release_value(LookupValue *v)
 	index_value(v, 0);
 	free(v->text);
 	free(v->gram);
-	map_free(&v->derived);
+	map_free(&v->derived.rest);
 	free(v);
 }
 static void index_change(LookupValue *v, Map *changed)

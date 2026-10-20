@@ -164,7 +164,8 @@ static void build_view_members(void *data)
 		source_groups_build(GET(syns, "fwd"), &u->ordinals, 0);
 	if (e->live)
 		u->live_order =
-			source_groups_build(GET(syns, "fwd"), &u->ordinals, 1);
+			source_groups_build(GET(GET(e->live, "synonyms"), "fwd"),
+					    &u->ordinals, 0);
 }
 static void build_match_members(void *data)
 {
@@ -262,37 +263,32 @@ static int term_same(const Term *a, const Term *b)
 		       b->language ? b->language : "");
 }
 
-static J *base_groups(J *fwd)
+/* Count source groups directly from existing synonym arrays. Counting each
+ * underscore as a space avoids allocating a replacement string. */
+static int base_word_count(const char *text, int underscores)
+{
+	int words = 1;
+	for (; *text; text++)
+		words += *text == ' ' || (underscores && *text == '_');
+	return words;
+}
+static J *base_groups(const char *key, J *values)
 {
 	J *groups = ARR();
-	EACH(k, fwd) {
-		char *key = replace(k->string, "_", " ");
-		int n = 1;
-		for (const char *p = key; *p; p++)
-			n += *p == ' ';
-		char num[32];
-		snprintf(num, sizeof(num), "%d", n);
+	char num[32];
+	snprintf(num, sizeof(num), "%d", base_word_count(key, 1));
+	unique(groups, num);
+	EACH(v, values) {
+		char *normal = norm(S(v), 1, 1);
+		snprintf(num, sizeof(num), "%d", base_word_count(normal, 1));
 		unique(groups, num);
-		free(key);
-		EACH(v, k) {
-			char *normal = norm(S(v), 1, 1),
-			     *text = replace(normal, "_", " ");
-			n = 1;
-			for (const char *p = text; *p; p++)
-				n += *p == ' ';
-			snprintf(num, sizeof(num), "%d", n);
+		size_t length = strlen(normal);
+		if (length && strchr("!?.", normal[length - 1])) {
+			snprintf(num, sizeof(num), "%d",
+				 base_word_count(normal, 0));
 			unique(groups, num);
-			size_t length = strlen(normal);
-			if (length && strchr("!?.", normal[length - 1])) {
-				n = 1;
-				for (const char *p = normal; *p; p++)
-					n += *p == ' ';
-				snprintf(num, sizeof(num), "%d", n);
-				unique(groups, num);
-			}
-			free(normal);
-			free(text);
 		}
+		free(normal);
 	}
 	return groups;
 }
@@ -362,12 +358,12 @@ static void source_groups_change(SourceGroups *s, J *fwd, Map *ordinals,
 				 int live, int delta)
 {
 	EACH(k, fwd) {
-		J *one = OBJ(), *values = DUP(k);
+		J *values = live ? DUP(k) : k;
 		if (live)
 			sort_strings(values, 0);
-		PUT(one, k->string, values);
-		J *groups = base_groups(one);
-		DEL(one);
+		J *groups = base_groups(k->string, values);
+		if (live)
+			DEL(values);
 		int sequence = 0;
 		EACH(key, groups) {
 			SourceGroup *g = map_get(&s->groups, S(key));
