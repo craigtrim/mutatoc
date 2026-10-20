@@ -94,6 +94,125 @@ static int check_maps(void)
 	return 1;
 }
 
+static int check_prefixes(void)
+{
+	const char *terms[] = { "a beta gamma",
+				"a betamax delta",
+				"aardvark beta gamma",
+				"a beta",
+				"a  beta gamma",
+				"abc def",
+				"abacus def",
+				"somewhat finish",
+				"some word finish",
+				"somewhere other end",
+				"  a beta gamma",
+				"trail ",
+				"single",
+				"",
+				"ab def ghi" };
+	int counts[sizeof(terms) / sizeof(*terms)] = { 0 };
+	PrefixIndex *index = NULL;
+	unsigned random = 129;
+	for (int step = 0; step < 1600; step++) {
+		random = random * 1664525u + 1013904223u;
+		size_t at = (random >> 16) % (sizeof(terms) / sizeof(*terms));
+		int delta = counts[at] >= 3 || (counts[at] && (random & 1)) ?
+					  -1 :
+					  1;
+		counts[at] += delta;
+		prefix_index_change(&index, terms[at], delta);
+		Map expected = { 0 };
+		for (size_t i = 0; i < sizeof(terms) / sizeof(*terms); i++) {
+			if (!counts[i])
+				continue;
+			for (const char *space = strchr(terms[i], ' '); space;
+			     space = strchr(space + 1, ' ')) {
+				if (space == terms[i])
+					continue;
+				char *key = slice(terms[i],
+						  (size_t)(space - terms[i]));
+				map_put(&expected, key, (void *)1);
+				free(key);
+			}
+		}
+		for (size_t i = 0; i < sizeof(terms) / sizeof(*terms); i++)
+			for (size_t n = 0; n <= strlen(terms[i]); n++) {
+				char *key = slice(terms[i], n);
+				int ok = prefix_index_has(index, key) ==
+					 (map_get(&expected, key) != NULL);
+				free(key);
+				if (!ok) {
+					fprintf(stderr,
+						"prefix mismatch at step %d term %zu byte %zu\n",
+						step, i, n);
+					return 0;
+				}
+			}
+		map_free(&expected);
+	}
+	for (size_t i = 0; i < sizeof(terms) / sizeof(*terms); i++)
+		while (counts[i]-- > 0)
+			prefix_index_change(&index, terms[i], -1);
+	if (prefix_index_has(index, "a") || prefix_index_has(index, "some"))
+		return 0;
+	/* Grow across many shared branches, then delete and reuse their nodes. */
+	for (int i = 0; i < 400; i++) {
+		char word[80];
+		snprintf(word, sizeof(word), "branch%03d middle tail", i);
+		prefix_index_change(&index, word, 1);
+	}
+	for (int i = 0; i < 400; i += 2) {
+		char word[80];
+		snprintf(word, sizeof(word), "branch%03d middle tail", i);
+		prefix_index_change(&index, word, -1);
+		snprintf(word, sizeof(word), "branch%03d modified tail", i);
+		prefix_index_change(&index, word, 1);
+	}
+	for (int i = 0; i < 400; i++) {
+		char key[80], word[96];
+		snprintf(key, sizeof(key), "branch%03d", i);
+		if (!prefix_index_has(index, key))
+			return 0;
+		snprintf(key, sizeof(key), "branch%03d middle", i);
+		if (prefix_index_has(index, key) != (i & 1))
+			return 0;
+		snprintf(key, sizeof(key), "branch%03d modified", i);
+		if (prefix_index_has(index, key) != !(i & 1))
+			return 0;
+		snprintf(word, sizeof(word), "branch%03d %s tail", i,
+			 i & 1 ? "middle" : "modified");
+		prefix_index_change(&index, word, -1);
+	}
+	if (prefix_index_has(index, "branch399"))
+		return 0;
+	const char *accent = "\xc3\xa9"
+			     "cole\xc2\xa0"
+			     "du\xe2\x80\x83"
+			     "nord";
+	const char *other = "\xc3\xaa"
+			    "cole sud";
+	prefix_index_change(&index, accent, 1);
+	prefix_index_change(&index, other, 1);
+	if (!prefix_index_has(index, "\xc3\xa9"
+				     "cole") ||
+	    !prefix_index_has(index, "\xc3\xa9"
+				     "cole\xc2\xa0"
+				     "du") ||
+	    !prefix_index_has(index, "\xc3\xaa"
+				     "cole"))
+		return 0;
+	prefix_index_change(&index, accent, -1);
+	if (prefix_index_has(index, "\xc3\xa9"
+				    "cole") ||
+	    !prefix_index_has(index, "\xc3\xaa"
+				     "cole"))
+		return 0;
+	prefix_index_change(&index, other, -1);
+	prefix_index_free(index);
+	return 1;
+}
+
 static int check_map_ownership(void)
 {
 	Map map = { 0 };
@@ -210,7 +329,7 @@ static int check_sorting(void)
 int main(void)
 {
 	if (!check_sorting() || !check_maps() || !check_map_bytes() ||
-	    !check_map_ownership())
+	    !check_map_ownership() || !check_prefixes())
 		return 1;
 	const char *terms[] = { "red green blue",
 				"bred green blue",

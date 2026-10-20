@@ -79,6 +79,10 @@ typedef struct {
 	Slot *slots;
 	size_t size, cap;
 } Map;
+typedef struct PrefixIndex PrefixIndex;
+void prefix_index_change(PrefixIndex **, const char *, int);
+int prefix_index_has(const PrefixIndex *, const char *);
+void prefix_index_free(PrefixIndex *);
 void parallel_pair(void (*)(void *), void *, void (*)(void *), void *, int);
 void *map_get(Map *, const char *);
 void map_put(Map *, const char *, void *);

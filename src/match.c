@@ -41,7 +41,7 @@ struct MatchIndex {
 	Map *words; /* words[n] holds lookup["n"] for n <= DENSE_WORDS */
 	int word_cap;
 	Map sparse_words; /* decimal word count to Map, above DENSE_WORDS */
-	Map prefixes; /* Synonym prefixes ending before whitespace. */
+	PrefixIndex *prefixes; /* Synonym prefixes ending before whitespace. */
 	Map aliases; /* Tokenized synonym to the lookup word it came from. */
 	Map fwd, rev, spans, entities, ner;
 	int entity_count, live;
@@ -87,16 +87,7 @@ static int add_length(MatchIndex *x, int n, int *cap)
 
 static void add_prefixes(MatchIndex *x, const char *s)
 {
-	const char *p = s;
-	while (*p) {
-		const char *at = p;
-		uint32_t c = uread(&p);
-		if (at > s && uspace(c)) {
-			char *prefix = slice(s, (size_t)(at - s));
-			map_put(&x->prefixes, prefix, (void *)1);
-			free(prefix);
-		}
-	}
+	prefix_index_change(&x->prefixes, s, 1);
 }
 
 /*
@@ -272,7 +263,8 @@ void match_index_free(MatchIndex *x)
 			free(x->sparse_words.slots[i].value);
 		}
 	map_free(&x->sparse_words);
-	map_free(&x->prefixes);
+	prefix_index_free(x->prefixes);
+	x->prefixes = NULL;
 	map_free(&x->aliases);
 	for (size_t i = 0; i < x->spans.cap; i++)
 		if (x->spans.slots[i].key) {
@@ -451,7 +443,7 @@ static void window_matches(ExactWindow *window, int remaining,
 			window->words = n;
 		}
 		/* Empty text has no fixed start: trimming a longer window removes its space. */
-		int longer = !*s || map_get((Map *)&x->prefixes, s) != NULL;
+		int longer = !*s || prefix_index_has(x->prefixes, s);
 		free(s);
 		if (!longer)
 			break;
@@ -1138,17 +1130,9 @@ static Map *mutable_group(MatchIndex *x, int n)
 }
 static void mutable_prefixes(MatchIndex *x, const char *s, int delta)
 {
-	const char *p = s;
-	while (*p) {
-		const char *at = p;
-		uint32_t c = uread(&p);
-		if (at > s && uspace(c)) {
-			char *prefix = slice(s, (size_t)(at - s));
-			counter(&x->prefixes, prefix, delta);
-			free(prefix);
-		}
-	}
+	prefix_index_change(&x->prefixes, s, delta);
 }
+
 static void mutable_alias(MatchIndex *x, const char *key)
 {
 	Map *candidates = map_get(&x->mutable_aliases, key);
@@ -1255,24 +1239,13 @@ void match_index_mutable(MatchIndex *x)
 		if (x->sparse_words.slots[i].key)
 			map_free(x->sparse_words.slots[i].value);
 	map_free(&x->aliases);
-	map_free(&x->prefixes);
+	prefix_index_free(x->prefixes);
+	x->prefixes = NULL;
 	J *lookup = GET(GET(x->view, "synonyms"), "lookup");
-	size_t total = 0, prefixes = 0;
-	EACH(group, lookup) {
+	size_t total = 0;
+	EACH(group, lookup)
 		total += (size_t)SIZE(group);
-		EACH(word, group) {
-			const char *start = S(word), *p = start;
-			while (*p) {
-				const char *at = p;
-				uint32_t c = uread(&p);
-				prefixes += at > start && uspace(c);
-			}
-		}
-	}
 	map_reserve(&x->mutable_words, total);
-	/* Shared prefixes may use fewer entries; aliases can still grow this
-	 * table. Reserve the known base contributions before copying keys. */
-	map_reserve(&x->prefixes, prefixes);
 	int rank = 0;
 	EACH(group, lookup)
 		map_put(&x->group_ranks, group->string,
