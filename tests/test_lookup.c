@@ -355,6 +355,18 @@ int main(void)
 				" ecole verte",
 				"green  blue",
 				"" };
+	const char *keys[] = { "_red_green", "red__green_blue", "red_green_",
+			       "and_red_green", "red_of_green", "red_green_and",
+			       "red_green_blue_amber_violet_black", "___" };
+	for (size_t i = 0; i < sizeof(keys) / sizeof(*keys); i++) {
+		J *fwd = OBJ(), *values = ARR();
+		ADD(values, STR("bred green blues"));
+		PUT(fwd, keys[i], values);
+		int ok = check(fwd);
+		DEL(fwd);
+		if (!ok)
+			return 1;
+	}
 	unsigned state = 129;
 	for (int run = 0; run < 180; run++) {
 		J *fwd = OBJ();

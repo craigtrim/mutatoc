@@ -117,21 +117,34 @@ J *generate_synonyms(J *raw, int reverse)
 	return r;
 }
 
-/*
- * Lookup groups hold every synonym of an ontology, so membership is hashed on
- * the group key and value together rather than scanned per insert.
- */
+/* Each group hashes the value strings already owned by its JSON array. */
+typedef struct {
+	J *array;
+	Map values;
+} LookupBuilder;
 static void lookup_push(J *d, Map *seen, const char *key, const char *value)
 {
-	Buf k = { 0 };
-	buf_put(&k, key);
-	buf_add(&k, "\x1f", 1);
-	buf_put(&k, value);
-	if (!map_get(seen, k.p)) {
-		map_put(seen, k.p, (void *)1);
-		ADD(ensure(d, key, 1), STR(value));
+	LookupBuilder *group = map_get(seen, key);
+	if (!group) {
+		group = calloc(1, sizeof(*group));
+		group->array = ensure(d, key, 1);
+		map_put(seen, key, group);
 	}
-	free(k.p);
+	if (!map_get(&group->values, value)) {
+		J *entry = STR(value);
+		ADD(group->array, entry);
+		map_put_ref(&group->values, S(entry), (void *)1);
+	}
+}
+static void lookup_seen_free(Map *seen)
+{
+	for (size_t i = 0; i < seen->cap; i++)
+		if (seen->slots[i].key) {
+			LookupBuilder *group = seen->slots[i].value;
+			map_free(&group->values);
+			free(group);
+		}
+	map_free(seen);
 }
 
 static void lookup_add(J *d, Map *seen, const char *s)
@@ -141,6 +154,24 @@ static void lookup_add(J *d, Map *seen, const char *s)
 	snprintf(key, sizeof(key), "%d", count(r, ' ') + 1);
 	lookup_push(d, seen, key, r);
 	free(r);
+}
+
+/* Groups contain exactly one more space-delimited word than their grams.
+ * Slice the leading words directly; temporary JSON token arrays are unnecessary. */
+char *lookup_leading_gram(const char *text, int words)
+{
+	const char *at = text, *end = NULL;
+	for (int i = 0; i < words; i++) {
+		end = strchr(at, ' ');
+		if (!end)
+			return NULL;
+		size_t length = (size_t)(end - at);
+		if ((length == 2 && (!memcmp(at, "of", 2) || !memcmp(at, "to", 2))) ||
+		    (length == 3 && (!memcmp(at, "and", 3) || !memcmp(at, "for", 3))))
+			return NULL;
+		at = end + 1;
+	}
+	return end ? slice(text, (size_t)(end - text)) : NULL;
 }
 
 J *generate_lookup(J *f)
@@ -171,31 +202,16 @@ J *generate_lookup(J *f)
 	for (int n = 5; n >= 2; n--) {
 		char k[8];
 		snprintf(k, sizeof(k), "%d", n + 1);
-		J *values = DUP(GET(d, k)), *grams = ARR();
+		/* Rewrites remove spaces, so they only append to lower groups. */
+		J *values = GET(d, k), *grams = ARR();
 		Map gram_set = { 0 };
 		map_reserve(&gram_set, (size_t)SIZE(values));
 		EACH(v, values) {
-			J *ts = split(S(v), " ");
-			for (int i = 0; i + n < SIZE(ts); i++) {
-				J *a = ARR();
-				int valid = 1;
-				for (int j = 0; j < n; j++) {
-					const char *t = S(AT(ts, i + j));
-					if (!strcmp(t, "and") ||
-					    !strcmp(t, "for") ||
-					    !strcmp(t, "of") ||
-					    !strcmp(t, "to"))
-						valid = 0;
-					ADD(a, STR(t));
-				}
-				if (valid) {
-					char *s = join(a, " ");
-					unique_indexed(grams, &gram_set, s);
-					free(s);
-				}
-				DEL(a);
+			char *gram = lookup_leading_gram(S(v), n);
+			if (gram) {
+				unique_indexed(grams, &gram_set, gram);
+				free(gram);
 			}
-			DEL(ts);
 		}
 		map_free(&gram_set);
 		Patterns *patterns = patterns_build(grams);
@@ -217,9 +233,8 @@ J *generate_lookup(J *f)
 		}
 		patterns_free(patterns);
 		DEL(grams);
-		DEL(values);
 	}
-	map_free(&seen);
+	lookup_seen_free(&seen);
 	EACH(k, d)
 		sort_strings(k, -1);
 	return d;
@@ -467,7 +482,7 @@ J *generate_trie(J *entities)
 		lookup_push(grams, &seen, k, s);
 		free(s);
 	}
-	map_free(&seen);
+	lookup_seen_free(&seen);
 	for (int i = 1; i <= 6; i++) {
 		char k[16];
 		snprintf(k, sizeof(k), "%d", i);

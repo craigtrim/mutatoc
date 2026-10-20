@@ -372,22 +372,6 @@ static void index_value(LookupValue *v, int add)
 	}
 }
 
-static char *leading_gram(LookupValue *v)
-{
-	J *words = split(v->text, " "), *a = ARR();
-	int valid = 1, n = v->group->words - 1;
-	for (int i = 0; i < n; i++) {
-		const char *t = S(AT(words, i));
-		if (!strcmp(t, "and") || !strcmp(t, "for") ||
-		    !strcmp(t, "of") || !strcmp(t, "to"))
-			valid = 0;
-		ADD(a, STR(t));
-	}
-	char *out = valid ? join(a, " ") : NULL;
-	DEL(words);
-	DEL(a);
-	return out;
-}
 static void gram_change(LookupGroup *g, const char *gram, int delta,
 			Map *changed)
 {
@@ -493,7 +477,7 @@ static void index_change(LookupValue *v, Map *changed)
 	if (!!v->refs == v->indexed)
 		return;
 	if (v->refs) {
-		v->gram = leading_gram(v);
+		v->gram = lookup_leading_gram(v->text, g->words - 1);
 		index_value(v, 1);
 		gram_change(g, v->gram, 1, changed);
 		v->indexed = 1;

@@ -137,6 +137,7 @@ J *data_query(J *, const char *, const J *, const J *, mc_error *);
 J *ontology_query(J *, const char *, const J *, mc_error *);
 J *generate_synonyms(J *, int);
 J *generate_lookup(J *);
+char *lookup_leading_gram(const char *text, int words);
 typedef struct LookupState LookupState;
 LookupState *lookup_state_build(J *);
 LookupState *lookup_state_reuse(J *, J *);
