@@ -6,11 +6,16 @@
 #define MC_PATTERNS_H
 
 typedef struct {
-	int edge, sibling, fail, output, pattern;
+	int edge, fail, output, pattern;
+	union {
+		int sibling, count;
+	} links;
 	unsigned char byte;
 } PatternNode;
 typedef struct {
 	PatternNode *nodes;
+	int *edges;
+	unsigned char *edge_bytes;
 	int n, cap, count, reverse;
 	const char **text;
 	int *hits;
@@ -25,16 +30,48 @@ static int pattern_node(Patterns *p, unsigned char byte)
 			realloc(p->nodes, (size_t)p->cap * sizeof(*p->nodes));
 	}
 	int n = p->n++;
-	p->nodes[n] = (PatternNode){ 0, 0, 0, 0, -1, byte };
+	p->nodes[n] = (PatternNode){ 0 };
+	p->nodes[n].pattern = -1;
+	p->nodes[n].byte = byte;
 	return n;
 }
 
 static int pattern_edge(Patterns *p, int node, unsigned char byte)
 {
-	for (int e = p->nodes[node].edge; e; e = p->nodes[e].sibling)
-		if (p->nodes[e].byte == byte)
-			return e;
+	if (p->edges) {
+		int start = p->nodes[node].edge;
+		int end = start + p->nodes[node].links.count;
+		for (int i = start; i < end; i++)
+			if (p->edge_bytes[i] == byte)
+				return p->edges[i];
+	} else {
+		for (int e = p->nodes[node].edge; e;
+		     e = p->nodes[e].links.sibling)
+			if (p->nodes[e].byte == byte)
+				return e;
+	}
 	return 0;
+}
+
+/* Freeze outgoing edges into contiguous ranges. Reading adjacent bytes avoids
+ * following widely separated sibling nodes during every text transition. */
+static void patterns_pack(Patterns *p)
+{
+	p->edges = malloc((size_t)p->n * sizeof(*p->edges));
+	p->edge_bytes = malloc((size_t)p->n);
+	int at = 0;
+	for (int node = 0; node < p->n; node++) {
+		int first = p->nodes[node].edge, start = at;
+		for (int child = first; child;
+		     child = p->nodes[child].links.sibling) {
+			p->edges[at] = child;
+			p->edge_bytes[at++] = p->nodes[child].byte;
+		}
+		/* A parent is always allocated before its children. Their sibling
+		 * links are still intact when this range is copied. */
+		p->nodes[node].edge = start;
+		p->nodes[node].links.count = at - start;
+	}
 }
 
 static Patterns *patterns_build(J *patterns)
@@ -83,20 +120,24 @@ static Patterns *patterns_build(J *patterns)
 			int e = pattern_edge(p, node, byte);
 			if (!e) {
 				e = pattern_node(p, byte);
-				p->nodes[e].sibling = p->nodes[node].edge;
+				p->nodes[e].links.sibling = p->nodes[node].edge;
 				p->nodes[node].edge = e;
 			}
 			node = e;
 		}
 		p->nodes[node].pattern = id;
 	}
+	patterns_pack(p);
 	int *queue = malloc((size_t)p->n * sizeof(*queue));
 	int head = 0, tail = 0;
-	for (int e = p->nodes[0].edge; e; e = p->nodes[e].sibling)
-		queue[tail++] = e;
+	for (int i = 0; i < p->nodes[0].links.count; i++)
+		queue[tail++] = p->edges[i];
 	while (head < tail) {
 		int node = queue[head++];
-		for (int e = p->nodes[node].edge; e; e = p->nodes[e].sibling) {
+		int start = p->nodes[node].edge;
+		int end = start + p->nodes[node].links.count;
+		for (int i = start; i < end; i++) {
+			int e = p->edges[i];
 			int f = p->nodes[node].fail;
 			int next = pattern_edge(p, f, p->nodes[e].byte);
 			while (f && !next) {
@@ -154,6 +195,8 @@ static int patterns_find(Patterns *p, const char *text)
 static void patterns_free(Patterns *p)
 {
 	free(p->nodes);
+	free(p->edges);
+	free(p->edge_bytes);
 	free((void *)p->text);
 	free(p->hits);
 	free(p->seen);

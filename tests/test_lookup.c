@@ -87,9 +87,16 @@ static int check(J *fwd)
 /* Raw substring presence and original pattern order are independent of scan direction. */
 static int check_patterns(void)
 {
-	for (int reversed = 0; reversed < 2; reversed++) {
+	for (int reversed = 0; reversed < 3; reversed++) {
 		J *grams = ARR();
-		for (int i = 0; i < 64; i++) {
+		/* A full byte alphabet exercises wide packed transition ranges. */
+		if (reversed == 2)
+			for (int byte = 1; byte < 256; byte++) {
+				char term[] = { (char)byte, 'x',
+						(char)(256 - byte), 0 };
+				ADD(grams, STR(term));
+			}
+		for (int i = 0; reversed < 2 && i < 64; i++) {
 			char term[80];
 			snprintf(term, sizeof(term),
 				 reversed ? "%03d common ending" :
@@ -108,7 +115,7 @@ static int check_patterns(void)
 		for (size_t i = 0; i < sizeof(overlap) / sizeof(*overlap); i++)
 			ADD(grams, STR(overlap[i]));
 		Patterns *patterns = patterns_build(grams);
-		int ok = patterns->reverse == reversed;
+		int ok = reversed == 2 || patterns->reverse == reversed;
 		for (int run = 0; run < 120 && ok; run++) {
 			Buf text = { 0 };
 			for (int i = 0; i < run % 9; i++) {
@@ -135,12 +142,17 @@ static int check_patterns(void)
 		DEL(grams);
 		if (!ok) {
 			fprintf(stderr,
-				"pattern direction %d disagrees with strstr\n",
+				"pattern case %d disagrees with strstr\n",
 				reversed);
 			return 0;
 		}
 	}
-	return 1;
+	J *empty = ARR();
+	Patterns *patterns = patterns_build(empty);
+	int ok = patterns_find(patterns, "nonempty input") == 0;
+	patterns_free(patterns);
+	DEL(empty);
+	return ok;
 }
 static int check_maps(void)
 {
