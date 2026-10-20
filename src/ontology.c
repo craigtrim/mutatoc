@@ -65,13 +65,23 @@ static J *reverse_synonyms(J *forward)
 
 static J *synonyms_build(J *raw, int reverse, int consume)
 {
-	J *f = OBJ();
+	J *f = consume ? raw : OBJ();
 	Map forward = { 0 };
-	map_reserve(&forward, (size_t)SIZE(raw));
+	if (!consume)
+		map_reserve(&forward, (size_t)SIZE(raw));
 	EACH(k, raw) {
-		char *key = lower(k->string);
-		J *a = indexed_ensure(f, &forward, key, 1);
-		for (J *v = k->child, *next; v; v = next) {
+		/* Extraction tables already own unique lowercase canonical keys.
+		 * Retain their wrappers and transform their children in place. */
+		char *key = consume ? NULL : lower(k->string);
+		J *a = consume ? k : indexed_ensure(f, &forward, key, 1);
+		J input_array = { 0 }, *input = k;
+		if (consume) {
+			input_array.type = cJSON_Array;
+			input_array.child = k->child;
+			k->child = NULL;
+			input = &input_array;
+		}
+		for (J *v = input->child, *next; v; v = next) {
 			next = v->next;
 			char *replaced = strchr(S(v), '+') ?
 						       replace(S(v), "+", " ") :
@@ -83,8 +93,8 @@ static J *synonyms_build(J *raw, int reverse, int consume)
 			 * preserves their string ownership and avoids a copy/free pair. */
 			if (consume && !replaced && !owned) {
 				if (!contains(a, normal))
-					ADD(a,
-					    cJSON_DetachItemViaPointer(k, v));
+					ADD(a, cJSON_DetachItemViaPointer(input,
+									  v));
 			} else
 				unique(a, normal);
 			free(owned);
@@ -111,6 +121,7 @@ static J *synonyms_build(J *raw, int reverse, int consume)
 			}
 			free(replaced);
 		}
+		DEL(input_array.child);
 		sort_strings(a, 1);
 		free(key);
 	}
@@ -1013,9 +1024,10 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 	PUT(r, "by_predicate", by);
 	PUT(r, "ner", ner);
 	PUT(r, "synonyms", syns);
-	if (synraw != raw)
+	if (synraw != raw && synraw != fwd)
 		DEL(synraw);
-	DEL(raw);
+	if (raw != fwd)
+		DEL(raw);
 	DEL(subentities);
 	if (e->code) {
 		DEL(r);
