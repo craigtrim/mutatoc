@@ -410,6 +410,21 @@ static int spacing_token(J *token)
 	return 1;
 }
 
+/* Mandatory line breaks in whitespace tokens (craigtrim/mutatoc#19). */
+static int line_boundary(J *token)
+{
+	if (!spacing_token(token))
+		return 0;
+	const char *text = S(GET(token, "text"));
+	while (*text) {
+		uint32_t c = uread(&text);
+		if ((c >= 10 && c <= 13) || c == 0x85 ||
+		    c == 0x2028 || c == 0x2029)
+			return 1;
+	}
+	return 0;
+}
+
 static char *exact_sequence(J *token, int length)
 {
 	Buf b = { 0 };
@@ -427,7 +442,7 @@ static char *exact_sequence(J *token, int length)
 }
 
 static void window_matches(ExactWindow *window, int remaining,
-			   const MatchIndex *x, int limit)
+			   const MatchIndex *x, int limit, int line_breaks)
 {
 	window->length = window->words = 0;
 	if (spacing_token(window->token))
@@ -437,6 +452,8 @@ static void window_matches(ExactWindow *window, int remaining,
 	J *token = window->token;
 	for (int length = 1; length <= remaining && n < limit;
 	     length++, token = token->next) {
+		if (line_breaks && line_boundary(token))
+			break;
 		if (spacing_token(token))
 			continue;
 		if (n++)
@@ -483,7 +500,8 @@ static J *canonical(const MatchIndex *x, const char *s)
 	return NIL();
 }
 
-static J *exact(const MatchIndex *x, J *ts, const J *names, mc_error *e)
+static J *exact(const MatchIndex *x, J *ts, const J *names,
+		int line_breaks, mc_error *e)
 {
 	if (x->lookup_error == 1) {
 		fail(e, 2, "Synonym lookup must be an object");
@@ -511,7 +529,7 @@ static J *exact(const MatchIndex *x, J *ts, const J *names, mc_error *e)
 	}
 	EACH(token, ts) {
 		windows[at].token = token;
-		window_matches(&windows[at], count - at, x, limit);
+		window_matches(&windows[at], count - at, x, limit, line_breaks);
 		at++;
 	}
 	while (!e->code) {
@@ -557,11 +575,14 @@ static J *exact(const MatchIndex *x, J *ts, const J *names, mc_error *e)
 		int first = start, preceding = 0;
 		while (first > 0 && preceding < limit - 1) {
 			first--;
+			if (line_breaks && line_boundary(windows[first].token))
+				break;
 			if (!spacing_token(windows[first].token))
 				preceding++;
 		}
 		for (int i = first; i <= start; i++)
-			window_matches(&windows[i], count - i, x, limit);
+			window_matches(&windows[i], count - i, x, limit,
+				       line_breaks);
 		if (++operations > 100000) {
 			fail(e, 4, "Matching operation limit exceeded");
 			break;
@@ -600,7 +621,7 @@ static int occurrence_from(const Occurrences *o, int v)
  * the last. craigtrim/mutatoc#9
  */
 static int span_window(Occurrences *const *words, int k, const SpanRule *r,
-		       int *x, int *y)
+		       const int *line, int *x, int *y)
 {
 	const Occurrences *a = words[0], *b = words[k - 1];
 	int found = 0, tightest = -1;
@@ -653,7 +674,8 @@ static int span_window(Occurrences *const *words, int k, const SpanRule *r,
 			else if (p > hi)
 				hi = p;
 		}
-		if (lo < 0 || hi - lo > r->distance)
+		if (lo < 0 || hi - lo > r->distance ||
+		    (line && line[lo] != line[hi]))
 			continue;
 		if (!found || hi - lo < *y - *x ||
 		    (hi - lo == *y - *x && lo < *x)) {
@@ -737,7 +759,8 @@ static void forms_free(Forms *f)
  * no position, just as they never interrupt an exact phrase, but a span
  * still covers those between its words (craigtrim/mutatoc#12).
  */
-static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
+static J *spans(const MatchIndex *index, J *ts, const J *names,
+		int line_breaks, mc_error *e)
 {
 	int n = SIZE(ts), applications = 0, word_cap = 0, i = 0;
 	Forms f = { 0 };
@@ -746,13 +769,17 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 	/* Whether each token is whitespace only, and the token at each position. */
 	int *spacing = malloc((size_t)(n ? n : 1) * sizeof(*spacing));
 	int *token = malloc((size_t)(n ? n : 1) * sizeof(*token));
+	int *line = line_breaks ?
+		malloc((size_t)(n ? n : 1) * sizeof(*line)) : NULL;
 	Occurrences **words = NULL;
-	if (!form || !at || !spacing || !token) {
+	if (!form || !at || !spacing || !token || (line_breaks && !line)) {
 		fail(e, 1, "Cannot allocate span positions");
 		goto done;
 	}
 	EACH(t, ts) {
 		spacing[i] = spacing_token(t);
+		if (line_breaks && line_boundary(t))
+			spacing[i] |= 2;
 		if ((form[i++] = form_id(&f, index, S(GET(t, "normal")))) < 0) {
 			fail(e, 1, "Cannot allocate span positions");
 			goto done;
@@ -769,10 +796,14 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 			offset += f.forms[g].at.n;
 			f.forms[g].at.n = 0;
 		}
-		for (int position = i = 0; i < n; i++) {
-			if (spacing[i])
+		for (int position = i = 0, segment = 0; i < n; i++) {
+			if (spacing[i]) {
+				segment += (spacing[i] & 2) != 0;
 				continue;
+			}
 			Occurrences *o = &f.forms[form[i]].at;
+			if (line)
+				line[position] = segment;
 			token[position] = i;
 			o->at[o->n++] = position++;
 		}
@@ -818,7 +849,8 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 						valid = 0;
 				}
 				int x = 0, y = 0;
-				if (valid && span_window(words, k, r, &x, &y)) {
+				if (valid &&
+				    span_window(words, k, r, line, &x, &y)) {
 					best = r;
 					bx = token[x];
 					by = token[y] + 1;
@@ -852,6 +884,7 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 		n -= by - bx - 1;
 	}
 done:
+	free(line);
 	free(words);
 	free(token);
 	free(spacing);
@@ -906,7 +939,8 @@ static char *product(J **choices, int count, int at, Buf *parts, Map *entities,
 	return NULL;
 }
 
-static J *hierarchy(const MatchIndex *index, J *ts, const J *names, mc_error *e)
+static J *hierarchy(const MatchIndex *index, J *ts, const J *names,
+		    int line_breaks, mc_error *e)
 {
 	if (!index->entity_count)
 		return ts;
@@ -922,25 +956,33 @@ static J *hierarchy(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 		J **forms =
 			malloc((size_t)(count ? count : 1) * sizeof(*forms));
 		int *multi = malloc((size_t)(count + 1) * sizeof(*multi));
-		if (!forms || !multi) {
+		int *breaks = line_breaks ?
+			malloc((size_t)(count + 1) * sizeof(*breaks)) : NULL;
+		if (!forms || !multi || (line_breaks && !breaks)) {
 			free(forms);
 			free(multi);
+			free(breaks);
 			fail(e, 1, "Cannot allocate hierarchy windows");
 			break;
 		}
 		int at = 0;
 		multi[0] = 0;
+		if (breaks)
+			breaks[0] = 0;
 		EACH(t, ts) {
 			forms[at] = ARR();
 			surface(t, forms[at]);
 			multi[at + 1] = multi[at] + (SIZE(forms[at]) > 1);
+			if (breaks)
+				breaks[at + 1] = breaks[at] + line_boundary(t);
 			at++;
 		}
 		for (int n = 9; n >= 2 && !changed; n--) {
 			J *first = ts->child;
 			for (int i = 0; i + n <= count;
 			     i++, first = first->next) {
-				if (multi[i + n] == multi[i])
+				if (multi[i + n] == multi[i] ||
+				    (breaks && breaks[i + n] != breaks[i]))
 					continue;
 				Buf parts = { 0 };
 				size_t budget = 1000000;
@@ -970,6 +1012,7 @@ static J *hierarchy(const MatchIndex *index, J *ts, const J *names, mc_error *e)
 			DEL(forms[i]);
 		free(forms);
 		free(multi);
+		free(breaks);
 	}
 	return ts;
 }
@@ -995,7 +1038,7 @@ static int valid_tokens(const J *input, mc_error *e)
 }
 
 J *match_tokens(const MatchIndex *x, J *ts, const J *names, int ctr,
-		mc_error *e)
+		int line_breaks, mc_error *e)
 {
 	/* Takes ownership of ts, which each request already owns, instead of copying it. */
 	if (!valid_tokens(ts, e)) {
@@ -1009,11 +1052,11 @@ J *match_tokens(const MatchIndex *x, J *ts, const J *names, int ctr,
 	}
 	int sweeps = ctr >= 2 ? 1 : 3 - ctr;
 	for (int i = 0; i < sweeps && !e->code; i++) {
-		ts = exact(x, ts, names, e);
+		ts = exact(x, ts, names, line_breaks, e);
 		if (!e->code)
-			ts = spans(x, ts, names, e);
+			ts = spans(x, ts, names, line_breaks, e);
 		if (!e->code)
-			ts = hierarchy(x, ts, names, e);
+			ts = hierarchy(x, ts, names, line_breaks, e);
 	}
 	if (e->code) {
 		DEL(ts);
@@ -1023,17 +1066,17 @@ J *match_tokens(const MatchIndex *x, J *ts, const J *names, int ctr,
 }
 
 J *transform_tokens(J *d, const MatchIndex *x, const J *input, const J *names,
-		    const char *stage, mc_error *err)
+		    const char *stage, int line_breaks, mc_error *err)
 {
 	if (!valid_tokens(input, err))
 		return NULL;
 	J *ts = DUP(input);
 	if (!strcmp(stage, "exact"))
-		return exact(x, ts, names, err);
+		return exact(x, ts, names, line_breaks, err);
 	if (!strcmp(stage, "spans"))
-		return spans(x, ts, names, err);
+		return spans(x, ts, names, line_breaks, err);
 	if (!strcmp(stage, "hierarchy"))
-		return hierarchy(x, ts, names, err);
+		return hierarchy(x, ts, names, line_breaks, err);
 	if (!strcmp(stage, "augment")) {
 		EACH(t, ts) {
 			const char *text = S(GET(t, "normal")), *p = text;

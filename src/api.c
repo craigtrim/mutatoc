@@ -497,6 +497,18 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 		fail(err, 2, "Request requires string op");
 		return NULL;
 	}
+	/* Matching boundaries belong to each request (craigtrim/mutatoc#19). */
+	int line_breaks = 0;
+	J *mode = GET(q, "line_breaks");
+	if (mode && (!strcmp(op, "parse") || !strcmp(op, "parse_tokens") ||
+		     !strcmp(op, "transform_tokens"))) {
+		if (!cJSON_IsString(mode) ||
+		    (strcmp(S(mode), "ignore") && strcmp(S(mode), "boundary"))) {
+			fail(err, 2, "line_breaks must be ignore or boundary");
+			return NULL;
+		}
+		line_breaks = !strcmp(S(mode), "boundary");
+	}
 	if (!strcmp(op, "version"))
 		return STR(MUTATOC_VERSION);
 	if ((!strcmp(op, "load") || !strcmp(op, "generate_spans")) &&
@@ -744,7 +756,7 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 		MatchIndex *index = view ? view_index(e, view, err) : NULL;
 		return index ? transform_tokens(view, index, GET(q, "tokens"),
 						e->names, S(GET(q, "stage")),
-						err) :
+						line_breaks, err) :
 			       NULL;
 	}
 	if (!strcmp(op, "parse") || !strcmp(op, "parse_tokens")) {
@@ -778,7 +790,8 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 			return NULL;
 		J *out = match_tokens(
 			index, tokens, e->names,
-			GET(q, "ctr") ? GET(q, "ctr")->valueint : 0, err);
+			GET(q, "ctr") ? GET(q, "ctr")->valueint : 0,
+			line_breaks, err);
 		if (!out)
 			return NULL;
 		/*
