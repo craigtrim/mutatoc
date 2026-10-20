@@ -2,6 +2,21 @@
 
 <!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2, craigtrim/mutatoc#5, craigtrim/mutatoc#7, craigtrim/mutatoc#9, craigtrim/mutatoc#11, craigtrim/mutatoc#12 -->
 
+## 0.6.0 (2026-10-20)
+
+### Added
+
+- The `update` protocol operation applies a batch of subject replacements and removals atomically to one loaded RDF graph. Each replacement supplies every statement to retain for its subject; removal preserves incoming references. Invalid batches leave the previous graph and matching results unchanged. See [Update entities](docs/protocol.md#update-entities).
+- Eligible literal vocabulary replacements update affected lookup forms and matching indexes incrementally, including label word-count changes. Structural edits, additions, removals and the documented fallback cases rebuild derived views transactionally. Both paths produce the results of a fresh load. Prepared snapshots and source collections do not support `update`.
+
+### Performance
+
+- Ontology loading uses indexed substring matching and hash-based deduplication, preserving matching semantics and serialized order. The `data` interface reuses a completed lookup only when canonical keys, values and their order match the snapshot input. Existing `load` requests receive the faster construction without protocol changes.
+- The generated 20,000-entity workload loaded in 456.71 ms in cached mode and 516.24 ms in data mode on Windows in the 2026-10-20 validation. Literal replacement plus immediate parsing measured 0.265 to 0.299 ms. These are local Release medians for the measured workloads; [the implementation record](https://github.com/craigtrim/mutatoc/issues/18) includes Linux results and validation details.
+- The generated load-doubling regression ceiling is 3.0x on Windows under the accepted platform decision and 2.2x on Linux. The 20 ms update-plus-parse ceiling and existing fixture limits remain enforced.
+
+This release contains [PR #17](https://github.com/craigtrim/mutatoc/pull/17), implementing [Axiom #129](https://github.com/craigtrim/axiom/issues/129). The new operation is additive; existing operations and the public C API remain compatible.
+
 ## 0.5.2 (2026-10-07)
 
 ### Fixed
