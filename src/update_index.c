@@ -314,10 +314,10 @@ void update_state_build(mc_engine *e)
 static int term_same(const Term *a, const Term *b)
 {
 	return a->kind == b->kind && !strcmp(a->value, b->value) &&
-	       !strcmp(a->datatype ? a->datatype : "",
-		       b->datatype ? b->datatype : "") &&
-	       !strcmp(a->language ? a->language : "",
-		       b->language ? b->language : "");
+	       !strcmp(rdf_datatype(a) ? rdf_datatype(a) : "",
+		       rdf_datatype(b) ? rdf_datatype(b) : "") &&
+	       !strcmp(rdf_language(a) ? rdf_language(a) : "",
+		       rdf_language(b) ? rdf_language(b) : "");
 }
 
 /* Count source groups directly from existing synonym arrays. Counting each

@@ -358,8 +358,8 @@ static Term object(Parser *p)
 		t.kind = 1;
 		if (*p->p == '@') {
 			p->p++;
-			t.language = word(p);
-			const char *lang = t.language;
+			char *language = word(p);
+			const char *lang = language;
 			if (!isalpha((unsigned char)*lang))
 				error(p, "Invalid language tag");
 			while (isalpha((unsigned char)*lang))
@@ -373,16 +373,14 @@ static Term object(Parser *p)
 			}
 			if (*lang)
 				error(p, "Invalid language tag");
-			t.datatype = copy(RDF "langString");
+			rdf_term_attributes(&t, RDF "langString", language);
+			free(language);
 		} else if (p->p[0] == '^' && p->p[1] == '^') {
 			p->p += 2;
 			Term dt = resource(p);
-			t.datatype = dt.value;
-			dt.value = NULL;
+			rdf_term_attributes(&t, dt.value, NULL);
 			rdf_term_free(&dt);
-		} else
-			t.datatype =
-				NULL; /* Plain and explicitly typed strings stay distinct. */
+		} /* Plain strings retain no annotation block (craigtrim/axiom#129). */
 	} else if (isdigit((unsigned char)c) || c == '+' || c == '-' ||
 		   (c == '.' && isdigit((unsigned char)p->p[1]))) {
 		char *w = word(p);
@@ -413,9 +411,11 @@ static Term object(Parser *p)
 		if (!digits || *end)
 			error(p, "Invalid numeric literal");
 		t = rdf_term(w, 1);
-		t.datatype = copy(strpbrk(w, "eE") ? XSD "double" :
-				  strchr(w, '.')   ? XSD "decimal" :
-						     XSD "integer");
+		rdf_term_attributes(&t,
+				    strpbrk(w, "eE") ? XSD "double" :
+				    strchr(w, '.')   ? XSD "decimal" :
+							     XSD "integer",
+				    NULL);
 		free(w);
 	} else if ((!strncmp(p->p, "true", 4) &&
 		    (delim(p->p[4]) || p->p[4] == '.')) ||
@@ -423,7 +423,7 @@ static Term object(Parser *p)
 		    (delim(p->p[5]) || p->p[5] == '.'))) {
 		char *w = word(p);
 		t = rdf_term(w, 1);
-		t.datatype = copy(XSD "boolean");
+		rdf_term_attributes(&t, XSD "boolean", NULL);
 		free(w);
 	} else
 		t = resource(p);

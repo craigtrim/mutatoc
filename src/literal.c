@@ -123,12 +123,13 @@ static char *float_text(const char *input)
 	return copy(candidate);
 }
 
+/* Compact terms expose optional annotations without allocating on reads (#129). */
 void literal_normalize(Term *t)
 {
-	if (t->kind != 1 || !t->datatype ||
-	    strncmp(t->datatype, XSD, strlen(XSD)))
+	if (t->kind != 1 || !rdf_datatype(t) ||
+	    strncmp(rdf_datatype(t), XSD, strlen(XSD)))
 		return;
-	const char *type = t->datatype + strlen(XSD);
+	const char *type = rdf_datatype(t) + strlen(XSD);
 	char *value = NULL;
 	const char *integers[] = { "integer",
 				   "nonPositiveInteger",

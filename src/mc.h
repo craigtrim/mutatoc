@@ -101,11 +101,25 @@ void map_delete(Map *, const char *);
 void unique_indexed(J *, Map *, const char *);
 J *indexed_ensure(J *, Map *, const char *, int);
 void indexed_set(J *, Map *, const char *, J *);
+/* Optional annotations do not occupy two pointers in every RDF term (#129). */
 typedef struct {
-	char *value, *datatype, *language;
+	char *datatype, *language;
+} TermAttributes;
+typedef struct {
+	char *value;
+	TermAttributes *attributes;
 	int kind;
 	int shared_value; /* Graph-owned string (craigtrim/axiom#129). */
 } Term;
+static inline const char *rdf_datatype(const Term *term)
+{
+	return term->attributes ? term->attributes->datatype : NULL;
+}
+static inline const char *rdf_language(const Term *term)
+{
+	return term->attributes ? term->attributes->language : NULL;
+}
+void rdf_term_attributes(Term *, const char *, const char *);
 typedef struct {
 	Term s, p, o;
 } Triple;

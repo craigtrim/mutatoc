@@ -88,7 +88,7 @@ Term source_resource(Source *s, const char *value, int explicit_iri)
 	} else
 		resolved = uri_resolve(s->base, value);
 	/* Reader terms own their values independently of graphs (craigtrim/axiom#129). */
-	Term result = { resolved, NULL, NULL, 0, 0 };
+	Term result = { resolved, NULL, 0, 0 };
 	return result;
 }
 

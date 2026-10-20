@@ -56,23 +56,44 @@ static char *graph_string(Graph *g, const char *text)
 
 Term rdf_term(const char *s, int kind)
 {
-	Term t = { copy(s), NULL, NULL, kind, 0 };
+	Term t = { copy(s), NULL, kind, 0 };
 	return t;
+}
+
+/* One allocation owns the optional annotation pair and its strings (#129).
+ * Copy before releasing the old block: either input may point into it. */
+void rdf_term_attributes(Term *t, const char *datatype, const char *language)
+{
+	TermAttributes *attributes = NULL;
+	if (datatype || language) {
+		size_t type_size = datatype ? strlen(datatype) + 1 : 0;
+		size_t language_size = language ? strlen(language) + 1 : 0;
+		attributes =
+			malloc(sizeof(*attributes) + type_size + language_size);
+		char *text = (char *)(attributes + 1);
+		attributes->datatype = type_size ? text : NULL;
+		attributes->language = language_size ? text + type_size : NULL;
+		if (type_size)
+			memcpy(attributes->datatype, datatype, type_size);
+		if (language_size)
+			memcpy(attributes->language, language, language_size);
+	}
+	free(t->attributes);
+	t->attributes = attributes;
 }
 
 void rdf_term_free(Term *t)
 {
 	if (!t->shared_value)
 		free(t->value);
-	free(t->datatype);
-	free(t->language);
+	free(t->attributes);
 	memset(t, 0, sizeof(*t));
 }
 
 Term rdf_term_copy(const Term *t)
 {
-	Term v = { copy(t->value), t->datatype ? copy(t->datatype) : NULL,
-		   t->language ? copy(t->language) : NULL, t->kind, 0 };
+	Term v = { copy(t->value), NULL, t->kind, 0 };
+	rdf_term_attributes(&v, rdf_datatype(t), rdf_language(t));
 	return v;
 }
 
@@ -90,9 +111,8 @@ static Term graph_term(Graph *g, const Term *source)
 			map_put_ref(&g->resources, value, value);
 		}
 	}
-	Term term = { value, source->datatype ? copy(source->datatype) : NULL,
-		      source->language ? copy(source->language) : NULL,
-		      source->kind, 1 };
+	Term term = { value, NULL, source->kind, 1 };
+	rdf_term_attributes(&term, rdf_datatype(source), rdf_language(source));
 	return term;
 }
 
@@ -105,8 +125,8 @@ static uint64_t triple_hash(const Term *s, const Term *p, const Term *o)
 	uint64_t hash = 129;
 	for (size_t i = 0; i < 3; i++) {
 		hash = (hash ^ (unsigned)terms[i]->kind) * mix;
-		const char *parts[] = { terms[i]->value, terms[i]->datatype,
-					terms[i]->language };
+		const char *parts[] = { terms[i]->value, rdf_datatype(terms[i]),
+					rdf_language(terms[i]) };
 		for (size_t j = 0; j < 3; j++)
 			hash = (hash ^
 				(parts[j] && *parts[j] ? hash_text(parts[j]) :
@@ -118,10 +138,10 @@ static uint64_t triple_hash(const Term *s, const Term *p, const Term *o)
 static int term_equal(const Term *a, const Term *b)
 {
 	return a->kind == b->kind && !strcmp(a->value, b->value) &&
-	       !strcmp(a->datatype ? a->datatype : "",
-		       b->datatype ? b->datatype : "") &&
-	       !strcmp(a->language ? a->language : "",
-		       b->language ? b->language : "");
+	       !strcmp(rdf_datatype(a) ? rdf_datatype(a) : "",
+		       rdf_datatype(b) ? rdf_datatype(b) : "") &&
+	       !strcmp(rdf_language(a) ? rdf_language(a) : "",
+		       rdf_language(b) ? rdf_language(b) : "");
 }
 static void triple_grow(Graph *g)
 {
@@ -296,10 +316,10 @@ static J *term_json(Term *t)
 	    STR(t->kind == 0 ? "iri" :
 		t->kind == 1 ? "literal" :
 				       "blank"));
-	if (t->datatype)
-		PUT(j, "datatype", STR(t->datatype));
-	if (t->language)
-		PUT(j, "language", STR(t->language));
+	if (rdf_datatype(t))
+		PUT(j, "datatype", STR(rdf_datatype(t)));
+	if (rdf_language(t))
+		PUT(j, "language", STR(rdf_language(t)));
 	return j;
 }
 

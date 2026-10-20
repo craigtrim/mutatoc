@@ -1,3 +1,4 @@
+/* Serialize optional RDF annotations from compact terms (craigtrim/axiom#129). */
 /* Test-only serialization. Production readers never convert source formats. */
 #ifndef MC_SOURCE_TESTLIB_H
 #define MC_SOURCE_TESTLIB_H
@@ -11,10 +12,10 @@ static J *source_test_term(const Term *term)
 	    STR(term->kind == 0 ? "iri" :
 		term->kind == 1 ? "literal" :
 				  "blank"));
-	if (term->datatype)
-		PUT(value, "datatype", STR(term->datatype));
-	if (term->language)
-		PUT(value, "language", STR(term->language));
+	if (rdf_datatype(term))
+		PUT(value, "datatype", STR(rdf_datatype(term)));
+	if (rdf_language(term))
+		PUT(value, "language", STR(rdf_language(term)));
 	return value;
 }
 

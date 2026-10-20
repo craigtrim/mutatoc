@@ -314,12 +314,12 @@ static void write_term(Buf *b, const Term *t)
 		buf_put(b, quoted);
 		free(quoted);
 		DEL(v);
-		if (t->language) {
+		if (rdf_language(t)) {
 			buf_put(b, "@");
-			buf_put(b, t->language);
-		} else if (t->datatype) {
+			buf_put(b, rdf_language(t));
+		} else if (rdf_datatype(t)) {
 			buf_put(b, "^^<");
-			buf_put(b, t->datatype);
+			buf_put(b, rdf_datatype(t));
 			buf_put(b, ">");
 		}
 	}

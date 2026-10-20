@@ -660,6 +660,61 @@ static void graph_ownership(void)
 	rdf_term_free(&predicate);
 }
 
+/* Annotation copies survive replacement, graph insertion and source deletion. */
+static void graph_annotation_ownership(void)
+{
+	Term original = rdf_term("bonjour", 1);
+	CHECK(!rdf_datatype(&original) && !rdf_language(&original));
+	rdf_term_attributes(&original, RDF "langString", "fr");
+	Term copied = rdf_term_copy(&original);
+	/* Both input strings can point inside the block being replaced. */
+	rdf_term_attributes(&original, rdf_datatype(&original),
+			    rdf_language(&original));
+	CHECK(!strcmp(rdf_datatype(&original), RDF "langString"));
+	CHECK(!strcmp(rdf_language(&original), "fr"));
+	rdf_term_attributes(&original, NULL, "en");
+	CHECK(!rdf_datatype(&original));
+	CHECK(!strcmp(rdf_language(&original), "en"));
+	rdf_term_free(&original);
+	CHECK(!strcmp(rdf_datatype(&copied), RDF "langString"));
+	CHECK(!strcmp(rdf_language(&copied), "fr"));
+
+	mc_error error = { 0 };
+	Graph *g = rdf_create(&error);
+	Term subject = rdf_term("urn:annotated", 0),
+	     predicate = rdf_term("urn:p", 0);
+	rdf_add(g, &subject, &predicate, &copied);
+	rdf_term_free(&copied);
+	rdf_replace_object(g, 0, &g->ts[0].o);
+	Graph *merged = rdf_merge(&g, 1);
+	rdf_free(g);
+	J *rows = rdf_json(merged);
+	CHECK(SIZE(rows) == 1);
+	J *object = GET(AT(rows, 0), "object");
+	CHECK(!strcmp(S(GET(object, "value")), "bonjour"));
+	CHECK(!strcmp(S(GET(object, "datatype")), RDF "langString"));
+	CHECK(!strcmp(S(GET(object, "language")), "fr"));
+	DEL(rows);
+	copied = rdf_term_copy(&merged->ts[0].o);
+	rdf_free(merged);
+	rdf_term_attributes(&copied, "", "");
+	g = rdf_create(&error);
+	rdf_add(g, &subject, &predicate, &copied);
+	rows = rdf_json(g);
+	J *json = GET(AT(rows, 0), "object");
+	CHECK(cJSON_IsString(GET(json, "datatype")) &&
+	      !*S(GET(json, "datatype")));
+	CHECK(cJSON_IsString(GET(json, "language")) &&
+	      !*S(GET(json, "language")));
+	DEL(rows);
+	rdf_free(g);
+	rdf_term_attributes(&copied, NULL, NULL);
+	CHECK(!rdf_datatype(&copied) && !rdf_language(&copied));
+	rdf_term_free(&copied);
+	rdf_term_free(&subject);
+	rdf_term_free(&predicate);
+}
+
 /* Distinct terms sharing a hash bucket survive growth and unlinking at every
  * position. Temporary duplicate triples remain findable during literal swaps. */
 static void graph_collision_chains(void)
@@ -720,17 +775,17 @@ static void graph_collision_chains(void)
 		Term object =
 			rdf_term("same lexical value", variant == 1 ? 0 : 1);
 		if (variant == 2)
-			object.datatype = copy("urn:type");
+			rdf_term_attributes(&object, "urn:type", NULL);
 		if (variant >= 3)
-			object.language = copy(variant == 3 ? "en" : "fr");
+			rdf_term_attributes(&object, NULL,
+					    variant == 3 ? "en" : "fr");
 		rdf_add(g, &subject, &predicate, &object);
 		rdf_add(g, &subject, &predicate, &object);
 		rdf_term_free(&object);
 	}
 	CHECK(g->n == start + 5);
 	Term empty = rdf_term("same lexical value", 1);
-	empty.datatype = copy("");
-	empty.language = copy("");
+	rdf_term_attributes(&empty, "", "");
 	rdf_add(g, &subject, &predicate, &empty);
 	CHECK(g->n == start + 5);
 	rdf_term_free(&empty);
@@ -749,6 +804,7 @@ int main(int argc, char **argv)
 	ontology_graphs(e, argv[1]);
 	literals(e);
 	graph_ownership();
+	graph_annotation_ownership();
 	graph_collision_chains();
 	mc_destroy(e);
 	printf("RDF: %d checks, %d failures.\n", total, failed);
