@@ -22,6 +22,7 @@ J *graph_predicate(Graph *g, const char *predicate, int lc, int rev,
 			continue;
 		Term *terms[] = { rev ? &t->o : &t->s, rev ? &t->s : &t->o };
 		J arrays[2] = { { 0 } }, values[2] = { { 0 } }, *flat[2];
+		char *owned[2] = { NULL, NULL };
 		/* Ordinary terms flatten to one string. The output copies it, so
 		 * temporary JSON wrappers can stay on the stack. */
 		for (int j = 0; j < 2; j++) {
@@ -29,11 +30,11 @@ J *graph_predicate(Graph *g, const char *predicate, int lc, int rev,
 				flat[j] = rdf_flatten(g, terms[j], lc, err);
 			else {
 				values[j].type = cJSON_String;
-				values[j].valuestring =
-					norm(terms[j]->kind == 0 ?
-							   local(terms[j]->value) :
-							   terms[j]->value,
-					     lc, 0);
+				values[j].valuestring = (char *)norm_view(
+					terms[j]->kind == 0 ?
+						      local(terms[j]->value) :
+						      terms[j]->value,
+					lc, 0, &owned[j]);
 				arrays[j].type = cJSON_Array;
 				arrays[j].child = &values[j];
 				flat[j] = &arrays[j];
@@ -53,7 +54,7 @@ J *graph_predicate(Graph *g, const char *predicate, int lc, int rev,
 			if (terms[j]->kind == 2)
 				DEL(flat[j]);
 			else
-				free(values[j].valuestring);
+				free(owned[j]);
 		}
 	}
 	map_free(&keys);

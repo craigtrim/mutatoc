@@ -280,22 +280,29 @@ static int ascii_space(unsigned char c)
 	return c == 32 || (c >= 9 && c <= 13) || (c >= 28 && c <= 31);
 }
 
-const char *norm_borrowed(const char *s, char **owned)
+const char *norm_view(const char *s, int lc, int spaces, char **owned)
 {
 	const unsigned char *at = (const unsigned char *)s;
 	int previous_space = 1;
 	*owned = NULL;
 	for (; *at; at++) {
 		unsigned char c = *at;
-		if (c >= 128 || (c >= 'A' && c <= 'Z') ||
-		    (ascii_space(c) && (c != ' ' || previous_space)))
+		int space = ascii_space(c);
+		if (c >= 128 || (lc && c >= 'A' && c <= 'Z') ||
+		    (space && (at == (const unsigned char *)s ||
+			       (spaces && (c != ' ' || previous_space)))))
 			break;
-		previous_space = c == ' ';
+		previous_space = space;
 	}
 	if (!*at && (!previous_space || !*s))
 		return s;
-	*owned = norm(s, 1, 1);
+	*owned = norm(s, lc, spaces);
 	return *owned;
+}
+
+const char *norm_borrowed(const char *s, char **owned)
+{
+	return norm_view(s, 1, 1, owned);
 }
 
 char *norm(const char *s, int lc, int spaces)

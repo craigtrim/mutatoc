@@ -71,6 +71,21 @@ static void borrowed_normalization(const char *text)
 	}
 	free(owned);
 	free(expected);
+	for (int lc = 0; lc < 2; lc++)
+		for (int spaces = 0; spaces < 2; spaces++) {
+			expected = reference_norm(text, lc, spaces);
+			actual = norm_view(text, lc, spaces, &owned);
+			total++;
+			if (!actual || strcmp(actual, expected) ||
+			    (!owned && actual != text)) {
+				fprintf(stderr,
+					"Normalization view differs: lc=%d spaces=%d [%s]\n",
+					lc, spaces, text);
+				failures++;
+			}
+			free(owned);
+			free(expected);
+		}
 }
 static void normalization_vectors(void)
 {

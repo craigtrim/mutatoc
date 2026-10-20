@@ -801,23 +801,26 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 		}
 		subclass |= !strcmp(t->p.value, RDFS "subClassOf");
 		if (!strcmp(t->p.value, RDFS "label")) {
-			char *k = norm(local(t->s.value), 0, 0),
-			     *v = norm(t->o.value, 0, 0);
+			char *owned_key, *owned_value;
+			const char *k = norm_view(local(t->s.value), 0, 0,
+						  &owned_key),
+				   *v = norm_view(t->o.value, 0, 0,
+						  &owned_value);
 			indexed_set(labels, &label_index, k, STR(v));
 			indexed_set(ner, &ner_index, v, STR("NER"));
-			free(k);
-			free(v);
+			free(owned_key);
+			free(owned_value);
 		}
 	}
 	int mixed = individuals && subclass && !skos && !force_class;
 	Map predicate_names = { 0 };
-	const char *previous_subject = NULL;
-	char *key = NULL;
+	const char *previous_subject = NULL, *key = NULL;
+	char *owned_key = NULL;
 	for (size_t i = 0; i < g->n && !e->code; i++) {
 		Triple *t = &g->ts[i];
 		if (!previous_subject || strcmp(previous_subject, t->s.value)) {
-			free(key);
-			key = norm(local(t->s.value), 1, 0);
+			free(owned_key);
+			key = norm_view(local(t->s.value), 1, 0, &owned_key);
 			previous_subject = t->s.value;
 		}
 		char *pk = map_get(&predicate_names, t->p.value);
@@ -828,14 +831,15 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 		/* Ordinary terms flatten to one value. Borrow stack wrappers while
 		 * these builders copy the value into their retained JSON views. */
 		J value_array = { 0 }, value_item = { 0 };
+		char *owned_value = NULL;
 		J *values;
 		if (t->o.kind == 2)
 			values = rdf_flatten(g, &t->o, 1, e);
 		else {
 			value_item.type = cJSON_String;
-			value_item.valuestring = norm(
+			value_item.valuestring = (char *)norm_view(
 				t->o.kind == 0 ? local(t->o.value) : t->o.value,
-				1, 0);
+				1, 0, &owned_value);
 			value_array.type = cJSON_Array;
 			value_array.child = &value_item;
 			values = &value_array;
@@ -854,7 +858,7 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 				subjects = rdf_flatten(g, &t->s, 1, e);
 			else {
 				subject_item.type = cJSON_String;
-				subject_item.valuestring = key;
+				subject_item.valuestring = (char *)key;
 				subject_array.type = cJSON_Array;
 				subject_array.child = &subject_item;
 				subjects = &subject_array;
@@ -962,9 +966,9 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 		if (t->o.kind == 2)
 			DEL(values);
 		else
-			free(value_item.valuestring);
+			free(owned_value);
 	}
-	free(key);
+	free(owned_key);
 	for (size_t i = 0; i < predicate_names.cap; i++)
 		free(predicate_names.slots[i].value);
 	map_free(&predicate_names);

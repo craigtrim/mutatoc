@@ -81,7 +81,8 @@ static void prepare_view(UpdateState *u, J *view)
 }
 static void ner_ref(UpdateState *u, const char *text, int delta)
 {
-	char *key = norm(text, 0, 0);
+	char *owned;
+	const char *key = norm_view(text, 0, 0, &owned);
 	size_t n = (size_t)(uintptr_t)map_get(&u->ner_refs, key);
 	if (delta > 0)
 		map_put(&u->ner_refs, key, (void *)(uintptr_t)(n + 1));
@@ -89,7 +90,7 @@ static void ner_ref(UpdateState *u, const char *text, int delta)
 		map_put(&u->ner_refs, key, (void *)(uintptr_t)(n - 1));
 	else
 		map_delete(&u->ner_refs, key);
-	free(key);
+	free(owned);
 }
 static J *raw_subject(Graph *g, J *ids)
 {
@@ -222,17 +223,18 @@ static void build_source_members(void *data)
 	if (compounds)
 		map_reserve(&raw_keys, sources);
 	const char *previous_subject = NULL;
-	char *canon = NULL;
+	char *owned_canon = NULL;
+	const char *canon = NULL;
 	for (size_t i = 0; i < e->graph->n; i++) {
 		Triple *t = &e->graph->ts[i];
 		/* Consecutive statements often share a subject and canonical name. */
 		if (!previous_subject || strcmp(previous_subject, t->s.value)) {
-			free(canon);
-			canon = norm(local(t->s.value), 1, 0);
+			free(owned_canon);
+			canon = norm_view(local(t->s.value), 1, 0, &owned_canon);
 			previous_subject = t->s.value;
 			const char *owner = map_get(&u->owners, canon);
 			if (owner && strcmp(owner, t->s.value)) {
-				free(canon);
+				free(owned_canon);
 				DEL(raw);
 				map_free(&raw_keys);
 				job->valid = 0;
@@ -250,7 +252,7 @@ static void build_source_members(void *data)
 			free(value);
 		}
 	}
-	free(canon);
+	free(owned_canon);
 	size_t ordinal = 0;
 	map_reserve(&u->ordinals, sources);
 	EACH(k, GET(syns, "fwd"))

@@ -48,7 +48,8 @@ char *copy(const char *);
 char *slice(const char *, size_t);
 char *replace(const char *, const char *, const char *);
 char *norm(const char *, int lower, int spaces);
-/* norm(text, 1, 1), borrowing unchanged ASCII; caller frees only *owned. */
+/* Normalization views borrow unchanged ASCII; caller frees only *owned. */
+const char *norm_view(const char *, int, int, char **owned);
 const char *norm_borrowed(const char *, char **owned);
 char *lower(const char *);
 char *upper(const char *);
