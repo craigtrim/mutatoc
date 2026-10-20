@@ -235,8 +235,52 @@ static int generated_benchmark(int runs, int check)
 	return failed || over;
 }
 
+/* Stage diagnostics for a failed generated gate (craigtrim/axiom#129).
+ * These separate construction costs without changing the timed API trials. */
+static int generated_profile(void)
+{
+	for (int live = 0; live < 2; live++)
+		for (int entities = 10000; entities <= 20000;
+		     entities += 10000) {
+			char *turtle = generated_turtle(entities);
+			mc_engine *e = mc_create();
+			mc_error error = { 0 };
+			e->force_class = 1;
+			e->live_mode = live;
+			e->directory = copy(".");
+			e->source_path = copy("");
+			e->names = ARR();
+			ADD(e->names, STR("ontology"));
+			double start = now_ms();
+			e->graph = rdf_parse(turtle, "http://example.org/",
+					     &error);
+			double parsed = now_ms();
+			if (!error.code)
+				e->snapshot = ontology_build(
+					e->graph, e->distance, 1, 0, &error);
+			double snapshot = now_ms();
+			if (!error.code && live)
+				live_view(e, &error);
+			double view = now_ms();
+			if (!error.code)
+				update_state_build(e);
+			double indexed = now_ms();
+			printf("profile interface=%s entities=%d rdf_ms=%.2f snapshot_ms=%.2f live_ms=%.2f indexes_ms=%.2f total_ms=%.2f error=%d\n",
+			       live ? "data" : "json", entities, parsed - start,
+			       snapshot - parsed, view - snapshot,
+			       indexed - view, indexed - start, error.code);
+			mc_destroy(e);
+			free(turtle);
+			if (error.code)
+				return 1;
+		}
+	return 0;
+}
+
 int main(int argc, char **argv)
 {
+	if (argc == 2 && !strcmp(argv[1], "--profile-load"))
+		return generated_profile();
 	if (argc < 2) {
 		fprintf(stderr,
 			"usage: mutatoc_bench ROOT [--runs N] [--check] [--source-dir DIR] [--extension EXT] [--setup JSON]...\n");
@@ -381,5 +425,7 @@ int main(int argc, char **argv)
 	free(listed);
 	if (!failed)
 		over += generated_benchmark(runs, check);
+	if (over)
+		generated_profile();
 	return failed || over;
 }
