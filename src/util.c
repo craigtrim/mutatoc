@@ -508,10 +508,16 @@ static int cmp_lex(const void *a, const void *b)
 	return strcmp(S(*(J *const *)a), S(*(J *const *)b));
 }
 
+typedef struct {
+	J *value;
+	size_t length;
+} SortString;
 static int cmp_len(const void *a, const void *b)
 {
-	size_t x = ulen(S(*(J *const *)a)), y = ulen(S(*(J *const *)b));
-	return x < y ? -1 : x > y ? 1 : cmp_lex(a, b);
+	const SortString *x = a, *y = b;
+	return x->length < y->length ? -1 :
+	       x->length > y->length ? 1 :
+					     strcmp(S(x->value), S(y->value));
 }
 
 void sort_strings(J *a, int mode)
@@ -519,14 +525,29 @@ void sort_strings(J *a, int mode)
 	int n = SIZE(a);
 	if (n < 2)
 		return;
+	if (mode) {
+		/* Count UTF-8 characters once, not on every comparison. */
+		SortString *vs = malloc((size_t)n * sizeof(*vs));
+		if (!vs)
+			return;
+		for (int i = 0; i < n; i++) {
+			vs[i].value = cJSON_DetachItemFromArray(a, 0);
+			vs[i].length = ulen(S(vs[i].value));
+		}
+		qsort(vs, (size_t)n, sizeof(*vs), cmp_len);
+		for (int i = 0; i < n; i++)
+			ADD(a, vs[mode < 0 ? n - 1 - i : i].value);
+		free(vs);
+		return;
+	}
 	J **vs = malloc((size_t)n * sizeof(*vs));
 	if (!vs)
 		return;
 	for (int i = 0; i < n; i++)
 		vs[i] = cJSON_DetachItemFromArray(a, 0);
-	qsort(vs, (size_t)n, sizeof(*vs), mode == 0 ? cmp_lex : cmp_len);
+	qsort(vs, (size_t)n, sizeof(*vs), cmp_lex);
 	for (int i = 0; i < n; i++)
-		ADD(a, vs[mode < 0 ? n - 1 - i : i]);
+		ADD(a, vs[i]);
 	free(vs);
 }
 

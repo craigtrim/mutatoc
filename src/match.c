@@ -291,15 +291,19 @@ void match_index_free(MatchIndex *x)
 	free(x);
 }
 
-MatchIndex *match_index_build(const J *view)
+static MatchIndex *build_index(const J *view, int mutable)
 {
 	MatchIndex *x = calloc(1, sizeof(*x));
 	if (!x)
 		return NULL;
 	x->view = view;
 	J *synonyms = GET(view, "synonyms");
-	int ok = index_lookup(x, GET(synonyms, "lookup")) &&
-		 index_spans(x, GET(view, "spans"));
+	int ok = 1;
+	if (mutable)
+		match_index_mutable(x);
+	else
+		ok = index_lookup(x, GET(synonyms, "lookup"));
+	ok = ok && index_spans(x, GET(view, "spans"));
 	EACH(k, GET(synonyms, "fwd"))
 		put_first(&x->fwd, k->string, (void *)1);
 	EACH(k, GET(synonyms, "rev"))
@@ -316,6 +320,15 @@ MatchIndex *match_index_build(const J *view)
 		return NULL;
 	}
 	return x;
+}
+
+MatchIndex *match_index_build(const J *view)
+{
+	return build_index(view, 0);
+}
+MatchIndex *match_index_build_mutable(const J *view)
+{
+	return build_index(view, 1);
 }
 
 const J *match_index_view(const MatchIndex *x)
@@ -1229,6 +1242,8 @@ void match_index_mutable(MatchIndex *x)
 	if (x->mutable_ready)
 		return;
 	x->mutable_ready = 1;
+	if (!x->words)
+		x->words = calloc(1, sizeof(*x->words));
 	for (int n = 0; n <= x->word_cap; n++)
 		map_free(&x->words[n]);
 	for (size_t i = 0; i < x->sparse_words.cap; i++)

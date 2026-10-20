@@ -145,7 +145,7 @@ void update_state_free(UpdateState *u)
 void update_state_build(mc_engine *e)
 {
 	if (e->updates || !e->graph || e->part_count || e->graph_only ||
-	    !e->index)
+	    !e->snapshot || (e->live_mode && !e->live))
 		return;
 	if (e->source_path && *e->source_path) {
 		Buf path = { 0 };
@@ -205,7 +205,15 @@ void update_state_build(mc_engine *e)
 	prepare_view(u, e->snapshot);
 	if (e->live)
 		prepare_view(u, e->live);
-	/* Aliases own their words because updates may remove lookup entries. */
+	/* Build mutable maps directly on load; avoid constructing and discarding
+	 * a complete read-only lookup index first. */
+	if (!e->index)
+		e->index = match_index_build_mutable(
+			e->live_mode ? e->live : e->snapshot);
+	if (!e->index) {
+		update_state_free(u);
+		return;
+	}
 	match_index_mutable(e->index);
 	u->snapshot = lookup_state_reuse(GET(syns, "fwd"), GET(syns, "lookup"));
 	if (e->live) {

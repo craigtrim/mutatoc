@@ -10,16 +10,22 @@ typedef struct Posting Posting;
 typedef struct {
 	Posting *head;
 	size_t size;
-	Map *index;
-	char *key;
-} PostingBucket;
+	int parent, child, next;
+	unsigned char byte;
+} PostingNode;
+typedef struct {
+	PostingNode *nodes;
+	int count, capacity, available;
+} PostingIndex;
 struct Posting {
 	LookupValue *value;
-	PostingBucket *bucket;
+	PostingIndex *index;
+	int node;
 	Posting *next, *prev, *owned_next;
 };
 typedef struct {
-	Map values, grams, starts, ends, dirty;
+	Map values, grams, dirty;
+	PostingIndex starts, ends;
 	LookupValue *root;
 	J *array, *mirror;
 	int words;
@@ -212,25 +218,127 @@ static LookupValue *adjust(LookupState *s, int words, const char *text,
 	return v;
 }
 
-static void post_add(Map *index, const char *key, LookupValue *v)
+static int post_node(PostingIndex *index, int parent, unsigned char byte)
 {
-	PostingBucket *bucket = map_get(index, key);
-	if (!bucket) {
-		bucket = calloc(1, sizeof(*bucket));
-		bucket->index = index;
-		bucket->key = copy(key);
-		map_put(index, key, bucket);
+	int id;
+	if (index->available) {
+		id = index->available;
+		index->available = index->nodes[id].next;
+	} else {
+		if (index->count == index->capacity) {
+			index->capacity =
+				index->capacity ? index->capacity * 2 : 64;
+			index->nodes = realloc(index->nodes,
+					       (size_t)index->capacity *
+						       sizeof(*index->nodes));
+		}
+		id = index->count++;
+	}
+	index->nodes[id] = (PostingNode){ 0 };
+	index->nodes[id].parent = parent;
+	index->nodes[id].byte = byte;
+	return id;
+}
+static int post_child(PostingIndex *index, int node, unsigned char byte)
+{
+	for (int at = index->nodes[node].child; at; at = index->nodes[at].next)
+		if (index->nodes[at].byte == byte)
+			return at;
+	return 0;
+}
+/* Store each boundary word once. Reversed starts and forward ends share
+ * suffix/prefix paths instead of allocating a posting for every substring. */
+static void post_add(PostingIndex *index, const char *text, size_t length,
+		     int reversed, LookupValue *v)
+{
+	if (!length)
+		return;
+	if (!index->count)
+		post_node(index, 0, 0);
+	int node = 0;
+	index->nodes[node].size++;
+	for (size_t i = 0; i < length; i++) {
+		unsigned char byte =
+			(unsigned char)text[reversed ? length - i - 1 : i];
+		int next = post_child(index, node, byte);
+		if (!next) {
+			next = post_node(index, node, byte);
+			index->nodes[next].next = index->nodes[node].child;
+			index->nodes[node].child = next;
+		}
+		node = next;
+		index->nodes[node].size++;
 	}
 	Posting *p = calloc(1, sizeof(*p));
 	p->value = v;
-	p->bucket = bucket;
-	p->next = bucket->head;
+	p->index = index;
+	p->node = node;
+	p->next = index->nodes[node].head;
 	if (p->next)
 		p->next->prev = p;
-	bucket->head = p;
-	bucket->size++;
+	index->nodes[node].head = p;
 	p->owned_next = v->postings;
 	v->postings = p;
+}
+static void post_remove(Posting *p)
+{
+	PostingIndex *index = p->index;
+	if (p->prev)
+		p->prev->next = p->next;
+	else
+		index->nodes[p->node].head = p->next;
+	if (p->next)
+		p->next->prev = p->prev;
+	int node = p->node;
+	while (node) {
+		PostingNode *at = &index->nodes[node];
+		int parent = at->parent;
+		if (!--at->size) {
+			int *link = &index->nodes[parent].child;
+			while (*link != node)
+				link = &index->nodes[*link].next;
+			*link = at->next;
+			at->next = index->available;
+			index->available = node;
+		}
+		node = parent;
+	}
+	index->nodes[0].size--;
+	free(p);
+}
+static int post_find(PostingIndex *index, const char *text, size_t length,
+		     int reversed)
+{
+	if (!index->count)
+		return 0;
+	int node = 0;
+	for (size_t i = 0; i < length; i++) {
+		node = post_child(
+			index, node,
+			(unsigned char)text[reversed ? length - i - 1 : i]);
+		if (!node)
+			break;
+	}
+	return node;
+}
+static void post_values(PostingIndex *index, int root, const char *gram,
+			Map *affected)
+{
+	int node = root;
+	for (;;) {
+		for (Posting *p = index->nodes[node].head; p; p = p->next)
+			if (strstr(p->value->text, gram))
+				map_put(affected, p->value->text, p->value);
+		if (index->nodes[node].child) {
+			node = index->nodes[node].child;
+			continue;
+		}
+		while (node != root && !index->nodes[node].next)
+			node = index->nodes[node].parent;
+		if (node == root)
+			break;
+		node = index->nodes[node].next;
+	}
 }
 /* Suffix/prefix postings preserve partial-word substring semantics. */
 static void index_value(LookupValue *v, int add)
@@ -238,20 +346,8 @@ static void index_value(LookupValue *v, int add)
 	if (!add) {
 		while (v->postings) {
 			Posting *p = v->postings;
-			PostingBucket *b = p->bucket;
 			v->postings = p->owned_next;
-			if (p->prev)
-				p->prev->next = p->next;
-			else
-				b->head = p->next;
-			if (p->next)
-				p->next->prev = p->prev;
-			if (!--b->size) {
-				map_delete(b->index, b->key);
-				free(b->key);
-				free(b);
-			}
-			free(p);
+			post_remove(p);
 		}
 		return;
 	}
@@ -262,19 +358,12 @@ static void index_value(LookupValue *v, int add)
 			   *end = space ? space : start + strlen(start);
 		/* An n-word substring of an (n+1)-word value starts in its
          * first two words and ends in its last two words. */
-		for (const char *p = start; p < end; p++) {
-			if (word < 2) {
-				char *suffix = slice(p, (size_t)(end - p));
-				post_add(&v->group->starts, suffix, v);
-				free(suffix);
-			}
-			if (word >= v->group->words - 2) {
-				char *prefix =
-					slice(start, (size_t)(p - start + 1));
-				post_add(&v->group->ends, prefix, v);
-				free(prefix);
-			}
-		}
+		if (word < 2)
+			post_add(&v->group->starts, start,
+				 (size_t)(end - start), 1, v);
+		if (word >= v->group->words - 2)
+			post_add(&v->group->ends, start, (size_t)(end - start),
+				 0, v);
 		if (!space)
 			break;
 		start = space + 1;
@@ -320,10 +409,6 @@ static void gram_change(LookupGroup *g, const char *gram, int delta,
 static void gram_values(LookupGroup *g, const char *gram, Map *affected)
 {
 	const char *space = strchr(gram, ' '), *last = strrchr(gram, ' ');
-	char *first = space ? slice(gram, (size_t)(space - gram)) : copy(gram);
-	PostingBucket *a = map_get(&g->starts, first),
-		      *b = map_get(&g->ends, last ? last + 1 : gram);
-	free(first);
 	if (!*gram || !space || space == gram || !last[1]) {
 		SLOTS(i, g->values)
 		{
@@ -331,13 +416,18 @@ static void gram_values(LookupGroup *g, const char *gram, Map *affected)
 			if (v->refs && strstr(v->text, gram))
 				map_put(affected, v->text, v);
 		}
-	} else if (a && b) {
-		PostingBucket *bucket = a->size < b->size ? a : b;
-		for (Posting *p = bucket->head; p; p = p->next)
-			if (strstr(p->value->text, gram))
-				map_put(affected, p->value->text, p->value);
+		return;
+	}
+	int a = post_find(&g->starts, gram, (size_t)(space - gram), 1),
+	    b = post_find(&g->ends, last + 1, strlen(last + 1), 0);
+	if (a && b) {
+		if (g->starts.nodes[a].size < g->ends.nodes[b].size)
+			post_values(&g->starts, a, gram, affected);
+		else
+			post_values(&g->ends, b, gram, affected);
 	}
 }
+
 static void derive_gram(LookupState *s, LookupValue *v, Map *outputs,
 			const char *gram)
 {
@@ -549,8 +639,8 @@ void lookup_state_free(LookupState *s)
 	{
 		LookupGroup *g = s->groups.slots[i].value;
 		SLOTS(j, g->values) release_value(g->values.slots[j].value);
-		map_free(&g->starts);
-		map_free(&g->ends);
+		free(g->starts.nodes);
+		free(g->ends.nodes);
 		map_free(&g->values);
 		map_free(&g->grams);
 		map_free(&g->dirty);

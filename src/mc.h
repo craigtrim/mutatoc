@@ -148,6 +148,7 @@ char *tokenize_key(const char *);
 void source_entities(J *, const char *);
 typedef struct MatchIndex MatchIndex;
 MatchIndex *match_index_build(const J *);
+MatchIndex *match_index_build_mutable(const J *);
 const J *match_index_view(const MatchIndex *);
 void match_index_free(MatchIndex *);
 void match_index_mutable(MatchIndex *);

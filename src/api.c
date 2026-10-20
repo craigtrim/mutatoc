@@ -805,8 +805,8 @@ static void warm_index(mc_engine *e)
 	mc_error ignored = { 0 };
 	J *view = e->live_mode ? live_view(e, &ignored) : e->snapshot;
 	if (view && !ignored.code) {
-		view_index(e, view, &ignored);
 		update_state_build(e);
+		view_index(e, view, &ignored);
 	}
 }
 
