@@ -429,6 +429,11 @@ static J *load_collection(mc_engine *e, J *q, mc_error *err)
 		DEL(loaded);
 		if (err->code)
 			break;
+		/* Collections cannot update individual source graphs. */
+		if (part->graph) {
+			lookup_trace_free(part->graph->lookup_trace);
+			part->graph->lookup_trace = NULL;
+		}
 		merge_views(next->snapshot, part->snapshot);
 		ADD(next->names, STR(part->name));
 	}

@@ -4,7 +4,9 @@
 #include "patterns.h"
 static int check(J *fwd)
 {
-	J *expected = reference_lookup(fwd), *actual = generate_lookup(fwd);
+	LookupTrace *trace = NULL;
+	J *expected = reference_lookup(fwd),
+	  *actual = generate_lookup_traced(fwd, &trace);
 	char *a = cJSON_PrintUnformatted(expected),
 	     *b = cJSON_PrintUnformatted(actual);
 	int ok = !strcmp(a, b);
@@ -15,7 +17,8 @@ static int check(J *fwd)
 		ok = 0;
 	}
 	free(c);
-	LookupState *reused = lookup_state_reuse(fwd, actual);
+	LookupState *reused = lookup_state_reuse_traced(fwd, actual, trace);
+	lookup_trace_free(trace);
 	for (int step = 0; step < 3 && fwd->child; step++) {
 		J *one = OBJ(), *old = fwd->child;
 		PUT(one, old->string, DUP(old));
@@ -385,10 +388,66 @@ static int check_sorting(void)
 	return 1;
 }
 
+/* Split compressed boundary paths, remove their original owners, then reuse
+ * nodes while matching substrings that end inside an edge (axiom#129). */
+static int check_posting_edits(void)
+{
+	J *fwd = OBJ();
+	for (int i = 0; i < 128; i++) {
+		char key[32], term[160];
+		snprintf(key, sizeof(key), "posting%d", i);
+		snprintf(term, sizeof(term),
+			 "stem%03dlongtail bridge finish%03d", i, i);
+		J *values = ARR();
+		ADD(values, STR(i == 0 ? "tail bridge finish" :
+				i == 1 ? "longtail bridge finishline" :
+				i == 2 ? "tail bridgelong finishlong" :
+					       term));
+		PUT(fwd, key, values);
+	}
+	LookupTrace *trace = NULL;
+	J *actual = generate_lookup_traced(fwd, &trace);
+	LookupState *state = lookup_state_reuse_traced(fwd, actual, trace);
+	lookup_trace_free(trace);
+	int ok = 1;
+	for (int step = 0; step < 80 && ok; step++) {
+		char key[32], term[160];
+		snprintf(key, sizeof(key), "posting%d", step % 16);
+		J *old = OBJ();
+		PUT(old, key, DUP(GET(fwd, key)));
+		lookup_state_entity(state, old, -1);
+		DEL(old);
+		J *replacement = OBJ(), *values = ARR();
+		snprintf(term, sizeof(term),
+			 "replacement%03dlongtail bridge finish%03d", step,
+			 step);
+		ADD(values, STR(step % 4 ? term : "tail bridge finish"));
+		ADD(values, STR(step % 3 ? "longtail bridgelong finishline" :
+						 "tail bridge finishlong"));
+		PUT(replacement, key, values);
+		set(fwd, key, DUP(values));
+		lookup_state_entity(state, replacement, 1);
+		DEL(replacement);
+		lookup_state_flush(state);
+		J *expected = reference_lookup(fwd);
+		ok = cJSON_Compare(actual, expected, 1);
+		DEL(expected);
+		if (!ok)
+			fprintf(stderr,
+				"compressed posting mismatch after edit %d\n",
+				step);
+	}
+	lookup_state_free(state);
+	DEL(actual);
+	DEL(fwd);
+	return ok;
+}
+
 int main(void)
 {
-	if (!check_patterns() || !check_sorting() || !check_maps() || !check_map_bytes() ||
-	    !check_map_ownership() || !check_prefixes())
+	if (!check_patterns() || !check_sorting() || !check_maps() ||
+	    !check_map_bytes() || !check_map_ownership() || !check_prefixes() ||
+	    !check_posting_edits())
 		return 1;
 	const char *terms[] = { "red green blue",
 				"bred green blue",
@@ -414,9 +473,14 @@ int main(void)
 				" ecole verte",
 				"green  blue",
 				"" };
-	const char *keys[] = { "_red_green", "red__green_blue", "red_green_",
-			       "and_red_green", "red_of_green", "red_green_and",
-			       "red_green_blue_amber_violet_black", "___" };
+	const char *keys[] = { "_red_green",
+			       "red__green_blue",
+			       "red_green_",
+			       "and_red_green",
+			       "red_of_green",
+			       "red_green_and",
+			       "red_green_blue_amber_violet_black",
+			       "___" };
 	for (size_t i = 0; i < sizeof(keys) / sizeof(*keys); i++) {
 		J *fwd = OBJ(), *values = ARR();
 		ADD(values, STR("bred green blues"));

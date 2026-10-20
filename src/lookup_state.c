@@ -5,13 +5,53 @@
 #define SLOTS(i, m)                          \
 	for (size_t i = 0; i < (m).cap; i++) \
 		if ((m).slots[i].key)
+/* Record each source-to-output relationship while lookup construction already
+ * has both JSON nodes. Only the records are owned here; strings stay in JSON. */
+typedef struct {
+	J *first;
+	Map rest;
+} LookupTraceEntry;
+struct LookupTrace {
+	Map sources;
+};
+LookupTrace *lookup_trace_create(void)
+{
+	return calloc(1, sizeof(LookupTrace));
+}
+void lookup_trace_add(LookupTrace *trace, J *source, J *output)
+{
+	LookupTraceEntry *entry = map_get(&trace->sources, S(source));
+	if (!entry) {
+		entry = calloc(1, sizeof(*entry));
+		entry->first = output;
+		map_put_ref(&trace->sources, S(source), entry);
+	} else if (strcmp(S(entry->first), S(output))) {
+		map_reserve(&entry->rest, 1);
+		map_put_ref(&entry->rest, S(output), output);
+	}
+}
+void lookup_trace_free(LookupTrace *trace)
+{
+	if (!trace)
+		return;
+	SLOTS(i, trace->sources)
+	{
+		LookupTraceEntry *entry = trace->sources.slots[i].value;
+		map_free(&entry->rest);
+		free(entry);
+	}
+	map_free(&trace->sources);
+	free(trace);
+}
+
 typedef struct LookupValue LookupValue;
 typedef struct Posting Posting;
 typedef struct {
 	Posting *head;
 	size_t size;
 	int parent, child, next;
-	unsigned char byte;
+	char *text;
+	size_t length;
 } PostingNode;
 typedef struct {
 	PostingNode *nodes;
@@ -19,10 +59,14 @@ typedef struct {
 } PostingIndex;
 struct Posting {
 	LookupValue *value;
-	PostingIndex *index;
-	int node;
-	Posting *next, *prev, *owned_next;
+	int node, ends;
+	Posting *next, *prev;
 };
+/* Only the first two and last two words need postings for an n-word gram. */
+typedef struct {
+	int count;
+	Posting items[4];
+} PostingSet;
 typedef struct {
 	Map values, grams, dirty;
 	PostingIndex starts, ends;
@@ -34,7 +78,7 @@ typedef struct {
  * additional rewrites use borrowed keys from their retained output values. */
 typedef struct {
 	LookupValue *first;
-	Map rest;
+	Map *rest;
 } DerivedRefs;
 struct LookupValue {
 	char *text, *gram;
@@ -45,16 +89,44 @@ struct LookupValue {
 	LookupGroup *group;
 	J *entry, *mirror_entry;
 	DerivedRefs derived;
-	Posting *postings;
+	PostingSet *postings;
 };
+typedef struct LookupValueBlock {
+	struct LookupValueBlock *next;
+	LookupValue values[256];
+} LookupValueBlock;
 struct LookupState {
 	Map groups;
+	LookupValueBlock *blocks;
+	LookupValue *available;
 	J *json, *mirror;
 	unsigned random;
 	int attached, building;
+	LookupTrace *trace;
 	void *context;
 	void (*change)(void *, int, const char *, int);
 };
+/* Keep mutable lookup records together and recycle removed slots. The strings
+ * retain their individual ownership; blocks are released with the engine. */
+static LookupValue *value_create(LookupState *s, const char *text)
+{
+	if (!s->available) {
+		LookupValueBlock *block = calloc(1, sizeof(*block));
+		block->next = s->blocks;
+		s->blocks = block;
+		for (int i = 255; i >= 0; i--) {
+			block->values[i].left = s->available;
+			s->available = &block->values[i];
+		}
+	}
+	LookupValue *v = s->available;
+	s->available = v->left;
+	memset(v, 0, sizeof(*v));
+	v->text = copy(text);
+	v->chars = ulen(text);
+	return v;
+}
+
 static int word_count(const char *s)
 {
 	int n = 1;
@@ -188,9 +260,7 @@ static LookupValue *adjust(LookupState *s, int words, const char *text,
 	LookupValue *v = map_get(&g->values, text);
 	if (!v) {
 		assert(delta > 0);
-		v = calloc(1, sizeof(*v));
-		v->text = copy(text);
-		v->chars = ulen(text);
+		v = value_create(s, text);
 		v->group = g;
 		s->random ^= s->random << 13;
 		s->random ^= s->random >> 17;
@@ -225,7 +295,8 @@ static LookupValue *adjust(LookupState *s, int words, const char *text,
 	return v;
 }
 
-static int post_node(PostingIndex *index, int parent, unsigned char byte)
+static int post_node(PostingIndex *index, int parent, const char *text,
+		     size_t length, int reversed)
 {
 	int id;
 	if (index->available) {
@@ -243,53 +314,97 @@ static int post_node(PostingIndex *index, int parent, unsigned char byte)
 	}
 	index->nodes[id] = (PostingNode){ 0 };
 	index->nodes[id].parent = parent;
-	index->nodes[id].byte = byte;
+	index->nodes[id].text = length ? slice(text, length) : NULL;
+	index->nodes[id].length = length;
+	if (reversed)
+		for (size_t i = 0; i < length / 2; i++) {
+			char *label = index->nodes[id].text;
+			char byte = label[i];
+			label[i] = label[length - i - 1];
+			label[length - i - 1] = byte;
+		}
 	return id;
 }
 static int post_child(PostingIndex *index, int node, unsigned char byte)
 {
 	for (int at = index->nodes[node].child; at; at = index->nodes[at].next)
-		if (index->nodes[at].byte == byte)
+		if ((unsigned char)index->nodes[at].text[0] == byte)
 			return at;
 	return 0;
 }
-/* Store each boundary word once. Reversed starts and forward ends share
- * suffix/prefix paths instead of allocating a posting for every substring. */
+/* Compressed edges retain terminal node IDs when split, so existing postings
+ * never need to move. Boundary words still support partial-word substrings. */
 static void post_add(PostingIndex *index, const char *text, size_t length,
 		     int reversed, LookupValue *v)
 {
 	if (!length)
 		return;
 	if (!index->count)
-		post_node(index, 0, 0);
+		post_node(index, 0, "", 0, 0);
 	int node = 0;
+	size_t offset = 0;
 	index->nodes[node].size++;
-	for (size_t i = 0; i < length; i++) {
-		unsigned char byte =
-			(unsigned char)text[reversed ? length - i - 1 : i];
-		int next = post_child(index, node, byte);
+	while (offset < length) {
+		int next = post_child(
+			index, node,
+			(unsigned char)
+				text[reversed ? length - offset - 1 : offset]);
 		if (!next) {
-			next = post_node(index, node, byte);
+			next = post_node(index, node,
+					 reversed ? text : text + offset,
+					 length - offset, reversed);
 			index->nodes[next].next = index->nodes[node].child;
 			index->nodes[node].child = next;
+			index->nodes[next].size = 1;
+			node = next;
+			break;
+		}
+		PostingNode old = index->nodes[next];
+		size_t common = 0;
+		while (common < old.length && offset + common < length &&
+		       old.text[common] ==
+			       text[reversed ? length - offset - common - 1 :
+						     offset + common])
+			common++;
+		if (common < old.length) {
+			int branch =
+				post_node(index, node, old.text, common, 0);
+			int *link = &index->nodes[node].child;
+			while (*link != next)
+				link = &index->nodes[*link].next;
+			*link = branch;
+			index->nodes[branch].next = old.next;
+			index->nodes[branch].child = next;
+			index->nodes[branch].size = old.size;
+			index->nodes[next].parent = branch;
+			index->nodes[next].next = 0;
+			index->nodes[next].text =
+				slice(old.text + common, old.length - common);
+			index->nodes[next].length = old.length - common;
+			free(old.text);
+			next = branch;
 		}
 		node = next;
 		index->nodes[node].size++;
+		offset += common;
 	}
-	Posting *p = calloc(1, sizeof(*p));
+	if (!v->postings)
+		v->postings = calloc(1, sizeof(*v->postings));
+	assert(v->postings->count < 4);
+	Posting *p = &v->postings->items[v->postings->count++];
 	p->value = v;
-	p->index = index;
+	p->ends = index == &v->group->ends;
 	p->node = node;
 	p->next = index->nodes[node].head;
 	if (p->next)
 		p->next->prev = p;
 	index->nodes[node].head = p;
-	p->owned_next = v->postings;
-	v->postings = p;
 }
+
 static void post_remove(Posting *p)
 {
-	PostingIndex *index = p->index;
+	PostingIndex *index = p->ends ? &p->value->group->ends :
+					      &p->value->group->starts;
 	if (p->prev)
 		p->prev->next = p->next;
 	else
@@ -305,13 +420,14 @@ static void post_remove(Posting *p)
 			while (*link != node)
 				link = &index->nodes[*link].next;
 			*link = at->next;
+			free(at->text);
+			at->text = NULL;
 			at->next = index->available;
 			index->available = node;
 		}
 		node = parent;
 	}
 	index->nodes[0].size--;
-	free(p);
 }
 static int post_find(PostingIndex *index, const char *text, size_t length,
 		     int reversed)
@@ -319,15 +435,25 @@ static int post_find(PostingIndex *index, const char *text, size_t length,
 	if (!index->count)
 		return 0;
 	int node = 0;
-	for (size_t i = 0; i < length; i++) {
+	size_t offset = 0;
+	while (offset < length) {
 		node = post_child(
 			index, node,
-			(unsigned char)text[reversed ? length - i - 1 : i]);
+			(unsigned char)
+				text[reversed ? length - offset - 1 : offset]);
 		if (!node)
-			break;
+			return 0;
+		PostingNode *edge = &index->nodes[node];
+		for (size_t i = 0; i < edge->length && offset < length;
+		     i++, offset++)
+			if (edge->text[i] !=
+			    text[reversed ? length - offset - 1 : offset])
+				return 0;
 	}
+	/* A query ending inside an edge selects that edge's whole subtree. */
 	return node;
 }
+
 static void post_values(PostingIndex *index, int root, const char *gram,
 			Map *affected)
 {
@@ -351,10 +477,11 @@ static void post_values(PostingIndex *index, int root, const char *gram,
 static void index_value(LookupValue *v, int add)
 {
 	if (!add) {
-		while (v->postings) {
-			Posting *p = v->postings;
-			v->postings = p->owned_next;
-			post_remove(p);
+		if (v->postings) {
+			for (int i = 0; i < v->postings->count; i++)
+				post_remove(&v->postings->items[i]);
+			free(v->postings);
+			v->postings = NULL;
 		}
 		return;
 	}
@@ -424,17 +551,41 @@ static LookupValue *derived_get(DerivedRefs *refs, const char *text)
 {
 	if (refs->first && !strcmp(refs->first->text, text))
 		return refs->first;
-	return map_get(&refs->rest, text);
+	return refs->rest ? map_get(refs->rest, text) : NULL;
 }
 static void derived_add(DerivedRefs *refs, LookupValue *value)
 {
 	if (!refs->first)
 		refs->first = value;
 	else {
-		map_reserve(&refs->rest, 1);
-		map_put_ref(&refs->rest, value->text, value);
+		if (!refs->rest)
+			refs->rest = calloc(1, sizeof(*refs->rest));
+		map_reserve(refs->rest, 1);
+		map_put_ref(refs->rest, value->text, value);
 	}
 }
+static void derived_free(DerivedRefs *refs)
+{
+	if (refs->rest) {
+		map_free(refs->rest);
+		free(refs->rest);
+	}
+	memset(refs, 0, sizeof(*refs));
+}
+static void derive_traced(LookupState *s, LookupValue *v)
+{
+	LookupTraceEntry *entry = map_get(&s->trace->sources, v->text);
+	if (!entry || !v->refs)
+		return;
+	const char *first = S(entry->first);
+	derived_add(&v->derived, adjust(s, word_count(first), first, 1));
+	SLOTS(i, entry->rest)
+	{
+		const char *text = entry->rest.slots[i].key;
+		derived_add(&v->derived, adjust(s, word_count(text), text, 1));
+	}
+}
+
 static void derive_gram(LookupState *s, LookupValue *v, DerivedRefs *outputs,
 			const char *gram)
 {
@@ -478,21 +629,25 @@ static void derive(LookupState *s, LookupValue *v, Patterns *bulk)
 	LookupValue *first = v->derived.first;
 	if (first && !derived_get(&outputs, first->text))
 		adjust(s, first->group->words, first->text, -1);
-	SLOTS(i, v->derived.rest)
-	if (!derived_get(&outputs, v->derived.rest.slots[i].key)) {
-		LookupValue *out = v->derived.rest.slots[i].value;
-		adjust(s, out->group->words, out->text, -1);
+	if (v->derived.rest) {
+		SLOTS(i, *v->derived.rest)
+		if (!derived_get(&outputs, v->derived.rest->slots[i].key)) {
+			LookupValue *out = v->derived.rest->slots[i].value;
+			adjust(s, out->group->words, out->text, -1);
+		}
 	}
-	map_free(&v->derived.rest);
+	derived_free(&v->derived);
 	v->derived = outputs;
 }
-static void release_value(LookupValue *v)
+static void release_value(LookupState *s, LookupValue *v)
 {
 	index_value(v, 0);
 	free(v->text);
 	free(v->gram);
-	map_free(&v->derived.rest);
-	free(v);
+	derived_free(&v->derived);
+	memset(v, 0, sizeof(*v));
+	v->left = s->available;
+	s->available = v;
 }
 static void index_change(LookupValue *v, Map *changed)
 {
@@ -523,6 +678,12 @@ void lookup_state_flush(LookupState *s)
 			EACH(entry, g->array)
 				index_change(map_get(&g->values, S(entry)),
 					     NULL);
+			if (s->trace) {
+				EACH(entry, g->array)
+					derive_traced(s, map_get(&g->values,
+								 S(entry)));
+				continue;
+			}
 			J *grams = ARR();
 			SLOTS(i, g->grams)
 			ADD(grams, STR(g->grams.slots[i].key));
@@ -562,7 +723,7 @@ void lookup_state_flush(LookupState *s)
 			LookupValue *v = g->dirty.slots[j].value;
 			if (!v->refs) {
 				map_delete(&g->values, v->text);
-				release_value(v);
+				release_value(s, v);
 			}
 		}
 		map_free(&g->dirty);
@@ -609,9 +770,8 @@ static void seed_lookup(LookupState *s)
 		map_reserve(&g->values, n);
 		LookupValue **stack = malloc((n ? n : 1) * sizeof(*stack));
 		EACH(entry, array) {
-			LookupValue *v = calloc(1, sizeof(*v)), *left = NULL;
-			v->text = copy(S(entry));
-			v->chars = ulen(v->text);
+			LookupValue *v = value_create(s, S(entry)),
+				    *left = NULL;
 			v->group = g;
 			v->entry = entry;
 			s->random ^= s->random << 13;
@@ -632,13 +792,14 @@ static void seed_lookup(LookupState *s)
 		free(stack);
 	}
 }
-static LookupState *build_lookup(J *fwd, J *existing)
+static LookupState *build_lookup(J *fwd, J *existing, LookupTrace *trace)
 {
 	LookupState *s = calloc(1, sizeof(*s));
 	s->json = existing ? existing : OBJ();
 	s->attached = existing != NULL;
 	s->random = 129;
 	s->building = 1;
+	s->trace = trace;
 	if (existing)
 		seed_lookup(s);
 	lookup_state_entity(s, fwd, 1);
@@ -646,15 +807,20 @@ static LookupState *build_lookup(J *fwd, J *existing)
 		group_at(s, n);
 	lookup_state_flush(s);
 	s->building = 0;
+	s->trace = NULL;
 	return s;
 }
 LookupState *lookup_state_build(J *fwd)
 {
-	return build_lookup(fwd, NULL);
+	return build_lookup(fwd, NULL, NULL);
 }
 LookupState *lookup_state_reuse(J *fwd, J *existing)
 {
-	return build_lookup(fwd, existing);
+	return build_lookup(fwd, existing, NULL);
+}
+LookupState *lookup_state_reuse_traced(J *fwd, J *existing, LookupTrace *trace)
+{
+	return build_lookup(fwd, existing, trace);
 }
 J *lookup_state_json(LookupState *s)
 {
@@ -667,7 +833,11 @@ void lookup_state_free(LookupState *s)
 	SLOTS(i, s->groups)
 	{
 		LookupGroup *g = s->groups.slots[i].value;
-		SLOTS(j, g->values) release_value(g->values.slots[j].value);
+		SLOTS(j, g->values) release_value(s, g->values.slots[j].value);
+		for (int n = 0; n < g->starts.count; n++)
+			free(g->starts.nodes[n].text);
+		for (int n = 0; n < g->ends.count; n++)
+			free(g->ends.nodes[n].text);
 		free(g->starts.nodes);
 		free(g->ends.nodes);
 		map_free(&g->values);
@@ -676,6 +846,11 @@ void lookup_state_free(LookupState *s)
 		free(g);
 	}
 	map_free(&s->groups);
+	while (s->blocks) {
+		LookupValueBlock *next = s->blocks->next;
+		free(s->blocks);
+		s->blocks = next;
+	}
 	if (!s->attached)
 		DEL(s->json);
 	free(s);

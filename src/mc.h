@@ -103,12 +103,18 @@ typedef struct {
 typedef struct {
 	Term s, p, o;
 } Triple;
+typedef struct LookupTrace LookupTrace;
+LookupTrace *lookup_trace_create(void);
+void lookup_trace_add(LookupTrace *, J *, J *);
+void lookup_trace_free(LookupTrace *);
 typedef struct {
 	Triple *ts;
 	size_t n, cap;
 	J *prefixes;
 	Map subjects;
 	Map triple_keys;
+	LookupTrace *
+		lookup_trace; /* Borrowed JSON strings; owned construction records. */
 } Graph;
 void literal_normalize(Term *);
 Term rdf_term(const char *, int);
@@ -137,10 +143,12 @@ J *data_query(J *, const char *, const J *, const J *, mc_error *);
 J *ontology_query(J *, const char *, const J *, mc_error *);
 J *generate_synonyms(J *, int);
 J *generate_lookup(J *);
+J *generate_lookup_traced(J *, LookupTrace **);
 char *lookup_leading_gram(const char *text, int words);
 typedef struct LookupState LookupState;
 LookupState *lookup_state_build(J *);
 LookupState *lookup_state_reuse(J *, J *);
+LookupState *lookup_state_reuse_traced(J *, J *, LookupTrace *);
 void lookup_state_entity(LookupState *, J *, int);
 void lookup_state_flush(LookupState *);
 J *lookup_state_json(LookupState *);

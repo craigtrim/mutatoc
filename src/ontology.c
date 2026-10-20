@@ -122,7 +122,7 @@ typedef struct {
 	J *array;
 	Map values;
 } LookupBuilder;
-static void lookup_push(J *d, Map *seen, const char *key, const char *value)
+static J *lookup_push(J *d, Map *seen, const char *key, const char *value)
 {
 	LookupBuilder *group = map_get(seen, key);
 	if (!group) {
@@ -130,11 +130,13 @@ static void lookup_push(J *d, Map *seen, const char *key, const char *value)
 		group->array = ensure(d, key, 1);
 		map_put(seen, key, group);
 	}
-	if (!map_get(&group->values, value)) {
-		J *entry = STR(value);
+	J *entry = map_get(&group->values, value);
+	if (!entry) {
+		entry = STR(value);
 		ADD(group->array, entry);
-		map_put_ref(&group->values, S(entry), (void *)1);
+		map_put_ref(&group->values, S(entry), entry);
 	}
+	return entry;
 }
 static void lookup_seen_free(Map *seen)
 {
@@ -174,8 +176,11 @@ char *lookup_leading_gram(const char *text, int words)
 	return end ? slice(text, (size_t)(end - text)) : NULL;
 }
 
-J *generate_lookup(J *f)
+J *generate_lookup_traced(J *f, LookupTrace **trace_out)
 {
+	LookupTrace *trace = trace_out ? lookup_trace_create() : NULL;
+	if (trace_out)
+		*trace_out = trace;
 	J *d = OBJ();
 	Map seen = { 0 };
 	EACH(k, f) {
@@ -225,7 +230,10 @@ J *generate_lookup(J *f)
 				int size = count(s, ' ') + 1;
 				if (size >= 2 && size <= 5) {
 					snprintf(k, sizeof(k), "%d", size);
-					lookup_push(d, &seen, k, s);
+					J *entry = lookup_push(d, &seen, k, s);
+					if (trace)
+						lookup_trace_add(trace, v,
+								 entry);
 				}
 				free(u);
 				free(s);
@@ -238,6 +246,11 @@ J *generate_lookup(J *f)
 	EACH(k, d)
 		sort_strings(k, -1);
 	return d;
+}
+
+J *generate_lookup(J *f)
+{
+	return generate_lookup_traced(f, NULL);
 }
 
 static J *rule(const char *canon, J *content, int distance)
@@ -707,7 +720,9 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 	}
 	DEL(ngentities);
 	J *syns = OBJ(), *fwd = generate_synonyms(synraw, 0);
-	PUT(syns, "lookup", generate_lookup(fwd));
+	lookup_trace_free(g->lookup_trace);
+	g->lookup_trace = NULL;
+	PUT(syns, "lookup", generate_lookup_traced(fwd, &g->lookup_trace));
 	PUT(syns, "fwd", fwd);
 	PUT(syns, "rev", reverse_synonyms(fwd));
 	PUT(r, "children", children);

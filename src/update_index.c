@@ -178,7 +178,7 @@ static void build_match_members(void *data)
 		match_index_mutable(e->index);
 }
 
-void update_state_build(mc_engine *e)
+static void build_update_state(mc_engine *e)
 {
 	if (e->updates || !e->graph || e->part_count || e->graph_only ||
 	    !e->snapshot || (e->live_mode && !e->live))
@@ -246,13 +246,22 @@ void update_state_build(mc_engine *e)
 		update_state_free(u);
 		return;
 	}
-	u->snapshot = lookup_state_reuse(GET(syns, "fwd"), GET(syns, "lookup"));
+	u->snapshot = lookup_state_reuse_traced(
+		GET(syns, "fwd"), GET(syns, "lookup"), e->graph->lookup_trace);
 	if (e->live) {
 		J *live_syns = GET(e->live, "synonyms");
 		lookup_state_mirror(u->snapshot, live_syns);
 		u->mirrored = 1;
 	}
 	e->updates = u;
+}
+void update_state_build(mc_engine *e)
+{
+	build_update_state(e);
+	if (e->graph) {
+		lookup_trace_free(e->graph->lookup_trace);
+		e->graph->lookup_trace = NULL;
+	}
 }
 static int term_same(const Term *a, const Term *b)
 {

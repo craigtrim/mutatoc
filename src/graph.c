@@ -115,6 +115,7 @@ void rdf_free(Graph *g)
 {
 	if (!g)
 		return;
+	lookup_trace_free(g->lookup_trace);
 	for (size_t i = 0; i < g->n; i++) {
 		rdf_term_free(&g->ts[i].s);
 		rdf_term_free(&g->ts[i].p);
