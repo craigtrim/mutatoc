@@ -714,18 +714,24 @@ static unsigned char map_tag(uint64_t key_hash)
 	unsigned char tag = (unsigned char)(key_hash >> 57);
 	return tag ? tag : MAP_FINGERPRINT;
 }
+static size_t map_bucket(uint64_t hash, size_t capacity)
+{
+	size_t mask = capacity - 1;
+	return (capacity & mask) ? (size_t)(hash % capacity) :
+					 (size_t)hash & mask;
+}
 void *map_get(Map *m, const char *k)
 {
 	if (!m->cap)
 		return NULL;
 	uint64_t key_hash = hash_text(k);
 	unsigned char tag = map_tag(key_hash), *tags = map_tags(m);
-	size_t i = (size_t)key_hash & (m->cap - 1);
+	size_t i = map_bucket(key_hash, m->cap);
 	while (tags[i]) {
 		if ((tags[i] & MAP_FINGERPRINT) == tag &&
 		    !strcmp(m->slots[i].key, k))
 			return m->slots[i].value;
-		i = (i + 1) & (m->cap - 1);
+		i = i + 1 == m->cap ? 0 : i + 1;
 	}
 	return NULL;
 }
@@ -740,9 +746,9 @@ static void map_resize(Map *m, size_t capacity)
 	for (size_t i = 0; i < old.cap; i++)
 		if (old.slots[i].key) {
 			uint64_t key_hash = hash_text(old.slots[i].key);
-			size_t at = (size_t)key_hash & (m->cap - 1);
+			size_t at = map_bucket(key_hash, m->cap);
 			while (tags[at])
-				at = (at + 1) & (m->cap - 1);
+				at = at + 1 == m->cap ? 0 : at + 1;
 			m->slots[at] = old.slots[i];
 			tags[at] = map_tags(&old)[i];
 		}
@@ -750,13 +756,17 @@ static void map_resize(Map *m, size_t capacity)
 }
 void map_reserve(Map *m, size_t entries)
 {
-	if (!entries)
+	if (!entries || entries <= m->cap - m->cap / 4)
 		return;
-	size_t capacity = m->cap ? m->cap : 8;
-	while (capacity - capacity / 4 < entries)
-		capacity *= 2;
-	if (capacity > m->cap)
-		map_resize(m, capacity);
+	/* Reserve the requested three-quarter occupancy without rounding every
+	 * completed vocabulary up to another power of two. */
+	size_t capacity = entries + (entries + 2) / 3;
+	/* Incremental reservations still grow geometrically, so repeated
+	 * reserve(size + 1) calls cannot cause quadratic rehashing. */
+	if (m->cap && capacity < m->cap + m->cap / 2)
+		capacity = m->cap + m->cap / 2;
+	capacity = (capacity + 7) / 8 * 8;
+	map_resize(m, capacity);
 }
 static void map_store(Map *m, const char *k, void *v, int borrowed)
 {
@@ -765,7 +775,7 @@ static void map_store(Map *m, const char *k, void *v, int borrowed)
 	size_t i = 0;
 	if (m->cap) {
 		unsigned char *tags = map_tags(m);
-		i = (size_t)key_hash & (m->cap - 1);
+		i = map_bucket(key_hash, m->cap);
 		while (tags[i]) {
 			if ((tags[i] & MAP_FINGERPRINT) == tag &&
 			    !strcmp(m->slots[i].key, k)) {
@@ -784,14 +794,14 @@ static void map_store(Map *m, const char *k, void *v, int borrowed)
 				m->slots[i].value = v;
 				return;
 			}
-			i = (i + 1) & (m->cap - 1);
+			i = i + 1 == m->cap ? 0 : i + 1;
 		}
 	}
 	if (!m->cap || m->size >= m->cap - m->cap / 4) {
 		map_resize(m, m->cap ? m->cap * 2 : 64);
-		i = (size_t)key_hash & (m->cap - 1);
+		i = map_bucket(key_hash, m->cap);
 		while (map_tags(m)[i])
-			i = (i + 1) & (m->cap - 1);
+			i = i + 1 == m->cap ? 0 : i + 1;
 	}
 	m->slots[i] = (Slot){ borrowed ? (char *)k : copy(k), v };
 	map_tags(m)[i] = tag | (borrowed ? 0 : MAP_OWNED);
@@ -861,24 +871,28 @@ void map_delete(Map *m, const char *key)
 		return;
 	uint64_t key_hash = hash_text(key);
 	unsigned char tag = map_tag(key_hash), *tags = map_tags(m);
-	size_t mask = m->cap - 1, hole = (size_t)key_hash & mask;
+	size_t hole = map_bucket(key_hash, m->cap);
 	while (tags[hole] && ((tags[hole] & MAP_FINGERPRINT) != tag ||
 			      strcmp(m->slots[hole].key, key)))
-		hole = (hole + 1) & mask;
+		hole = hole + 1 == m->cap ? 0 : hole + 1;
 	if (!m->slots[hole].key)
 		return;
 	if (tags[hole] & MAP_OWNED)
 		free(m->slots[hole].key);
 	m->size--;
-	size_t next = (hole + 1) & mask;
+	size_t next = hole + 1 == m->cap ? 0 : hole + 1;
 	while (m->slots[next].key) {
-		size_t start = (size_t)hash_text(m->slots[next].key) & mask;
-		if (((next - start) & mask) >= ((next - hole) & mask)) {
+		size_t start =
+			map_bucket(hash_text(m->slots[next].key), m->cap);
+		size_t distance = next >= start ? next - start :
+							next + m->cap - start;
+		size_t gap = next >= hole ? next - hole : next + m->cap - hole;
+		if (distance >= gap) {
 			m->slots[hole] = m->slots[next];
 			tags[hole] = tags[next];
 			hole = next;
 		}
-		next = (next + 1) & mask;
+		next = next + 1 == m->cap ? 0 : next + 1;
 	}
 	m->slots[hole] = (Slot){ 0 };
 	tags[hole] = 0;

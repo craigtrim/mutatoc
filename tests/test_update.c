@@ -452,6 +452,60 @@ static void many_group_updates(int live)
 	mc_destroy(fresh);
 }
 
+/* Literal token sequences suppress aliases; removing them restores the best
+ * remaining source, including after candidate records have been recycled. */
+static void alias_precedence(int live)
+{
+	const char *labels[] = { "dog/cat health", "dog / cat health",
+				 "dog /cat health" };
+	const char *markers[] = { "marker zero", "marker one", "marker two" };
+	const int subjects[] = { 1, 0, 0, 2, 1, 2, 1, 0 };
+	const char *replacements[] = { "unrelated one",	   "unrelated zero",
+				       "dog/cat health",   "dog / cat health",
+				       "dog / cat health", "dog /cat health",
+				       "unrelated one",	   "unrelated zero" };
+	const char *expected[] = { "id1", "id0", "id2", "id0", "id2",
+				   "id1", "id1", "id0", "id2" };
+	char *entities[3];
+	for (int i = 0; i < 3; i++)
+		entities[i] = entity(i, labels[i], markers[i]);
+	mc_engine *e = mc_create(), *fresh = mc_create();
+	char *text = document(entities, 3);
+	load(e, text, live);
+	free(text);
+	Graph *graph = e->graph;
+	MatchIndex *index = e->index;
+	for (int step = 0; step <= 8; step++) {
+		if (step) {
+			int id = subjects[step - 1];
+			char iri[80];
+			snprintf(iri, sizeof(iri), "http://example.org/#id%d",
+				 id);
+			free(entities[id]);
+			entities[id] =
+				entity(id, replacements[step - 1], markers[id]);
+			J *r = call(e, update(iri, entities[id]), 1);
+			DEL(r);
+			CHECK(e->graph == graph && e->index == index);
+		}
+		J *q = OBJ();
+		PUT(q, "op", STR("parse"));
+		PUT(q, "text", STR("dog/cat health"));
+		J *r = call(e, q, 1);
+		CHECK(!strcmp(S(GET(GET(r, "result"), "text")),
+			      expected[step]));
+		DEL(r);
+		text = document(entities, 3);
+		load(fresh, text, live);
+		free(text);
+		equivalent(e, fresh);
+	}
+	for (int i = 0; i < 3; i++)
+		free(entities[i]);
+	mc_destroy(e);
+	mc_destroy(fresh);
+}
+
 int main(int argc, char **argv)
 {
 	for (int live = 0; live < 2; live++) {
@@ -459,6 +513,7 @@ int main(int argc, char **argv)
 		indexed_replace(live);
 		indexed_swap(live);
 		many_group_updates(live);
+		alias_precedence(live);
 		if (argc > 1)
 			fixture_updates(argv[1], live);
 	}

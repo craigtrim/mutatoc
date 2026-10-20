@@ -189,6 +189,59 @@ static int check_maps(void)
 	return 1;
 }
 
+static int check_map_wraparound(void)
+{
+	Map map = { 0 };
+	map_reserve(&map, 17);
+	char keys[12][40];
+	int count = 0;
+	for (unsigned candidate = 0; count < 12; candidate++) {
+		char key[40];
+		snprintf(key, sizeof(key), "wrap%u", candidate);
+		if (hash_text(key) % map.cap != map.cap - 2)
+			continue;
+		strcpy(keys[count], key);
+		map_put(&map, key, (void *)(uintptr_t)(count + 1));
+		count++;
+	}
+	int present[12];
+	for (int i = 0; i < 12; i++)
+		present[i] = 1;
+	const int removals[] = { 0, 6, 11, 1, 10, 4, 7, 2, 3, 5, 8, 9 };
+	int ok = 1;
+	for (size_t step = 0; step < sizeof(removals) / sizeof(*removals);
+	     step++) {
+		int removed = removals[step];
+		map_delete(&map, keys[removed]);
+		present[removed] = 0;
+		for (int i = 0; i < 12; i++)
+			ok &= (uintptr_t)map_get(&map, keys[i]) ==
+			      (uintptr_t)(present[i] ? i + 1 : 0);
+	}
+	ok &= map.size == 0;
+	map_free(&map);
+	/* Reserving one more key must not rebuild the table on every append. */
+	int grows = 0;
+	for (unsigned i = 0; i < 6000; i++) {
+		size_t before = map.cap;
+		map_reserve(&map, map.size + 1);
+		grows += map.cap != before;
+		char key[40];
+		snprintf(key, sizeof(key), "reserved%u", i);
+		map_put(&map, key, (void *)(uintptr_t)(i + 1));
+	}
+	ok &= grows < 40;
+	for (unsigned i = 0; i < 6000; i++) {
+		char key[40];
+		snprintf(key, sizeof(key), "reserved%u", i);
+		ok &= (uintptr_t)map_get(&map, key) == (uintptr_t)i + 1;
+	}
+	map_free(&map);
+	if (!ok)
+		fprintf(stderr, "hash wraparound deletion lost an entry\n");
+	return ok;
+}
+
 static int check_prefixes(void)
 {
 	const char *terms[] = { "a beta gamma",
@@ -542,11 +595,47 @@ static int check_stopword_edits(void)
 	return ok;
 }
 
+static int check_rewrites(void)
+{
+	const char *texts[] = { "",
+				"red green red green",
+				"bred greens",
+				"a a a a a",
+				"a  b  a  b",
+				"abcabcabc",
+				"x y x yx y",
+				"\xc3\xa9 cole \xc3\xa9 cole",
+				"_red green_" };
+	const char *grams[] = {
+		"",	  " ",	 "red green",	  "a a",    "a  b",
+		"abcabc", "x y", "\xc3\xa9 cole", "missing"
+	};
+	for (size_t i = 0; i < sizeof(texts) / sizeof(*texts); i++)
+		for (size_t j = 0; j < sizeof(grams) / sizeof(*grams); j++) {
+			char *underscore = replace(grams[j], " ", "_"),
+			     *expected =
+				     replace(texts[i], grams[j], underscore),
+			     *actual = lookup_rewrite(texts[i], grams[j]);
+			int ok = !strcmp(expected, actual);
+			free(underscore);
+			free(expected);
+			free(actual);
+			if (!ok) {
+				fprintf(stderr,
+					"substring replacement mismatch\n");
+				return 0;
+			}
+		}
+	return 1;
+}
+
 int main(void)
 {
 	if (!check_patterns() || !check_sorting() || !check_maps() ||
-	    !check_map_bytes() || !check_map_ownership() || !check_prefixes() ||
-	    !check_posting_edits() || !check_stopword_edits())
+	    !check_map_bytes() || !check_map_ownership() ||
+	    !check_map_wraparound() || !check_prefixes() ||
+	    !check_posting_edits() || !check_stopword_edits() ||
+	    !check_rewrites())
 		return 1;
 	const char *terms[] = { "red green blue",
 				"abcdefg middle ending",

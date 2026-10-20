@@ -689,13 +689,12 @@ static void derive_traced(LookupState *s, LookupValue *v)
 static void derive_gram(LookupState *s, LookupValue *v, DerivedRefs *outputs,
 			const char *gram)
 {
-	char *u = replace(gram, " ", "_"), *text = replace(v->text, gram, u);
+	char *text = lookup_rewrite(v->text, gram);
 	int words = word_count(text);
 	if (words >= 2 && words <= 5 && !derived_get(outputs, text)) {
 		LookupValue *old = derived_get(&v->derived, text);
 		derived_add(outputs, old ? old : adjust(s, words, text, 1));
 	}
-	free(u);
 	free(text);
 }
 

@@ -344,6 +344,25 @@ char *lookup_leading_gram(const char *text, int words)
 	return end ? slice(text, (size_t)(end - text)) : NULL;
 }
 
+/* Replacing gram spaces with underscores preserves byte length. Match against
+ * the original text and advance past each occurrence, as replace() does. */
+char *lookup_rewrite(const char *text, const char *gram)
+{
+	char *out = copy(text);
+	size_t length = strlen(gram);
+	if (!length)
+		return out;
+	const char *at = text, *found;
+	while ((found = strstr(at, gram)) != NULL) {
+		char *target = out + (found - text);
+		for (size_t i = 0; i < length; i++)
+			if (gram[i] == ' ')
+				target[i] = '_';
+		at = found + length;
+	}
+	return out;
+}
+
 static J *lookup_build(J *f, LookupTrace **trace_out, J *reference)
 {
 	LookupTrace *trace = trace_out ? lookup_trace_create() : NULL;
@@ -403,8 +422,7 @@ static J *lookup_build(J *f, LookupTrace **trace_out, J *reference)
 			for (int i = 0; i < matches; i++) {
 				const char *g =
 					patterns->text[patterns->hits[i]];
-				char *u = replace(g, " ", "_"),
-				     *s = replace(v->text, g, u);
+				char *s = lookup_rewrite(v->text, g);
 				int size = count(s, ' ') + 1;
 				if (size >= 2 && size <= 5) {
 					snprintf(k, sizeof(k), "%d", size);
@@ -420,7 +438,6 @@ static J *lookup_build(J *f, LookupTrace **trace_out, J *reference)
 								 entry->json);
 					s = NULL;
 				}
-				free(u);
 				free(s);
 			}
 		}
