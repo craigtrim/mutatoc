@@ -32,6 +32,8 @@ typedef struct {
 	SpanRule *rules;
 	int n;
 } SpanList;
+typedef struct MutableWord MutableWord;
+typedef struct MutableWordBlock MutableWordBlock;
 struct MatchIndex {
 	const J *view;
 	/* 1: lookup is not an object; 2: a lookup group is not an array. */
@@ -47,6 +49,8 @@ struct MatchIndex {
 	int entity_count, live;
 	Map mutable_words, mutable_aliases, group_ranks, ambiguous_aliases;
 	int mutable_ready;
+	MutableWordBlock *word_blocks;
+	MutableWord *available_words;
 };
 static void put_first(Map *m, const char *k, void *v)
 {
@@ -1078,11 +1082,33 @@ char *render(const J *tokens)
 }
 
 /* Patch lookup membership and token aliases after edits (craigtrim/axiom#129). */
-typedef struct {
-	char *text, *alias;
+struct MutableWord {
+	const char *text; /* Borrowed from a lookup JSON node until removal. */
+	char *alias;
+	MutableWord *available;
 	int words, rank;
 	size_t chars;
-} MutableWord;
+};
+struct MutableWordBlock {
+	MutableWordBlock *next;
+	MutableWord words[256];
+};
+static MutableWord *mutable_word_create(MatchIndex *x)
+{
+	if (!x->available_words) {
+		MutableWordBlock *block = calloc(1, sizeof(*block));
+		block->next = x->word_blocks;
+		x->word_blocks = block;
+		for (int i = 255; i >= 0; i--) {
+			block->words[i].available = x->available_words;
+			x->available_words = &block->words[i];
+		}
+	}
+	MutableWord *word = x->available_words;
+	x->available_words = word->available;
+	memset(word, 0, sizeof(*word));
+	return word;
+}
 static int mutable_count(const char *s)
 {
 	int n = 1;
@@ -1159,7 +1185,7 @@ static void mutable_alias(MatchIndex *x, const char *key)
 	}
 	int had = map_get(&x->aliases, key) != NULL;
 	if (best)
-		map_put(&x->aliases, key, best->text);
+		map_put(&x->aliases, key, (void *)best->text);
 	else
 		map_delete(&x->aliases, key);
 	if (!!best != had) {
@@ -1172,8 +1198,8 @@ void match_index_word(void *context, int words, const char *text, int delta)
 {
 	MatchIndex *x = context;
 	if (delta > 0) {
-		MutableWord *w = calloc(1, sizeof(*w));
-		w->text = copy(text);
+		MutableWord *w = mutable_word_create(x);
+		w->text = text;
 		w->alias = tokenize_key(text);
 		w->words = words;
 		w->chars = ulen(text);
@@ -1221,9 +1247,9 @@ void match_index_word(void *context, int words, const char *text, int delta)
 				map_delete(&x->mutable_aliases, w->alias);
 			}
 		}
-		free(w->text);
 		free(w->alias);
-		free(w);
+		w->available = x->available_words;
+		x->available_words = w;
 	}
 }
 void match_index_mutable(MatchIndex *x)
@@ -1265,9 +1291,7 @@ static void mutable_free(MatchIndex *x)
 	for (size_t i = 0; i < x->mutable_words.cap; i++)
 		if (x->mutable_words.slots[i].key) {
 			MutableWord *w = x->mutable_words.slots[i].value;
-			free(w->text);
 			free(w->alias);
-			free(w);
 		}
 	for (size_t i = 0; i < x->mutable_aliases.cap; i++)
 		if (x->mutable_aliases.slots[i].key) {
@@ -1279,6 +1303,11 @@ static void mutable_free(MatchIndex *x)
 	map_free(&x->mutable_aliases);
 	map_free(&x->group_ranks);
 	map_free(&x->ambiguous_aliases);
+	while (x->word_blocks) {
+		MutableWordBlock *next = x->word_blocks->next;
+		free(x->word_blocks);
+		x->word_blocks = next;
+	}
 }
 void match_index_member(MatchIndex *x, const char *kind, const char *key,
 			J *value)

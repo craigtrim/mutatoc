@@ -228,6 +228,58 @@ J *merge_views(J *out, const J *source)
 	return out;
 }
 
+/* Keep independent JSON nodes while sharing snapshot string storage. Edits
+ * replace the data-view nodes before releasing their snapshot counterparts. */
+static J *live_value_copy(J *source)
+{
+	/* Allocate through cJSON's hooks, preserving scalar fields exactly. */
+	J *out = NIL();
+	if (!out)
+		return NULL;
+	*out = *source;
+	out->next = out->prev = out->child = NULL;
+	out->type &= ~(cJSON_IsReference | cJSON_StringIsConst);
+	if (out->valuestring)
+		out->type |= cJSON_IsReference;
+	if (out->string)
+		out->type |= cJSON_StringIsConst;
+	EACH(child, source) {
+		J *part = live_value_copy(child);
+		if (!part || !cJSON_AddItemToArray(out, part)) {
+			DEL(part);
+			DEL(out);
+			return NULL;
+		}
+	}
+	return out;
+}
+
+/* Vocabulary edits leave structural predicate views unchanged. The data view
+ * can reference those objects until a transactional rebuild replaces both views. */
+static J *live_predicate_copy(J *predicates)
+{
+	J *out = cJSON_Duplicate(predicates, 0);
+	if (!out)
+		return NULL;
+	EACH(member, predicates) {
+		const char *colon = strrchr(member->string, ':');
+		int mutable = !strcmp(member->string, "rdfs:label") ||
+			      !strcmp(member->string, "rdfs:seeAlso") ||
+			      !strcmp(member->string, "skos:altLabel") ||
+			      (colon && !strcmp(colon + 1, "inflection"));
+		J *part = !mutable && cJSON_IsObject(member) ?
+					cJSON_CreateObjectReference(member->child) :
+					live_value_copy(member);
+		if (!part ||
+		    !cJSON_AddItemToObject(out, member->string, part)) {
+			DEL(part);
+			DEL(out);
+			return NULL;
+		}
+	}
+	return out;
+}
+
 /* The data view rebuilds lookup after sorting its forward synonyms (#129).
  * Keep the original member position without copying entries that are discarded. */
 static J *live_snapshot_copy(J *snapshot)
@@ -245,9 +297,10 @@ static J *live_snapshot_copy(J *snapshot)
 			J *lookup = GET(field, "lookup");
 			if (value)
 				EACH(member, field) {
-					J *part = member == lookup ?
-								NIL() :
-								DUP(member);
+					J *part =
+						member == lookup ?
+							      NIL() :
+							      live_value_copy(member);
 					if (!part ||
 					    !cJSON_AddItemToObject(
 						    value, member->string,
@@ -258,8 +311,11 @@ static J *live_snapshot_copy(J *snapshot)
 						break;
 					}
 				}
-		} else
-			value = DUP(field);
+		} else if (!strcmp(field->string, "by_predicate") &&
+			   cJSON_IsObject(field))
+			value = live_predicate_copy(field);
+		else
+			value = live_value_copy(field);
 		if (!value ||
 		    !cJSON_AddItemToObject(copy, field->string, value)) {
 			DEL(value);
@@ -270,34 +326,17 @@ static J *live_snapshot_copy(J *snapshot)
 	return copy;
 }
 
-J *live_view(mc_engine *e, mc_error *err)
+typedef struct {
+	mc_engine *engine;
+	J *view, *forward, *lookup;
+	mc_error *error;
+} LiveBuild;
+static void live_metadata(void *data)
 {
-	if (e->live)
-		return e->live;
-	if (e->part_count) {
-		J *merged = OBJ();
-		int bound = 0;
-		for (size_t i = 0; i < e->part_count; i++) {
-			J *part = live_view(e->parts[i], err);
-			if (!part) {
-				DEL(merged);
-				return NULL;
-			}
-			merge_views(merged, part);
-			bound |= cJSON_IsTrue(GET(part, "_namespace_bound"));
-		}
-		set(merged, "_namespace_bound", BOOL(bound));
-		J *syns = GET(merged, "synonyms");
-		set(syns, "lookup", generate_lookup(GET(syns, "fwd")));
-		e->live = merged;
-		return merged;
-	}
-	J *d = live_snapshot_copy(e->snapshot);
-	if (!d || !e->graph) {
-		DEL(d);
-		fail(err, 4, "Live finder requires a loaded RDF graph");
-		return NULL;
-	}
+	LiveBuild *job = data;
+	mc_engine *e = job->engine;
+	J *d = job->view;
+	mc_error *err = job->error;
 	mc_error local_error = { 0 };
 	J *labels = graph_predicate(e->graph, RDFS "label", 0, 0, &local_error);
 	set(d, "_labels", labels ? labels : NIL());
@@ -332,33 +371,82 @@ J *live_view(mc_engine *e, mc_error *err)
 	map_free(&seen);
 	set(d, "entities", entities);
 	ner_views(e->graph, d, err);
+}
+static void live_lookup(void *data)
+{
+	LiveBuild *job = data;
+	job->lookup = generate_lookup(job->forward);
+}
+
+J *live_view(mc_engine *e, mc_error *err)
+{
+	if (e->live)
+		return e->live;
+	if (e->part_count) {
+		J *merged = OBJ();
+		int bound = 0;
+		for (size_t i = 0; i < e->part_count; i++) {
+			J *part = live_view(e->parts[i], err);
+			if (!part) {
+				DEL(merged);
+				return NULL;
+			}
+			merge_views(merged, part);
+			bound |= cJSON_IsTrue(GET(part, "_namespace_bound"));
+		}
+		set(merged, "_namespace_bound", BOOL(bound));
+		J *syns = GET(merged, "synonyms");
+		set(syns, "lookup", generate_lookup(GET(syns, "fwd")));
+		e->live = merged;
+		return merged;
+	}
+	J *d = live_snapshot_copy(e->snapshot);
+	if (!d || !e->graph) {
+		DEL(d);
+		fail(err, 4, "Live finder requires a loaded RDF graph");
+		return NULL;
+	}
+
 	J *fwd = GET(GET(d, "synonyms"), "fwd"),
 	  *rev = GET(GET(d, "synonyms"), "rev");
+	/* External synonyms retain their existing error and construction order.
+	 * Otherwise metadata and lookup read disjoint completed inputs. */
+	Buf path = { 0 };
+	int external_file = 0;
 	if (e->source_path && *e->source_path) {
-		Buf path = { 0 };
 		buf_put(&path, e->source_path);
 		buf_put(&path, ".txt");
-		FILE *f = mc_fopen(path.p, "rb");
-		if (f) {
-			fclose(f);
-			char *text = read_file(path.p, err);
-			J *external = text ? external_synonyms(text) : NULL;
-			free(text);
-			EACH(k, external) {
-				EACH(v, k) {
-					unique(ensure(fwd, k->string, 1), S(v));
-					unique(ensure(rev, S(v), 1), k->string);
-				}
-			}
-			DEL(external);
+		FILE *file = mc_fopen(path.p, "rb");
+		if (file) {
+			fclose(file);
+			external_file = 1;
 		}
-		free(path.p);
 	}
+	LiveBuild build = { e, d, fwd, NULL, err };
+	if (external_file) {
+		live_metadata(&build);
+		char *text = read_file(path.p, err);
+		J *external = text ? external_synonyms(text) : NULL;
+		free(text);
+		EACH(k, external) {
+			EACH(v, k) {
+				unique(ensure(fwd, k->string, 1), S(v));
+				unique(ensure(rev, S(v), 1), k->string);
+			}
+		}
+		DEL(external);
+	}
+	free(path.p);
 	EACH(k, fwd)
 		sort_strings(k, 0);
 	EACH(k, rev)
 		sort_strings(k, 0);
-	set(GET(d, "synonyms"), "lookup", generate_lookup(fwd));
+	if (external_file)
+		live_lookup(&build);
+	else
+		parallel_pair(live_metadata, &build, live_lookup, &build,
+			      e->graph->subjects.size >= 4096);
+	set(GET(d, "synonyms"), "lookup", build.lookup);
 	if (err->code) {
 		DEL(d);
 		return NULL;

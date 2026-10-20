@@ -395,12 +395,62 @@ static void fixture_updates(const char *root, int live)
 	}
 }
 
+/* More than eight groups exercise ordering storage growth and recycled nodes. */
+static char *many_group_entity(int revision)
+{
+	Buf text = { 0 };
+	for (int n = 1; n <= 14; n++) {
+		buf_put(&text,
+			"<http://example.org/#many> <http://www.w3.org/2000/01/rdf-schema#label> \"");
+		for (int word = 0; word < n + revision % 3; word++) {
+			if (word)
+				buf_put(&text, " ");
+			buf_put(&text, revision % 2 ? "violet" : "orange");
+		}
+		buf_put(&text, "\" .\n");
+	}
+	return buf_take(&text);
+}
+static void many_group_updates(int live)
+{
+	mc_engine *e = mc_create(), *fresh = mc_create();
+	char *text = many_group_entity(0);
+	load(e, text, live);
+	free(text);
+	Graph *original = e->graph;
+	MatchIndex *index = e->index;
+	for (int revision = 1; revision <= 18; revision++) {
+		text = many_group_entity(revision);
+		J *result =
+			call(e, update("http://example.org/#many", text), 1);
+		DEL(result);
+		CHECK(e->graph == original && e->index == index);
+		load(fresh, text, live);
+		free(text);
+		equivalent(e, fresh);
+		J *a = operation(e, "snapshot"),
+		  *b = operation(fresh, "snapshot");
+		char *actual = cJSON_PrintUnformatted(
+			     GET(GET(GET(a, "result"), "synonyms"), "lookup")),
+		     *expected = cJSON_PrintUnformatted(
+			     GET(GET(GET(b, "result"), "synonyms"), "lookup"));
+		CHECK(!strcmp(actual, expected));
+		free(actual);
+		free(expected);
+		DEL(a);
+		DEL(b);
+	}
+	mc_destroy(e);
+	mc_destroy(fresh);
+}
+
 int main(int argc, char **argv)
 {
 	for (int live = 0; live < 2; live++) {
 		sequences(live);
 		indexed_replace(live);
 		indexed_swap(live);
+		many_group_updates(live);
 		if (argc > 1)
 			fixture_updates(argv[1], live);
 	}

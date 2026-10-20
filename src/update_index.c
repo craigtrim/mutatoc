@@ -69,8 +69,14 @@ static void prepare_view(UpdateState *u, J *view)
 	J *syns = GET(view, "synonyms");
 	object_index(u, GET(syns, "fwd"));
 	object_index(u, GET(syns, "rev"));
-	EACH(p, GET(view, "by_predicate"))
-		object_index(u, p);
+	EACH(p, GET(view, "by_predicate")) {
+		const char *colon = strrchr(p->string, ':');
+		if (!strcmp(p->string, "rdfs:label") ||
+		    !strcmp(p->string, "rdfs:seeAlso") ||
+		    !strcmp(p->string, "skos:altLabel") ||
+		    (colon && !strcmp(colon + 1, "inflection")))
+			object_index(u, p);
+	}
 }
 static void ner_ref(UpdateState *u, const char *text, int delta)
 {
@@ -163,9 +169,17 @@ static void build_view_members(void *data)
 	u->cached_order =
 		source_groups_build(GET(syns, "fwd"), &u->ordinals, 0);
 	if (e->live)
-		u->live_order =
-			source_groups_build(GET(GET(e->live, "synonyms"), "fwd"),
-					    &u->ordinals, 0);
+		u->live_order = source_groups_build(
+			GET(GET(e->live, "synonyms"), "fwd"), &u->ordinals, 0);
+	/* Reuse only reads the completed lookup JSON; matching builds its own
+	 * records from those same immutable strings in the other load job. */
+	u->snapshot = lookup_state_reuse_traced(
+		GET(syns, "fwd"), GET(syns, "lookup"), e->graph->lookup_trace);
+	if (e->live) {
+		J *live_syns = GET(e->live, "synonyms");
+		lookup_state_mirror(u->snapshot, live_syns);
+		u->mirrored = 1;
+	}
 }
 static void build_match_members(void *data)
 {
@@ -246,13 +260,6 @@ static void build_update_state(mc_engine *e)
 		update_state_free(u);
 		return;
 	}
-	u->snapshot = lookup_state_reuse_traced(
-		GET(syns, "fwd"), GET(syns, "lookup"), e->graph->lookup_trace);
-	if (e->live) {
-		J *live_syns = GET(e->live, "synonyms");
-		lookup_state_mirror(u->snapshot, live_syns);
-		u->mirrored = 1;
-	}
 	e->updates = u;
 }
 void update_state_build(mc_engine *e)
@@ -281,25 +288,40 @@ static int base_word_count(const char *text, int underscores)
 		words += *text == ' ' || (underscores && *text == '_');
 	return words;
 }
-static J *base_groups(const char *key, J *values)
+/* Word groups are small integers; construction needs no temporary JSON. */
+typedef struct {
+	int local[8], *items, count, capacity;
+} BaseGroups;
+static void base_group_add(BaseGroups *groups, int words)
 {
-	J *groups = ARR();
-	char num[32];
-	snprintf(num, sizeof(num), "%d", base_word_count(key, 1));
-	unique(groups, num);
+	for (int i = 0; i < groups->count; i++)
+		if (groups->items[i] == words)
+			return;
+	if (groups->count == groups->capacity) {
+		int capacity = groups->capacity * 2;
+		int *items = malloc((size_t)capacity * sizeof(*items));
+		memcpy(items, groups->items,
+		       (size_t)groups->count * sizeof(*items));
+		if (groups->items != groups->local)
+			free(groups->items);
+		groups->items = items;
+		groups->capacity = capacity;
+	}
+	groups->items[groups->count++] = words;
+}
+static void base_groups(const char *key, J *values, BaseGroups *groups)
+{
+	groups->items = groups->local;
+	groups->capacity = 8;
+	base_group_add(groups, base_word_count(key, 1));
 	EACH(v, values) {
 		char *normal = norm(S(v), 1, 1);
-		snprintf(num, sizeof(num), "%d", base_word_count(normal, 1));
-		unique(groups, num);
+		base_group_add(groups, base_word_count(normal, 1));
 		size_t length = strlen(normal);
-		if (length && strchr("!?.", normal[length - 1])) {
-			snprintf(num, sizeof(num), "%d",
-				 base_word_count(normal, 0));
-			unique(groups, num);
-		}
+		if (length && strchr("!?.", normal[length - 1]))
+			base_group_add(groups, base_word_count(normal, 0));
 		free(normal);
 	}
-	return groups;
 }
 
 typedef struct SourceGroupNode {
@@ -310,13 +332,34 @@ typedef struct SourceGroupNode {
 } SourceGroupNode;
 typedef struct {
 	SourceGroupNode *root, *last;
-	Map members;
 } SourceGroup;
+typedef struct SourceGroupBlock {
+	struct SourceGroupBlock *next;
+	SourceGroupNode nodes[256];
+} SourceGroupBlock;
 struct SourceGroups {
 	Map groups;
+	SourceGroupBlock *blocks;
+	SourceGroupNode *available;
 	unsigned random;
 	int building;
 };
+static SourceGroupNode *source_node(SourceGroups *s)
+{
+	if (!s->available) {
+		SourceGroupBlock *block = calloc(1, sizeof(*block));
+		block->next = s->blocks;
+		s->blocks = block;
+		for (int i = 255; i >= 0; i--) {
+			block->nodes[i].left = s->available;
+			s->available = &block->nodes[i];
+		}
+	}
+	SourceGroupNode *v = s->available;
+	s->available = v->left;
+	memset(v, 0, sizeof(*v));
+	return v;
+}
 static SourceGroupNode *source_merge(SourceGroupNode *a, SourceGroupNode *b)
 {
 	if (!a)
@@ -370,20 +413,24 @@ static void source_groups_change(SourceGroups *s, J *fwd, Map *ordinals,
 		J *values = live ? DUP(k) : k;
 		if (live)
 			sort_strings(values, 0);
-		J *groups = base_groups(k->string, values);
+		BaseGroups groups = { 0 };
+		base_groups(k->string, values, &groups);
 		if (live)
 			DEL(values);
-		int sequence = 0;
-		EACH(key, groups) {
-			SourceGroup *g = map_get(&s->groups, S(key));
+		size_t ordinal =
+			(size_t)(uintptr_t)map_get(ordinals, k->string);
+		for (int sequence = 0; sequence < groups.count; sequence++) {
+			char key[32];
+			snprintf(key, sizeof(key), "%d",
+				 groups.items[sequence]);
+			SourceGroup *g = map_get(&s->groups, key);
 			if (delta > 0) {
 				if (!g) {
 					g = calloc(1, sizeof(*g));
-					map_put(&s->groups, S(key), g);
+					map_put(&s->groups, key, g);
 				}
-				SourceGroupNode *v = calloc(1, sizeof(*v));
-				v->ordinal = (size_t)(uintptr_t)map_get(
-					ordinals, k->string);
+				SourceGroupNode *v = source_node(s);
+				v->ordinal = ordinal;
 				v->sequence = sequence;
 				s->random ^= s->random << 13;
 				s->random ^= s->random >> 17;
@@ -409,22 +456,23 @@ static void source_groups_change(SourceGroups *s, J *fwd, Map *ordinals,
 					g->last = v;
 				} else
 					g->root = source_insert(g->root, v);
-				map_put(&g->members, k->string, v);
 			} else {
-				SourceGroupNode *v =
-					map_get(&g->members, k->string);
+				/* The existing order tree also locates a source by ordinal. */
+				SourceGroupNode *v = g->root;
+				while (v->ordinal != ordinal)
+					v = ordinal < v->ordinal ? v->left :
+									 v->right;
 				g->root = source_remove(g->root, v);
-				map_delete(&g->members, k->string);
-				free(v);
+				v->left = s->available;
+				s->available = v;
 				if (!g->root) {
-					map_free(&g->members);
 					free(g);
-					map_delete(&s->groups, S(key));
+					map_delete(&s->groups, key);
 				}
 			}
-			sequence++;
 		}
-		DEL(groups);
+		if (groups.items != groups.local)
+			free(groups.items);
 	}
 }
 static SourceGroups *source_groups_build(J *fwd, Map *ordinals, int live)
@@ -442,12 +490,14 @@ static void source_groups_free(SourceGroups *s)
 		return;
 	SLOTS(i, s->groups)
 	{
-		SourceGroup *g = s->groups.slots[i].value;
-		SLOTS(j, g->members) free(g->members.slots[j].value);
-		map_free(&g->members);
-		free(g);
+		free(s->groups.slots[i].value);
 	}
 	map_free(&s->groups);
+	while (s->blocks) {
+		SourceGroupBlock *next = s->blocks->next;
+		free(s->blocks);
+		s->blocks = next;
+	}
 	free(s);
 }
 typedef struct {
@@ -771,11 +821,12 @@ int update_fast(mc_engine *e, Graph *added, Map *selected)
 			if (!strcmp(t->p.value, RDFS "label"))
 				ner_ref(u, t->o.value, 1);
 		}
-		patch_view(e, e->snapshot, old_local, new_local, old_spans,
-			   new_spans, new_graph);
+		/* Release data-view references before replacing snapshot strings. */
 		if (e->live)
 			patch_view(e, e->live, old_local, new_local, old_spans,
 				   new_spans, new_graph);
+		patch_view(e, e->snapshot, old_local, new_local, old_spans,
+			   new_spans, new_graph);
 		J *a = old_ids->child, *b = new_ids->child;
 		while (a && b) {
 			Triple *x = &e->graph->ts[(size_t)a->valuedouble],

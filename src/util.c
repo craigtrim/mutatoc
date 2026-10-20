@@ -683,7 +683,8 @@ static uint64_t hash(const char *s)
 	return h ^ (h >> 47);
 }
 
-/* Compact metadata stores an eight-bit fingerprint and key ownership.
+/* Compact metadata stores a fingerprint and key ownership. A three-quarter
+ * load limit keeps large indexes compact while retaining empty probe slots.
  * Borrowed keys remain valid until their entry is removed or replaced. */
 enum { MAP_FINGERPRINT = 255, MAP_OWNED = 256 };
 static uint16_t *map_tags(Map *m)
@@ -733,7 +734,7 @@ void map_reserve(Map *m, size_t entries)
 	if (!entries)
 		return;
 	size_t capacity = m->cap ? m->cap : 8;
-	while (capacity / 2 < entries)
+	while (capacity - capacity / 4 < entries)
 		capacity *= 2;
 	if (capacity > m->cap)
 		map_resize(m, capacity);
@@ -767,7 +768,7 @@ static void map_store(Map *m, const char *k, void *v, int borrowed)
 			i = (i + 1) & (m->cap - 1);
 		}
 	}
-	if (!m->cap || m->size * 2 >= m->cap) {
+	if (!m->cap || m->size >= m->cap - m->cap / 4) {
 		map_resize(m, m->cap ? m->cap * 2 : 64);
 		i = (size_t)key_hash & (m->cap - 1);
 		while (map_tags(m)[i])

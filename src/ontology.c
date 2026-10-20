@@ -27,13 +27,6 @@ static void indexed_push(J *object, Map *index, const char *key,
 	unique(indexed_ensure(object, index, key, 1), value);
 }
 
-static void index_members(Map *index, J *object)
-{
-	map_reserve(index, (size_t)SIZE(object));
-	EACH(value, object)
-		if (!map_get(index, value->string))
-			map_put_ref(index, value->string, value);
-}
 
 static int stopword(const char *s)
 {
@@ -122,7 +115,7 @@ typedef struct {
 	J *array;
 	Map values;
 } LookupBuilder;
-static J *lookup_push(J *d, Map *seen, const char *key, const char *value)
+static LookupBuilder *lookup_group(J *d, Map *seen, const char *key)
 {
 	LookupBuilder *group = map_get(seen, key);
 	if (!group) {
@@ -130,6 +123,10 @@ static J *lookup_push(J *d, Map *seen, const char *key, const char *value)
 		group->array = ensure(d, key, 1);
 		map_put(seen, key, group);
 	}
+	return group;
+}
+static J *lookup_group_push(LookupBuilder *group, const char *value)
+{
 	J *entry = map_get(&group->values, value);
 	if (!entry) {
 		entry = STR(value);
@@ -138,6 +135,36 @@ static J *lookup_push(J *d, Map *seen, const char *key, const char *value)
 	}
 	return entry;
 }
+static J *lookup_push(J *d, Map *seen, const char *key, const char *value)
+{
+	return lookup_group_push(lookup_group(d, seen, key), value);
+}
+/* Collect base forms in input order, then size their indexes once and retain
+ * each first occurrence. Rewrite stages append through the same indexes. */
+static void lookup_append(J *d, Map *seen, const char *key, const char *value)
+{
+	ADD(lookup_group(d, seen, key)->array, STR(value));
+}
+static void lookup_seed(Map *seen)
+{
+	for (size_t i = 0; i < seen->cap; i++) {
+		if (!seen->slots[i].key)
+			continue;
+		LookupBuilder *group = seen->slots[i].value;
+		map_reserve(&group->values, (size_t)SIZE(group->array));
+		J *entry = group->array->child;
+		while (entry) {
+			J *next = entry->next;
+			if (map_get(&group->values, S(entry)))
+				DEL(cJSON_DetachItemViaPointer(group->array,
+							       entry));
+			else
+				map_put_ref(&group->values, S(entry), entry);
+			entry = next;
+		}
+	}
+}
+
 static void lookup_seen_free(Map *seen)
 {
 	for (size_t i = 0; i < seen->cap; i++)
@@ -154,7 +181,7 @@ static void lookup_add(J *d, Map *seen, const char *s)
 	char *r = replace(s, "_", " ");
 	char key[32];
 	snprintf(key, sizeof(key), "%d", count(r, ' ') + 1);
-	lookup_push(d, seen, key, r);
+	lookup_append(d, seen, key, r);
 	free(r);
 }
 
@@ -168,8 +195,10 @@ char *lookup_leading_gram(const char *text, int words)
 		if (!end)
 			return NULL;
 		size_t length = (size_t)(end - at);
-		if ((length == 2 && (!memcmp(at, "of", 2) || !memcmp(at, "to", 2))) ||
-		    (length == 3 && (!memcmp(at, "and", 3) || !memcmp(at, "for", 3))))
+		if ((length == 2 &&
+		     (!memcmp(at, "of", 2) || !memcmp(at, "to", 2))) ||
+		    (length == 3 &&
+		     (!memcmp(at, "and", 3) || !memcmp(at, "for", 3))))
 			return NULL;
 		at = end + 1;
 	}
@@ -194,11 +223,12 @@ J *generate_lookup_traced(J *f, LookupTrace **trace_out)
 				snprintf(key, sizeof(key), "%d",
 					 count(s, ' ') + 1);
 				s[n - 1] = 0;
-				lookup_push(d, &seen, key, s);
+				lookup_append(d, &seen, key, s);
 			}
 			free(s);
 		}
 	}
+	lookup_seed(&seen);
 	for (int n = 1; n <= 6; n++) {
 		char k[8];
 		snprintf(k, sizeof(k), "%d", n);
@@ -209,6 +239,7 @@ J *generate_lookup_traced(J *f, LookupTrace **trace_out)
 		snprintf(k, sizeof(k), "%d", n + 1);
 		/* Rewrites remove spaces, so they only append to lower groups. */
 		J *values = GET(d, k), *grams = ARR();
+		size_t source_count = (size_t)SIZE(values);
 		Map gram_set = { 0 };
 		map_reserve(&gram_set, (size_t)SIZE(values));
 		EACH(v, values) {
@@ -232,7 +263,12 @@ J *generate_lookup_traced(J *f, LookupTrace **trace_out)
 				int size = count(s, ' ') + 1;
 				if (size >= 2 && size <= 5) {
 					snprintf(k, sizeof(k), "%d", size);
-					J *entry = lookup_push(d, &seen, k, s);
+					LookupBuilder *group =
+						lookup_group(d, &seen, k);
+					if (!group->values.cap)
+						map_reserve(&group->values,
+							    source_count);
+					J *entry = lookup_group_push(group, s);
 					if (trace)
 						lookup_trace_add(trace, v,
 								 entry);
@@ -354,34 +390,55 @@ static J *spans_build(J *raw, int distance, int plus_only, int comma_lists,
 	}
 	J *d = OBJ();
 	Map seen = { 0 }, raw_index = { 0 }, keys = { 0 };
-	index_members(&raw_index, raw);
+	/* A bigram key always contains an underscore. Without such a canonical
+	 * key there can be no implicit plus rule, so retain the original values. */
+	int compounds = 0;
+	if (external_keys) {
+		/* Edits probe the retained index using their few changed values. */
+		compounds = external_keys->size != 0;
+	} else {
+		size_t count = 0;
+		EACH(k, raw)
+			count += k->string && strchr(k->string, '_') != NULL;
+		map_reserve(&raw_index, count);
+		EACH(k, raw)
+			if (k->string && strchr(k->string, '_') &&
+			    !map_get(&raw_index, k->string))
+				map_put_ref(&raw_index, k->string, k);
+		compounds = count != 0;
+	}
 	EACH(k, raw) {
-		J *syns = DUP(k);
-		EACH(v, k) {
-			J *ts = split(S(v), " ");
-			char *working = copy(S(v));
-			for (int i = 0; i + 1 < SIZE(ts); i++) {
-				Buf b = { 0 };
-				buf_put(&b, S(AT(ts, i)));
-				buf_put(&b, "_");
-				buf_put(&b, S(AT(ts, i + 1)));
-				if (map_get(external_keys ? external_keys :
+		J *syns = compounds ? DUP(k) : k;
+		if (compounds)
+			EACH(v, k) {
+				J *ts = split(S(v), " ");
+				char *working = copy(S(v));
+				for (int i = 0; i + 1 < SIZE(ts); i++) {
+					Buf b = { 0 };
+					buf_put(&b, S(AT(ts, i)));
+					buf_put(&b, "_");
+					buf_put(&b, S(AT(ts, i + 1)));
+					if (map_get(external_keys ?
+								  external_keys :
 								  &raw_index,
-					    b.p)) {
-					char *phrase = replace(b.p, "_", " ");
-					buf_put(&b, " +");
-					char *r = replace(working, phrase, b.p);
-					free(working);
-					working = r;
-					free(phrase);
-					if (working[strlen(working) - 1] != '+')
-						unique(syns, working);
+						    b.p)) {
+						char *phrase =
+							replace(b.p, "_", " ");
+						buf_put(&b, " +");
+						char *r = replace(working,
+								  phrase, b.p);
+						free(working);
+						working = r;
+						free(phrase);
+						if (working[strlen(working) -
+							    1] != '+')
+							unique(syns, working);
+					}
+					free(b.p);
 				}
-				free(b.p);
+				free(working);
+				DEL(ts);
 			}
-			free(working);
-			DEL(ts);
-		}
 		EACH(v, syns) {
 			if (!strchr(S(v), '+'))
 				continue;
@@ -400,7 +457,8 @@ static J *spans_build(J *raw, int distance, int plus_only, int comma_lists,
 				DEL(content);
 			DEL(ts);
 		}
-		DEL(syns);
+		if (compounds)
+			DEL(syns);
 	}
 	map_free(&seen);
 	map_free(&raw_index);
