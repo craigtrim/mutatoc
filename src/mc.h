@@ -105,6 +105,7 @@ typedef struct {
 } Triple;
 typedef struct LookupTrace LookupTrace;
 LookupTrace *lookup_trace_create(void);
+void lookup_trace_reserve(LookupTrace *, size_t);
 void lookup_trace_add(LookupTrace *, J *, J *);
 void lookup_trace_free(LookupTrace *);
 typedef struct {

@@ -7,40 +7,44 @@
 		if ((m).slots[i].key)
 /* Record each source-to-output relationship while lookup construction already
  * has both JSON nodes. Only the records are owned here; strings stay in JSON. */
-typedef struct {
-	J *first;
-	Map rest;
-} LookupTraceEntry;
 struct LookupTrace {
-	Map sources;
+	Map first, rest;
 };
 LookupTrace *lookup_trace_create(void)
 {
 	return calloc(1, sizeof(LookupTrace));
 }
+void lookup_trace_reserve(LookupTrace *trace, size_t additional)
+{
+	map_reserve(&trace->first, trace->first.size + additional);
+}
 void lookup_trace_add(LookupTrace *trace, J *source, J *output)
 {
-	LookupTraceEntry *entry = map_get(&trace->sources, S(source));
-	if (!entry) {
-		entry = calloc(1, sizeof(*entry));
-		entry->first = output;
-		map_put_ref(&trace->sources, S(source), entry);
-	} else if (strcmp(S(entry->first), S(output))) {
-		map_reserve(&entry->rest, 1);
-		map_put_ref(&entry->rest, S(output), output);
+	J *first = map_get(&trace->first, S(source));
+	if (!first)
+		map_put_ref(&trace->first, S(source), output);
+	else if (strcmp(S(first), S(output))) {
+		Map *rest = map_get(&trace->rest, S(source));
+		if (!rest) {
+			rest = calloc(1, sizeof(*rest));
+			map_put_ref(&trace->rest, S(source), rest);
+		}
+		map_reserve(rest, 1);
+		map_put_ref(rest, S(output), output);
 	}
 }
 void lookup_trace_free(LookupTrace *trace)
 {
 	if (!trace)
 		return;
-	SLOTS(i, trace->sources)
+	SLOTS(i, trace->rest)
 	{
-		LookupTraceEntry *entry = trace->sources.slots[i].value;
-		map_free(&entry->rest);
-		free(entry);
+		Map *rest = trace->rest.slots[i].value;
+		map_free(rest);
+		free(rest);
 	}
-	map_free(&trace->sources);
+	map_free(&trace->first);
+	map_free(&trace->rest);
 	free(trace);
 }
 
@@ -574,15 +578,19 @@ static void derived_free(DerivedRefs *refs)
 }
 static void derive_traced(LookupState *s, LookupValue *v)
 {
-	LookupTraceEntry *entry = map_get(&s->trace->sources, v->text);
-	if (!entry || !v->refs)
+	J *first = map_get(&s->trace->first, v->text);
+	if (!first || !v->refs)
 		return;
-	const char *first = S(entry->first);
-	derived_add(&v->derived, adjust(s, word_count(first), first, 1));
-	SLOTS(i, entry->rest)
-	{
-		const char *text = entry->rest.slots[i].key;
-		derived_add(&v->derived, adjust(s, word_count(text), text, 1));
+	const char *text = S(first);
+	derived_add(&v->derived, adjust(s, word_count(text), text, 1));
+	Map *rest = map_get(&s->trace->rest, v->text);
+	if (rest) {
+		SLOTS(i, *rest)
+		{
+			text = rest->slots[i].key;
+			derived_add(&v->derived,
+				    adjust(s, word_count(text), text, 1));
+		}
 	}
 }
 

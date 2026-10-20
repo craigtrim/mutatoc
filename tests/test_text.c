@@ -95,9 +95,63 @@ static void normalization_vectors(void)
 	}
 }
 
+/* Compare alias classification with the tokenizer's actual normalized tokens. */
+static void check_alias(const char *text)
+{
+	J *tokens = tokenize_text(text);
+	Buf joined = { 0 };
+	int count = 0;
+	EACH(token, tokens) {
+		const char *normal = S(GET(token, "normal"));
+		if (*normal) {
+			if (count++)
+				buf_put(&joined, " ");
+			buf_put(&joined, normal);
+		}
+	}
+	DEL(tokens);
+	char *expected = norm(joined.p ? joined.p : "", 1, 0);
+	char *actual = tokenize_key(text);
+	/* These inputs are lowercase. Plain input must need no alias. */
+	int needs_alias = *expected && strcmp(expected, text);
+	total++;
+	if (needs_alias ? (!actual || strcmp(actual, expected)) :
+				actual != NULL) {
+		fprintf(stderr, "Alias differs from tokenization for [%s]\n",
+			text);
+		failures++;
+	}
+	free(joined.p);
+	free(expected);
+	free(actual);
+}
+static void alias_vectors(void)
+{
+	for (int byte = 1; byte < 128; byte++) {
+		if (byte >= 'A' && byte <= 'Z')
+			continue;
+		char text[] = { 'a', (char)byte, 'b', ' ',
+				'1', (char)byte, '2', 0 };
+		check_alias(text);
+	}
+	const char *values[] = { "",
+				 "school42 regional_academy",
+				 "_school_",
+				 "a  b",
+				 "école 42",
+				 "l’école",
+				 "xʼy",
+				 "a²b",
+				 "a\xc0\x80"
+				 "b" };
+	for (size_t i = 0; i < sizeof(values) / sizeof(*values); i++)
+		check_alias(values[i]);
+}
+
 int main(void)
 {
 	normalization_vectors();
+	alias_vectors();
 	const char *length_vectors[] = { "", "ascii", "aé🐕",
 					 "a\xc0\x80"
 					 "b",

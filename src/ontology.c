@@ -220,6 +220,8 @@ J *generate_lookup_traced(J *f, LookupTrace **trace_out)
 		}
 		map_free(&gram_set);
 		Patterns *patterns = patterns_build(grams);
+		if (trace)
+			lookup_trace_reserve(trace, (size_t)SIZE(values));
 		EACH(v, values) {
 			int matches = patterns_find(patterns, S(v));
 			for (int i = 0; i < matches; i++) {
@@ -543,6 +545,23 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 	    synraw_index = { 0 }, parent_index = { 0 }, child_index = { 0 },
 	    equiv_index = { 0 }, predicate_indexes = { 0 },
 	    subentity_index = { 0 };
+	/* Bound growing indexes from the graph before allocating their entries. */
+	size_t label_rows = 0, vocabulary_rows = 0;
+	for (size_t i = 0; i < g->n; i++) {
+		const char *p = g->ts[i].p.value;
+		label_rows += !strcmp(p, RDFS "label");
+		vocabulary_rows += !strcmp(p, RDFS "label") ||
+				   !strcmp(p, RDFS "seeAlso") ||
+				   !strcmp(p, SKOS "altLabel") ||
+				   !strcmp(local(p), "inflection");
+	}
+	map_reserve(&label_index, label_rows);
+	map_reserve(&ner_index, label_rows);
+	size_t vocabulary_subjects = vocabulary_rows < g->subjects.size ?
+						   vocabulary_rows :
+						   g->subjects.size;
+	map_reserve(&raw_index, vocabulary_subjects);
+	map_reserve(&synraw_index, vocabulary_subjects);
 	int individuals = 0, subclass = 0, skos = 0;
 	for (size_t i = 0; i < g->n; i++) {
 		Triple *t = &g->ts[i];
