@@ -197,7 +197,8 @@ static LookupValue *adjust(LookupState *s, int words, const char *text,
 		if (!v->refs++) {
 			if (!v->entry)
 				show_value(v);
-			map_put_ref(&g->dirty, v->text, v);
+			if (!s->building)
+				map_put_ref(&g->dirty, v->text, v);
 			if (s->change)
 				s->change(s->context, words, text, 1);
 		}
@@ -395,13 +396,14 @@ static void gram_change(LookupGroup *g, const char *gram, int delta,
 	size_t n = (size_t)(uintptr_t)map_get(&g->grams, gram);
 	if (delta > 0) {
 		map_put(&g->grams, gram, (void *)(uintptr_t)(n + 1));
-		if (!n)
+		if (!n && changed)
 			map_put(changed, gram, (void *)1);
 	} else {
 		assert(n);
 		if (n == 1) {
 			map_delete(&g->grams, gram);
-			map_put(changed, gram, (void *)1);
+			if (changed)
+				map_put(changed, gram, (void *)1);
 		} else
 			map_put(&g->grams, gram, (void *)(uintptr_t)(n - 1));
 	}
@@ -435,7 +437,8 @@ static void derive_gram(LookupState *s, LookupValue *v, Map *outputs,
 	int words = word_count(text);
 	if (words >= 2 && words <= 5 && !map_get(outputs, text)) {
 		LookupValue *old = map_get(&v->derived, text);
-		map_put_small(outputs, text, old ? old : adjust(s, words, text, 1));
+		map_put_small(outputs, text,
+			      old ? old : adjust(s, words, text, 1));
 	}
 	free(u);
 	free(text);
@@ -484,10 +487,49 @@ static void release_value(LookupValue *v)
 	map_free(&v->derived);
 	free(v);
 }
+static void index_change(LookupValue *v, Map *changed)
+{
+	LookupGroup *g = v->group;
+	if (!!v->refs == v->indexed)
+		return;
+	if (v->refs) {
+		v->gram = leading_gram(v);
+		index_value(v, 1);
+		gram_change(g, v->gram, 1, changed);
+		v->indexed = 1;
+	} else {
+		index_value(v, 0);
+		gram_change(g, v->gram, -1, changed);
+		free(v->gram);
+		v->gram = NULL;
+		v->indexed = 0;
+	}
+}
 void lookup_state_flush(LookupState *s)
 {
 	for (int words = 6; words >= 3; words--) {
 		LookupGroup *g = group_at(s, words);
+		if (s->building) {
+			/* Loading visits every active value in each ordered group.
+			 * Only edits need dirty/affected maps; walking the arrays keeps
+			 * nearby patterns and values together during construction. */
+			EACH(entry, g->array)
+				index_change(map_get(&g->values, S(entry)),
+					     NULL);
+			J *grams = ARR();
+			SLOTS(i, g->grams)
+			ADD(grams, STR(g->grams.slots[i].key));
+			sort_strings(grams, -1);
+			Patterns *bulk = patterns_build(grams);
+			EACH(entry, g->array) {
+				LookupValue *v = map_get(&g->values, S(entry));
+				if (v->refs)
+					derive(s, v, bulk);
+			}
+			patterns_free(bulk);
+			DEL(grams);
+			continue;
+		}
 		Map changed = { 0 }, affected = { 0 };
 		map_reserve(&affected, g->dirty.size);
 		SLOTS(i, g->dirty)
@@ -496,34 +538,12 @@ void lookup_state_flush(LookupState *s)
 			if (!!v->refs == v->indexed)
 				continue;
 			map_put(&affected, v->text, v);
-			if (v->refs) {
-				v->gram = leading_gram(v);
-				index_value(v, 1);
-				gram_change(g, v->gram, 1, &changed);
-				v->indexed = 1;
-			} else {
-				index_value(v, 0);
-				gram_change(g, v->gram, -1, &changed);
-				free(v->gram);
-				v->gram = NULL;
-				v->indexed = 0;
-			}
+			index_change(v, &changed);
 		}
-		J *grams = NULL;
-		Patterns *bulk = NULL;
-		if (s->building) {
-			grams = ARR();
-			SLOTS(i, g->grams)
-			ADD(grams, STR(g->grams.slots[i].key));
-			bulk = patterns_build(grams);
-		} else {
-			SLOTS(i, changed)
-			gram_values(g, changed.slots[i].key, &affected);
-		}
-		SLOTS(i, affected) derive(s, affected.slots[i].value, bulk);
-		if (bulk)
-			patterns_free(bulk);
-		DEL(grams);
+		SLOTS(i, changed)
+		gram_values(g, changed.slots[i].key, &affected);
+		SLOTS(i, affected)
+		derive(s, affected.slots[i].value, NULL);
 		map_free(&changed);
 		map_free(&affected);
 	}
@@ -580,7 +600,6 @@ static void seed_lookup(LookupState *s)
 		map_put(&s->groups, array->string, g);
 		size_t n = (size_t)SIZE(array), depth = 0;
 		map_reserve(&g->values, n);
-		map_reserve(&g->dirty, n);
 		LookupValue **stack = malloc((n ? n : 1) * sizeof(*stack));
 		EACH(entry, array) {
 			LookupValue *v = calloc(1, sizeof(*v)), *left = NULL;
