@@ -13,25 +13,48 @@ J *graph_predicate(Graph *g, const char *predicate, int lc, int rev,
 	J *out = OBJ();
 	Map keys = { 0 };
 	size_t rows = 0;
+	for (size_t i = 0; i < g->n; i++)
+		rows += !strcmp(g->ts[i].p.value, predicate);
+	map_reserve(&keys, rows);
 	for (size_t i = 0; i < g->n && !err->code; i++) {
 		Triple *t = &g->ts[i];
 		if (strcmp(t->p.value, predicate))
 			continue;
-		rows++;
-		J *ks = rdf_flatten(g, rev ? &t->o : &t->s, lc, err);
-		J *vs = rdf_flatten(g, rev ? &t->s : &t->o, lc, err);
-		EACH(k, ks) {
+		Term *terms[] = { rev ? &t->o : &t->s, rev ? &t->s : &t->o };
+		J arrays[2] = { { 0 } }, values[2] = { { 0 } }, *flat[2];
+		/* Ordinary terms flatten to one string. The output copies it, so
+		 * temporary JSON wrappers can stay on the stack. */
+		for (int j = 0; j < 2; j++) {
+			if (terms[j]->kind == 2)
+				flat[j] = rdf_flatten(g, terms[j], lc, err);
+			else {
+				values[j].type = cJSON_String;
+				values[j].valuestring =
+					norm(terms[j]->kind == 0 ?
+							   local(terms[j]->value) :
+							   terms[j]->value,
+					     lc, 0);
+				arrays[j].type = cJSON_Array;
+				arrays[j].child = &values[j];
+				flat[j] = &arrays[j];
+			}
+		}
+		EACH(k, flat[0]) {
 			if (!*S(k) || !strcmp(S(k), "nil") ||
 			    !strcmp(S(k), "class"))
 				continue;
 			J *a = indexed_ensure(out, &keys, S(k), 1);
-			EACH(v, vs)
+			EACH(v, flat[1])
 				if (*S(v) && strcmp(S(v), S(k)) &&
 				    strcmp(S(v), "nil"))
 					unique(a, S(v));
 		}
-		DEL(ks);
-		DEL(vs);
+		for (int j = 0; j < 2; j++) {
+			if (terms[j]->kind == 2)
+				DEL(flat[j]);
+			else
+				free(values[j].valuestring);
+		}
 	}
 	map_free(&keys);
 	EACH(k, out)

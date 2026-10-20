@@ -177,9 +177,11 @@ static void build_view_members(void *data)
 	mc_engine *e = job->engine;
 	UpdateState *u = job->state;
 	J *syns = GET(e->snapshot, "synonyms");
-	J *plus = generate_spans(job->raw, e->distance, 1, e->comma_lists);
-	plus_refs(u, plus, 1);
-	DEL(plus);
+	if (job->raw) {
+		J *plus = generate_spans(job->raw, e->distance, 1, e->comma_lists);
+		plus_refs(u, plus, 1);
+		DEL(plus);
+	}
 	prepare_view(u, e->snapshot);
 	if (e->live)
 		prepare_view(u, e->live);
@@ -210,9 +212,15 @@ static void build_source_members(void *data)
 	size_t sources = (size_t)SIZE(GET(syns, "fwd"));
 	map_reserve(&u->owners, e->graph->subjects.size);
 	map_reserve(&u->ner_refs, (size_t)SIZE(GET(e->snapshot, "ner")));
-	J *raw = OBJ();
+	/* Explicit plus literals were excluded before these jobs started.
+	 * Implicit plus rules require an underscore in a vocabulary key. */
+	int compounds = 0;
+	EACH(k, GET(syns, "fwd"))
+		compounds |= strchr(k->string, '_') != NULL;
+	J *raw = compounds ? OBJ() : NULL;
 	Map raw_keys = { 0 };
-	map_reserve(&raw_keys, sources);
+	if (compounds)
+		map_reserve(&raw_keys, sources);
 	const char *previous_subject = NULL;
 	char *canon = NULL;
 	for (size_t i = 0; i < e->graph->n; i++) {
@@ -234,7 +242,7 @@ static void build_source_members(void *data)
 		}
 		if (!strcmp(t->p.value, RDFS "label"))
 			ner_ref(u, t->o.value, 1);
-		if (vocabulary(t->p.value)) {
+		if (compounds && vocabulary(t->p.value)) {
 			char *value = norm(t->o.value, 1, 0);
 			if (*value && strcmp(value, "nil"))
 				unique(indexed_ensure(raw, &raw_keys, canon, 1),

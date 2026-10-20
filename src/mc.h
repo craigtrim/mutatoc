@@ -163,6 +163,7 @@ J *generate_lookup(J *);
 J *generate_lookup_shared(J *, J *);
 J *generate_lookup_traced(J *, LookupTrace **);
 char *lookup_leading_gram(const char *text, int words);
+int lookup_rewritable(const char *text, int words);
 typedef struct LookupState LookupState;
 LookupState *lookup_state_build(J *);
 LookupState *lookup_state_reuse(J *, J *);

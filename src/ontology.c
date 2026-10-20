@@ -63,7 +63,7 @@ static J *reverse_synonyms(J *forward)
 	return reverse;
 }
 
-J *generate_synonyms(J *raw, int reverse)
+static J *synonyms_build(J *raw, int reverse, int consume)
 {
 	J *f = OBJ();
 	Map forward = { 0 };
@@ -71,14 +71,22 @@ J *generate_synonyms(J *raw, int reverse)
 	EACH(k, raw) {
 		char *key = lower(k->string);
 		J *a = indexed_ensure(f, &forward, key, 1);
-		EACH(v, k) {
+		for (J *v = k->child, *next; v; v = next) {
+			next = v->next;
 			char *replaced = strchr(S(v), '+') ?
 						       replace(S(v), "+", " ") :
 						       NULL;
 			const char *r = replaced ? replaced : S(v);
 			char *owned;
 			const char *normal = norm_borrowed(r, &owned);
-			unique(a, normal);
+			/* A consumed source no longer needs unchanged nodes. Moving them
+			 * preserves their string ownership and avoids a copy/free pair. */
+			if (consume && !replaced && !owned) {
+				if (!contains(a, normal))
+					ADD(a,
+					    cJSON_DetachItemViaPointer(k, v));
+			} else
+				unique(a, normal);
 			free(owned);
 			char *c;
 			if (strchr(r, '_')) {
@@ -112,6 +120,11 @@ J *generate_synonyms(J *raw, int reverse)
 	J *r = reverse_synonyms(f);
 	DEL(f);
 	return r;
+}
+
+J *generate_synonyms(J *raw, int reverse)
+{
+	return synonyms_build(raw, reverse, 0);
 }
 
 /* Contiguous forms preserve insertion order without allocating a second set
@@ -279,6 +292,30 @@ static void lookup_add(J *d, Map *seen, const char *s, int traced, int borrow)
 	free(replaced);
 }
 
+static int gram_stopword(const char *text, size_t length)
+{
+	return (length == 2 &&
+		(!memcmp(text, "of", 2) || !memcmp(text, "to", 2))) ||
+	       (length == 3 &&
+		(!memcmp(text, "and", 3) || !memcmp(text, "for", 3)));
+}
+/* An (n-1)-word substring can cut the first two and last two words of an
+ * n-word value. Every word between them is necessarily present in full.
+ * A forbidden gram word there makes any rewrite impossible, even after edits. */
+int lookup_rewritable(const char *text, int words)
+{
+	const char *at = text;
+	for (int i = 0; i < words - 2; i++) {
+		const char *end = strchr(at, ' ');
+		if (!end)
+			return 1;
+		if (i >= 2 && gram_stopword(at, (size_t)(end - at)))
+			return 0;
+		at = end + 1;
+	}
+	return 1;
+}
+
 /* Groups contain exactly one more space-delimited word than their grams.
  * Slice the leading words directly; temporary JSON token arrays are unnecessary. */
 char *lookup_leading_gram(const char *text, int words)
@@ -289,10 +326,7 @@ char *lookup_leading_gram(const char *text, int words)
 		if (!end)
 			return NULL;
 		size_t length = (size_t)(end - at);
-		if ((length == 2 &&
-		     (!memcmp(at, "of", 2) || !memcmp(at, "to", 2))) ||
-		    (length == 3 &&
-		     (!memcmp(at, "and", 3) || !memcmp(at, "for", 3))))
+		if (gram_stopword(at, length))
 			return NULL;
 		at = end + 1;
 	}
@@ -703,9 +737,10 @@ static char *predicate_key(const char *p)
 J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 		  mc_error *e)
 {
-	J *r = OBJ(), *raw = OBJ(), *synraw = OBJ(), *by = OBJ(),
-	  *labels = OBJ(), *ner = OBJ(), *parents = OBJ(), *children = OBJ(),
-	  *equivs = OBJ(), *grams = OBJ(), *subentities = ARR(), *preds = ARR();
+	J *r = OBJ(), *raw = OBJ(), *synraw = comma_lists ? OBJ() : raw,
+	  *by = OBJ(), *labels = OBJ(), *ner = OBJ(), *parents = OBJ(),
+	  *children = OBJ(), *equivs = OBJ(), *grams = OBJ(),
+	  *subentities = ARR(), *preds = ARR();
 	Map label_index = { 0 }, ner_index = { 0 }, raw_index = { 0 },
 	    synraw_index = { 0 }, parent_index = { 0 }, child_index = { 0 },
 	    equiv_index = { 0 }, predicate_indexes = { 0 },
@@ -726,8 +761,9 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 						   vocabulary_rows :
 						   g->subjects.size;
 	map_reserve(&raw_index, vocabulary_subjects);
-	map_reserve(&synraw_index, vocabulary_subjects);
-	int individuals = 0, subclass = 0, skos = 0;
+	if (comma_lists)
+		map_reserve(&synraw_index, vocabulary_subjects);
+	int individuals = 0, subclass = 0, skos = 0, span_candidates = 0;
 	for (size_t i = 0; i < g->n; i++) {
 		Triple *t = &g->ts[i];
 		if (!strcmp(t->p.value, RDF "type")) {
@@ -822,6 +858,13 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 				if (!*S(v) || !strcmp(S(v), "nil"))
 					continue;
 				indexed_push(raw, &raw_index, key, S(v));
+				span_candidates |= strchr(key, ' ') != NULL ||
+						   strchr(key, '_') != NULL ||
+						   strchr(S(v), '+') != NULL;
+				/* Without list expansion, flattening has already trimmed
+				 * these values; the synonym source is exactly raw. */
+				if (!comma_lists)
+					continue;
 				J *parts = literal_parts(S(v), comma_lists);
 				EACH(p, parts) {
 					char *s = norm(S(p), 0, 0);
@@ -944,7 +987,8 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 		PUT(grams, k, a);
 	}
 	DEL(ngentities);
-	J *syns = OBJ(), *fwd = generate_synonyms(synraw, 0);
+	J *syns = OBJ(),
+	  *fwd = synonyms_build(synraw, 0, synraw != raw || !span_candidates);
 	lookup_trace_free(g->lookup_trace);
 	g->lookup_trace = NULL;
 	PUT(syns, "lookup", generate_lookup_traced(fwd, &g->lookup_trace));
@@ -954,7 +998,11 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 	PUT(r, "parents", parents);
 	PUT(r, "trie", generate_trie(subentities));
 	PUT(r, "ngrams", grams);
-	PUT(r, "spans", generate_spans(raw, distance, 0, comma_lists));
+	/* Ordinary rules need a compound key; plus rules need such a key or
+	 * an explicit plus literal. Their absence is known while collecting raw. */
+	PUT(r, "spans",
+	    span_candidates ? generate_spans(raw, distance, 0, comma_lists) :
+				    OBJ());
 	PUT(r, "labels", labels);
 	if (!SIZE(equivs)) {
 		DEL(equivs);
@@ -965,8 +1013,9 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 	PUT(r, "by_predicate", by);
 	PUT(r, "ner", ner);
 	PUT(r, "synonyms", syns);
+	if (synraw != raw)
+		DEL(synraw);
 	DEL(raw);
-	DEL(synraw);
 	DEL(subentities);
 	if (e->code) {
 		DEL(r);

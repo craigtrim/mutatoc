@@ -485,11 +485,68 @@ static int check_posting_edits(void)
 	return ok;
 }
 
+/* Interior stop words cannot occur in valid grams. Boundary stop words can
+ * still be matched partially, and replacements can make either case change. */
+static int check_stopword_edits(void)
+{
+	const char *terms[] = {
+		"alpha beta of delta echo foxtrot",
+		"alpha beta gamma delta echo foxtrot",
+		"alpha beta gamma delta echo another",
+		"of beta gamma delta echo foxtrot",
+		"f beta gamma delta echo another",
+		"alpha of gamma delta echo foxtrot",
+		"f gamma delta echo foxtrot another",
+		"alpha beta gamma delta of foxtrot",
+		"alpha beta gamma delta o another",
+		"alpha beta gamma for echo",
+		"alpha beta and delta echo",
+		"alpha beta andy delta echo",
+		"alpha beta to delta echo foxtrot",
+		"alpha beta toward delta echo foxtrot"
+	};
+	J *fwd = OBJ();
+	for (size_t i = 0; i < sizeof(terms) / sizeof(*terms); i++) {
+		char key[32];
+		snprintf(key, sizeof(key), "source%u", (unsigned)i);
+		J *values = ARR();
+		ADD(values, STR(terms[i]));
+		PUT(fwd, key, values);
+	}
+	LookupTrace *trace = NULL;
+	J *actual = generate_lookup_traced(fwd, &trace);
+	LookupState *state = lookup_state_reuse_traced(fwd, actual, trace);
+	lookup_trace_free(trace);
+	int ok = 1;
+	for (int step = 0; step < 28 && ok; step++) {
+		J *old = OBJ();
+		PUT(old, "source0", DUP(GET(fwd, "source0")));
+		lookup_state_entity(state, old, -1);
+		DEL(old);
+		J *replacement = OBJ(), *values = ARR();
+		ADD(values, STR(terms[(step + 1) % 14]));
+		PUT(replacement, "source0", values);
+		set(fwd, "source0", DUP(values));
+		lookup_state_entity(state, replacement, 1);
+		DEL(replacement);
+		lookup_state_flush(state);
+		J *expected = reference_lookup(fwd);
+		ok = cJSON_Compare(actual, expected, 1);
+		DEL(expected);
+	}
+	lookup_state_free(state);
+	DEL(actual);
+	DEL(fwd);
+	if (!ok)
+		fprintf(stderr, "stop-word dependency mismatch after replacement\n");
+	return ok;
+}
+
 int main(void)
 {
 	if (!check_patterns() || !check_sorting() || !check_maps() ||
 	    !check_map_bytes() || !check_map_ownership() || !check_prefixes() ||
-	    !check_posting_edits())
+	    !check_posting_edits() || !check_stopword_edits())
 		return 1;
 	const char *terms[] = { "red green blue",
 				"abcdefg middle ending",
@@ -536,6 +593,24 @@ int main(void)
 		if (!ok)
 			return 1;
 	}
+	/* Many aliases, duplicate normalized forms, and punctuation exercise
+	 * ownership through source removal as well as small vocabulary sets. */
+	J *many = OBJ();
+	for (int i = 0; i < 3; i++) {
+		char key[32];
+		snprintf(key, sizeof(key), "many_aliases_%d", i);
+		J *values = ARR();
+		for (size_t j = 0; j < sizeof(terms) / sizeof(*terms); j++)
+			ADD(values, STR(terms[j]));
+		ADD(values, STR("  RED  GREEN!  "));
+		ADD(values, STR("red_green!"));
+		ADD(values, STR("red green!"));
+		PUT(many, key, values);
+	}
+	int many_ok = check(many);
+	DEL(many);
+	if (!many_ok)
+		return 1;
 	unsigned state = 129;
 	for (int run = 0; run < 180; run++) {
 		J *fwd = OBJ();

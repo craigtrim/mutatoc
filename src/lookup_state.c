@@ -579,6 +579,8 @@ static void index_value(LookupValue *v, int add)
 		}
 		return;
 	}
+	if (!lookup_rewritable(v->text, v->group->words))
+		return;
 	const char *start = v->text;
 	int word = 0;
 	for (;;) {
@@ -831,38 +833,88 @@ void lookup_state_flush(LookupState *s)
 		map_free(&g->dirty);
 	}
 }
+/* Borrow unchanged source strings while collecting the distinct forms of one
+ * entity. Small synonym sets need no JSON nodes or allocated hash table. */
+typedef struct {
+	const char *text;
+	char *owned;
+} BaseForm;
+typedef struct {
+	BaseForm local[8], *items;
+	size_t count, capacity;
+	Map seen;
+} BaseForms;
+static void base_form_add(BaseForms *forms, const char *text, char *owned)
+{
+	int duplicate = 0;
+	if (forms->seen.cap)
+		duplicate = map_get(&forms->seen, text) != NULL;
+	else
+		for (size_t i = 0; i < forms->count && !duplicate; i++)
+			duplicate = !strcmp(forms->items[i].text, text);
+	if (duplicate) {
+		free(owned);
+		return;
+	}
+	if (forms->count == forms->capacity) {
+		size_t capacity = forms->capacity * 2;
+		BaseForm *items = malloc(capacity * sizeof(*items));
+		memcpy(items, forms->items, forms->count * sizeof(*items));
+		if (forms->items != forms->local)
+			free(forms->items);
+		forms->items = items;
+		forms->capacity = capacity;
+		if (!forms->seen.cap) {
+			map_reserve(&forms->seen, capacity);
+			for (size_t i = 0; i < forms->count; i++)
+				map_put_ref(&forms->seen, items[i].text,
+					    (void *)1);
+		}
+	}
+	forms->items[forms->count++] = (BaseForm){ text, owned };
+	if (forms->seen.cap)
+		map_put_ref(&forms->seen, text, (void *)1);
+}
 /* Each canonical contributes its distinct base forms once. Derived entries
  * carry one reference per source value, regardless of duplicate derivations. */
 void lookup_state_entity(LookupState *s, J *fwd, int delta)
 {
-	Map seen = { 0 };
 	EACH(k, fwd) {
-		J *forms = ARR();
+		BaseForms forms = { 0 };
+		forms.items = forms.local;
+		forms.capacity = 8;
 		char *key = strchr(k->string, '_') ?
 					  replace(k->string, "_", " ") :
 					  NULL;
-		unique_indexed(forms, &seen, key ? key : k->string);
-		free(key);
+		base_form_add(&forms, key ? key : k->string, key);
 		EACH(v, k) {
 			char *owned;
 			const char *normalized = norm_borrowed(S(v), &owned);
 			char *base = strchr(normalized, '_') ?
 						   replace(normalized, "_", " ") :
 						   NULL;
-			unique_indexed(forms, &seen, base ? base : normalized);
-			free(base);
+			/* The punctuation form retains underscores, so collect it before
+			 * transferring or freeing the normalized value below. */
 			size_t n = strlen(normalized);
-			if (n && strchr("!?.", normalized[n - 1])) {
-				char *trimmed = slice(normalized, n - 1);
-				unique_indexed(forms, &seen, trimmed);
-				free(trimmed);
-			}
-			free(owned);
+			char *trimmed = n && strchr("!?.", normalized[n - 1]) ?
+						      slice(normalized, n - 1) :
+						      NULL;
+			if (base) {
+				free(owned);
+				base_form_add(&forms, base, base);
+			} else
+				base_form_add(&forms, normalized, owned);
+			if (trimmed)
+				base_form_add(&forms, trimmed, trimmed);
 		}
-		EACH(v, forms)
-			adjust(s, word_count(S(v)), S(v), delta);
-		DEL(forms);
-		map_free(&seen);
+		for (size_t i = 0; i < forms.count; i++)
+			adjust(s, word_count(forms.items[i].text),
+			       forms.items[i].text, delta);
+		map_free(&forms.seen);
+		for (size_t i = 0; i < forms.count; i++)
+			free(forms.items[i].owned);
+		if (forms.items != forms.local)
+			free(forms.items);
 	}
 }
 /* Existing lookup arrays already have the required length/lexical order.
