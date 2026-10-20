@@ -13,9 +13,9 @@ Each request is one JSON object. The CLI's `--serve` mode accepts newline-delimi
 | `schema` | none | ontology schema |
 | `detect_schema` | `content` and optional `format`, or `turtle`; optional `base` | schema without changing loaded ontology |
 | `query` | `method`, `args`, optional `kwargs`, `interface` | finder/query result |
-| `parse` | `text`, optional `ctr` | canonical `text` and complete matched `tokens` |
-| `transform_tokens` | `stage`, `tokens` | one optional service: `exact`, `spans`, `hierarchy`, or `augment` |
-| `parse_tokens` | `tokens`, optional `ctr` | matched tokens and canonical text, without tokenizing |
+| `parse` | `text`, optional `ctr`, `line_breaks` | canonical `text` and complete matched `tokens` |
+| `transform_tokens` | `stage`, `tokens`, optional `line_breaks` | one optional service: `exact`, `spans`, `hierarchy`, or `augment` |
+| `parse_tokens` | `tokens`, optional `ctr`, `line_breaks` | matched tokens and canonical text, without tokenizing |
 | `tokenize` | `text` | the tokens `parse` would match |
 | `generate_synonyms` | `data`, optional `reverse` | synonym view |
 | `generate_lookup` | `data` | lookup view |
@@ -75,12 +75,28 @@ A prepared MDA snapshot stores extracted matching views. Loading one does not re
 
 - `text` is a slice of the input, and concatenating every token's `text` reproduces the input. A word keeps the one space that follows it. Any other run of whitespace (tabs, line breaks, further spaces) is its own token, whose `normal` is empty.
 - `x` and `y` are code point offsets into the input: `x` is where the token starts and `y` is where it ends without its trailing whitespace, so a whitespace token has `y` equal to `x`.
-- `normal` is the text lowercased, with every hyphen and dash folded to `-`, every apostrophe and single quote folded to `'`, and every double quote, including the pairs ``` `` ``` and `´´`, folded to `"`. Matching reads only `normal`.
+- `normal` is the text lowercased, with every hyphen and dash folded to `-`, every apostrophe and single quote folded to `'`, and every double quote, including the pairs ``` `` ``` and `´´`, folded to `"`. Matching reads `normal` for word forms; optional line boundaries also inspect whitespace token `text`.
 - `id` is `<hash>#<index>`: the MurmurHash64A (seed 1) of the token's text without its trailing space, and its position in the result. Treat ids as opaque identifiers scoped to one tokenization result; they are not stable across tokenizer changes.
 
 Punctuation becomes its own token, except a period or comma inside a number, an apostrophe inside a word, and an ampersand between letters. A period or comma that ends a number is split off (`2020.` becomes `2020` and `.`), and so are underscores that open or close a word (`_name_`). An apostrophe that ends a word is split off as a closing quote, except after a plural `s` (`dogs'`). A pair of backticks or acute accents is one token. Every character that folds to `'` behaves as `'` in these rules, so `Driver’s` is one token just as `Driver's` is. Contractions stay whole (`don't`, `can't`, `y'all`, `O'Brien`), and so do numbers written with units (`5G`, `9am`, `500mg`) and words such as `cannot`. Abbreviations split at their periods (`dept.` becomes `dept` and `.`). `tests/test_tokenize.c` pins these cases, and `tests/test_token_fidelity.c` holds every token and entity to the input.
 
 A matched entity is a new token `{id, x, y, ner, text, normal, swaps}` whose `normal` is the canonical form and whose `swaps.tokens` holds the original tokens. For `parse`, its `text` is the input from its `x` to its `y`; for `parse_tokens`, it is its tokens' trimmed texts joined by single spaces. `ner` comes from the ontology; a `hierarchy` match with no ontology label has a null `ner`.
+
+## Line boundaries
+
+<!-- craigtrim/mutatoc#19 -->
+
+`parse`, `parse_tokens` and `transform_tokens` accept `line_breaks: "ignore"` (the default) or `line_breaks: "boundary"`. The choice applies only to that request and is not stored in the engine or snapshot. Other strings and non-string values, including null, return input error 2.
+
+```json
+{"op":"parse","text":"survey\nglacier","line_breaks":"boundary"}
+```
+
+With the label `Glacier Survey` loaded, the default mode matches this text as a span. Boundary mode leaves the two words unmatched. A same-line `survey glacier` still matches, including when an earlier candidate would cross a break.
+
+Boundary mode prevents exact, span and hierarchy windows from crossing a whitespace-only token containing LF (U+000A), CR (U+000D), VT (U+000B), FF (U+000C), NEL (U+0085), LINE SEPARATOR (U+2028) or PARAGRAPH SEPARATOR (U+2029). CRLF and runs containing blank lines also block matching. Spaces, tabs and other non-breaking whitespace keep their existing behavior. Span distance still counts only non-whitespace tokens; context requirements still search the whole document. The `augment` stage accepts and validates the option, but annotation does not create matching windows.
+
+Tokenization, source text, code point offsets and swap history are unchanged. For caller-supplied tokens, a boundary token must have empty `normal`, contain only whitespace in `text`, and have no `swaps` field. Supplied tokens remain atomic: embedded breaks in a visible token, a nonempty `normal`, or existing swap history do not cause retokenization.
 
 ## Span rules
 
@@ -89,8 +105,8 @@ A matched entity is a new token `{id, x, y, ner, text, normal, swaps}` whose `no
 A span rule matches the words of a multiword label when they appear near each other in any order rather than as the exact phrase. The snapshot's `spans` view keys each rule by the label's first word and lists the label's other words, without stopwords, as `content`. A rule matches when the text holds the key and every content word, and one occurrence of each can be chosen so that the first and last chosen positions are at most `distance` apart. The distance is 4 unless `load` or `generate_spans` sets another value. The `spans` entity covers the tokens from the first chosen occurrence to the last.
 
 - Every word of the rule is held to the distance, not only two of them. A rule whose key and content words, after stopwords are dropped, number more than `distance + 1` can therefore match only as its exact phrase: `Office of Tidal Records` needs three words, not four.
-- Positions count every token except whitespace. Punctuation takes a position, while a run of whitespace beyond the single space after a word (a second space, a tab or a line break) takes none, just as it never interrupts an exact phrase. In `marine, pottery, workshop` the first and last words are four positions apart; in `marine pottery workshop` they are two, and they stay two when tabs or line breaks replace the spaces. A span still covers the whitespace between its words, so its `text`, `x` and `y` are those of the input. An entity matched exactly earlier in the parse is one position.
-- Because line breaks take no position, words at the end of one line of a pasted list and the start of the next sit only a count or so apart and can match. Treating a line break as a boundary would be segmentation, which mutatoc does not do; a caller that wants lines matched apart can send each line on its own.
+- Positions count every token except whitespace. Punctuation takes a position, while a run of whitespace beyond the single space after a word (a second space, a tab or a line break) takes none, just as it never interrupts an exact phrase in the default `ignore` mode. In `marine, pottery, workshop` the first and last words are four positions apart; in `marine pottery workshop` they are two, and they stay two when tabs or line breaks replace the spaces. A span still covers the whitespace between its words, so its `text`, `x` and `y` are those of the input. An entity matched exactly earlier in the parse is one position.
+- In the default `ignore` mode, words at the end of one line and the start of the next can match because line breaks take no position. Set `line_breaks: "boundary"` to prevent windows crossing mandatory line breaks while retaining document-wide context.
 - When a word occurs more than once, the rule uses the occurrences that lie closest together, and the leftmost of equally close sets.
 - A stopword the rule leaves out is not required, but it takes a position when the text contains it.
 - `context` words must appear somewhere in the text and are not held to the distance.

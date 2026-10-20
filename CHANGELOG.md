@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0 (2026-10-20)
+
+### Added
+
+- Optional `line_breaks: "boundary"` on `parse`, `parse_tokens` and `transform_tokens` prevents exact, span and hierarchy matches from crossing mandatory line breaks ([#19](https://github.com/craigtrim/mutatoc/issues/19)). Omitting the option, or setting it to `"ignore"`, preserves existing matching. Spaces and tabs remain ignorable; span context remains document-wide. Invalid modes return input error 2. See [Line boundaries](docs/protocol.md#line-boundaries).
+
 <!-- craigtrim/mutatoc#1, craigtrim/mutatoc#2, craigtrim/mutatoc#5, craigtrim/mutatoc#7, craigtrim/mutatoc#9, craigtrim/mutatoc#11, craigtrim/mutatoc#12 -->
 
 ## 0.6.0 (2026-10-20)

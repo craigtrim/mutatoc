@@ -1,7 +1,7 @@
 # Everything builds and tests natively; no interpreter or model at any stage (craigtrim/mutatoc#1).
 cmake_minimum_required(VERSION 3.20)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-project(mutatoc VERSION 0.6.0 LANGUAGES C)
+project(mutatoc VERSION 0.7.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
@@ -117,6 +117,9 @@ if(BUILD_TESTING)
   # Span rules that hold every content word within the distance (craigtrim/mutatoc#9).
   mutatoc_program(mutatoc_span_distance tests/test_span_distance.c)
   add_test(NAME span_distance COMMAND mutatoc_span_distance ${CMAKE_CURRENT_SOURCE_DIR})
+  # Request-local line boundaries (craigtrim/mutatoc#19).
+  mutatoc_program(mutatoc_line_breaks tests/test_line_breaks.c)
+  add_test(NAME line_breaks COMMAND mutatoc_line_breaks ${CMAKE_CURRENT_SOURCE_DIR})
   # Timing ceilings only mean something in optimized builds without sanitizers.
   # Build type names are case-insensitive in CMake, so compare them uppercased.
   set(optimized_configurations Release RelWithDebInfo MinSizeRel)

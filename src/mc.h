@@ -212,9 +212,10 @@ void match_index_mutable(MatchIndex *);
 void match_index_group_order(MatchIndex *, J *);
 void match_index_word(void *, int, const char *, int);
 void match_index_member(MatchIndex *, const char *, const char *, J *);
-J *match_tokens(const MatchIndex *, J *, const J *, int, mc_error *);
+/* Per-request line boundaries leave the public C API unchanged (#19). */
+J *match_tokens(const MatchIndex *, J *, const J *, int, int, mc_error *);
 J *transform_tokens(J *, const MatchIndex *, const J *, const J *, const char *,
-		    mc_error *);
+		    int, mc_error *);
 char *render(const J *);
 typedef struct UpdateState UpdateState;
 void update_state_build(mc_engine *);
