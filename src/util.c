@@ -644,11 +644,12 @@ static uint64_t hash(const char *s)
 	return h ^ (h >> 47);
 }
 
-/* One-byte fingerprints stay contiguous after the key/value slots. Empty
- * probes need not fetch a key string or an entire slot from memory. */
-static unsigned char *map_tags(Map *m)
+/* Compact metadata stores an eight-bit fingerprint and key ownership.
+ * Borrowed keys remain valid until their entry is removed or replaced. */
+enum { MAP_FINGERPRINT = 255, MAP_OWNED = 256 };
+static uint16_t *map_tags(Map *m)
 {
-	return (unsigned char *)(m->slots + m->cap);
+	return (uint16_t *)(m->slots + m->cap);
 }
 static unsigned char map_tag(uint64_t key_hash)
 {
@@ -659,10 +660,11 @@ void *map_get(Map *m, const char *k)
 	if (!m->cap)
 		return NULL;
 	uint64_t key_hash = hash(k);
-	unsigned char tag = map_tag(key_hash), *tags = map_tags(m);
+	uint16_t tag = map_tag(key_hash), *tags = map_tags(m);
 	size_t i = (size_t)key_hash & (m->cap - 1);
 	while (tags[i]) {
-		if (tags[i] == tag && !strcmp(m->slots[i].key, k))
+		if ((tags[i] & MAP_FINGERPRINT) == tag &&
+		    !strcmp(m->slots[i].key, k))
 			return m->slots[i].value;
 		i = (i + 1) & (m->cap - 1);
 	}
@@ -673,9 +675,9 @@ static void map_resize(Map *m, size_t capacity)
 {
 	Map old = *m;
 	m->cap = capacity;
-	m->slots = calloc(m->cap, sizeof(*m->slots) + 1);
-	unsigned char *tags = map_tags(m);
-	/* Transfer owned keys in the same probe order. */
+	m->slots = calloc(m->cap, sizeof(*m->slots) + sizeof(uint16_t));
+	uint16_t *tags = map_tags(m);
+	/* Transfer keys and their ownership in the same probe order. */
 	for (size_t i = 0; i < old.cap; i++)
 		if (old.slots[i].key) {
 			uint64_t key_hash = hash(old.slots[i].key);
@@ -683,7 +685,7 @@ static void map_resize(Map *m, size_t capacity)
 			while (tags[at])
 				at = (at + 1) & (m->cap - 1);
 			m->slots[at] = old.slots[i];
-			tags[at] = map_tag(key_hash);
+			tags[at] = map_tags(&old)[i];
 		}
 	free(old.slots);
 }
@@ -697,17 +699,29 @@ void map_reserve(Map *m, size_t entries)
 	if (capacity > m->cap)
 		map_resize(m, capacity);
 }
-void map_put(Map *m, const char *k, void *v)
+static void map_store(Map *m, const char *k, void *v, int borrowed)
 {
 	uint64_t key_hash = hash(k);
 	unsigned char tag = map_tag(key_hash);
 	size_t i = 0;
 	if (m->cap) {
-		unsigned char *tags = map_tags(m);
+		uint16_t *tags = map_tags(m);
 		i = (size_t)key_hash & (m->cap - 1);
 		while (tags[i]) {
-			if (tags[i] == tag && !strcmp(m->slots[i].key, k)) {
-				/* Updating an existing key must not rebuild the table. */
+			if ((tags[i] & MAP_FINGERPRINT) == tag &&
+			    !strcmp(m->slots[i].key, k)) {
+				/* Switch ownership before the previous owner can free its key. */
+				if (borrowed) {
+					if (m->slots[i].key != k &&
+					    (tags[i] & MAP_OWNED))
+						free(m->slots[i].key);
+					m->slots[i].key = (char *)k;
+					tags[i] = tag;
+				} else if (!borrowed &&
+					   !(tags[i] & MAP_OWNED)) {
+					m->slots[i].key = copy(k);
+					tags[i] = tag | MAP_OWNED;
+				}
 				m->slots[i].value = v;
 				return;
 			}
@@ -720,9 +734,18 @@ void map_put(Map *m, const char *k, void *v)
 		while (map_tags(m)[i])
 			i = (i + 1) & (m->cap - 1);
 	}
-	m->slots[i] = (Slot){ copy(k), v };
-	map_tags(m)[i] = tag;
+	m->slots[i] = (Slot){ borrowed ? (char *)k : copy(k), v };
+	map_tags(m)[i] = tag | (borrowed ? 0 : MAP_OWNED);
 	m->size++;
+}
+
+void map_put(Map *m, const char *key, void *value)
+{
+	map_store(m, key, value, 0);
+}
+void map_put_ref(Map *m, const char *key, void *value)
+{
+	map_store(m, key, value, 1);
 }
 
 /* Per-word dependency and alias buckets usually contain only one entry. */
@@ -730,7 +753,7 @@ void map_put_small(Map *m, const char *key, void *value)
 {
 	if (!m->cap) {
 		m->cap = 8;
-		m->slots = calloc(m->cap, sizeof(*m->slots) + 1);
+		m->slots = calloc(m->cap, sizeof(*m->slots) + sizeof(uint16_t));
 	}
 	map_put(m, key, value);
 }
@@ -738,7 +761,8 @@ void map_put_small(Map *m, const char *key, void *value)
 void map_free(Map *m)
 {
 	for (size_t i = 0; i < m->cap; i++)
-		free(m->slots[i].key);
+		if (map_tags(m)[i] & MAP_OWNED)
+			free(m->slots[i].key);
 	free(m->slots);
 	memset(m, 0, sizeof(*m));
 }
@@ -750,7 +774,7 @@ J *indexed_ensure(J *object, Map *index, const char *key, int array)
 	if (!value) {
 		value = array ? ARR() : OBJ();
 		PUT(object, key, value);
-		map_put(index, key, value);
+		map_put_ref(index, value->string, value);
 	}
 	return value;
 }
@@ -763,10 +787,12 @@ void indexed_set(J *object, Map *index, const char *key, J *value)
 			free(value->string);
 		value->type &= ~cJSON_StringIsConst;
 		value->string = copy(key);
+		map_put_ref(index, value->string, value);
 		cJSON_ReplaceItemViaPointer(object, old, value);
-	} else
+	} else {
 		PUT(object, key, value);
-	map_put(index, key, value);
+		map_put_ref(index, value->string, value);
+	}
 }
 
 /* Backshift deletion keeps probe chains reachable without tombstone buildup. */
@@ -775,14 +801,15 @@ void map_delete(Map *m, const char *key)
 	if (!m->cap)
 		return;
 	uint64_t key_hash = hash(key);
-	unsigned char tag = map_tag(key_hash), *tags = map_tags(m);
+	uint16_t tag = map_tag(key_hash), *tags = map_tags(m);
 	size_t mask = m->cap - 1, hole = (size_t)key_hash & mask;
-	while (tags[hole] && (tags[hole] != tag ||
+	while (tags[hole] && ((tags[hole] & MAP_FINGERPRINT) != tag ||
 			      strcmp(m->slots[hole].key, key)))
 		hole = (hole + 1) & mask;
 	if (!m->slots[hole].key)
 		return;
-	free(m->slots[hole].key);
+	if (tags[hole] & MAP_OWNED)
+		free(m->slots[hole].key);
 	m->size--;
 	size_t next = (hole + 1) & mask;
 	while (m->slots[next].key) {

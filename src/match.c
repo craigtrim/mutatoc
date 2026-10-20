@@ -1201,7 +1201,7 @@ void match_index_word(void *context, int words, const char *text, int delta)
 			map_put(&x->group_ranks, key,
 				(void *)(uintptr_t)w->rank);
 		}
-		map_put(&x->mutable_words, text, w);
+		map_put_ref(&x->mutable_words, w->text, w);
 		counter(mutable_group(x, words), text, 1);
 		mutable_prefixes(x, text, 1);
 		mutable_alias(x, text);

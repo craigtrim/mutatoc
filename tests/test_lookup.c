@@ -94,6 +94,42 @@ static int check_maps(void)
 	return 1;
 }
 
+static int check_map_ownership(void)
+{
+	Map map = { 0 };
+	char keys[160][32];
+	for (int i = 0; i < 160; i++) {
+		snprintf(keys[i], sizeof(keys[i]), "reference%d", i);
+		if (i & 1)
+			map_put(&map, keys[i], (void *)(uintptr_t)(i + 1));
+		else
+			map_put_ref(&map, keys[i], (void *)(uintptr_t)(i + 1));
+	}
+	map_reserve(&map, 500);
+	for (int i = 0; i < 160; i += 3)
+		map_delete(&map, keys[i]);
+	for (int i = 0; i < 160; i++)
+		if ((size_t)(uintptr_t)map_get(&map, keys[i]) !=
+		    (i % 3 ? (size_t)i + 1 : 0))
+			return 0;
+	char *first = copy("changing"), *second = copy("changing");
+	map_put_ref(&map, first, (void *)1);
+	map_put_ref(&map, second, (void *)2);
+	free(first);
+	if (map_get(&map, "changing") != (void *)2)
+		return 0;
+	map_put(&map, second, (void *)3);
+	free(second);
+	if (map_get(&map, "changing") != (void *)3)
+		return 0;
+	map_put_ref(&map, "changing", (void *)4);
+	if (map_get(&map, "changing") != (void *)4)
+		return 0;
+	map_delete(&map, "changing");
+	map_free(&map);
+	return 1;
+}
+
 /* Exercise every hash tail and address alignment with exact-size buffers. */
 static int check_map_bytes(void)
 {
@@ -150,7 +186,8 @@ static int check_sorting(void)
 					 terms[(i * 17 + run) % 7],
 					 run == 3 ? 0 : (i * 31) % 203);
 				if (run >= 5)
-					snprintf(text, sizeof(text), "%s%04d", prefix,
+					snprintf(text, sizeof(text), "%s%04d",
+						 prefix,
 						 run == 5 ? i : 699 - i);
 				ADD(actual, STR(run == 4 ? "" : text));
 			}
@@ -172,7 +209,8 @@ static int check_sorting(void)
 
 int main(void)
 {
-	if (!check_sorting() || !check_maps() || !check_map_bytes())
+	if (!check_sorting() || !check_maps() || !check_map_bytes() ||
+	    !check_map_ownership())
 		return 1;
 	const char *terms[] = { "red green blue",
 				"bred green blue",

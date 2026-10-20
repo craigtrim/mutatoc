@@ -82,6 +82,8 @@ typedef struct {
 void parallel_pair(void (*)(void *), void *, void (*)(void *), void *, int);
 void *map_get(Map *, const char *);
 void map_put(Map *, const char *, void *);
+/* Referenced keys must outlive their entries; deletion does not free them. */
+void map_put_ref(Map *, const char *, void *);
 void map_reserve(Map *, size_t);
 void map_put_small(Map *, const char *, void *);
 void map_free(Map *);

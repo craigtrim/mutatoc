@@ -36,7 +36,7 @@ static ObjectIndex *object_index(UpdateState *u, J *object)
 		x->object = object;
 		map_reserve(&x->members, (size_t)SIZE(object));
 		EACH(v, object)
-			map_put(&x->members, v->string, v);
+			map_put_ref(&x->members, v->string, v);
 		map_put(&u->objects, key, x);
 	}
 	return x;
@@ -49,8 +49,8 @@ static void member_set(UpdateState *u, J *object, const char *key, J *value)
 	else {
 		J *old = map_get(&x->members, key);
 		if (old) {
-			DEL(cJSON_DetachItemViaPointer(object, old));
 			map_delete(&x->members, key);
+			DEL(cJSON_DetachItemViaPointer(object, old));
 		}
 	}
 }

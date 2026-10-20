@@ -32,7 +32,7 @@ static void index_members(Map *index, J *object)
 	map_reserve(index, (size_t)SIZE(object));
 	EACH(value, object)
 		if (!map_get(index, value->string))
-			map_put(index, value->string, value);
+			map_put_ref(index, value->string, value);
 }
 
 static int stopword(const char *s)

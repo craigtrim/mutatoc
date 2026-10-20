@@ -190,14 +190,14 @@ static LookupValue *adjust(LookupState *s, int words, const char *text,
 		s->random ^= s->random >> 17;
 		s->random ^= s->random << 5;
 		v->priority = s->random;
-		map_put(&g->values, text, v);
+		map_put_ref(&g->values, v->text, v);
 	}
 	assert(delta > 0 || v->refs);
 	if (delta > 0) {
 		if (!v->refs++) {
 			if (!v->entry)
 				show_value(v);
-			map_put(&g->dirty, text, v);
+			map_put_ref(&g->dirty, v->text, v);
 			if (s->change)
 				s->change(s->context, words, text, 1);
 		}
@@ -211,7 +211,7 @@ static LookupValue *adjust(LookupState *s, int words, const char *text,
 						       v->mirror_entry));
 			v->mirror_entry = NULL;
 		}
-		map_put(&g->dirty, text, v);
+		map_put_ref(&g->dirty, v->text, v);
 		if (s->change)
 			s->change(s->context, words, text, -1);
 	}
@@ -601,7 +601,7 @@ static void seed_lookup(LookupState *s)
 			else
 				g->root = v;
 			stack[depth++] = v;
-			map_put(&g->values, v->text, v);
+			map_put_ref(&g->values, v->text, v);
 		}
 		free(stack);
 	}
