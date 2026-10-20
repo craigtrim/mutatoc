@@ -182,13 +182,14 @@ static LookupForm *lookup_form(LookupBuilder *group, char *text, int traced,
 static LookupForm *lookup_group_push(LookupBuilder *group, char *text,
 				     int traced)
 {
-	size_t position = (size_t)(uintptr_t)map_get(&group->values, text);
+	Slot *slot = map_entry_ref(&group->values, text);
+	size_t position = (size_t)(uintptr_t)slot->value;
 	if (position) {
 		free(text);
 		return &group->forms[position - 1];
 	}
 	LookupForm *form = lookup_form(group, text, traced, 0);
-	map_put_ref(&group->values, text, (void *)(uintptr_t)group->count);
+	slot->value = (void *)(uintptr_t)group->count;
 	return form;
 }
 static void lookup_append(J *d, Map *seen, const char *key, const char *value,
@@ -208,15 +209,15 @@ static void lookup_seed(Map *seen)
 		size_t count = 0;
 		for (size_t j = 0; j < group->count; j++) {
 			LookupForm form = group->forms[j];
-			if (map_get(&group->values, form.text)) {
+			Slot *slot = map_entry_ref(&group->values, form.text);
+			if (slot->value) {
 				if (form.json)
 					DEL(form.json);
 				else if (!form.borrowed)
 					free(form.text);
 			} else {
 				group->forms[count++] = form;
-				map_put_ref(&group->values, form.text,
-					    (void *)(uintptr_t)count);
+				slot->value = (void *)(uintptr_t)count;
 			}
 		}
 		group->count = count;

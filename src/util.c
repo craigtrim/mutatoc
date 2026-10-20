@@ -815,6 +815,36 @@ static void map_store(Map *m, const char *k, void *v, int borrowed)
 	m->size++;
 }
 
+/* Builders find or insert a borrowed key in one probe (craigtrim/axiom#129).
+ * Callers complete new entries with retained key storage and a nonnull value
+ * before another map operation. Existing entries retain their ownership. */
+Slot *map_entry_ref(Map *m, const char *key)
+{
+	uint64_t hash = hash_text(key);
+	unsigned char tag = map_tag(hash);
+	size_t at = 0;
+	if (m->cap) {
+		unsigned char *tags = map_tags(m);
+		at = map_bucket(hash, m->cap);
+		while (tags[at]) {
+			if ((tags[at] & MAP_FINGERPRINT) == tag &&
+			    !strcmp(m->slots[at].key, key))
+				return &m->slots[at];
+			at = at + 1 == m->cap ? 0 : at + 1;
+		}
+	}
+	if (!m->cap || m->size >= m->cap - m->cap / 4) {
+		map_resize(m, m->cap ? m->cap * 2 : 64);
+		at = map_bucket(hash, m->cap);
+		while (map_tags(m)[at])
+			at = at + 1 == m->cap ? 0 : at + 1;
+	}
+	m->slots[at] = (Slot){ (char *)key, NULL };
+	map_tags(m)[at] = tag;
+	m->size++;
+	return &m->slots[at];
+}
+
 void map_put(Map *m, const char *key, void *value)
 {
 	map_store(m, key, value, 0);
@@ -846,28 +876,32 @@ void map_free(Map *m)
 /* Hashed object construction, preserving member order (craigtrim/axiom#129). */
 J *indexed_ensure(J *object, Map *index, const char *key, int array)
 {
-	J *value = map_get(index, key);
-	if (!value) {
-		value = array ? ARR() : OBJ();
+	Slot *entry = map_entry_ref(index, key);
+	if (!entry->value) {
+		J *value = array ? ARR() : OBJ();
 		PUT(object, key, value);
-		map_put_ref(index, value->string, value);
+		entry->key = value->string;
+		entry->value = value;
 	}
-	return value;
+	return entry->value;
 }
 
 void indexed_set(J *object, Map *index, const char *key, J *value)
 {
-	J *old = map_get(index, key);
+	Slot *entry = map_entry_ref(index, key);
+	J *old = entry->value;
 	if (old) {
 		if (!(value->type & cJSON_StringIsConst))
 			free(value->string);
 		value->type &= ~cJSON_StringIsConst;
 		value->string = copy(key);
-		map_put_ref(index, value->string, value);
+		entry->key = value->string;
+		entry->value = value;
 		cJSON_ReplaceItemViaPointer(object, old, value);
 	} else {
 		PUT(object, key, value);
-		map_put_ref(index, value->string, value);
+		entry->key = value->string;
+		entry->value = value;
 	}
 }
 

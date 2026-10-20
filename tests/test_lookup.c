@@ -201,6 +201,45 @@ static int check_maps(void)
 	return 1;
 }
 
+/* Temporary keys and replacement aliases retain JSON order across map growth. */
+static int check_indexed_builders(void)
+{
+	Map index = { 0 };
+	J *actual = OBJ(), *expected = OBJ();
+	char key[40];
+	for (int i = 0; i < 512; i++) {
+		snprintf(key, sizeof(key), "member%d", i);
+		J *array = indexed_ensure(actual, &index, key, 1);
+		ADD(array, NUM(i));
+		J *reference = ARR();
+		ADD(reference, NUM(i));
+		PUT(expected, key, reference);
+	}
+	int ok = 1;
+	for (int i = 511; i >= 0; i--) {
+		snprintf(key, sizeof(key), "member%d", i);
+		J *old = GET(actual, key);
+		ok &= indexed_ensure(actual, &index, key, 0) == old;
+		/* The lookup key itself is freed by replacing its old JSON node. */
+		indexed_set(actual, &index, old->string, NUM(i + 1));
+		set(expected, key, NUM(i + 1));
+	}
+	for (J *entry = actual->child; entry; entry = entry->next)
+		ok &= map_get(&index, entry->string) == entry;
+	char *a = cJSON_PrintUnformatted(actual),
+	     *b = cJSON_PrintUnformatted(expected);
+	ok &= !strcmp(a, b);
+	free(a);
+	free(b);
+	map_free(&index);
+	DEL(actual);
+	DEL(expected);
+	if (!ok)
+		fprintf(stderr,
+			"indexed construction changed ownership or order\n");
+	return ok;
+}
+
 static int check_map_wraparound(void)
 {
 	Map map = { 0 };
@@ -213,7 +252,8 @@ static int check_map_wraparound(void)
 		if (hash_text(key) % map.cap != map.cap - 2)
 			continue;
 		strcpy(keys[count], key);
-		map_put(&map, key, (void *)(uintptr_t)(count + 1));
+		Slot *entry = map_entry_ref(&map, keys[count]);
+		entry->value = (void *)(uintptr_t)(count + 1);
 		count++;
 	}
 	int present[12];
@@ -695,11 +735,12 @@ static int check_cached_lookup(void)
 
 int main(void)
 {
-	if (!check_patterns() || !check_sorting() || !check_maps() ||
-	    !check_map_bytes() || !check_map_ownership() ||
-	    !check_map_wraparound() || !check_prefixes() ||
-	    !check_posting_edits() || !check_stopword_edits() ||
-	    !check_rewrites() || !check_cached_lookup())
+	if (!check_patterns() || !check_sorting() ||
+	    !check_indexed_builders() || !check_maps() || !check_map_bytes() ||
+	    !check_map_ownership() || !check_map_wraparound() ||
+	    !check_prefixes() || !check_posting_edits() ||
+	    !check_stopword_edits() || !check_rewrites() ||
+	    !check_cached_lookup())
 		return 1;
 	const char *terms[] = { "red green blue",
 				"abcdefg middle ending",
