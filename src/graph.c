@@ -9,13 +9,14 @@
 
 Term rdf_term(const char *s, int kind)
 {
-	Term t = { copy(s), NULL, NULL, kind };
+	Term t = { copy(s), NULL, NULL, kind, 0 };
 	return t;
 }
 
 void rdf_term_free(Term *t)
 {
-	free(t->value);
+	if (!t->shared_value)
+		free(t->value);
 	free(t->datatype);
 	free(t->language);
 	memset(t, 0, sizeof(*t));
@@ -24,8 +25,25 @@ void rdf_term_free(Term *t)
 Term rdf_term_copy(const Term *t)
 {
 	Term v = { copy(t->value), t->datatype ? copy(t->datatype) : NULL,
-		   t->language ? copy(t->language) : NULL, t->kind };
+		   t->language ? copy(t->language) : NULL, t->kind, 0 };
 	return v;
+}
+
+/* Resource terms recur across triples. Keep one graph-owned string while
+ * independent term copies and mutable literal values retain their ownership. */
+static Term graph_term(Graph *g, const Term *source)
+{
+	if (source->kind == 1)
+		return rdf_term_copy(source);
+	char *value = map_get(&g->resources, source->value);
+	if (!value) {
+		value = copy(source->value);
+		map_put_ref(&g->resources, value, value);
+	}
+	Term term = { value, source->datatype ? copy(source->datatype) : NULL,
+		      source->language ? copy(source->language) : NULL,
+		      source->kind, 1 };
+	return term;
 }
 
 static char *triple_key(const Term *s, const Term *p, const Term *o)
@@ -63,8 +81,8 @@ void rdf_add(Graph *g, const Term *s, const Term *p, const Term *o)
 		g->ts = realloc(g->ts, g->cap * sizeof(*g->ts));
 	}
 	size_t n = g->n++;
-	g->ts[n] = (Triple){ rdf_term_copy(s), rdf_term_copy(p),
-			     rdf_term_copy(o) };
+	g->ts[n] = (Triple){ graph_term(g, s), graph_term(g, p),
+			     graph_term(g, o) };
 	J *a = map_get(&g->subjects, s->value);
 	if (!a) {
 		a = ARR();
@@ -126,6 +144,10 @@ void rdf_free(Graph *g)
 			DEL(g->subjects.slots[i].value);
 	map_free(&g->subjects);
 	map_free(&g->triple_keys);
+	for (size_t i = 0; i < g->resources.cap; i++)
+		if (g->resources.slots[i].key)
+			free(g->resources.slots[i].value);
+	map_free(&g->resources);
 	free(g->ts);
 	DEL(g->prefixes);
 	free(g);

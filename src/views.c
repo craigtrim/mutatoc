@@ -326,17 +326,10 @@ static J *live_snapshot_copy(J *snapshot)
 	return copy;
 }
 
-typedef struct {
-	mc_engine *engine;
-	J *view, *forward, *lookup;
-	mc_error *error;
-} LiveBuild;
-static void live_metadata(void *data)
+/* Keep data-view construction on the calling thread: its many small nodes
+ * otherwise cross allocator arenas before the independent index jobs begin. */
+static void live_metadata(mc_engine *e, J *d, mc_error *err)
 {
-	LiveBuild *job = data;
-	mc_engine *e = job->engine;
-	J *d = job->view;
-	mc_error *err = job->error;
 	mc_error local_error = { 0 };
 	J *labels = graph_predicate(e->graph, RDFS "label", 0, 0, &local_error);
 	set(d, "_labels", labels ? labels : NIL());
@@ -372,11 +365,6 @@ static void live_metadata(void *data)
 	set(d, "entities", entities);
 	ner_views(e->graph, d, err);
 }
-static void live_lookup(void *data)
-{
-	LiveBuild *job = data;
-	job->lookup = generate_lookup(job->forward);
-}
 
 J *live_view(mc_engine *e, mc_error *err)
 {
@@ -407,46 +395,34 @@ J *live_view(mc_engine *e, mc_error *err)
 		return NULL;
 	}
 
+	live_metadata(e, d, err);
 	J *fwd = GET(GET(d, "synonyms"), "fwd"),
 	  *rev = GET(GET(d, "synonyms"), "rev");
-	/* External synonyms retain their existing error and construction order.
-	 * Otherwise metadata and lookup read disjoint completed inputs. */
-	Buf path = { 0 };
-	int external_file = 0;
 	if (e->source_path && *e->source_path) {
+		Buf path = { 0 };
 		buf_put(&path, e->source_path);
 		buf_put(&path, ".txt");
-		FILE *file = mc_fopen(path.p, "rb");
-		if (file) {
-			fclose(file);
-			external_file = 1;
-		}
-	}
-	LiveBuild build = { e, d, fwd, NULL, err };
-	if (external_file) {
-		live_metadata(&build);
-		char *text = read_file(path.p, err);
-		J *external = text ? external_synonyms(text) : NULL;
-		free(text);
-		EACH(k, external) {
-			EACH(v, k) {
-				unique(ensure(fwd, k->string, 1), S(v));
-				unique(ensure(rev, S(v), 1), k->string);
+		FILE *f = mc_fopen(path.p, "rb");
+		if (f) {
+			fclose(f);
+			char *text = read_file(path.p, err);
+			J *external = text ? external_synonyms(text) : NULL;
+			free(text);
+			EACH(k, external) {
+				EACH(v, k) {
+					unique(ensure(fwd, k->string, 1), S(v));
+					unique(ensure(rev, S(v), 1), k->string);
+				}
 			}
+			DEL(external);
 		}
-		DEL(external);
+		free(path.p);
 	}
-	free(path.p);
 	EACH(k, fwd)
 		sort_strings(k, 0);
 	EACH(k, rev)
 		sort_strings(k, 0);
-	if (external_file)
-		live_lookup(&build);
-	else
-		parallel_pair(live_metadata, &build, live_lookup, &build,
-			      e->graph->subjects.size >= 4096);
-	set(GET(d, "synonyms"), "lookup", build.lookup);
+	set(GET(d, "synonyms"), "lookup", generate_lookup(fwd));
 	if (err->code) {
 		DEL(d);
 		return NULL;

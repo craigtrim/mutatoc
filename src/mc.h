@@ -99,6 +99,7 @@ void indexed_set(J *, Map *, const char *, J *);
 typedef struct {
 	char *value, *datatype, *language;
 	int kind;
+	int shared_value; /* Graph-owned resource string (craigtrim/axiom#129). */
 } Term;
 typedef struct {
 	Term s, p, o;
@@ -114,6 +115,7 @@ typedef struct {
 	J *prefixes;
 	Map subjects;
 	Map triple_keys;
+	Map resources; /* Shared IRI and blank-node values owned by this graph. */
 	LookupTrace *
 		lookup_trace; /* Borrowed JSON strings; owned construction records. */
 } Graph;

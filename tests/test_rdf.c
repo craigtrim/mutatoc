@@ -594,6 +594,42 @@ static void literals(mc_engine *e)
 	printf("Typed literals: %d checks so far.\n", total);
 }
 
+/* Copies and merged graphs outlive shared source storage (craigtrim/axiom#129). */
+static void graph_ownership(void)
+{
+	mc_error error = { 0 };
+	Graph *source = rdf_parse("<urn:s> <urn:p> <urn:o>, _:b . "
+				  "_:b <urn:p> <urn:o> .",
+				  "urn:base", &error);
+	CHECK(source && !error.code);
+	if (!source)
+		return;
+	Graph *merged = rdf_merge(&source, 1);
+	Term terms[] = { rdf_term_copy(&source->ts[0].s),
+			 rdf_term_copy(&source->ts[0].p),
+			 rdf_term_copy(&source->ts[0].o) };
+	rdf_free(source);
+	J *rows = rdf_json(merged);
+	CHECK(SIZE(rows) == 3);
+	CHECK(!strcmp(S(GET(GET(AT(rows, 0), "subject"), "value")), "urn:s"));
+	CHECK(!strcmp(S(GET(GET(AT(rows, 0), "object"), "value")), "urn:o"));
+	DEL(rows);
+	rdf_free(merged);
+	CHECK(!strcmp(terms[0].value, "urn:s"));
+	CHECK(!strcmp(terms[1].value, "urn:p"));
+	CHECK(!strcmp(terms[2].value, "urn:o"));
+	Graph *retained = rdf_create(&error);
+	rdf_add(retained, &terms[0], &terms[1], &terms[2]);
+	rdf_add(retained, &terms[0], &terms[1], &terms[2]);
+	for (size_t i = 0; i < 3; i++)
+		rdf_term_free(&terms[i]);
+	rows = rdf_json(retained);
+	CHECK(SIZE(rows) == 1);
+	CHECK(!strcmp(S(GET(GET(AT(rows, 0), "object"), "value")), "urn:o"));
+	DEL(rows);
+	rdf_free(retained);
+}
+
 int main(int argc, char **argv)
 {
 	if (argc != 2)
@@ -603,6 +639,7 @@ int main(int argc, char **argv)
 	fingerprint_properties(e);
 	ontology_graphs(e, argv[1]);
 	literals(e);
+	graph_ownership();
 	mc_destroy(e);
 	printf("RDF: %d checks, %d failures.\n", total, failed);
 	return failed ? 1 : 0;
