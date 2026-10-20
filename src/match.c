@@ -223,6 +223,7 @@ static int index_lookup(MatchIndex *x, J *lookup)
 
 static int index_spans(MatchIndex *x, J *rules)
 {
+	map_reserve(&x->spans, x->spans.size + (size_t)SIZE(rules));
 	EACH(key, rules) {
 		if (!key->string || map_get(&x->spans, key->string))
 			continue;
@@ -298,6 +299,10 @@ static MatchIndex *build_index(const J *view, int mutable)
 		return NULL;
 	x->view = view;
 	J *synonyms = GET(view, "synonyms");
+	map_reserve(&x->fwd, (size_t)SIZE(GET(synonyms, "fwd")));
+	map_reserve(&x->rev, (size_t)SIZE(GET(synonyms, "rev")));
+	map_reserve(&x->entities, (size_t)SIZE(GET(view, "entities")));
+	map_reserve(&x->ner, (size_t)SIZE(GET(view, "ner")));
 	int ok = 1;
 	if (mutable)
 		match_index_mutable(x);

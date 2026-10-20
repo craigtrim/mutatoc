@@ -489,6 +489,7 @@ void lookup_state_flush(LookupState *s)
 	for (int words = 6; words >= 3; words--) {
 		LookupGroup *g = group_at(s, words);
 		Map changed = { 0 }, affected = { 0 };
+		map_reserve(&affected, g->dirty.size);
 		SLOTS(i, g->dirty)
 		{
 			LookupValue *v = g->dirty.slots[i].value;
@@ -579,6 +580,7 @@ static void seed_lookup(LookupState *s)
 		map_put(&s->groups, array->string, g);
 		size_t n = (size_t)SIZE(array), depth = 0;
 		map_reserve(&g->values, n);
+		map_reserve(&g->dirty, n);
 		LookupValue **stack = malloc((n ? n : 1) * sizeof(*stack));
 		EACH(entry, array) {
 			LookupValue *v = calloc(1, sizeof(*v)), *left = NULL;

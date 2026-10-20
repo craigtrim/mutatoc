@@ -29,6 +29,7 @@ static void indexed_push(J *object, Map *index, const char *key,
 
 static void index_members(Map *index, J *object)
 {
+	map_reserve(index, (size_t)SIZE(object));
 	EACH(value, object)
 		if (!map_get(index, value->string))
 			map_put(index, value->string, value);
@@ -54,10 +55,26 @@ static int stopword(const char *s)
 	return yes;
 }
 
+static J *reverse_synonyms(J *forward)
+{
+	J *reverse = OBJ();
+	Map keys = { 0 };
+	size_t entries = 0;
+	EACH(k, forward)
+		entries += (size_t)SIZE(k);
+	map_reserve(&keys, entries);
+	EACH(k, forward)
+		EACH(v, k)
+			indexed_push(reverse, &keys, S(v), k->string);
+	map_free(&keys);
+	return reverse;
+}
+
 J *generate_synonyms(J *raw, int reverse)
 {
 	J *f = OBJ();
 	Map forward = { 0 };
+	map_reserve(&forward, (size_t)SIZE(raw));
 	EACH(k, raw) {
 		char *key = lower(k->string);
 		J *a = indexed_ensure(f, &forward, key, 1);
@@ -95,13 +112,7 @@ J *generate_synonyms(J *raw, int reverse)
 	map_free(&forward);
 	if (!reverse)
 		return f;
-	J *r = OBJ();
-	Map backward = { 0 };
-	EACH(k, f) {
-		EACH(v, k)
-			indexed_push(r, &backward, S(v), k->string);
-	}
-	map_free(&backward);
+	J *r = reverse_synonyms(f);
 	DEL(f);
 	return r;
 }
@@ -162,6 +173,7 @@ J *generate_lookup(J *f)
 		snprintf(k, sizeof(k), "%d", n + 1);
 		J *values = DUP(GET(d, k)), *grams = ARR();
 		Map gram_set = { 0 };
+		map_reserve(&gram_set, (size_t)SIZE(values));
 		EACH(v, values) {
 			J *ts = split(S(v), " ");
 			for (int i = 0; i + n < SIZE(ts); i++) {
@@ -682,7 +694,7 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 	J *syns = OBJ(), *fwd = generate_synonyms(synraw, 0);
 	PUT(syns, "lookup", generate_lookup(fwd));
 	PUT(syns, "fwd", fwd);
-	PUT(syns, "rev", generate_synonyms(synraw, 1));
+	PUT(syns, "rev", reverse_synonyms(fwd));
 	PUT(r, "children", children);
 	PUT(r, "parents", parents);
 	PUT(r, "trie", generate_trie(subentities));
