@@ -602,7 +602,12 @@ static uint64_t hash(const char *s)
 		h ^= (unsigned char)*s++;
 		h *= 1099511628211ull;
 	}
-	return h;
+	/* Spread patterned vocabulary keys across power-of-two tables. */
+	h ^= h >> 33;
+	h *= UINT64_C(0xff51afd7ed558ccd);
+	h ^= h >> 33;
+	h *= UINT64_C(0xc4ceb9fe1a85ec53);
+	return h ^ (h >> 33);
 }
 
 void *map_get(Map *m, const char *k)
