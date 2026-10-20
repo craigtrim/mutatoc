@@ -546,9 +546,19 @@ void sort_strings(J *a, int mode)
 			vs[i].value = cJSON_DetachItemFromArray(a, 0);
 			vs[i].length = ulen(S(vs[i].value));
 		}
-		qsort(vs, (size_t)n, sizeof(*vs), cmp_len);
+		/* Keep qsort's tie handling; skip it only for strict input order. */
+		int order = cmp_len(&vs[0], &vs[1]), ordered = order != 0;
+		for (int i = 2; i < n && ordered; i++) {
+			int next = cmp_len(&vs[i - 1], &vs[i]);
+			ordered = next != 0 && (next > 0) == (order > 0);
+		}
+		if (!ordered) {
+			qsort(vs, (size_t)n, sizeof(*vs), cmp_len);
+			order = -1;
+		}
+		int reverse = (mode < 0) != (order > 0);
 		for (int i = 0; i < n; i++)
-			ADD(a, vs[mode < 0 ? n - 1 - i : i].value);
+			ADD(a, vs[reverse ? n - 1 - i : i].value);
 		free(vs);
 		return;
 	}
@@ -557,9 +567,17 @@ void sort_strings(J *a, int mode)
 		return;
 	for (int i = 0; i < n; i++)
 		vs[i] = cJSON_DetachItemFromArray(a, 0);
-	qsort(vs, (size_t)n, sizeof(*vs), cmp_lex);
+	int order = cmp_lex(&vs[0], &vs[1]), ordered = order != 0;
+	for (int i = 2; i < n && ordered; i++) {
+		int next = cmp_lex(&vs[i - 1], &vs[i]);
+		ordered = next != 0 && (next > 0) == (order > 0);
+	}
+	if (!ordered) {
+		qsort(vs, (size_t)n, sizeof(*vs), cmp_lex);
+		order = -1;
+	}
 	for (int i = 0; i < n; i++)
-		ADD(a, vs[i]);
+		ADD(a, vs[order > 0 ? n - 1 - i : i]);
 	free(vs);
 }
 

@@ -138,7 +138,7 @@ static int check_sorting(void)
 		"",	"x",	 "\xc3\xa9", "\xce\xbb", "\xf0\x9f\x90\x95",
 		"\x01", "longer"
 	};
-	for (int run = 0; run < 5; run++)
+	for (int run = 0; run < 7; run++)
 		for (int mode = -1; mode <= 1; mode++) {
 			J *actual = ARR();
 			char prefix[514];
@@ -149,6 +149,9 @@ static int check_sorting(void)
 				snprintf(text, sizeof(text), "%s%s%04d", prefix,
 					 terms[(i * 17 + run) % 7],
 					 run == 3 ? 0 : (i * 31) % 203);
+				if (run >= 5)
+					snprintf(text, sizeof(text), "%s%04d", prefix,
+						 run == 5 ? i : 699 - i);
 				ADD(actual, STR(run == 4 ? "" : text));
 			}
 			J *expected = DUP(actual);

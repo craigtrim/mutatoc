@@ -1257,10 +1257,22 @@ void match_index_mutable(MatchIndex *x)
 	map_free(&x->aliases);
 	map_free(&x->prefixes);
 	J *lookup = GET(GET(x->view, "synonyms"), "lookup");
-	size_t total = 0;
-	EACH(group, lookup)
+	size_t total = 0, prefixes = 0;
+	EACH(group, lookup) {
 		total += (size_t)SIZE(group);
+		EACH(word, group) {
+			const char *start = S(word), *p = start;
+			while (*p) {
+				const char *at = p;
+				uint32_t c = uread(&p);
+				prefixes += at > start && uspace(c);
+			}
+		}
+	}
 	map_reserve(&x->mutable_words, total);
+	/* Shared prefixes may use fewer entries; aliases can still grow this
+	 * table. Reserve the known base contributions before copying keys. */
+	map_reserve(&x->prefixes, prefixes);
 	int rank = 0;
 	EACH(group, lookup)
 		map_put(&x->group_ranks, group->string,
