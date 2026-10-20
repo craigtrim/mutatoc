@@ -82,6 +82,9 @@ static void normalization_vectors(void)
 			text[i] = (char)(1 + random % 127);
 		}
 		text[length] = 0;
+		total++;
+		if (ulen(text) != (size_t)length)
+			failures++;
 		for (int lc = 0; lc < 2; lc++)
 			for (int spaces = 0; spaces < 2; spaces++) {
 				char *expected =
@@ -95,6 +98,17 @@ static void normalization_vectors(void)
 int main(void)
 {
 	normalization_vectors();
+	const char *length_vectors[] = { "", "ascii", "aé🐕",
+					 "a\xc0\x80"
+					 "b",
+					 "\xff"
+					 "a" };
+	const size_t lengths[] = { 0, 5, 3, 3, 2 };
+	for (size_t i = 0; i < sizeof(lengths) / sizeof(*lengths); i++) {
+		total++;
+		if (ulen(length_vectors[i]) != lengths[i])
+			failures++;
+	}
 	const char *vectors[][2] = { { "g:h", "g:h" },
 				     { "g", "http://a/b/c/g" },
 				     { "./g", "http://a/b/c/g" },

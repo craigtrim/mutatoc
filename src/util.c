@@ -134,7 +134,10 @@ size_t ulen(const char *s)
 {
 	size_t n = 0;
 	while (*s) {
-		uread(&s);
+		if ((unsigned char)*s < 128)
+			s++;
+		else
+			uread(&s);
 		n++;
 	}
 	return n;

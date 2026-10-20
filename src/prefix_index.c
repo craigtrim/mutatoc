@@ -141,7 +141,8 @@ void prefix_index_change(PrefixIndex **handle, const char *text, int delta)
 	const char *p = text, *previous = text;
 	while (*p) {
 		const char *at = p;
-		uint32_t c = uread(&p);
+		uint32_t c = (unsigned char)*p < 128 ? (unsigned char)*p++ :
+							     uread(&p);
 		if (at == text || !uspace(c))
 			continue;
 		if (!*handle) {
