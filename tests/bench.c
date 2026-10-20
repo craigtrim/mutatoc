@@ -170,6 +170,13 @@ static int generated_parse(mc_engine *e, int revision)
 /* Large loads and edit-plus-parse timings exercise craigtrim/axiom#129. */
 static int generated_benchmark(int runs, int check)
 {
+	/* Windows allows additional memory-access overhead for large loads
+	 * (craigtrim/axiom#129); the Linux scaling contract remains 2.2x. */
+#ifdef _WIN32
+	const double scaling_ceiling = 3.0;
+#else
+	const double scaling_ceiling = 2.2;
+#endif
 	int failed = 0, over = 0;
 	double medians[2][2] = { { 0 } };
 	for (int live = 0; live < 2; live++) {
@@ -243,7 +250,7 @@ static int generated_benchmark(int runs, int check)
 			over += !within("load scaling",
 					live ? "generated-data" :
 						     "generated-json",
-					ratio, 2.2, "x");
+					ratio, scaling_ceiling, "x");
 	}
 	printf("generated peak working set: %.1f MB\n", peak_mb());
 	if (check)
