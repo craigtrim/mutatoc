@@ -689,13 +689,15 @@ static void release_value(LookupState *s, LookupValue *v)
 	v->left = s->available;
 	s->available = v;
 }
-static void index_change(LookupValue *v, Map *changed)
+static void index_change(LookupValue *v, Map *changed, size_t reserve)
 {
 	LookupGroup *g = v->group;
 	if (!!v->refs == v->indexed)
 		return;
 	if (v->refs) {
 		v->gram = lookup_leading_gram(v->text, g->words - 1);
+		if (v->gram && !g->grams.cap && reserve)
+			map_reserve(&g->grams, reserve);
 		index_value(v, 1);
 		gram_change(g, v->gram, 1, changed);
 		v->indexed = 1;
@@ -715,9 +717,10 @@ void lookup_state_flush(LookupState *s)
 			/* Loading visits every active value in each ordered group.
 			 * Only edits need dirty/affected maps; walking the arrays keeps
 			 * nearby patterns and values together during construction. */
+			size_t reserve = (size_t)SIZE(g->array);
 			EACH(entry, g->array)
 				index_change(map_get(&g->values, S(entry)),
-					     NULL);
+					     NULL, reserve);
 			if (s->trace) {
 				EACH(entry, g->array)
 					derive_traced(s, map_get(&g->values,
@@ -746,7 +749,7 @@ void lookup_state_flush(LookupState *s)
 			if (!!v->refs == v->indexed)
 				continue;
 			map_put(&affected, v->text, v);
-			index_change(v, &changed);
+			index_change(v, &changed, 0);
 		}
 		SLOTS(i, changed)
 		gram_values(g, changed.slots[i].key, &affected);

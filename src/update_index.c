@@ -218,21 +218,32 @@ static void build_update_state(mc_engine *e)
 			return;
 	}
 	UpdateState *u = calloc(1, sizeof(*u));
+	J *syns = GET(e->snapshot, "synonyms");
+	size_t sources = (size_t)SIZE(GET(syns, "fwd"));
 	map_reserve(&u->owners, e->graph->subjects.size);
+	map_reserve(&u->ner_refs, (size_t)SIZE(GET(e->snapshot, "ner")));
 	J *raw = OBJ();
 	Map raw_keys = { 0 };
+	map_reserve(&raw_keys, sources);
+	const char *previous_subject = NULL;
+	char *canon = NULL;
 	for (size_t i = 0; i < e->graph->n; i++) {
 		Triple *t = &e->graph->ts[i];
-		char *canon = norm(local(t->s.value), 1, 0);
-		const char *owner = map_get(&u->owners, canon);
-		if (owner && strcmp(owner, t->s.value)) {
+		/* Consecutive statements often share a subject and canonical name. */
+		if (!previous_subject || strcmp(previous_subject, t->s.value)) {
 			free(canon);
-			DEL(raw);
-			map_free(&raw_keys);
-			update_state_free(u);
-			return;
+			canon = norm(local(t->s.value), 1, 0);
+			previous_subject = t->s.value;
+			const char *owner = map_get(&u->owners, canon);
+			if (owner && strcmp(owner, t->s.value)) {
+				free(canon);
+				DEL(raw);
+				map_free(&raw_keys);
+				update_state_free(u);
+				return;
+			}
+			map_put(&u->owners, canon, t->s.value);
 		}
-		map_put(&u->owners, canon, t->s.value);
 		if (!strcmp(t->p.value, RDFS "label"))
 			ner_ref(u, t->o.value, 1);
 		if (vocabulary(t->p.value)) {
@@ -242,11 +253,10 @@ static void build_update_state(mc_engine *e)
 				       value);
 			free(value);
 		}
-		free(canon);
 	}
+	free(canon);
 	size_t ordinal = 0;
-	J *syns = GET(e->snapshot, "synonyms");
-	map_reserve(&u->ordinals, (size_t)SIZE(GET(syns, "fwd")));
+	map_reserve(&u->ordinals, sources);
 	EACH(k, GET(syns, "fwd"))
 		map_put(&u->ordinals, k->string, (void *)(uintptr_t)++ordinal);
 	/* These jobs read completed JSON views and own separate indexes. One
