@@ -595,19 +595,35 @@ const char *local(const char *s)
 	return p ? p + 1 : s;
 }
 
+/* MurmurHash64A (Austin Appleby, public domain), with aligned-safe reads.
+ * https://github.com/aappleby/smhasher/blob/master/src/MurmurHash2.cpp
+ * Hash long vocabulary forms eight bytes at a time. Hashes stay internal;
+ * native byte order does not affect lookup equality or JSON ordering. */
 static uint64_t hash(const char *s)
 {
-	uint64_t h = 14695981039346656037ull;
-	while (*s) {
-		h ^= (unsigned char)*s++;
-		h *= 1099511628211ull;
+	const uint64_t mix = UINT64_C(0xc6a4a7935bd1e995);
+	size_t length = strlen(s);
+	uint64_t h = UINT64_C(129) ^ ((uint64_t)length * mix);
+	const unsigned char *p = (const unsigned char *)s;
+	while (length >= 8) {
+		uint64_t word;
+		memcpy(&word, p, sizeof(word));
+		word *= mix;
+		word ^= word >> 47;
+		word *= mix;
+		h = (h ^ word) * mix;
+		p += 8;
+		length -= 8;
 	}
-	/* Spread patterned vocabulary keys across power-of-two tables. */
-	h ^= h >> 33;
-	h *= UINT64_C(0xff51afd7ed558ccd);
-	h ^= h >> 33;
-	h *= UINT64_C(0xc4ceb9fe1a85ec53);
-	return h ^ (h >> 33);
+	if (length) {
+		uint64_t tail = 0;
+		for (size_t i = 0; i < length; i++)
+			tail |= (uint64_t)p[i] << (i * 8);
+		h = (h ^ tail) * mix;
+	}
+	h ^= h >> 47;
+	h *= mix;
+	return h ^ (h >> 47);
 }
 
 /* One-byte fingerprints stay contiguous after the key/value slots. Empty

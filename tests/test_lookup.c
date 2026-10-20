@@ -94,6 +94,44 @@ static int check_maps(void)
 	return 1;
 }
 
+/* Exercise every hash tail and address alignment with exact-size buffers. */
+static int check_map_bytes(void)
+{
+	Map map = { 0 };
+	for (size_t offset = 0; offset < 8; offset++) {
+		for (size_t length = 0; length < 80; length++) {
+			char *allocation = malloc(offset + length + 1);
+			char *key = allocation + offset;
+			for (size_t i = 0; i < length; i++)
+				key[i] = (char)(1 + (i * 73 + length) % 255);
+			key[length] = 0;
+			map_put(&map, key, (void *)(uintptr_t)(length + 1));
+			free(allocation);
+		}
+		for (size_t length = 0; length < 80; length++) {
+			char *allocation = malloc(offset + length + 1);
+			char *key = allocation + offset;
+			for (size_t i = 0; i < length; i++)
+				key[i] = (char)(1 + (i * 73 + length) % 255);
+			key[length] = 0;
+			int ok = (size_t)(uintptr_t)map_get(&map, key) ==
+				 length + 1;
+			map_delete(&map, key);
+			ok &= map_get(&map, key) == NULL;
+			free(allocation);
+			if (!ok) {
+				fprintf(stderr,
+					"hash byte boundary mismatch: %zu/%zu\n",
+					length, offset);
+				map_free(&map);
+				return 0;
+			}
+		}
+	}
+	map_free(&map);
+	return 1;
+}
+
 static int check_sorting(void)
 {
 	const char *terms[] = {
@@ -131,7 +169,7 @@ static int check_sorting(void)
 
 int main(void)
 {
-	if (!check_sorting() || !check_maps())
+	if (!check_sorting() || !check_maps() || !check_map_bytes())
 		return 1;
 	const char *terms[] = { "red green blue",
 				"bred green blue",
