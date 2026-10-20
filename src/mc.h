@@ -69,6 +69,7 @@ J *json_parse_record(const char *, size_t, const char **, mc_error *);
 void set(J *, const char *, J *);
 J *ensure(J *, const char *, int);
 void unique(J *, const char *);
+void unique_sorted(J *, const char *);
 int contains(const J *, const char *);
 void sort_strings(J *, int mode);
 char *join(const J *, const char *);

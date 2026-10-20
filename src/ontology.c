@@ -63,10 +63,15 @@ static J *reverse_synonyms(J *forward)
 	return reverse;
 }
 
-static J *synonyms_build(J *raw, int reverse, int consume)
+static J *synonyms_build(J *raw, int reverse, int consume, J **reverse_out)
 {
 	J *f = consume ? raw : OBJ();
-	Map forward = { 0 };
+	/* Consumed input has unique canonical keys. Build the reverse table as
+	 * each final value list is sorted, avoiding a later cold traversal. */
+	J *back = reverse_out && consume ? OBJ() : NULL;
+	Map forward = { 0 }, back_keys = { 0 };
+	if (back)
+		map_reserve(&back_keys, (size_t)SIZE(raw));
 	if (!consume)
 		map_reserve(&forward, (size_t)SIZE(raw));
 	EACH(k, raw) {
@@ -123,9 +128,15 @@ static J *synonyms_build(J *raw, int reverse, int consume)
 		}
 		DEL(input_array.child);
 		sort_strings(a, 1);
+		if (back)
+			EACH(v, a)
+				indexed_push(back, &back_keys, S(v), a->string);
 		free(key);
 	}
 	map_free(&forward);
+	map_free(&back_keys);
+	if (reverse_out)
+		*reverse_out = back ? back : reverse_synonyms(f);
 	if (!reverse)
 		return f;
 	J *r = reverse_synonyms(f);
@@ -135,7 +146,7 @@ static J *synonyms_build(J *raw, int reverse, int consume)
 
 J *generate_synonyms(J *raw, int reverse)
 {
-	return synonyms_build(raw, reverse, 0);
+	return synonyms_build(raw, reverse, 0, NULL);
 }
 
 /* Contiguous forms preserve insertion order without allocating a second set
@@ -914,7 +925,7 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 						if (strcmp(S(v), subject_key) &&
 						    strcmp(S(v), "nil") &&
 						    *S(v))
-							unique(a, S(v));
+							unique_sorted(a, S(v));
 				}
 			}
 			if (t->s.kind != 0)
@@ -1029,10 +1040,6 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 		}
 	}
 	map_free(&predicate_indexes);
-	EACH(p, by) {
-		EACH(a, p)
-			sort_strings(a, 0);
-	}
 	J *ngentities = ARR();
 	if (mixed) {
 		Map seen = { 0 };
@@ -1060,13 +1067,14 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 		PUT(grams, k, a);
 	}
 	DEL(ngentities);
-	J *syns = OBJ(),
-	  *fwd = synonyms_build(synraw, 0, synraw != raw || !span_candidates);
+	J *syns = OBJ(), *rev = NULL,
+	  *fwd = synonyms_build(synraw, 0, synraw != raw || !span_candidates,
+				&rev);
 	lookup_trace_free(g->lookup_trace);
 	g->lookup_trace = NULL;
 	PUT(syns, "lookup", generate_lookup_traced(fwd, &g->lookup_trace));
 	PUT(syns, "fwd", fwd);
-	PUT(syns, "rev", reverse_synonyms(fwd));
+	PUT(syns, "rev", rev);
 	PUT(r, "children", children);
 	PUT(r, "parents", parents);
 	PUT(r, "trie", generate_trie(subentities));

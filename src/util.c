@@ -567,6 +567,29 @@ void unique(J *a, const char *s)
 		ADD(a, STR(s));
 }
 
+/* Maintain lexical predicate buckets while their nodes are hot (#129).
+ * This has the same duplicate rule as unique() followed by sort_strings(0). */
+void unique_sorted(J *array, const char *text)
+{
+	EACH(at, array) {
+		int order = strcmp(text, S(at));
+		if (!order)
+			return;
+		if (order < 0) {
+			J *value = STR(text);
+			value->prev = at->prev;
+			value->next = at;
+			if (at == array->child)
+				array->child = value;
+			else
+				at->prev->next = value;
+			at->prev = value;
+			return;
+		}
+	}
+	ADD(array, STR(text));
+}
+
 /*
  * unique() for arrays that only this set's owner appends to: same order and
  * contents, with a hash check instead of a scan of the whole array.

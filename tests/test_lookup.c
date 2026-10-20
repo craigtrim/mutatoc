@@ -733,14 +733,61 @@ static int check_cached_lookup(void)
 	return ok;
 }
 
+/* Compare every insertion with the original append/dedupe/sort behavior.
+ * Removing and reinserting endpoints also checks cJSON's tail convention. */
+static int check_sorted_insertion(void)
+{
+	J *actual = ARR(), *expected = ARR();
+	unsigned state = 129;
+	int ok = 1;
+	for (int i = 0; i < 400; i++) {
+		char text[64];
+		state = state * 1664525u + 1013904223u;
+		snprintf(text, sizeof(text), "%s%03u", i % 2 ? "A" : "z",
+			 state % 120);
+		const char *value = i % 17 ? text : "";
+		unique_sorted(actual, value);
+		unique(expected, value);
+		sort_strings(expected, 0);
+		char *a = cJSON_PrintUnformatted(actual),
+		     *b = cJSON_PrintUnformatted(expected);
+		ok &= !strcmp(a, b);
+		free(a);
+		free(b);
+		J *previous = NULL;
+		EACH(v, actual) {
+			if (previous)
+				ok &= v->prev == previous;
+			previous = v;
+		}
+		ok &= actual->child->prev == previous;
+		if (i % 19 == 0) {
+			DEL(cJSON_DetachItemViaPointer(actual, actual->child));
+			DEL(cJSON_DetachItemViaPointer(expected,
+						       expected->child));
+		}
+		if (i % 23 == 0 && actual->child) {
+			DEL(cJSON_DetachItemViaPointer(actual,
+						       actual->child->prev));
+			DEL(cJSON_DetachItemViaPointer(expected,
+						       expected->child->prev));
+		}
+	}
+	DEL(actual);
+	DEL(expected);
+	if (!ok)
+		fprintf(stderr, "sorted predicate insertion mismatch\n");
+	return ok;
+}
+
 int main(void)
 {
 	if (!check_patterns() || !check_sorting() ||
-	    !check_indexed_builders() || !check_maps() || !check_map_bytes() ||
-	    !check_map_ownership() || !check_map_wraparound() ||
-	    !check_prefixes() || !check_posting_edits() ||
-	    !check_stopword_edits() || !check_rewrites() ||
-	    !check_cached_lookup())
+	    !check_sorted_insertion() || !check_indexed_builders() ||
+	    !check_maps() || !check_map_bytes() || !check_map_ownership() ||
+	    !check_map_wraparound() || !check_prefixes() ||
+	    !check_posting_edits() || !check_stopword_edits() ||
+	    !check_rewrites() || !check_cached_lookup())
 		return 1;
 	const char *terms[] = { "red green blue",
 				"abcdefg middle ending",

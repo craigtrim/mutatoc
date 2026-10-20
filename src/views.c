@@ -48,7 +48,7 @@ J *graph_predicate(Graph *g, const char *predicate, int lc, int rev,
 			EACH(v, flat[1])
 				if (*S(v) && strcmp(S(v), S(k)) &&
 				    strcmp(S(v), "nil"))
-					unique(a, S(v));
+					unique_sorted(a, S(v));
 		}
 		for (int j = 0; j < 2; j++) {
 			if (terms[j]->kind == 2)
@@ -58,8 +58,6 @@ J *graph_predicate(Graph *g, const char *predicate, int lc, int rev,
 		}
 	}
 	map_free(&keys);
-	EACH(k, out)
-		sort_strings(k, 0);
 	if (!rows)
 		fail(err, 4, "Predicate query returned no rows: %s", predicate);
 	if (err->code) {
