@@ -99,7 +99,8 @@ then using the CJSON_API_VISIBILITY flag to "export" the same symbols the way CJ
 #define cJSON_IsReference 256
 #define cJSON_StringIsConst 512
 
-/* The cJSON structure: */
+/* Mutatoc-private field order removes 64-bit padding (craigtrim/axiom#129).
+ * This vendored header is not part of mutatoc's installed public C API. */
 typedef struct cJSON
 {
     /* next/prev allow you to walk array/object chains. Alternatively, use GetArraySize/GetArrayItem/GetObjectItem */
@@ -108,18 +109,18 @@ typedef struct cJSON
     /* An array or object item will have a child pointer pointing to a chain of the items in the array/object. */
     struct cJSON *child;
 
-    /* The type of the item, as above. */
-    int type;
-
     /* The item's string, if type==cJSON_String  and type == cJSON_Raw */
     char *valuestring;
-    /* writing to valueint is DEPRECATED, use cJSON_SetNumberValue instead */
-    int valueint;
     /* The item's number, if type==cJSON_Number */
     double valuedouble;
 
     /* The item's name string, if this item is the child of, or is in the list of subitems of an object. */
     char *string;
+
+    /* The type of the item, as above. */
+    int type;
+    /* writing to valueint is DEPRECATED, use cJSON_SetNumberValue instead */
+    int valueint;
 } cJSON;
 
 typedef struct cJSON_Hooks
