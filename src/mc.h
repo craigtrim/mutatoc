@@ -162,6 +162,7 @@ J *ontology_query(J *, const char *, const J *, mc_error *);
 J *generate_synonyms(J *, int);
 J *generate_lookup(J *);
 J *generate_lookup_shared(J *, J *);
+J *generate_lookup_cached(J *, J *, J *);
 J *generate_lookup_traced(J *, LookupTrace **);
 char *lookup_leading_gram(const char *text, int words);
 int lookup_rewritable(const char *text, int words);

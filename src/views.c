@@ -278,6 +278,8 @@ static J *live_value_copy(J *source)
 	return out;
 }
 
+static J *live_sorted_arrays_copy(J *source);
+
 /* Vocabulary edits leave structural predicate views unchanged. The data view
  * can reference those objects until a transactional rebuild replaces both views. */
 static J *live_predicate_copy(J *predicates)
@@ -291,9 +293,14 @@ static J *live_predicate_copy(J *predicates)
 			      !strcmp(member->string, "rdfs:seeAlso") ||
 			      !strcmp(member->string, "skos:altLabel") ||
 			      (colon && !strcmp(colon + 1, "inflection"));
-		J *part = !mutable && cJSON_IsObject(member) ?
-					cJSON_CreateObjectReference(member->child) :
-					live_value_copy(member);
+		J *part;
+		if (!cJSON_IsObject(member))
+			part = live_value_copy(member);
+		else if (mutable)
+			/* Edits replace each affected array before its snapshot owner. */
+			part = live_sorted_arrays_copy(member);
+		else
+			part = cJSON_CreateObjectReference(member->child);
 		if (!part ||
 		    !cJSON_AddItemToObject(out, member->string, part)) {
 			DEL(part);
@@ -304,9 +311,9 @@ static J *live_predicate_copy(J *predicates)
 	return out;
 }
 
-/* Already lexical synonym buckets need independent wrappers only. Copy an
+/* Already lexical array buckets need independent wrappers only. Copy an
  * affected bucket before appending external forms or applying an edit. */
-static J *live_synonyms_copy(J *source)
+static J *live_sorted_arrays_copy(J *source)
 {
 	J *out = cJSON_Duplicate(source, 0);
 	if (!out)
@@ -337,7 +344,7 @@ static J *live_synonym_array(J *object, const char *key)
 	return array;
 }
 
-/* The data view rebuilds lookup after sorting its forward synonyms (#129).
+/* The data view verifies or rebuilds lookup after sorting its forward synonyms (#129).
  * Keep the original member position without copying entries that are discarded. */
 static J *live_snapshot_copy(J *snapshot)
 {
@@ -362,7 +369,7 @@ static J *live_snapshot_copy(J *snapshot)
 							  "fwd") ||
 						  !strcmp(member->string,
 							  "rev")))
-						part = live_synonyms_copy(
+						part = live_sorted_arrays_copy(
 							member);
 					else
 						part = live_value_copy(member);
@@ -475,9 +482,10 @@ static void live_lookup(void *context)
 	EACH(k, rev)
 		if (!(k->type & cJSON_IsReference))
 			sort_strings(k, 0);
+	J *previous = GET(e->snapshot, "synonyms");
 	set(GET(d, "synonyms"), "lookup",
-	    generate_lookup_shared(fwd, GET(GET(e->snapshot, "synonyms"),
-					    "lookup")));
+	    generate_lookup_cached(fwd, GET(previous, "fwd"),
+				   GET(previous, "lookup")));
 }
 
 J *live_view(mc_engine *e, mc_error *err)

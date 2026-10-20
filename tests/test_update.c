@@ -62,6 +62,9 @@ static void equivalent(mc_engine *a, mc_engine *b)
 	CHECK(cJSON_Compare(x, y, 1));
 	DEL(x);
 	DEL(y);
+	/* Data-view arrays must also agree after their snapshot owners change. */
+	if (a->live_mode && b->live_mode)
+		CHECK(cJSON_Compare(a->live, b->live, 1));
 	/* Lookup group order chooses alias precedence in each view. */
 	J *av = a->live_mode ? a->live : a->snapshot;
 	J *bv = b->live_mode ? b->live : b->snapshot;

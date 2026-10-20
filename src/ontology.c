@@ -461,6 +461,46 @@ J *generate_lookup_shared(J *f, J *reference)
 	return lookup_build(f, NULL, reference);
 }
 
+/* Identical ordered forward inputs prove the deterministic lookup is identical.
+ * Compare keys and array order explicitly; object equality ignores key order. */
+static int lookup_inputs_equal(J *a, J *b)
+{
+	if (!cJSON_IsObject(a) || !cJSON_IsObject(b))
+		return 0;
+	J *left = a->child, *right = b->child;
+	for (; left && right; left = left->next, right = right->next) {
+		if (!left->string || !right->string ||
+		    strcmp(left->string, right->string) ||
+		    !cJSON_IsArray(left) || !cJSON_IsArray(right))
+			return 0;
+		if (left->child == right->child)
+			continue;
+		J *x = left->child, *y = right->child;
+		for (; x && y; x = x->next, y = y->next)
+			if (!cJSON_IsString(x) || !cJSON_IsString(y) ||
+			    strcmp(S(x), S(y)))
+				return 0;
+		if (x || y)
+			return 0;
+	}
+	return !left && !right;
+}
+/* previous_lookup is the completed result for previous_fwd and must outlive
+ * the returned view, as with generate_lookup_shared(). */
+J *generate_lookup_cached(J *fwd, J *previous_fwd, J *previous_lookup)
+{
+	if (!cJSON_IsObject(previous_lookup) ||
+	    !lookup_inputs_equal(fwd, previous_fwd))
+		return generate_lookup_shared(fwd, previous_lookup);
+	J *out = OBJ();
+	EACH(group, previous_lookup)
+		PUT(out, group->string,
+		    cJSON_IsArray(group) ?
+				  cJSON_CreateArrayReference(group->child) :
+				  DUP(group));
+	return out;
+}
+
 static J *rule(const char *canon, J *content, int distance)
 {
 	J *r = OBJ();

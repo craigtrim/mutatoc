@@ -641,13 +641,65 @@ static int check_rewrites(void)
 	return 1;
 }
 
+static int check_cached_lookup(void)
+{
+	J *previous = OBJ(), *first = ARR(), *second = ARR();
+	ADD(first, STR("red green blue"));
+	ADD(first, STR("red green"));
+	ADD(second, STR("dog/cat health"));
+	ADD(second, STR("ecole bleue"));
+	PUT(previous, "alpha", first);
+	PUT(previous, "delta_key", second);
+	J *lookup = generate_lookup(previous);
+	int ok = 1;
+	for (int change = 0; change < 6; change++) {
+		J *current = DUP(previous);
+		if (change == 1)
+			ADD(current, cJSON_DetachItemViaPointer(
+					     current, current->child));
+		else if (change == 2) {
+			J *array = current->child;
+			ADD(array, cJSON_DetachItemFromArray(array, 0));
+		} else if (change == 3)
+			ADD(current->child, STR("new amber violet phrase"));
+		else if (change == 4)
+			DEL(cJSON_DetachItemViaPointer(current,
+						       current->child));
+		else if (change == 5) {
+			DEL(current);
+			current = OBJ();
+		}
+		J *expected = reference_lookup(current),
+		  *actual = generate_lookup_cached(current, previous, lookup);
+		DEL(current);
+		char *a = cJSON_PrintUnformatted(actual),
+		     *b = cJSON_PrintUnformatted(expected);
+		ok &= !strcmp(a, b);
+		if (!change)
+			EACH(group, lookup) {
+				J *shared = GET(actual, group->string);
+				ok &= shared && shared->child == group->child;
+			}
+		free(a);
+		free(b);
+		DEL(actual);
+		DEL(expected);
+	}
+	DEL(lookup);
+	DEL(previous);
+	if (!ok)
+		fprintf(stderr,
+			"cached lookup input/order comparison failed\n");
+	return ok;
+}
+
 int main(void)
 {
 	if (!check_patterns() || !check_sorting() || !check_maps() ||
 	    !check_map_bytes() || !check_map_ownership() ||
 	    !check_map_wraparound() || !check_prefixes() ||
 	    !check_posting_edits() || !check_stopword_edits() ||
-	    !check_rewrites())
+	    !check_rewrites() || !check_cached_lookup())
 		return 1;
 	const char *terms[] = { "red green blue",
 				"abcdefg middle ending",
