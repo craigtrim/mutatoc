@@ -2,6 +2,15 @@
 #include "mc.h"
 #include "lookup_reference.h"
 #include "patterns.h"
+static J *shared_mirror(J *lookup)
+{
+	J *synonyms = OBJ(), *mirror = OBJ();
+	EACH(group, lookup)
+		PUT(mirror, group->string,
+		    cJSON_CreateArrayReference(group->child));
+	PUT(synonyms, "lookup", mirror);
+	return synonyms;
+}
 static int check(J *fwd)
 {
 	LookupTrace *trace = NULL;
@@ -10,6 +19,11 @@ static int check(J *fwd)
 	char *a = cJSON_PrintUnformatted(expected),
 	     *b = cJSON_PrintUnformatted(actual);
 	int ok = !strcmp(a, b);
+	J *shared = generate_lookup_shared(fwd, actual);
+	char *shared_text = cJSON_PrintUnformatted(shared);
+	ok &= !strcmp(a, shared_text);
+	free(shared_text);
+	DEL(shared);
 	LookupState *state = lookup_state_build(fwd);
 	char *c = cJSON_PrintUnformatted(lookup_state_json(state));
 	if (strcmp(a, c)) {
@@ -18,6 +32,8 @@ static int check(J *fwd)
 	}
 	free(c);
 	LookupState *reused = lookup_state_reuse_traced(fwd, actual, trace);
+	J *mirror = shared_mirror(actual);
+	lookup_state_mirror(reused, mirror);
 	lookup_trace_free(trace);
 	for (int step = 0; step < 3 && fwd->child; step++) {
 		J *one = OBJ(), *old = fwd->child;
@@ -29,10 +45,26 @@ static int check(J *fwd)
 		lookup_state_flush(state);
 		lookup_state_flush(reused);
 		J *expected_update = generate_lookup(fwd);
+		/* A partial storage match must own new forms after its input is freed. */
+		J *input = DUP(fwd);
+		J *partial = generate_lookup_shared(input, expected);
+		J *independent = generate_lookup(input);
+		DEL(input);
+		char *expected_text = cJSON_PrintUnformatted(expected_update);
+		char *partial_text = cJSON_PrintUnformatted(partial);
+		char *independent_text = cJSON_PrintUnformatted(independent);
+		ok &= !strcmp(expected_text, partial_text) &&
+		      !strcmp(expected_text, independent_text);
+		free(expected_text);
+		free(partial_text);
+		free(independent_text);
+		DEL(partial);
+		DEL(independent);
 		if (!cJSON_Compare(expected_update, lookup_state_json(state),
 				   1) ||
 		    !cJSON_Compare(expected_update, lookup_state_json(reused),
-				   1)) {
+				   1) ||
+		    !cJSON_Compare(expected_update, GET(mirror, "lookup"), 1)) {
 			fprintf(stderr,
 				"incremental lookup mismatch after removal %d\n",
 				step);
@@ -49,6 +81,7 @@ static int check(J *fwd)
 	free(b);
 	DEL(expected);
 	DEL(actual);
+	DEL(mirror);
 	return ok;
 }
 /* Raw substring presence and original pattern order are independent of scan direction. */
@@ -171,6 +204,10 @@ static int check_prefixes(void)
 				"  a beta gamma",
 				"trail ",
 				"single",
+				"abcdefg tail",
+				"abcdefgh tail",
+				"abcdefghi tail",
+				"abcdxyz tail",
 				"",
 				"ab def ghi" };
 	int counts[sizeof(terms) / sizeof(*terms)] = { 0 };
@@ -408,6 +445,8 @@ static int check_posting_edits(void)
 	LookupTrace *trace = NULL;
 	J *actual = generate_lookup_traced(fwd, &trace);
 	LookupState *state = lookup_state_reuse_traced(fwd, actual, trace);
+	J *mirror = shared_mirror(actual);
+	lookup_state_mirror(state, mirror);
 	lookup_trace_free(trace);
 	int ok = 1;
 	for (int step = 0; step < 80 && ok; step++) {
@@ -431,7 +470,8 @@ static int check_posting_edits(void)
 		DEL(replacement);
 		lookup_state_flush(state);
 		J *expected = reference_lookup(fwd);
-		ok = cJSON_Compare(actual, expected, 1);
+		ok = cJSON_Compare(actual, expected, 1) &&
+		     cJSON_Compare(GET(mirror, "lookup"), expected, 1);
 		DEL(expected);
 		if (!ok)
 			fprintf(stderr,
@@ -440,6 +480,7 @@ static int check_posting_edits(void)
 	}
 	lookup_state_free(state);
 	DEL(actual);
+	DEL(mirror);
 	DEL(fwd);
 	return ok;
 }
@@ -451,6 +492,10 @@ int main(void)
 	    !check_posting_edits())
 		return 1;
 	const char *terms[] = { "red green blue",
+				"abcdefg middle ending",
+				"abcdefgh middle ending",
+				"abcdefghi middle ending",
+				"abcdxyz middle ending",
 				"bred green blue",
 				"red green blues",
 				"red green red green",

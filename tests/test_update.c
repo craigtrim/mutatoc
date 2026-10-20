@@ -62,6 +62,15 @@ static void equivalent(mc_engine *a, mc_engine *b)
 	CHECK(cJSON_Compare(x, y, 1));
 	DEL(x);
 	DEL(y);
+	/* Lookup group order chooses alias precedence in each view. */
+	J *av = a->live_mode ? a->live : a->snapshot;
+	J *bv = b->live_mode ? b->live : b->snapshot;
+	J *ag = GET(GET(av, "synonyms"), "lookup");
+	J *bg = GET(GET(bv, "synonyms"), "lookup");
+	J *ak = ag ? ag->child : NULL, *bk = bg ? bg->child : NULL;
+	for (; ak && bk; ak = ak->next, bk = bk->next)
+		CHECK(!strcmp(ak->string, bk->string));
+	CHECK(!ak && !bk);
 	const char *texts[] = {
 		"red green blue",
 		"bred green blues",
@@ -269,7 +278,6 @@ static void indexed_swap(int live)
 		J *r = call(e, update("urn:school", documents[step % 2]), 1);
 		DEL(r);
 		CHECK(e->graph == graph);
-		CHECK(e->graph->triple_keys.size == e->graph->n);
 		load(fresh, documents[step % 2], live);
 		equivalent(e, fresh);
 		/* Adding either existing triple must still be a no-op. */

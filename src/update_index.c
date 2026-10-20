@@ -3,6 +3,7 @@
  * vocabulary in existing subject slots patches only the affected view buckets.
  */
 #include "mc.h"
+#include <assert.h>
 #define SLOTS(i, m)                          \
 	for (size_t i = 0; i < (m).cap; i++) \
 		if ((m).slots[i].key)
@@ -11,15 +12,15 @@ typedef struct {
 	Map members;
 } ObjectIndex;
 typedef struct SourceGroups SourceGroups;
-static SourceGroups *source_groups_build(J *, Map *, int);
+static SourceGroups *source_groups_build(J *, Map *, Map *);
 static void source_groups_free(SourceGroups *);
-static void source_groups_change(SourceGroups *, J *, Map *, int, int);
-static J *source_groups_order(SourceGroups *);
+static void source_groups_change(SourceGroups *, J *, Map *, int);
+static J *source_groups_order(SourceGroups *, int);
 struct UpdateState {
 	Map objects, ordinals, owners, ner_refs, plus_rules;
 	LookupState *snapshot;
 	int mirrored;
-	SourceGroups *cached_order, *live_order;
+	SourceGroups *source_order;
 };
 static int vocabulary(const char *p)
 {
@@ -133,8 +134,7 @@ void update_state_free(UpdateState *u)
 {
 	if (!u)
 		return;
-	source_groups_free(u->cached_order);
-	source_groups_free(u->live_order);
+	source_groups_free(u->source_order);
 	lookup_state_free(u->snapshot);
 	SLOTS(i, u->objects)
 	{
@@ -153,8 +153,9 @@ typedef struct {
 	mc_engine *engine;
 	UpdateState *state;
 	J *raw;
+	int valid;
 } BuildIndexes;
-static void build_view_members(void *data)
+static void build_lookup_members(void *data)
 {
 	BuildIndexes *job = data;
 	mc_engine *e = job->engine;
@@ -169,17 +170,25 @@ static void build_view_members(void *data)
 		lookup_state_mirror(u->snapshot, live_syns);
 		u->mirrored = 1;
 	}
+}
+static void build_view_members(void *data)
+{
+	BuildIndexes *job = data;
+	mc_engine *e = job->engine;
+	UpdateState *u = job->state;
+	J *syns = GET(e->snapshot, "synonyms");
 	J *plus = generate_spans(job->raw, e->distance, 1, e->comma_lists);
 	plus_refs(u, plus, 1);
 	DEL(plus);
 	prepare_view(u, e->snapshot);
 	if (e->live)
 		prepare_view(u, e->live);
-	u->cached_order =
-		source_groups_build(GET(syns, "fwd"), &u->ordinals, 0);
-	if (e->live)
-		u->live_order = source_groups_build(
-			GET(GET(e->live, "synonyms"), "fwd"), &u->ordinals, 0);
+	Map *live_values =
+		e->live ? &object_index(u, GET(GET(e->live, "synonyms"), "fwd"))
+				   ->members :
+				NULL;
+	u->source_order = source_groups_build(GET(syns, "fwd"), &u->ordinals,
+					      live_values);
 }
 static void build_match_members(void *data)
 {
@@ -190,6 +199,59 @@ static void build_match_members(void *data)
 			e->live_mode ? e->live : e->snapshot);
 	if (e->index)
 		match_index_mutable(e->index);
+}
+
+static void build_source_members(void *data)
+{
+	BuildIndexes *job = data;
+	mc_engine *e = job->engine;
+	UpdateState *u = job->state;
+	J *syns = GET(e->snapshot, "synonyms");
+	size_t sources = (size_t)SIZE(GET(syns, "fwd"));
+	map_reserve(&u->owners, e->graph->subjects.size);
+	map_reserve(&u->ner_refs, (size_t)SIZE(GET(e->snapshot, "ner")));
+	J *raw = OBJ();
+	Map raw_keys = { 0 };
+	map_reserve(&raw_keys, sources);
+	const char *previous_subject = NULL;
+	char *canon = NULL;
+	for (size_t i = 0; i < e->graph->n; i++) {
+		Triple *t = &e->graph->ts[i];
+		/* Consecutive statements often share a subject and canonical name. */
+		if (!previous_subject || strcmp(previous_subject, t->s.value)) {
+			free(canon);
+			canon = norm(local(t->s.value), 1, 0);
+			previous_subject = t->s.value;
+			const char *owner = map_get(&u->owners, canon);
+			if (owner && strcmp(owner, t->s.value)) {
+				free(canon);
+				DEL(raw);
+				map_free(&raw_keys);
+				job->valid = 0;
+				return;
+			}
+			map_put(&u->owners, canon, t->s.value);
+		}
+		if (!strcmp(t->p.value, RDFS "label"))
+			ner_ref(u, t->o.value, 1);
+		if (vocabulary(t->p.value)) {
+			char *value = norm(t->o.value, 1, 0);
+			if (*value && strcmp(value, "nil"))
+				unique(indexed_ensure(raw, &raw_keys, canon, 1),
+				       value);
+			free(value);
+		}
+	}
+	free(canon);
+	size_t ordinal = 0;
+	map_reserve(&u->ordinals, sources);
+	EACH(k, GET(syns, "fwd"))
+		map_put(&u->ordinals, k->string, (void *)(uintptr_t)++ordinal);
+	job->raw = raw;
+	build_view_members(job);
+	DEL(raw);
+	map_free(&raw_keys);
+	job->raw = NULL;
 }
 
 static void build_update_state(mc_engine *e)
@@ -218,55 +280,14 @@ static void build_update_state(mc_engine *e)
 			return;
 	}
 	UpdateState *u = calloc(1, sizeof(*u));
-	J *syns = GET(e->snapshot, "synonyms");
-	size_t sources = (size_t)SIZE(GET(syns, "fwd"));
-	map_reserve(&u->owners, e->graph->subjects.size);
-	map_reserve(&u->ner_refs, (size_t)SIZE(GET(e->snapshot, "ner")));
-	J *raw = OBJ();
-	Map raw_keys = { 0 };
-	map_reserve(&raw_keys, sources);
-	const char *previous_subject = NULL;
-	char *canon = NULL;
-	for (size_t i = 0; i < e->graph->n; i++) {
-		Triple *t = &e->graph->ts[i];
-		/* Consecutive statements often share a subject and canonical name. */
-		if (!previous_subject || strcmp(previous_subject, t->s.value)) {
-			free(canon);
-			canon = norm(local(t->s.value), 1, 0);
-			previous_subject = t->s.value;
-			const char *owner = map_get(&u->owners, canon);
-			if (owner && strcmp(owner, t->s.value)) {
-				free(canon);
-				DEL(raw);
-				map_free(&raw_keys);
-				update_state_free(u);
-				return;
-			}
-			map_put(&u->owners, canon, t->s.value);
-		}
-		if (!strcmp(t->p.value, RDFS "label"))
-			ner_ref(u, t->o.value, 1);
-		if (vocabulary(t->p.value)) {
-			char *value = norm(t->o.value, 1, 0);
-			if (*value && strcmp(value, "nil"))
-				unique(indexed_ensure(raw, &raw_keys, canon, 1),
-				       value);
-			free(value);
-		}
-	}
-	free(canon);
-	size_t ordinal = 0;
-	map_reserve(&u->ordinals, sources);
-	EACH(k, GET(syns, "fwd"))
-		map_put(&u->ordinals, k->string, (void *)(uintptr_t)++ordinal);
-	/* These jobs read completed JSON views and own separate indexes. One
-	 * extra worker is enough to overlap their memory access on large loads. */
-	BuildIndexes job = { e, u, raw };
-	parallel_pair(build_view_members, &job, build_match_members, &job,
-		      e->graph->subjects.size >= 4096);
-	DEL(raw);
-	map_free(&raw_keys);
-	if (!e->index) {
+	/* Each job reads completed JSON views and owns separate mutable indexes.
+	 * Bound parallelism to the three independent construction tasks. */
+	BuildIndexes job = { e, u, NULL, 1 };
+	parallel_three(build_lookup_members, build_match_members,
+		       build_source_members, &job,
+		       e->graph->subjects.size >= 4096);
+	/* Eligibility discovered by the source job is applied after all joins. */
+	if (!job.valid || !e->index) {
 		update_state_free(u);
 		return;
 	}
@@ -325,12 +346,13 @@ static void base_groups(const char *key, J *values, BaseGroups *groups)
 	groups->capacity = 8;
 	base_group_add(groups, base_word_count(key, 1));
 	EACH(v, values) {
-		char *normal = norm(S(v), 1, 1);
+		char *owned;
+		const char *normal = norm_borrowed(S(v), &owned);
 		base_group_add(groups, base_word_count(normal, 1));
 		size_t length = strlen(normal);
 		if (length && strchr("!?.", normal[length - 1]))
 			base_group_add(groups, base_word_count(normal, 0));
-		free(normal);
+		free(owned);
 	}
 }
 
@@ -338,7 +360,7 @@ typedef struct SourceGroupNode {
 	struct SourceGroupNode *left, *right, *parent;
 	size_t ordinal;
 	unsigned priority;
-	int sequence;
+	int sequence[2];
 } SourceGroupNode;
 typedef struct {
 	SourceGroupNode *root, *last;
@@ -352,7 +374,8 @@ struct SourceGroups {
 	SourceGroupBlock *blocks;
 	SourceGroupNode *available;
 	unsigned random;
-	int building;
+	int building, has_live;
+	Map *live_values; /* Used only while constructing from the completed view. */
 };
 static SourceGroupNode *source_node(SourceGroups *s)
 {
@@ -417,16 +440,22 @@ static SourceGroupNode *source_remove(SourceGroupNode *root, SourceGroupNode *v)
 	return root;
 }
 static void source_groups_change(SourceGroups *s, J *fwd, Map *ordinals,
-				 int live, int delta)
+				 int delta)
 {
 	EACH(k, fwd) {
-		J *values = live ? DUP(k) : k;
-		if (live)
-			sort_strings(values, 0);
-		BaseGroups groups = { 0 };
-		base_groups(k->string, values, &groups);
-		if (live)
-			DEL(values);
+		BaseGroups groups = { 0 }, live_groups = { 0 };
+		base_groups(k->string, k, &groups);
+		if (s->has_live && delta > 0) {
+			J *values = s->building ?
+						  map_get(s->live_values, k->string) :
+						  DUP(k);
+			if (!s->building)
+				sort_strings(values, 0);
+			base_groups(k->string, values, &live_groups);
+			if (!s->building)
+				DEL(values);
+			assert(groups.count == live_groups.count);
+		}
 		size_t ordinal =
 			(size_t)(uintptr_t)map_get(ordinals, k->string);
 		for (int sequence = 0; sequence < groups.count; sequence++) {
@@ -441,7 +470,18 @@ static void source_groups_change(SourceGroups *s, J *fwd, Map *ordinals,
 				}
 				SourceGroupNode *v = source_node(s);
 				v->ordinal = ordinal;
-				v->sequence = sequence;
+				v->sequence[0] = sequence;
+				if (s->has_live) {
+					int live_sequence = 0;
+					while (live_sequence <
+						       live_groups.count &&
+					       live_groups.items[live_sequence] !=
+						       groups.items[sequence])
+						live_sequence++;
+					assert(live_sequence <
+					       live_groups.count);
+					v->sequence[1] = live_sequence;
+				}
 				s->random ^= s->random << 13;
 				s->random ^= s->random >> 17;
 				s->random ^= s->random << 5;
@@ -483,15 +523,21 @@ static void source_groups_change(SourceGroups *s, J *fwd, Map *ordinals,
 		}
 		if (groups.items != groups.local)
 			free(groups.items);
+		if (live_groups.items && live_groups.items != live_groups.local)
+			free(live_groups.items);
 	}
 }
-static SourceGroups *source_groups_build(J *fwd, Map *ordinals, int live)
+static SourceGroups *source_groups_build(J *fwd, Map *ordinals,
+					 Map *live_values)
 {
 	SourceGroups *s = calloc(1, sizeof(*s));
 	s->random = 129;
 	s->building = 1;
-	source_groups_change(s, fwd, ordinals, live, 1);
+	s->has_live = live_values != NULL;
+	s->live_values = live_values;
+	source_groups_change(s, fwd, ordinals, 1);
 	s->building = 0;
+	s->live_values = NULL;
 	return s;
 }
 static void source_groups_free(SourceGroups *s)
@@ -522,7 +568,7 @@ static int first_group_compare(const void *a, const void *b)
 		return x->ordinal < y->ordinal ? -1 : 1;
 	return (x->sequence > y->sequence) - (x->sequence < y->sequence);
 }
-static J *source_groups_order(SourceGroups *s)
+static J *source_groups_order(SourceGroups *s, int live)
 {
 	FirstGroup *first = calloc(s->groups.size + 1, sizeof(*first));
 	size_t n = 0;
@@ -533,7 +579,7 @@ static J *source_groups_order(SourceGroups *s)
 		while (v->left)
 			v = v->left;
 		first[n++] = (FirstGroup){ s->groups.slots[i].key, v->ordinal,
-					   v->sequence };
+					   v->sequence[live] };
 	}
 	qsort(first, n, sizeof(*first), first_group_compare);
 	J *order = ARR();
@@ -659,6 +705,13 @@ static void patch_reverse(mc_engine *e, J *view, const char *canon, J *old_fwd,
 			member_set(u, rev, key, ARR());
 			bucket = member_get(u, rev, key);
 		}
+		if (bucket->type & cJSON_IsReference) {
+			/* Release the borrowed matcher key before replacing its wrapper. */
+			if (match_index_view(e->index) == view)
+				match_index_member(e->index, "rev", key, NULL);
+			member_set(u, rev, key, DUP(bucket));
+			bucket = member_get(u, rev, key);
+		}
 		J *v = bucket->child;
 		while (v) {
 			J *next = v->next;
@@ -673,6 +726,9 @@ static void patch_reverse(mc_engine *e, J *view, const char *canon, J *old_fwd,
 		else
 			sort_sources(u, bucket, NULL);
 		if (!bucket->child) {
+			/* The initial matcher index borrows this bucket's key. */
+			if (match_index_view(e->index) == view)
+				match_index_member(e->index, "rev", key, NULL);
 			member_set(u, rev, key, NULL);
 			bucket = NULL;
 		}
@@ -748,6 +804,9 @@ static void patch_view(mc_engine *e, J *view, J *old_local, J *new_local,
 	SLOTS(i, ner_keys)
 	{
 		const char *key = ner_keys.slots[i].key;
+		/* Remove borrowed keys before their JSON nodes are replaced. */
+		if (match_index_view(e->index) == view)
+			match_index_member(e->index, "ner", key, NULL);
 		member_set(u, GET(view, "ner"), key,
 			   map_get(&u->ner_refs, key) ? STR("NER") : NULL);
 		if (match_index_view(e->index) == view)
@@ -809,16 +868,8 @@ int update_fast(mc_engine *e, Graph *added, Map *selected)
 		DEL(new_raw);
 		J *old_fwd = GET(GET(old_local, "synonyms"), "fwd"),
 		  *new_fwd = GET(GET(new_local, "synonyms"), "fwd");
-		source_groups_change(u->cached_order, old_fwd, &u->ordinals, 0,
-				     -1);
-		source_groups_change(u->cached_order, new_fwd, &u->ordinals, 0,
-				     1);
-		if (u->live_order) {
-			source_groups_change(u->live_order, old_fwd,
-					     &u->ordinals, 1, -1);
-			source_groups_change(u->live_order, new_fwd,
-					     &u->ordinals, 1, 1);
-		}
+		source_groups_change(u->source_order, old_fwd, &u->ordinals, -1);
+		source_groups_change(u->source_order, new_fwd, &u->ordinals, 1);
 		lookup_state_entity(u->snapshot, old_fwd, -1);
 		lookup_state_entity(u->snapshot, new_fwd, 1);
 		EACH(id, old_ids) {
@@ -856,10 +907,10 @@ int update_fast(mc_engine *e, Graph *added, Map *selected)
 		rdf_free(new_graph);
 	}
 	lookup_state_flush(u->snapshot);
-	J *cached_order = source_groups_order(u->cached_order);
+	J *cached_order = source_groups_order(u->source_order, 0);
 	lookup_state_order(u->snapshot, cached_order, 0);
-	J *live_order = u->live_order ? source_groups_order(u->live_order) :
-					      NULL;
+	J *live_order = e->live ? source_groups_order(u->source_order, 1) :
+					NULL;
 	if (live_order)
 		lookup_state_order(u->snapshot, live_order, 1);
 	match_index_group_order(

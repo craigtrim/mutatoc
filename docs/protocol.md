@@ -23,7 +23,7 @@ Each request is one JSON object. The CLI's `--serve` mode accepts newline-delimi
 
 The `query` interface defaults to cached JSON finder behavior. `owl` and `data` select direct graph and live finder semantics when an RDF graph is loaded. `ask_json` selects the low-level stored JSON views. Unknown operations and methods return errors. The complete exercised method list is recorded in `tests/fixtures/api/queries.json`.
 
-`load` constructs the new graph and snapshot before replacing the existing ontology. Failed loads retain the previous ontology. Eligible large loads build independent indexes with at most one additional native thread, which finishes before `load` returns.
+`load` constructs the new graph and snapshot before replacing the existing ontology. Failed loads retain the previous ontology. Eligible large loads build independent indexes with at most two additional native threads, which finish before `load` returns.
 
 `comma_lists` is a boolean, false by default on every load. Whole literals, including their commas, supply synonyms and span rules. Set it to true for sources that pack lists into literals; commas between numeric characters remain intact. Collections inherit it per source, with explicit source values taking precedence. Deferred `graph_only` extraction retains it, and failed loads preserve the previous setting. It does not rewrite prepared snapshots. See [comma literals and packed lists](input-formats.md#comma-literals-and-packed-lists) for migration examples.
 

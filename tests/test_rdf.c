@@ -628,6 +628,115 @@ static void graph_ownership(void)
 	CHECK(!strcmp(S(GET(GET(AT(rows, 0), "object"), "value")), "urn:o"));
 	DEL(rows);
 	rdf_free(retained);
+
+	/* Long literal copies and merges remain valid across storage blocks. */
+	source = rdf_create(&error);
+	Term subject = rdf_term("urn:long", 0), predicate = rdf_term("urn:p", 0);
+	const size_t lengths[] = { 4096, 65536, 131072 };
+	for (size_t i = 0; i < 3; i++) {
+		char *text = malloc(lengths[i] + 1);
+		memset(text, 'a' + (int)i, lengths[i]);
+		text[lengths[i]] = 0;
+		Term literal = rdf_term(text, 1);
+		rdf_add(source, &subject, &predicate, &literal);
+		rdf_term_free(&literal);
+		free(text);
+	}
+	Term copied = rdf_term_copy(&source->ts[1].o);
+	merged = rdf_merge(&source, 1);
+	rdf_free(source);
+	CHECK(merged->n == 3);
+	for (size_t i = 0; i < 3; i++) {
+		CHECK(strlen(merged->ts[i].o.value) == lengths[i]);
+		CHECK(merged->ts[i].o.value[0] == 'a' + (int)i);
+		CHECK(merged->ts[i].o.value[lengths[i] - 1] == 'a' + (int)i);
+	}
+	rdf_replace_object(merged, 1, &merged->ts[1].o);
+	CHECK(!strcmp(merged->ts[1].o.value, copied.value));
+	rdf_free(merged);
+	CHECK(strlen(copied.value) == lengths[1]);
+	rdf_term_free(&copied);
+	rdf_term_free(&subject);
+	rdf_term_free(&predicate);
+}
+
+/* Distinct terms sharing a hash bucket survive growth and unlinking at every
+ * position. Temporary duplicate triples remain findable during literal swaps. */
+static void graph_collision_chains(void)
+{
+	mc_error error = { 0 };
+	Graph *g = rdf_create(&error);
+	Term subject = rdf_term("urn:collision-subject", 0);
+	Term predicate = rdf_term("urn:collision-predicate", 0);
+	for (int i = 0; i < 1000; i++) {
+		char text[48];
+		snprintf(text, sizeof(text), "literal%d", i);
+		Term object = rdf_term(text, 1);
+		rdf_add(g, &subject, &predicate, &object);
+		rdf_term_free(&object);
+	}
+	CHECK(g->n == 1000);
+	size_t selected[3] = { 0 }, found = 0;
+	for (size_t bucket = 0; bucket < g->triple_capacity && !found;
+	     bucket++) {
+		size_t id = g->triple_heads[bucket], count = 0;
+		for (; id; id = g->triple_links[id - 1].next) {
+			if (count < 2)
+				selected[count] = id - 1;
+			selected[2] = id - 1;
+			count++;
+		}
+		found = count >= 3;
+	}
+	CHECK(found);
+	if (found) {
+		Term shared = rdf_term("shared replacement", 1);
+		for (size_t i = 0; i < 3; i++)
+			rdf_replace_object(g, selected[i], &shared);
+		rdf_add(g, &subject, &predicate, &shared);
+		CHECK(g->n == 1000);
+		Term separate = rdf_term("separate replacement", 1);
+		rdf_replace_object(g, selected[1], &separate);
+		rdf_add(g, &subject, &predicate, &shared);
+		rdf_add(g, &subject, &predicate, &separate);
+		CHECK(g->n == 1000);
+		rdf_term_free(&shared);
+		rdf_term_free(&separate);
+		for (size_t i = 0; i < 1000; i++) {
+			Triple *t = &g->ts[i];
+			rdf_add(g, &t->s, &t->p, &t->o);
+		}
+		CHECK(g->n == 1000);
+		char old[48];
+		snprintf(old, sizeof(old), "literal%zu", selected[0]);
+		Term removed = rdf_term(old, 1);
+		rdf_add(g, &subject, &predicate, &removed);
+		CHECK(g->n == 1001);
+		rdf_term_free(&removed);
+	}
+	/* Kind, datatype and language participate in exact equality. */
+	size_t start = g->n;
+	for (int variant = 0; variant < 5; variant++) {
+		Term object =
+			rdf_term("same lexical value", variant == 1 ? 0 : 1);
+		if (variant == 2)
+			object.datatype = copy("urn:type");
+		if (variant >= 3)
+			object.language = copy(variant == 3 ? "en" : "fr");
+		rdf_add(g, &subject, &predicate, &object);
+		rdf_add(g, &subject, &predicate, &object);
+		rdf_term_free(&object);
+	}
+	CHECK(g->n == start + 5);
+	Term empty = rdf_term("same lexical value", 1);
+	empty.datatype = copy("");
+	empty.language = copy("");
+	rdf_add(g, &subject, &predicate, &empty);
+	CHECK(g->n == start + 5);
+	rdf_term_free(&empty);
+	rdf_term_free(&subject);
+	rdf_term_free(&predicate);
+	rdf_free(g);
 }
 
 int main(int argc, char **argv)
@@ -640,6 +749,7 @@ int main(int argc, char **argv)
 	ontology_graphs(e, argv[1]);
 	literals(e);
 	graph_ownership();
+	graph_collision_chains();
 	mc_destroy(e);
 	printf("RDF: %d checks, %d failures.\n", total, failed);
 	return failed ? 1 : 0;

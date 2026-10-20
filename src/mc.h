@@ -48,6 +48,8 @@ char *copy(const char *);
 char *slice(const char *, size_t);
 char *replace(const char *, const char *, const char *);
 char *norm(const char *, int lower, int spaces);
+/* norm(text, 1, 1), borrowing unchanged ASCII; caller frees only *owned. */
+const char *norm_borrowed(const char *, char **owned);
 char *lower(const char *);
 char *upper(const char *);
 char *uri_resolve(const char *, const char *);
@@ -83,7 +85,9 @@ typedef struct PrefixIndex PrefixIndex;
 void prefix_index_change(PrefixIndex **, const char *, int);
 int prefix_index_has(const PrefixIndex *, const char *);
 void prefix_index_free(PrefixIndex *);
-void parallel_pair(void (*)(void *), void *, void (*)(void *), void *, int);
+void parallel_three(void (*)(void *), void (*)(void *), void (*)(void *),
+		    void *, int);
+uint64_t hash_text(const char *);
 void *map_get(Map *, const char *);
 void map_put(Map *, const char *, void *);
 /* Referenced keys must outlive their entries; deletion does not free them. */
@@ -99,25 +103,35 @@ void indexed_set(J *, Map *, const char *, J *);
 typedef struct {
 	char *value, *datatype, *language;
 	int kind;
-	int shared_value; /* Graph-owned resource string (craigtrim/axiom#129). */
+	int shared_value; /* Graph-owned string (craigtrim/axiom#129). */
 } Term;
 typedef struct {
 	Term s, p, o;
 } Triple;
 typedef struct LookupTrace LookupTrace;
+typedef struct GraphIds GraphIds;
+typedef struct GraphStrings GraphStrings;
 LookupTrace *lookup_trace_create(void);
 void lookup_trace_reserve(LookupTrace *, size_t);
 void lookup_trace_add(LookupTrace *, J *, J *);
 void lookup_trace_free(LookupTrace *);
 typedef struct {
+	uint64_t hash;
+	size_t next;
+} TripleLink;
+typedef struct {
 	Triple *ts;
 	size_t n, cap;
 	J *prefixes;
 	Map subjects;
-	Map triple_keys;
+	GraphIds *subject_ids; /* Pooled read-only JSON wrappers for triple IDs. */
+	size_t *triple_heads;
+	TripleLink *triple_links;
+	size_t triple_capacity;
 	Map resources; /* Shared IRI and blank-node values owned by this graph. */
 	LookupTrace *
 		lookup_trace; /* Borrowed JSON strings; owned construction records. */
+	GraphStrings *strings;
 } Graph;
 void literal_normalize(Term *);
 Term rdf_term(const char *, int);
@@ -146,6 +160,7 @@ J *data_query(J *, const char *, const J *, const J *, mc_error *);
 J *ontology_query(J *, const char *, const J *, mc_error *);
 J *generate_synonyms(J *, int);
 J *generate_lookup(J *);
+J *generate_lookup_shared(J *, J *);
 J *generate_lookup_traced(J *, LookupTrace **);
 char *lookup_leading_gram(const char *text, int words);
 typedef struct LookupState LookupState;

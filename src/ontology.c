@@ -72,11 +72,15 @@ J *generate_synonyms(J *raw, int reverse)
 		char *key = lower(k->string);
 		J *a = indexed_ensure(f, &forward, key, 1);
 		EACH(v, k) {
-			char *r = replace(S(v), "+", " "), *l = lower(r),
-			     *c = norm(l, 0, 1);
-			unique(a, c);
-			free(c);
-			free(l);
+			char *replaced = strchr(S(v), '+') ?
+						       replace(S(v), "+", " ") :
+						       NULL;
+			const char *r = replaced ? replaced : S(v);
+			char *owned;
+			const char *normal = norm_borrowed(r, &owned);
+			unique(a, normal);
+			free(owned);
+			char *c;
 			if (strchr(r, '_')) {
 				char *t = replace(r, "_", " ");
 				c = norm(t, 1, 1);
@@ -97,7 +101,7 @@ J *generate_synonyms(J *raw, int reverse)
 				free(c);
 				free(t);
 			}
-			free(r);
+			free(replaced);
 		}
 		sort_strings(a, 1);
 		free(key);
@@ -110,10 +114,19 @@ J *generate_synonyms(J *raw, int reverse)
 	return r;
 }
 
-/* Each group hashes the value strings already owned by its JSON array. */
+/* Contiguous forms preserve insertion order without allocating a second set
+ * of JSON nodes before the data view has proved its completed arrays equal. */
+typedef struct {
+	char *text;
+	J *json;
+	size_t length;
+	int borrowed;
+} LookupForm;
 typedef struct {
 	J *array;
 	Map values;
+	LookupForm *forms;
+	size_t count, capacity;
 } LookupBuilder;
 static LookupBuilder *lookup_group(J *d, Map *seen, const char *key)
 {
@@ -125,25 +138,41 @@ static LookupBuilder *lookup_group(J *d, Map *seen, const char *key)
 	}
 	return group;
 }
-static J *lookup_group_push(LookupBuilder *group, const char *value)
+static LookupForm *lookup_form(LookupBuilder *group, char *text, int traced,
+			       int borrowed)
 {
-	J *entry = map_get(&group->values, value);
-	if (!entry) {
-		entry = STR(value);
-		ADD(group->array, entry);
-		map_put_ref(&group->values, S(entry), entry);
+	if (group->count == group->capacity) {
+		group->capacity = group->capacity ? group->capacity * 2 : 64;
+		group->forms = realloc(group->forms,
+				       group->capacity * sizeof(*group->forms));
 	}
-	return entry;
+	LookupForm *form = &group->forms[group->count++];
+	*form = (LookupForm){ text, NULL, 0, borrowed };
+	if (traced) {
+		form->json = cJSON_CreateStringReference(text);
+		form->json->type &= ~cJSON_IsReference;
+	}
+	return form;
 }
-static J *lookup_push(J *d, Map *seen, const char *key, const char *value)
+/* Takes ownership of text, including when the form already exists. */
+static LookupForm *lookup_group_push(LookupBuilder *group, char *text,
+				     int traced)
 {
-	return lookup_group_push(lookup_group(d, seen, key), value);
+	size_t position = (size_t)(uintptr_t)map_get(&group->values, text);
+	if (position) {
+		free(text);
+		return &group->forms[position - 1];
+	}
+	LookupForm *form = lookup_form(group, text, traced, 0);
+	map_put_ref(&group->values, text, (void *)(uintptr_t)group->count);
+	return form;
 }
-/* Collect base forms in input order, then size their indexes once and retain
- * each first occurrence. Rewrite stages append through the same indexes. */
-static void lookup_append(J *d, Map *seen, const char *key, const char *value)
+static void lookup_append(J *d, Map *seen, const char *key, const char *value,
+			  int traced, int borrow)
 {
-	ADD(lookup_group(d, seen, key)->array, STR(value));
+	int borrowed = borrow && !traced;
+	lookup_form(lookup_group(d, seen, key),
+		borrowed ? (char *)value : copy(value), traced, borrowed);
 }
 static void lookup_seed(Map *seen)
 {
@@ -151,38 +180,103 @@ static void lookup_seed(Map *seen)
 		if (!seen->slots[i].key)
 			continue;
 		LookupBuilder *group = seen->slots[i].value;
-		map_reserve(&group->values, (size_t)SIZE(group->array));
-		J *entry = group->array->child;
-		while (entry) {
-			J *next = entry->next;
-			if (map_get(&group->values, S(entry)))
-				DEL(cJSON_DetachItemViaPointer(group->array,
-							       entry));
-			else
-				map_put_ref(&group->values, S(entry), entry);
-			entry = next;
+		map_reserve(&group->values, group->count);
+		size_t count = 0;
+		for (size_t j = 0; j < group->count; j++) {
+			LookupForm form = group->forms[j];
+			if (map_get(&group->values, form.text)) {
+				if (form.json)
+					DEL(form.json);
+				else if (!form.borrowed)
+					free(form.text);
+			} else {
+				group->forms[count++] = form;
+				map_put_ref(&group->values, form.text,
+					    (void *)(uintptr_t)count);
+			}
 		}
+		group->count = count;
 	}
 }
-
-static void lookup_seen_free(Map *seen)
+static int lookup_form_compare(const void *a, const void *b)
 {
-	for (size_t i = 0; i < seen->cap; i++)
-		if (seen->slots[i].key) {
-			LookupBuilder *group = seen->slots[i].value;
-			map_free(&group->values);
-			free(group);
+	const LookupForm *x = a, *y = b;
+	return x->length < y->length ? -1 :
+	       x->length > y->length ? 1 :
+					     strcmp(x->text, y->text);
+}
+static void lookup_finish(Map *seen, J *reference, int sorted)
+{
+	for (size_t i = 0; i < seen->cap; i++) {
+		if (!seen->slots[i].key)
+			continue;
+		LookupBuilder *group = seen->slots[i].value;
+		for (size_t j = 0; sorted && j < group->count; j++)
+			group->forms[j].length = ulen(group->forms[j].text);
+		int order = sorted ? -1 : 1, ordered = 1;
+		if (sorted && group->count > 1) {
+			order = lookup_form_compare(&group->forms[0],
+						    &group->forms[1]);
+			ordered = order != 0;
 		}
+		for (size_t j = 2; sorted && j < group->count && ordered; j++) {
+			int next = lookup_form_compare(&group->forms[j - 1],
+						       &group->forms[j]);
+			ordered = next != 0 && (next > 0) == (order > 0);
+		}
+		if (!ordered) {
+			qsort(group->forms, group->count, sizeof(*group->forms),
+			      lookup_form_compare);
+			order = -1;
+		}
+		J *source = GET(reference, seen->slots[i].key);
+		int identical = cJSON_IsArray(source) &&
+				(size_t)SIZE(source) == group->count;
+		J *entry = source ? source->child : NULL;
+		for (size_t j = 0; j < group->count && identical;
+		     j++, entry = entry->next) {
+			LookupForm *form =
+				&group->forms[order < 0 ? group->count - 1 - j :
+								j];
+			identical = !strcmp(form->text, S(entry));
+		}
+		if (identical) {
+			group->array->child = source->child;
+			group->array->type |= cJSON_IsReference;
+		}
+		for (size_t j = 0; j < group->count; j++) {
+			LookupForm *form =
+				&group->forms[order < 0 ? group->count - 1 - j :
+								j];
+			if (identical) {
+				if (!form->borrowed)
+					free(form->text);
+			} else {
+				J *value = form->json;
+				if (form->borrowed)
+					value = STR(form->text);
+				else if (!value) {
+					value = cJSON_CreateStringReference(
+						form->text);
+					value->type &= ~cJSON_IsReference;
+				}
+				ADD(group->array, value);
+			}
+		}
+		map_free(&group->values);
+		free(group->forms);
+		free(group);
+	}
 	map_free(seen);
 }
-
-static void lookup_add(J *d, Map *seen, const char *s)
+static void lookup_add(J *d, Map *seen, const char *s, int traced, int borrow)
 {
-	char *r = replace(s, "_", " ");
+	char *replaced = strchr(s, '_') ? replace(s, "_", " ") : NULL;
+	const char *text = replaced ? replaced : s;
 	char key[32];
-	snprintf(key, sizeof(key), "%d", count(r, ' ') + 1);
-	lookup_append(d, seen, key, r);
-	free(r);
+	snprintf(key, sizeof(key), "%d", count(text, ' ') + 1);
+	lookup_append(d, seen, key, text, traced, borrow && !replaced);
+	free(replaced);
 }
 
 /* Groups contain exactly one more space-delimited word than their grams.
@@ -205,7 +299,7 @@ char *lookup_leading_gram(const char *text, int words)
 	return end ? slice(text, (size_t)(end - text)) : NULL;
 }
 
-J *generate_lookup_traced(J *f, LookupTrace **trace_out)
+static J *lookup_build(J *f, LookupTrace **trace_out, J *reference)
 {
 	LookupTrace *trace = trace_out ? lookup_trace_create() : NULL;
 	if (trace_out)
@@ -213,19 +307,21 @@ J *generate_lookup_traced(J *f, LookupTrace **trace_out)
 	J *d = OBJ();
 	Map seen = { 0 };
 	EACH(k, f) {
-		lookup_add(d, &seen, k->string);
+		lookup_add(d, &seen, k->string, trace != NULL, 1);
 		EACH(v, k) {
-			char *s = norm(S(v), 1, 1);
-			lookup_add(d, &seen, s);
+			char *owned;
+			const char *s = norm_borrowed(S(v), &owned);
+			lookup_add(d, &seen, s, trace != NULL, owned == NULL);
 			size_t n = strlen(s);
 			if (n && strchr("!?.", s[n - 1])) {
 				char key[32];
 				snprintf(key, sizeof(key), "%d",
 					 count(s, ' ') + 1);
-				s[n - 1] = 0;
-				lookup_append(d, &seen, key, s);
+				char *trimmed = slice(s, n - 1);
+				lookup_append(d, &seen, key, trimmed, trace != NULL, 0);
+				free(trimmed);
 			}
-			free(s);
+			free(owned);
 		}
 	}
 	lookup_seed(&seen);
@@ -237,13 +333,16 @@ J *generate_lookup_traced(J *f, LookupTrace **trace_out)
 	for (int n = 5; n >= 2; n--) {
 		char k[8];
 		snprintf(k, sizeof(k), "%d", n + 1);
-		/* Rewrites remove spaces, so they only append to lower groups. */
-		J *values = GET(d, k), *grams = ARR();
-		size_t source_count = (size_t)SIZE(values);
+		LookupBuilder *values = map_get(&seen, k);
+		if (!values || !values->count)
+			continue;
+		J *grams = ARR();
+		size_t source_count = values->count;
 		Map gram_set = { 0 };
-		map_reserve(&gram_set, (size_t)SIZE(values));
-		EACH(v, values) {
-			char *gram = lookup_leading_gram(S(v), n);
+		map_reserve(&gram_set, source_count);
+		for (size_t j = 0; j < source_count; j++) {
+			char *gram =
+				lookup_leading_gram(values->forms[j].text, n);
 			if (gram) {
 				unique_indexed(grams, &gram_set, gram);
 				free(gram);
@@ -252,14 +351,15 @@ J *generate_lookup_traced(J *f, LookupTrace **trace_out)
 		map_free(&gram_set);
 		Patterns *patterns = patterns_build(grams);
 		if (trace)
-			lookup_trace_reserve(trace, (size_t)SIZE(values));
-		EACH(v, values) {
-			int matches = patterns_find(patterns, S(v));
+			lookup_trace_reserve(trace, source_count);
+		for (size_t j = 0; j < source_count; j++) {
+			LookupForm *v = &values->forms[j];
+			int matches = patterns_find(patterns, v->text);
 			for (int i = 0; i < matches; i++) {
 				const char *g =
 					patterns->text[patterns->hits[i]];
 				char *u = replace(g, " ", "_"),
-				     *s = replace(S(v), g, u);
+				     *s = replace(v->text, g, u);
 				int size = count(s, ' ') + 1;
 				if (size >= 2 && size <= 5) {
 					snprintf(k, sizeof(k), "%d", size);
@@ -268,10 +368,12 @@ J *generate_lookup_traced(J *f, LookupTrace **trace_out)
 					if (!group->values.cap)
 						map_reserve(&group->values,
 							    source_count);
-					J *entry = lookup_group_push(group, s);
+					LookupForm *entry = lookup_group_push(
+						group, s, trace != NULL);
 					if (trace)
-						lookup_trace_add(trace, v,
-								 entry);
+						lookup_trace_add(trace, v->json,
+								 entry->json);
+					s = NULL;
 				}
 				free(u);
 				free(s);
@@ -280,15 +382,21 @@ J *generate_lookup_traced(J *f, LookupTrace **trace_out)
 		patterns_free(patterns);
 		DEL(grams);
 	}
-	lookup_seen_free(&seen);
-	EACH(k, d)
-		sort_strings(k, -1);
+	lookup_finish(&seen, reference, 1);
 	return d;
 }
-
+J *generate_lookup_traced(J *f, LookupTrace **trace_out)
+{
+	return lookup_build(f, trace_out, NULL);
+}
 J *generate_lookup(J *f)
 {
-	return generate_lookup_traced(f, NULL);
+	return lookup_build(f, NULL, NULL);
+}
+/* Recompute every form and its order; only final identical arrays share storage. */
+J *generate_lookup_shared(J *f, J *reference)
+{
+	return lookup_build(f, NULL, reference);
 }
 
 static J *rule(const char *canon, J *content, int distance)
@@ -552,10 +660,9 @@ J *generate_trie(J *entities)
 		char *s = replace(S(v), "_", " ");
 		char k[16];
 		snprintf(k, sizeof(k), "%d", count(s, ' ') + 1);
-		lookup_push(grams, &seen, k, s);
-		free(s);
+		lookup_group_push(lookup_group(grams, &seen, k), s, 0);
 	}
-	lookup_seen_free(&seen);
+	lookup_finish(&seen, NULL, 0);
 	for (int i = 1; i <= 6; i++) {
 		char k[16];
 		snprintf(k, sizeof(k), "%d", i);
@@ -639,11 +746,36 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 		}
 	}
 	int mixed = individuals && subclass && !skos && !force_class;
+	Map predicate_names = { 0 };
+	const char *previous_subject = NULL;
+	char *key = NULL;
 	for (size_t i = 0; i < g->n && !e->code; i++) {
 		Triple *t = &g->ts[i];
-		char *key = norm(local(t->s.value), 1, 0),
-		     *pk = predicate_key(t->p.value);
-		J *values = rdf_flatten(g, &t->o, 1, e);
+		if (!previous_subject || strcmp(previous_subject, t->s.value)) {
+			free(key);
+			key = norm(local(t->s.value), 1, 0);
+			previous_subject = t->s.value;
+		}
+		char *pk = map_get(&predicate_names, t->p.value);
+		if (!pk) {
+			pk = predicate_key(t->p.value);
+			map_put_ref(&predicate_names, t->p.value, pk);
+		}
+		/* Ordinary terms flatten to one value. Borrow stack wrappers while
+		 * these builders copy the value into their retained JSON views. */
+		J value_array = { 0 }, value_item = { 0 };
+		J *values;
+		if (t->o.kind == 2)
+			values = rdf_flatten(g, &t->o, 1, e);
+		else {
+			value_item.type = cJSON_String;
+			value_item.valuestring = norm(
+				t->o.kind == 0 ? local(t->o.value) : t->o.value,
+				1, 0);
+			value_array.type = cJSON_Array;
+			value_array.child = &value_item;
+			values = &value_array;
+		}
 		if (strcmp(pk, "rdfs:comment")) {
 			J *pd = ensure(by, pk, 0);
 			Map *subject_index = map_get(&predicate_indexes, pk);
@@ -652,7 +784,17 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 					calloc(1, sizeof(*subject_index));
 				map_put(&predicate_indexes, pk, subject_index);
 			}
-			J *subjects = rdf_flatten(g, &t->s, 1, e);
+			J subject_array = { 0 }, subject_item = { 0 };
+			J *subjects;
+			if (t->s.kind != 0)
+				subjects = rdf_flatten(g, &t->s, 1, e);
+			else {
+				subject_item.type = cJSON_String;
+				subject_item.valuestring = key;
+				subject_array.type = cJSON_Array;
+				subject_array.child = &subject_item;
+				subjects = &subject_array;
+			}
 			EACH(subject, subjects) {
 				const char *subject_key = S(subject);
 				if (strcmp(subject_key, "class") &&
@@ -666,7 +808,8 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 							unique(a, S(v));
 				}
 			}
-			DEL(subjects);
+			if (t->s.kind != 0)
+				DEL(subjects);
 			if (pk[0] == ':')
 				unique(preds, pk);
 		}
@@ -745,10 +888,15 @@ J *ontology_build(Graph *g, int distance, int force_class, int comma_lists,
 			indexed_push(equivs, &equiv_index, v, key);
 			free(v);
 		}
-		DEL(values);
-		free(pk);
-		free(key);
+		if (t->o.kind == 2)
+			DEL(values);
+		else
+			free(value_item.valuestring);
 	}
+	free(key);
+	for (size_t i = 0; i < predicate_names.cap; i++)
+		free(predicate_names.slots[i].value);
+	map_free(&predicate_names);
 	map_free(&label_index);
 	map_free(&ner_index);
 	map_free(&raw_index);

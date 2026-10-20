@@ -6,6 +6,53 @@
 
 #include "mc.h"
 #include "rdf_namespaces.h"
+#include <assert.h>
+#include <limits.h>
+
+/* Subject lists are append-only until the graph is discarded. Keep their
+ * array/number wrappers together; callers read them but never delete a node. */
+struct GraphIds {
+	struct GraphIds *next;
+	size_t used;
+	J nodes[256];
+};
+static J *graph_id_node(Graph *g, int type)
+{
+	if (!g->subject_ids || g->subject_ids->used == 256) {
+		GraphIds *block = calloc(1, sizeof(*block));
+		block->next = g->subject_ids;
+		g->subject_ids = block;
+	}
+	J *node = &g->subject_ids->nodes[g->subject_ids->used++];
+	node->type = type;
+	return node;
+}
+
+/* Original graph strings have one lifetime. Replacements own their new
+ * strings separately, so repeated edits never append to this initial pool. */
+struct GraphStrings {
+	struct GraphStrings *next;
+	size_t used, capacity;
+	char bytes[];
+};
+static char *graph_string(Graph *g, const char *text)
+{
+	size_t length = strlen(text) + 1;
+	if (!g->strings || g->strings->capacity - g->strings->used < length) {
+		size_t capacity = g->strings ? 65536 : 4096;
+		if (capacity < length)
+			capacity = length;
+		GraphStrings *block = malloc(sizeof(*block) + capacity);
+		block->next = g->strings;
+		block->used = 0;
+		block->capacity = capacity;
+		g->strings = block;
+	}
+	char *value = g->strings->bytes + g->strings->used;
+	memcpy(value, text, length);
+	g->strings->used += length;
+	return value;
+}
 
 Term rdf_term(const char *s, int kind)
 {
@@ -33,12 +80,15 @@ Term rdf_term_copy(const Term *t)
  * independent term copies and mutable literal values retain their ownership. */
 static Term graph_term(Graph *g, const Term *source)
 {
+	char *value;
 	if (source->kind == 1)
-		return rdf_term_copy(source);
-	char *value = map_get(&g->resources, source->value);
-	if (!value) {
-		value = copy(source->value);
-		map_put_ref(&g->resources, value, value);
+		value = graph_string(g, source->value);
+	else {
+		value = map_get(&g->resources, source->value);
+		if (!value) {
+			value = graph_string(g, source->value);
+			map_put_ref(&g->resources, value, value);
+		}
 	}
 	Term term = { value, source->datatype ? copy(source->datatype) : NULL,
 		      source->language ? copy(source->language) : NULL,
@@ -46,49 +96,83 @@ static Term graph_term(Graph *g, const Term *source)
 	return term;
 }
 
-static char *triple_key(const Term *s, const Term *p, const Term *o)
+/* Hashes select a chain of stable triple IDs; full terms decide equality.
+ * This avoids retaining a second serialized copy of every RDF statement. */
+static uint64_t triple_hash(const Term *s, const Term *p, const Term *o)
 {
-	Buf key = { 0 };
+	const uint64_t mix = UINT64_C(0xc6a4a7935bd1e995);
 	const Term *terms[] = { s, p, o };
+	uint64_t hash = 129;
 	for (size_t i = 0; i < 3; i++) {
+		hash = (hash ^ (unsigned)terms[i]->kind) * mix;
 		const char *parts[] = { terms[i]->value, terms[i]->datatype,
 					terms[i]->language };
-		char length[64];
-		snprintf(length, sizeof(length), "%d:", terms[i]->kind);
-		buf_put(&key, length);
-		for (size_t j = 0; j < 3; j++) {
-			const char *part = parts[j] ? parts[j] : "";
-			snprintf(length, sizeof(length), "%zu:", strlen(part));
-			buf_put(&key, length);
-			buf_put(&key, part);
-		}
+		for (size_t j = 0; j < 3; j++)
+			hash = (hash ^
+				(parts[j] && *parts[j] ? hash_text(parts[j]) :
+							       0)) *
+			       mix;
 	}
-	return buf_take(&key);
+	return hash ^ (hash >> 47);
 }
-
+static int term_equal(const Term *a, const Term *b)
+{
+	return a->kind == b->kind && !strcmp(a->value, b->value) &&
+	       !strcmp(a->datatype ? a->datatype : "",
+		       b->datatype ? b->datatype : "") &&
+	       !strcmp(a->language ? a->language : "",
+		       b->language ? b->language : "");
+}
+static void triple_grow(Graph *g)
+{
+	g->cap = g->cap ? g->cap * 2 : 256;
+	g->ts = realloc(g->ts, g->cap * sizeof(*g->ts));
+	g->triple_links =
+		realloc(g->triple_links, g->cap * sizeof(*g->triple_links));
+	g->triple_capacity = g->cap;
+	free(g->triple_heads);
+	g->triple_heads = calloc(g->triple_capacity, sizeof(*g->triple_heads));
+	for (size_t i = 0; i < g->n; i++) {
+		size_t bucket = (size_t)g->triple_links[i].hash &
+				(g->triple_capacity - 1);
+		g->triple_links[i].next = g->triple_heads[bucket];
+		g->triple_heads[bucket] = i + 1;
+	}
+}
 void rdf_add(Graph *g, const Term *s, const Term *p, const Term *o)
 {
-	char *key = triple_key(s, p, o);
-	if (map_get(&g->triple_keys, key)) {
-		free(key);
-		return;
+	uint64_t hash = triple_hash(s, p, o);
+	if (g->triple_capacity) {
+		size_t bucket = (size_t)hash & (g->triple_capacity - 1);
+		for (size_t id = g->triple_heads[bucket]; id;
+		     id = g->triple_links[id - 1].next) {
+			if (g->triple_links[id - 1].hash != hash)
+				continue;
+			Triple *t = &g->ts[id - 1];
+			if (term_equal(&t->s, s) && term_equal(&t->p, p) &&
+			    term_equal(&t->o, o))
+				return;
+		}
 	}
-	map_put(&g->triple_keys, key, (void *)1);
-	free(key);
-
-	if (g->n == g->cap) {
-		g->cap = g->cap ? g->cap * 2 : 256;
-		g->ts = realloc(g->ts, g->cap * sizeof(*g->ts));
-	}
+	/* Copy before reallocating: callers may supply terms from this graph. */
+	Triple triple = { graph_term(g, s), graph_term(g, p),
+			  graph_term(g, o) };
+	if (g->n == g->cap)
+		triple_grow(g);
 	size_t n = g->n++;
-	g->ts[n] = (Triple){ graph_term(g, s), graph_term(g, p),
-			     graph_term(g, o) };
-	J *a = map_get(&g->subjects, s->value);
+	g->ts[n] = triple;
+	size_t bucket = (size_t)hash & (g->triple_capacity - 1);
+	g->triple_links[n] = (TripleLink){ hash, g->triple_heads[bucket] };
+	g->triple_heads[bucket] = n + 1;
+	J *a = map_get(&g->subjects, triple.s.value);
 	if (!a) {
-		a = ARR();
-		map_put(&g->subjects, s->value, a);
+		a = graph_id_node(g, cJSON_Array);
+		map_put_ref(&g->subjects, triple.s.value, a);
 	}
-	ADD(a, NUM((double)n));
+	J *id = graph_id_node(g, cJSON_Number);
+	id->valuedouble = (double)n;
+	id->valueint = n > INT_MAX ? INT_MAX : (int)n;
+	ADD(a, id);
 }
 
 void rdf_bind_prefix(Graph *g, const char *prefix, const char *namespace)
@@ -139,15 +223,20 @@ void rdf_free(Graph *g)
 		rdf_term_free(&g->ts[i].p);
 		rdf_term_free(&g->ts[i].o);
 	}
-	for (size_t i = 0; i < g->subjects.cap; i++)
-		if (g->subjects.slots[i].key)
-			DEL(g->subjects.slots[i].value);
+	while (g->subject_ids) {
+		GraphIds *next = g->subject_ids->next;
+		free(g->subject_ids);
+		g->subject_ids = next;
+	}
 	map_free(&g->subjects);
-	map_free(&g->triple_keys);
-	for (size_t i = 0; i < g->resources.cap; i++)
-		if (g->resources.slots[i].key)
-			free(g->resources.slots[i].value);
+	free(g->triple_heads);
+	free(g->triple_links);
 	map_free(&g->resources);
+	while (g->strings) {
+		GraphStrings *next = g->strings->next;
+		free(g->strings);
+		g->strings = next;
+	}
 	free(g->ts);
 	DEL(g->prefixes);
 	free(g);
@@ -206,7 +295,7 @@ static J *term_json(Term *t)
 	PUT(j, "kind",
 	    STR(t->kind == 0 ? "iri" :
 		t->kind == 1 ? "literal" :
-			       "blank"));
+				       "blank"));
 	if (t->datatype)
 		PUT(j, "datatype", STR(t->datatype));
 	if (t->language)
@@ -269,18 +358,19 @@ Graph *rdf_merge(Graph **graphs, size_t count)
 void rdf_replace_object(Graph *g, size_t at, const Term *object)
 {
 	Triple *t = &g->ts[at];
-	char *old = triple_key(&t->s, &t->p, &t->o);
-	/* Reordering literals may temporarily give two slots the same key. */
-	size_t references = (size_t)(uintptr_t)map_get(&g->triple_keys, old);
-	if (references > 1)
-		map_put(&g->triple_keys, old, (void *)(uintptr_t)(references - 1));
-	else
-		map_delete(&g->triple_keys, old);
-	free(old);
+	Term replacement = rdf_term_copy(object);
+	size_t bucket = (size_t)g->triple_links[at].hash &
+			(g->triple_capacity - 1);
+	size_t *link = &g->triple_heads[bucket];
+	while (*link && *link != at + 1)
+		link = &g->triple_links[*link - 1].next;
+	assert(*link == at + 1);
+	*link = g->triple_links[at].next;
 	rdf_term_free(&t->o);
-	t->o = rdf_term_copy(object);
-	char *key = triple_key(&t->s, &t->p, &t->o);
-	references = (size_t)(uintptr_t)map_get(&g->triple_keys, key);
-	map_put(&g->triple_keys, key, (void *)(uintptr_t)(references + 1));
-	free(key);
+	t->o = replacement;
+	g->triple_links[at].hash = triple_hash(&t->s, &t->p, &t->o);
+	bucket = (size_t)g->triple_links[at].hash & (g->triple_capacity - 1);
+	/* Every slot has its own link, including temporary duplicates in swaps. */
+	g->triple_links[at].next = g->triple_heads[bucket];
+	g->triple_heads[bucket] = at + 1;
 }

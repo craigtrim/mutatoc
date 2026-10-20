@@ -5,7 +5,10 @@
 #include "mc.h"
 
 typedef struct {
-	char *text;
+	union {
+		char *heap;
+		char small[8];
+	} text;
 	size_t length, refs;
 	int child, next;
 } PrefixNode;
@@ -13,6 +16,26 @@ struct PrefixIndex {
 	PrefixNode *nodes;
 	int count, capacity, available;
 };
+/* Compressed edges are commonly one digit or a short word. Keep those bytes
+ * in the node rather than allocating a separate string for each edge. */
+static const char *prefix_text(const PrefixNode *node)
+{
+	return node->length <= sizeof(node->text.small) ? node->text.small :
+								node->text.heap;
+}
+static void prefix_text_free(PrefixNode *node)
+{
+	if (node->length > sizeof(node->text.small))
+		free(node->text.heap);
+}
+static void prefix_text_copy(PrefixNode *node, const char *text, size_t length)
+{
+	node->length = length;
+	if (length <= sizeof(node->text.small))
+		memcpy(node->text.small, text, length);
+	else
+		node->text.heap = slice(text, length);
+}
 static int prefix_node(PrefixIndex *index, const char *text, size_t length)
 {
 	int id;
@@ -29,7 +52,8 @@ static int prefix_node(PrefixIndex *index, const char *text, size_t length)
 		}
 		id = index->count++;
 	}
-	index->nodes[id] = (PrefixNode){ slice(text, length), length, 0, 0, 0 };
+	index->nodes[id] = (PrefixNode){ 0 };
+	prefix_text_copy(&index->nodes[id], text, length);
 	return id;
 }
 static int prefix_child(const PrefixIndex *index, int parent,
@@ -37,7 +61,7 @@ static int prefix_child(const PrefixIndex *index, int parent,
 {
 	for (int id = index->nodes[parent].child; id;
 	     id = index->nodes[id].next)
-		if ((unsigned char)index->nodes[id].text[0] == byte)
+		if ((unsigned char)prefix_text(&index->nodes[id])[0] == byte)
 			return id;
 	return 0;
 }
@@ -53,20 +77,20 @@ static int prefix_append(PrefixIndex *index, int parent, const char *text,
 			return id;
 		}
 		PrefixNode old = index->nodes[id];
+		const char *old_text = prefix_text(&old);
 		size_t common = 0;
 		while (common < length && common < old.length &&
-		       text[common] == old.text[common])
+		       text[common] == old_text[common])
 			common++;
 		if (common < old.length) {
-			int rest = prefix_node(index, old.text + common,
+			int rest = prefix_node(index, old_text + common,
 					       old.length - common);
 			index->nodes[rest].refs = old.refs;
 			index->nodes[rest].child = old.child;
-			index->nodes[id].text = slice(old.text, common);
-			index->nodes[id].length = common;
+			prefix_text_copy(&index->nodes[id], old_text, common);
 			index->nodes[id].refs = 0;
 			index->nodes[id].child = rest;
-			free(old.text);
+			prefix_text_free(&old);
 		}
 		parent = id;
 		text += common;
@@ -80,7 +104,7 @@ static int prefix_follow(const PrefixIndex *index, int parent, const char *text,
 	while (length) {
 		int id = prefix_child(index, parent, (unsigned char)*text);
 		if (!id || index->nodes[id].length > length ||
-		    memcmp(index->nodes[id].text, text,
+		    memcmp(prefix_text(&index->nodes[id]), text,
 			   index->nodes[id].length))
 			return -1;
 		if (path)
@@ -93,7 +117,7 @@ static int prefix_follow(const PrefixIndex *index, int parent, const char *text,
 }
 static void prefix_recycle(PrefixIndex *index, int id)
 {
-	free(index->nodes[id].text);
+	prefix_text_free(&index->nodes[id]);
 	index->nodes[id] = (PrefixNode){ 0 };
 	index->nodes[id].next = index->available;
 	index->available = id;
@@ -115,11 +139,18 @@ static void prefix_compact(PrefixIndex *index, const int *path, size_t depth)
 				int child = node->child;
 				PrefixNode next = index->nodes[child];
 				Buf joined = { 0 };
-				buf_add(&joined, node->text, node->length);
-				buf_add(&joined, next.text, next.length);
-				free(node->text);
-				node->text = buf_take(&joined);
+				buf_add(&joined, prefix_text(node),
+					node->length);
+				buf_add(&joined, prefix_text(&next),
+					next.length);
+				prefix_text_free(node);
 				node->length += next.length;
+				if (node->length <= sizeof(node->text.small)) {
+					memcpy(node->text.small, joined.p,
+					       node->length);
+					free(joined.p);
+				} else
+					node->text.heap = buf_take(&joined);
 				node->refs = next.refs;
 				node->child = next.child;
 				prefix_recycle(index, child);
@@ -181,7 +212,7 @@ void prefix_index_free(PrefixIndex *index)
 	if (!index)
 		return;
 	for (int i = 0; i < index->count; i++)
-		free(index->nodes[i].text);
+		prefix_text_free(&index->nodes[i]);
 	free(index->nodes);
 	free(index);
 }

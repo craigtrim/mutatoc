@@ -52,11 +52,15 @@ struct MatchIndex {
 	MutableWordBlock *word_blocks;
 	MutableWord *available_words;
 };
-static void put_first(Map *m, const char *k, void *v)
+static void put_first(Map *m, const char *k, void *v, int borrow)
 {
 	/* Array members have no key, and GET never finds them; skip them likewise. */
-	if (k && !map_get(m, k))
-		map_put(m, k, v);
+	if (k && !map_get(m, k)) {
+		if (borrow)
+			map_put_ref(m, k, v);
+		else
+			map_put(m, k, v);
+	}
 }
 
 static int cmp_int(const void *a, const void *b)
@@ -306,15 +310,15 @@ static MatchIndex *build_index(const J *view, int mutable)
 		ok = index_lookup(x, GET(synonyms, "lookup"));
 	ok = ok && index_spans(x, GET(view, "spans"));
 	EACH(k, GET(synonyms, "fwd"))
-		put_first(&x->fwd, k->string, (void *)1);
+		put_first(&x->fwd, k->string, (void *)1, 0);
 	EACH(k, GET(synonyms, "rev"))
-		put_first(&x->rev, k->string, k);
+		put_first(&x->rev, k->string, k, 1);
 	EACH(v, GET(view, "entities")) {
-		put_first(&x->entities, S(v), (void *)1);
+		put_first(&x->entities, S(v), (void *)1, 1);
 		x->entity_count++;
 	}
 	EACH(k, GET(view, "ner"))
-		put_first(&x->ner, k->string, k);
+		put_first(&x->ner, k->string, k, 1);
 	x->live = cJSON_IsTrue(GET(view, "_live"));
 	if (!ok) {
 		match_index_free(x);
@@ -1118,10 +1122,12 @@ static int mutable_count(const char *s)
 		n += *s == ' ';
 	return n;
 }
-static void counter(Map *map, const char *key, int delta)
+static void counter(Map *map, const char *key, int delta, int borrow)
 {
 	size_t n = (size_t)(uintptr_t)map_get(map, key);
-	if (delta > 0)
+	if (delta > 0 && borrow)
+		map_put_ref(map, key, (void *)(uintptr_t)(n + 1));
+	else if (delta > 0)
 		map_put(map, key, (void *)(uintptr_t)(n + 1));
 	else if (n > 1)
 		map_put(map, key, (void *)(uintptr_t)(n - 1));
@@ -1194,7 +1200,7 @@ static void mutable_alias(MatchIndex *x, const char *key)
 		map_delete(&x->aliases, key);
 	if (!!best != had) {
 		int delta = best ? 1 : -1;
-		counter(mutable_group(x, mutable_count(key)), key, delta);
+		counter(mutable_group(x, mutable_count(key)), key, delta, 0);
 		mutable_prefixes(x, key, delta);
 	}
 }
@@ -1219,7 +1225,7 @@ static void mutable_word_add(MatchIndex *x, int words, const char *text,
 	}
 	map_put_ref(&x->mutable_words, text,
 		    w ? (void *)w : (void *)&literal_word);
-	counter(mutable_group(x, words), text, 1);
+	counter(mutable_group(x, words), text, 1, 1);
 	mutable_prefixes(x, text, 1);
 	mutable_alias(x, text);
 	if (alias) {
@@ -1244,7 +1250,7 @@ void match_index_word(void *context, int words, const char *text, int delta)
 		if (!w)
 			return;
 		map_delete(&x->mutable_words, text);
-		counter(mutable_group(x, words), text, -1);
+		counter(mutable_group(x, words), text, -1, 0);
 		mutable_prefixes(x, text, -1);
 		mutable_alias(x, text);
 		if (w == &literal_word)

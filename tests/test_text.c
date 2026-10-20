@@ -59,12 +59,26 @@ static char *reference_norm(const char *text, int lc, int spaces)
 	free(v);
 	return buf_take(&out);
 }
+static void borrowed_normalization(const char *text)
+{
+	char *expected = reference_norm(text, 1, 1), *owned;
+	const char *actual = norm_borrowed(text, &owned);
+	total++;
+	if (!actual || strcmp(actual, expected)) {
+		fprintf(stderr, "Borrowed normalization differs for [%s]\n",
+			text);
+		failures++;
+	}
+	free(owned);
+	free(expected);
+}
 static void normalization_vectors(void)
 {
 	for (int byte = 1; byte < 128; byte++) {
 		char text[] = {
 			(char)byte, 'A', (char)byte, 'B', (char)byte, 0
 		};
+		borrowed_normalization(text);
 		for (int lc = 0; lc < 2; lc++)
 			for (int spaces = 0; spaces < 2; spaces++) {
 				char *expected =
@@ -85,6 +99,7 @@ static void normalization_vectors(void)
 		total++;
 		if (ulen(text) != (size_t)length)
 			failures++;
+		borrowed_normalization(text);
 		for (int lc = 0; lc < 2; lc++)
 			for (int spaces = 0; spaces < 2; spaces++) {
 				char *expected =
@@ -151,6 +166,19 @@ static void alias_vectors(void)
 int main(void)
 {
 	normalization_vectors();
+	const char *borrowed_vectors[] = { "",
+					   "plain ascii",
+					   "a  b",
+					   "a ",
+					   "école 42",
+					   "ΟΣ",
+					   "a\xc2\xa0"
+					   "b",
+					   "a\xc0\x80"
+					   "b" };
+	for (size_t i = 0;
+	     i < sizeof(borrowed_vectors) / sizeof(*borrowed_vectors); i++)
+		borrowed_normalization(borrowed_vectors[i]);
 	alias_vectors();
 	const char *length_vectors[] = { "", "ascii", "aé🐕",
 					 "a\xc0\x80"

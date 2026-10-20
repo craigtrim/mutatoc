@@ -280,6 +280,24 @@ static int ascii_space(unsigned char c)
 	return c == 32 || (c >= 9 && c <= 13) || (c >= 28 && c <= 31);
 }
 
+const char *norm_borrowed(const char *s, char **owned)
+{
+	const unsigned char *at = (const unsigned char *)s;
+	int previous_space = 1;
+	*owned = NULL;
+	for (; *at; at++) {
+		unsigned char c = *at;
+		if (c >= 128 || (c >= 'A' && c <= 'Z') ||
+		    (ascii_space(c) && (c != ' ' || previous_space)))
+			break;
+		previous_space = c == ' ';
+	}
+	if (!*at && (!previous_space || !*s))
+		return s;
+	*owned = norm(s, 1, 1);
+	return *owned;
+}
+
 char *norm(const char *s, int lc, int spaces)
 {
 	/* Common vocabulary text needs one allocation and no Unicode decoding.
@@ -656,7 +674,7 @@ const char *local(const char *s)
  * https://github.com/aappleby/smhasher/blob/master/src/MurmurHash2.cpp
  * Hash long vocabulary forms eight bytes at a time. Hashes stay internal;
  * native byte order does not affect lookup equality or JSON ordering. */
-static uint64_t hash(const char *s)
+uint64_t hash_text(const char *s)
 {
 	const uint64_t mix = UINT64_C(0xc6a4a7935bd1e995);
 	size_t length = strlen(s);
@@ -686,21 +704,22 @@ static uint64_t hash(const char *s)
 /* Compact metadata stores a fingerprint and key ownership. A three-quarter
  * load limit keeps large indexes compact while retaining empty probe slots.
  * Borrowed keys remain valid until their entry is removed or replaced. */
-enum { MAP_FINGERPRINT = 255, MAP_OWNED = 256 };
-static uint16_t *map_tags(Map *m)
+enum { MAP_FINGERPRINT = 127, MAP_OWNED = 128 };
+static unsigned char *map_tags(Map *m)
 {
-	return (uint16_t *)(m->slots + m->cap);
+	return (unsigned char *)(m->slots + m->cap);
 }
 static unsigned char map_tag(uint64_t key_hash)
 {
-	return (unsigned char)((key_hash >> 57) + 1);
+	unsigned char tag = (unsigned char)(key_hash >> 57);
+	return tag ? tag : MAP_FINGERPRINT;
 }
 void *map_get(Map *m, const char *k)
 {
 	if (!m->cap)
 		return NULL;
-	uint64_t key_hash = hash(k);
-	uint16_t tag = map_tag(key_hash), *tags = map_tags(m);
+	uint64_t key_hash = hash_text(k);
+	unsigned char tag = map_tag(key_hash), *tags = map_tags(m);
 	size_t i = (size_t)key_hash & (m->cap - 1);
 	while (tags[i]) {
 		if ((tags[i] & MAP_FINGERPRINT) == tag &&
@@ -715,12 +734,12 @@ static void map_resize(Map *m, size_t capacity)
 {
 	Map old = *m;
 	m->cap = capacity;
-	m->slots = calloc(m->cap, sizeof(*m->slots) + sizeof(uint16_t));
-	uint16_t *tags = map_tags(m);
+	m->slots = calloc(m->cap, sizeof(*m->slots) + sizeof(unsigned char));
+	unsigned char *tags = map_tags(m);
 	/* Transfer keys and their ownership in the same probe order. */
 	for (size_t i = 0; i < old.cap; i++)
 		if (old.slots[i].key) {
-			uint64_t key_hash = hash(old.slots[i].key);
+			uint64_t key_hash = hash_text(old.slots[i].key);
 			size_t at = (size_t)key_hash & (m->cap - 1);
 			while (tags[at])
 				at = (at + 1) & (m->cap - 1);
@@ -741,11 +760,11 @@ void map_reserve(Map *m, size_t entries)
 }
 static void map_store(Map *m, const char *k, void *v, int borrowed)
 {
-	uint64_t key_hash = hash(k);
+	uint64_t key_hash = hash_text(k);
 	unsigned char tag = map_tag(key_hash);
 	size_t i = 0;
 	if (m->cap) {
-		uint16_t *tags = map_tags(m);
+		unsigned char *tags = map_tags(m);
 		i = (size_t)key_hash & (m->cap - 1);
 		while (tags[i]) {
 			if ((tags[i] & MAP_FINGERPRINT) == tag &&
@@ -793,7 +812,7 @@ void map_put_small(Map *m, const char *key, void *value)
 {
 	if (!m->cap) {
 		m->cap = 8;
-		m->slots = calloc(m->cap, sizeof(*m->slots) + sizeof(uint16_t));
+		m->slots = calloc(m->cap, sizeof(*m->slots) + sizeof(unsigned char));
 	}
 	map_put(m, key, value);
 }
@@ -840,8 +859,8 @@ void map_delete(Map *m, const char *key)
 {
 	if (!m->cap)
 		return;
-	uint64_t key_hash = hash(key);
-	uint16_t tag = map_tag(key_hash), *tags = map_tags(m);
+	uint64_t key_hash = hash_text(key);
+	unsigned char tag = map_tag(key_hash), *tags = map_tags(m);
 	size_t mask = m->cap - 1, hole = (size_t)key_hash & mask;
 	while (tags[hole] && ((tags[hole] & MAP_FINGERPRINT) != tag ||
 			      strcmp(m->slots[hole].key, key)))
@@ -853,7 +872,7 @@ void map_delete(Map *m, const char *key)
 	m->size--;
 	size_t next = (hole + 1) & mask;
 	while (m->slots[next].key) {
-		size_t start = (size_t)hash(m->slots[next].key) & mask;
+		size_t start = (size_t)hash_text(m->slots[next].key) & mask;
 		if (((next - start) & mask) >= ((next - hole) & mask)) {
 			m->slots[hole] = m->slots[next];
 			tags[hole] = tags[next];

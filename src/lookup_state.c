@@ -51,7 +51,10 @@ void lookup_trace_free(LookupTrace *trace)
 typedef struct LookupValue LookupValue;
 typedef struct Posting Posting;
 typedef struct {
-	char *text;
+	union {
+		char *heap;
+		char small[8];
+	} text;
 	size_t size, length;
 	int parent, child, next;
 	uint32_t head;
@@ -84,7 +87,7 @@ typedef struct {
 	PostingSet *available_postings;
 	LookupValue *root;
 	J *array, *mirror;
-	int words;
+	int words, shared_mirror;
 } LookupGroup;
 /* Most source values produce one distinct rewrite. Keep that reference inline;
  * additional rewrites use borrowed keys from their retained output values. */
@@ -219,6 +222,7 @@ static LookupGroup *group_at(LookupState *s, int words)
 		PUT(s->json, key, g->array);
 	}
 	if (s->mirror && !g->mirror) {
+		g->shared_mirror = 0;
 		g->mirror = ARR();
 		PUT(s->mirror, key, g->mirror);
 	}
@@ -259,7 +263,9 @@ static void show_value(LookupValue *v)
 			at = at->left;
 	}
 	v->entry = insert_json(g->array, prev ? prev->entry : NULL, v->text);
-	if (g->mirror)
+	if (g->shared_mirror)
+		g->mirror->child = g->array->child;
+	else if (g->mirror)
 		v->mirror_entry = insert_json(
 			g->mirror, prev ? prev->mirror_entry : NULL, v->text);
 	v->left = v->right = NULL;
@@ -306,6 +312,8 @@ static LookupValue *adjust(LookupState *s, int words, const char *text,
 		}
 		DEL(cJSON_DetachItemViaPointer(g->array, v->entry));
 		v->entry = NULL;
+		if (g->shared_mirror)
+			g->mirror->child = g->array->child;
 		if (v->mirror_entry) {
 			DEL(cJSON_DetachItemViaPointer(g->mirror,
 						       v->mirror_entry));
@@ -359,6 +367,24 @@ static PostingSet *postings_create(LookupValue *v)
 	return set;
 }
 
+static char *post_text(PostingNode *node)
+{
+	return node->length <= sizeof(node->text.small) ? node->text.small :
+								node->text.heap;
+}
+static void post_text_free(PostingNode *node)
+{
+	if (node->length > sizeof(node->text.small))
+		free(node->text.heap);
+}
+static void post_text_copy(PostingNode *node, const char *text, size_t length)
+{
+	node->length = length;
+	if (length <= sizeof(node->text.small))
+		memcpy(node->text.small, text, length);
+	else
+		node->text.heap = slice(text, length);
+}
 static int post_node(PostingIndex *index, int parent, const char *text,
 		     size_t length, int reversed)
 {
@@ -378,11 +404,10 @@ static int post_node(PostingIndex *index, int parent, const char *text,
 	}
 	index->nodes[id] = (PostingNode){ 0 };
 	index->nodes[id].parent = parent;
-	index->nodes[id].text = length ? slice(text, length) : NULL;
-	index->nodes[id].length = length;
+	post_text_copy(&index->nodes[id], text, length);
 	if (reversed)
 		for (size_t i = 0; i < length / 2; i++) {
-			char *label = index->nodes[id].text;
+			char *label = post_text(&index->nodes[id]);
 			char byte = label[i];
 			label[i] = label[length - i - 1];
 			label[length - i - 1] = byte;
@@ -392,7 +417,7 @@ static int post_node(PostingIndex *index, int parent, const char *text,
 static int post_child(PostingIndex *index, int node, unsigned char byte)
 {
 	for (int at = index->nodes[node].child; at; at = index->nodes[at].next)
-		if ((unsigned char)index->nodes[at].text[0] == byte)
+		if ((unsigned char)post_text(&index->nodes[at])[0] == byte)
 			return at;
 	return 0;
 }
@@ -424,15 +449,16 @@ static void post_add(PostingIndex *index, const char *text, size_t length,
 			break;
 		}
 		PostingNode old = index->nodes[next];
+		const char *old_text = post_text(&old);
 		size_t common = 0;
 		while (common < old.length && offset + common < length &&
-		       old.text[common] ==
+		       old_text[common] ==
 			       text[reversed ? length - offset - common - 1 :
 						     offset + common])
 			common++;
 		if (common < old.length) {
 			int branch =
-				post_node(index, node, old.text, common, 0);
+				post_node(index, node, old_text, common, 0);
 			int *link = &index->nodes[node].child;
 			while (*link != next)
 				link = &index->nodes[*link].next;
@@ -442,10 +468,9 @@ static void post_add(PostingIndex *index, const char *text, size_t length,
 			index->nodes[branch].size = old.size;
 			index->nodes[next].parent = branch;
 			index->nodes[next].next = 0;
-			index->nodes[next].text =
-				slice(old.text + common, old.length - common);
-			index->nodes[next].length = old.length - common;
-			free(old.text);
+			post_text_copy(&index->nodes[next], old_text + common,
+				       old.length - common);
+			post_text_free(&old);
 			next = branch;
 		}
 		node = next;
@@ -482,8 +507,9 @@ static void post_remove(LookupGroup *g, Posting *p)
 			while (*link != node)
 				link = &index->nodes[*link].next;
 			*link = at->next;
-			free(at->text);
-			at->text = NULL;
+			post_text_free(at);
+			at->text.heap = NULL;
+			at->length = 0;
 			at->next = index->available;
 			index->available = node;
 		}
@@ -508,7 +534,7 @@ static int post_find(PostingIndex *index, const char *text, size_t length,
 		PostingNode *edge = &index->nodes[node];
 		for (size_t i = 0; i < edge->length && offset < length;
 		     i++, offset++)
-			if (edge->text[i] !=
+			if (post_text(edge)[i] !=
 			    text[reversed ? length - offset - 1 : offset])
 				return 0;
 	}
@@ -812,20 +838,26 @@ void lookup_state_entity(LookupState *s, J *fwd, int delta)
 	Map seen = { 0 };
 	EACH(k, fwd) {
 		J *forms = ARR();
-		char *key = replace(k->string, "_", " ");
-		unique_indexed(forms, &seen, key);
+		char *key = strchr(k->string, '_') ?
+					  replace(k->string, "_", " ") :
+					  NULL;
+		unique_indexed(forms, &seen, key ? key : k->string);
 		free(key);
 		EACH(v, k) {
-			char *normalized = norm(S(v), 1, 1),
-			     *base = replace(normalized, "_", " ");
-			unique_indexed(forms, &seen, base);
+			char *owned;
+			const char *normalized = norm_borrowed(S(v), &owned);
+			char *base = strchr(normalized, '_') ?
+						   replace(normalized, "_", " ") :
+						   NULL;
+			unique_indexed(forms, &seen, base ? base : normalized);
 			free(base);
 			size_t n = strlen(normalized);
 			if (n && strchr("!?.", normalized[n - 1])) {
-				normalized[n - 1] = 0;
-				unique_indexed(forms, &seen, normalized);
+				char *trimmed = slice(normalized, n - 1);
+				unique_indexed(forms, &seen, trimmed);
+				free(trimmed);
 			}
-			free(normalized);
+			free(owned);
 		}
 		EACH(v, forms)
 			adjust(s, word_count(S(v)), S(v), delta);
@@ -911,9 +943,9 @@ void lookup_state_free(LookupState *s)
 		LookupGroup *g = s->groups.slots[i].value;
 		SLOTS(j, g->values) release_value(s, g->values.slots[j].value);
 		for (int n = 0; n < g->starts.count; n++)
-			free(g->starts.nodes[n].text);
+			post_text_free(&g->starts.nodes[n]);
 		for (int n = 0; n < g->ends.count; n++)
-			free(g->ends.nodes[n].text);
+			post_text_free(&g->ends.nodes[n]);
 		free(g->starts.nodes);
 		free(g->ends.nodes);
 		for (size_t n = 0; n < g->posting_count; n++)
@@ -950,6 +982,10 @@ void lookup_state_mirror(LookupState *s, J *synonyms)
 	EACH(old, s->mirror) {
 		LookupGroup *g = map_get(&s->groups, old->string);
 		g->mirror = old;
+		g->shared_mirror = (old->type & cJSON_IsReference) &&
+				   old->child == g->array->child;
+		if (g->shared_mirror)
+			continue;
 		EACH(v, g->mirror) {
 			LookupValue *value = map_get(&g->values, S(v));
 			value->mirror_entry = v;

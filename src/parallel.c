@@ -10,6 +10,7 @@
 
 typedef struct {
 	void (*run)(void *);
+	void (*after)(void *);
 	void *data;
 } ParallelJob;
 #ifdef _WIN32
@@ -20,40 +21,56 @@ static void *parallel_start(void *data)
 {
 	ParallelJob *job = data;
 	job->run(job->data);
+	if (job->after)
+		job->after(job->data);
 	return 0;
 }
 
-void parallel_pair(void (*first)(void *), void *first_data,
-		   void (*second)(void *), void *second_data, int enabled)
+void parallel_three(void (*first)(void *), void (*second)(void *),
+		    void (*third)(void *), void *data, int enabled)
 {
-	if (!enabled) {
-		first(first_data);
-		second(second_data);
-		return;
-	}
-	ParallelJob job = { first, first_data };
 #ifdef _WIN32
 	SYSTEM_INFO system;
 	GetSystemInfo(&system);
-	uintptr_t thread =
-		system.dwNumberOfProcessors > 1 ?
-			      _beginthreadex(NULL, 0, parallel_start, &job, 0, NULL) :
-			      0;
-	if (thread) {
-		second(second_data);
-		WaitForSingleObject((HANDLE)thread, INFINITE);
-		CloseHandle((HANDLE)thread);
-		return;
-	}
+	long processors = (long)system.dwNumberOfProcessors;
+	uintptr_t threads[2] = { 0, 0 };
 #else
-	pthread_t thread;
-	if (sysconf(_SC_NPROCESSORS_ONLN) > 1 &&
-	    !pthread_create(&thread, NULL, parallel_start, &job)) {
-		second(second_data);
-		pthread_join(thread, NULL);
+	long processors = sysconf(_SC_NPROCESSORS_ONLN);
+	pthread_t threads[2];
+#endif
+	if (!enabled || processors < 2) {
+		first(data);
+		second(data);
+		if (third)
+			third(data);
 		return;
 	}
+	/* Keep task ownership consistent across repeated loads. Two-core hosts
+	 * combine the first and third jobs while the caller builds matching. */
+	int workers = third && processors > 2 ? 2 : 1, started[2] = { 0, 0 };
+	ParallelJob jobs[] = { { first, workers == 1 ? third : NULL, data },
+			       { third, NULL, data } };
+	for (int i = 0; i < workers; i++) {
+#ifdef _WIN32
+		threads[i] = _beginthreadex(NULL, 0, parallel_start, &jobs[i],
+					    0, NULL);
+		started[i] = threads[i] != 0;
+#else
+		started[i] = !pthread_create(&threads[i], NULL, parallel_start,
+					     &jobs[i]);
 #endif
-	first(first_data);
-	second(second_data);
+	}
+	second(data);
+	for (int i = 0; i < workers; i++) {
+		if (!started[i]) {
+			parallel_start(&jobs[i]);
+			continue;
+		}
+#ifdef _WIN32
+		WaitForSingleObject((HANDLE)threads[i], INFINITE);
+		CloseHandle((HANDLE)threads[i]);
+#else
+		pthread_join(threads[i], NULL);
+#endif
+	}
 }

@@ -280,6 +280,39 @@ static J *live_predicate_copy(J *predicates)
 	return out;
 }
 
+/* Already lexical synonym buckets need independent wrappers only. Copy an
+ * affected bucket before appending external forms or applying an edit. */
+static J *live_synonyms_copy(J *source)
+{
+	J *out = cJSON_Duplicate(source, 0);
+	if (!out)
+		return NULL;
+	EACH(member, source) {
+		int sorted = cJSON_IsArray(member);
+		for (J *v = member->child; sorted && v && v->next; v = v->next)
+			sorted = strcmp(S(v), S(v->next)) < 0;
+		J *part = sorted ? cJSON_CreateArrayReference(member->child) :
+					 live_value_copy(member);
+		if (!part ||
+		    !cJSON_AddItemToObjectCS(out, member->string, part)) {
+			DEL(part);
+			DEL(out);
+			return NULL;
+		}
+	}
+	return out;
+}
+static J *live_synonym_array(J *object, const char *key)
+{
+	J *array = ensure(object, key, 1);
+	if (array->type & cJSON_IsReference) {
+		J *owned = DUP(array);
+		set(object, key, owned);
+		array = owned;
+	}
+	return array;
+}
+
 /* The data view rebuilds lookup after sorting its forward synonyms (#129).
  * Keep the original member position without copying entries that are discarded. */
 static J *live_snapshot_copy(J *snapshot)
@@ -297,10 +330,18 @@ static J *live_snapshot_copy(J *snapshot)
 			J *lookup = GET(field, "lookup");
 			if (value)
 				EACH(member, field) {
-					J *part =
-						member == lookup ?
-							      NIL() :
-							      live_value_copy(member);
+					J *part;
+					if (member == lookup)
+						part = NIL();
+					else if (cJSON_IsObject(member) &&
+						 (!strcmp(member->string,
+							  "fwd") ||
+						  !strcmp(member->string,
+							  "rev")))
+						part = live_synonyms_copy(
+							member);
+					else
+						part = live_value_copy(member);
 					if (!part ||
 					    !cJSON_AddItemToObject(
 						    value, member->string,
@@ -326,10 +367,17 @@ static J *live_snapshot_copy(J *snapshot)
 	return copy;
 }
 
-/* Keep data-view construction on the calling thread: its many small nodes
- * otherwise cross allocator arenas before the independent index jobs begin. */
-static void live_metadata(mc_engine *e, J *d, mc_error *err)
+typedef struct {
+	mc_engine *engine;
+	J *view, *metadata;
+	mc_error metadata_error, lookup_error;
+} LiveBuild;
+static void live_metadata(void *context)
 {
+	LiveBuild *job = context;
+	mc_engine *e = job->engine;
+	J *d = job->metadata;
+	mc_error *err = &job->metadata_error;
 	mc_error local_error = { 0 };
 	J *labels = graph_predicate(e->graph, RDFS "label", 0, 0, &local_error);
 	set(d, "_labels", labels ? labels : NIL());
@@ -354,7 +402,7 @@ static void live_metadata(mc_engine *e, J *d, mc_error *err)
 	set(d, "_custom_predicates", custom);
 	set(d, "_live", BOOL(1));
 	J *entities = ARR(),
-	  *types = GET(GET(d, "by_predicate"), "rdfs:subClassOf");
+	  *types = GET(GET(job->view, "by_predicate"), "rdfs:subClassOf");
 	Map seen = { 0 };
 	EACH(k, types) {
 		unique_indexed(entities, &seen, k->string);
@@ -364,6 +412,48 @@ static void live_metadata(mc_engine *e, J *d, mc_error *err)
 	map_free(&seen);
 	set(d, "entities", entities);
 	ner_views(e->graph, d, err);
+}
+
+static void live_lookup(void *context)
+{
+	LiveBuild *job = context;
+	mc_engine *e = job->engine;
+	J *d = job->view;
+	mc_error *err = &job->lookup_error;
+	J *fwd = GET(GET(d, "synonyms"), "fwd"),
+	  *rev = GET(GET(d, "synonyms"), "rev");
+	if (e->source_path && *e->source_path) {
+		Buf path = { 0 };
+		buf_put(&path, e->source_path);
+		buf_put(&path, ".txt");
+		FILE *f = mc_fopen(path.p, "rb");
+		if (f) {
+			fclose(f);
+			char *text = read_file(path.p, err);
+			J *external = text ? external_synonyms(text) : NULL;
+			free(text);
+			EACH(k, external) {
+				EACH(v, k) {
+					unique(live_synonym_array(fwd,
+								  k->string),
+					       S(v));
+					unique(live_synonym_array(rev, S(v)),
+					       k->string);
+				}
+			}
+			DEL(external);
+		}
+		free(path.p);
+	}
+	EACH(k, fwd)
+		if (!(k->type & cJSON_IsReference))
+			sort_strings(k, 0);
+	EACH(k, rev)
+		if (!(k->type & cJSON_IsReference))
+			sort_strings(k, 0);
+	set(GET(d, "synonyms"), "lookup",
+	    generate_lookup_shared(fwd, GET(GET(e->snapshot, "synonyms"),
+					    "lookup")));
 }
 
 J *live_view(mc_engine *e, mc_error *err)
@@ -395,34 +485,20 @@ J *live_view(mc_engine *e, mc_error *err)
 		return NULL;
 	}
 
-	live_metadata(e, d, err);
-	J *fwd = GET(GET(d, "synonyms"), "fwd"),
-	  *rev = GET(GET(d, "synonyms"), "rev");
-	if (e->source_path && *e->source_path) {
-		Buf path = { 0 };
-		buf_put(&path, e->source_path);
-		buf_put(&path, ".txt");
-		FILE *f = mc_fopen(path.p, "rb");
-		if (f) {
-			fclose(f);
-			char *text = read_file(path.p, err);
-			J *external = text ? external_synonyms(text) : NULL;
-			free(text);
-			EACH(k, external) {
-				EACH(v, k) {
-					unique(ensure(fwd, k->string, 1), S(v));
-					unique(ensure(rev, S(v), 1), k->string);
-				}
-			}
-			DEL(external);
-		}
-		free(path.p);
+	LiveBuild job = { e, d, OBJ(), { 0 }, { 0 } };
+	parallel_three(live_metadata, live_lookup, NULL, &job,
+		       e->graph->subjects.size >= 4096);
+	while (job.metadata->child) {
+		J *member = cJSON_DetachItemFromArray(job.metadata, 0);
+		char *key = copy(member->string);
+		set(d, key, member);
+		free(key);
 	}
-	EACH(k, fwd)
-		sort_strings(k, 0);
-	EACH(k, rev)
-		sort_strings(k, 0);
-	set(GET(d, "synonyms"), "lookup", generate_lookup(fwd));
+	DEL(job.metadata);
+	if (!err->code && job.metadata_error.code)
+		*err = job.metadata_error;
+	else if (!err->code && job.lookup_error.code)
+		*err = job.lookup_error;
 	if (err->code) {
 		DEL(d);
 		return NULL;
