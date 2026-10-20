@@ -81,6 +81,7 @@ typedef struct {
 } Map;
 void *map_get(Map *, const char *);
 void map_put(Map *, const char *, void *);
+void map_put_small(Map *, const char *, void *);
 void map_free(Map *);
 void map_delete(Map *, const char *);
 /* Indexed builders avoid repeated object scans (craigtrim/axiom#129). */

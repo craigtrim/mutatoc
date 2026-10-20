@@ -435,7 +435,7 @@ static void derive_gram(LookupState *s, LookupValue *v, Map *outputs,
 	int words = word_count(text);
 	if (words >= 2 && words <= 5 && !map_get(outputs, text)) {
 		LookupValue *old = map_get(&v->derived, text);
-		map_put(outputs, text, old ? old : adjust(s, words, text, 1));
+		map_put_small(outputs, text, old ? old : adjust(s, words, text, 1));
 	}
 	free(u);
 	free(text);

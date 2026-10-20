@@ -612,12 +612,16 @@ void map_put(Map *m, const char *k, void *v)
 		Map old = *m;
 		m->cap = m->cap ? m->cap * 2 : 64;
 		m->slots = calloc(m->cap, sizeof(Slot));
-		m->size = 0;
+		m->size = old.size;
+		/* Transfer owned keys in the same probe order; growth does not
+		 * need to copy and free every key string. */
 		for (size_t i = 0; i < old.cap; i++)
 			if (old.slots[i].key) {
-				map_put(m, old.slots[i].key,
-					old.slots[i].value);
-				free(old.slots[i].key);
+				size_t at = (size_t)hash(old.slots[i].key) &
+					    (m->cap - 1);
+				while (m->slots[at].key)
+					at = (at + 1) & (m->cap - 1);
+				m->slots[at] = old.slots[i];
 			}
 		free(old.slots);
 	}
@@ -629,6 +633,16 @@ void map_put(Map *m, const char *k, void *v)
 		m->size++;
 	}
 	m->slots[i].value = v;
+}
+
+/* Per-word dependency and alias buckets usually contain only one entry. */
+void map_put_small(Map *m, const char *key, void *value)
+{
+	if (!m->cap) {
+		m->cap = 8;
+		m->slots = calloc(m->cap, sizeof(*m->slots));
+	}
+	map_put(m, key, value);
 }
 
 void map_free(Map *m)

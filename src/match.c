@@ -1206,7 +1206,7 @@ void match_index_word(void *context, int words, const char *text, int delta)
 				bucket = calloc(1, sizeof(*bucket));
 				map_put(&x->mutable_aliases, w->alias, bucket);
 			}
-			map_put(bucket, text, w);
+			map_put_small(bucket, text, w);
 			if (bucket->size > 1)
 				map_put(&x->ambiguous_aliases, w->alias,
 					bucket);
