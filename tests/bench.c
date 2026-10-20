@@ -148,6 +148,25 @@ static char *document(const char *root, const char *name)
 	return b.p;
 }
 
+static int generated_parse(mc_engine *e, int revision)
+{
+	char wire[192];
+	snprintf(wire, sizeof(wire),
+		 "{\"op\":\"parse\",\"text\":\"district00042 regional school of applied sciences%d\"}",
+		 revision);
+	mc_error error;
+	char *response = mc_request(e, wire, &error);
+	J *parsed = response ? cJSON_Parse(response) : NULL;
+	int ok = !error.code && cJSON_IsTrue(GET(parsed, "ok")) &&
+		 !strcmp(S(GET(GET(parsed, "result"), "text")), "id42");
+	if (!ok)
+		fprintf(stderr, "updated label did not match id42: %s\n",
+			response ? response : "no response");
+	DEL(parsed);
+	mc_free(response);
+	return ok;
+}
+
 /* Large loads and edit-plus-parse timings exercise craigtrim/axiom#129. */
 static int generated_benchmark(int runs, int check)
 {
@@ -193,9 +212,7 @@ static int generated_benchmark(int runs, int check)
 					DEL(q);
 					start = now_ms();
 					failed |= !request(e, edit);
-					failed |= !request(
-						e,
-						"{\"op\":\"parse\",\"text\":\"district00042 regional academy training center\"}");
+					failed |= !generated_parse(e, step + 1);
 					edits[size][run * 12 + step] =
 						now_ms() - start;
 					free(edit);

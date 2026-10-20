@@ -143,6 +143,40 @@ void update_state_free(UpdateState *u)
 	map_free(&u->plus_rules);
 	free(u);
 }
+typedef struct {
+	mc_engine *engine;
+	UpdateState *state;
+	J *raw;
+} BuildIndexes;
+static void build_view_members(void *data)
+{
+	BuildIndexes *job = data;
+	mc_engine *e = job->engine;
+	UpdateState *u = job->state;
+	J *plus = generate_spans(job->raw, e->distance, 1, e->comma_lists);
+	plus_refs(u, plus, 1);
+	DEL(plus);
+	prepare_view(u, e->snapshot);
+	if (e->live)
+		prepare_view(u, e->live);
+	J *syns = GET(e->snapshot, "synonyms");
+	u->cached_order =
+		source_groups_build(GET(syns, "fwd"), &u->ordinals, 0);
+	if (e->live)
+		u->live_order =
+			source_groups_build(GET(syns, "fwd"), &u->ordinals, 1);
+}
+static void build_match_members(void *data)
+{
+	BuildIndexes *job = data;
+	mc_engine *e = job->engine;
+	if (!e->index)
+		e->index = match_index_build_mutable(
+			e->live_mode ? e->live : e->snapshot);
+	if (e->index)
+		match_index_mutable(e->index);
+}
+
 void update_state_build(mc_engine *e)
 {
 	if (e->updates || !e->graph || e->part_count || e->graph_only ||
@@ -200,35 +234,23 @@ void update_state_build(mc_engine *e)
 	map_reserve(&u->ordinals, (size_t)SIZE(GET(syns, "fwd")));
 	EACH(k, GET(syns, "fwd"))
 		map_put(&u->ordinals, k->string, (void *)(uintptr_t)++ordinal);
-	J *plus = generate_spans(raw, e->distance, 1, e->comma_lists);
-	plus_refs(u, plus, 1);
-	DEL(plus);
+	/* These jobs read completed JSON views and own separate indexes. One
+	 * extra worker is enough to overlap their memory access on large loads. */
+	BuildIndexes job = { e, u, raw };
+	parallel_pair(build_view_members, &job, build_match_members, &job,
+		      e->graph->subjects.size >= 4096);
 	DEL(raw);
 	map_free(&raw_keys);
-	prepare_view(u, e->snapshot);
-	if (e->live)
-		prepare_view(u, e->live);
-	/* Build mutable maps directly on load; avoid constructing and discarding
-	 * a complete read-only lookup index first. */
-	if (!e->index)
-		e->index = match_index_build_mutable(
-			e->live_mode ? e->live : e->snapshot);
 	if (!e->index) {
 		update_state_free(u);
 		return;
 	}
-	match_index_mutable(e->index);
 	u->snapshot = lookup_state_reuse(GET(syns, "fwd"), GET(syns, "lookup"));
 	if (e->live) {
 		J *live_syns = GET(e->live, "synonyms");
 		lookup_state_mirror(u->snapshot, live_syns);
 		u->mirrored = 1;
 	}
-	u->cached_order =
-		source_groups_build(GET(syns, "fwd"), &u->ordinals, 0);
-	if (e->live)
-		u->live_order =
-			source_groups_build(GET(syns, "fwd"), &u->ordinals, 1);
 	e->updates = u;
 }
 static int term_same(const Term *a, const Term *b)
