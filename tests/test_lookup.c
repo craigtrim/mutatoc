@@ -1,6 +1,7 @@
 /* Compare substring rewrites against v0.5.2 (craigtrim/axiom#129). */
 #include "mc.h"
 #include "lookup_reference.h"
+#include "patterns.h"
 static int check(J *fwd)
 {
 	J *expected = reference_lookup(fwd), *actual = generate_lookup(fwd);
@@ -46,6 +47,64 @@ static int check(J *fwd)
 	DEL(expected);
 	DEL(actual);
 	return ok;
+}
+/* Raw substring presence and original pattern order are independent of scan direction. */
+static int check_patterns(void)
+{
+	for (int reversed = 0; reversed < 2; reversed++) {
+		J *grams = ARR();
+		for (int i = 0; i < 64; i++) {
+			char term[80];
+			snprintf(term, sizeof(term),
+				 reversed ? "%03d common ending" :
+						  "common beginning %03d",
+				 i);
+			ADD(grams, STR(term));
+		}
+		const char *overlap[] = { "aba",
+					  "ba",
+					  "a",
+					  "caba",
+					  "\xc3\xa9",
+					  "cole",
+					  "\xc3\xa9"
+					  "cole" };
+		for (size_t i = 0; i < sizeof(overlap) / sizeof(*overlap); i++)
+			ADD(grams, STR(overlap[i]));
+		Patterns *patterns = patterns_build(grams);
+		int ok = patterns->reverse == reversed;
+		for (int run = 0; run < 120 && ok; run++) {
+			Buf text = { 0 };
+			for (int i = 0; i < run % 9; i++) {
+				buf_put(&text, "x|");
+				buf_put(&text,
+					patterns->text[(run * 17 + i * 13) %
+						       patterns->count]);
+			}
+			int found = patterns_find(patterns,
+						  text.p ? text.p : ""),
+			    expected = 0;
+			for (int i = 0; i < patterns->count; i++)
+				if (strstr(text.p ? text.p : "",
+					   patterns->text[i])) {
+					if (expected >= found ||
+					    patterns->hits[expected] != i)
+						ok = 0;
+					expected++;
+				}
+			ok &= expected == found;
+			free(text.p);
+		}
+		patterns_free(patterns);
+		DEL(grams);
+		if (!ok) {
+			fprintf(stderr,
+				"pattern direction %d disagrees with strstr\n",
+				reversed);
+			return 0;
+		}
+	}
+	return 1;
 }
 static int check_maps(void)
 {
@@ -328,7 +387,7 @@ static int check_sorting(void)
 
 int main(void)
 {
-	if (!check_sorting() || !check_maps() || !check_map_bytes() ||
+	if (!check_patterns() || !check_sorting() || !check_maps() || !check_map_bytes() ||
 	    !check_map_ownership() || !check_prefixes())
 		return 1;
 	const char *terms[] = { "red green blue",

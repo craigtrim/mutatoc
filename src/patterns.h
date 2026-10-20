@@ -11,7 +11,7 @@ typedef struct {
 } PatternNode;
 typedef struct {
 	PatternNode *nodes;
-	int n, cap, count;
+	int n, cap, count, reverse;
 	const char **text;
 	int *hits;
 	unsigned *seen, stamp;
@@ -44,22 +44,51 @@ static Patterns *patterns_build(J *patterns)
 	p->text = calloc((size_t)p->count + 1, sizeof(*p->text));
 	p->hits = calloc((size_t)p->count + 1, sizeof(*p->hits));
 	p->seen = calloc((size_t)p->count + 1, sizeof(*p->seen));
-	pattern_node(p, 0);
+	/* Match presence is unchanged when both patterns and text are reversed.
+	 * Prefer the direction sharing more bytes between neighboring patterns;
+	 * common endings otherwise duplicate long paths under every unique prefix. */
+	size_t shared_front = 0, shared_back = 0, previous_length = 0;
 	int id = 0;
 	EACH(v, patterns) {
-		p->text[id] = S(v);
+		const char *text = S(v);
+		size_t length = strlen(text);
+		p->text[id] = text;
+		if (id) {
+			const char *previous = p->text[id - 1];
+			size_t limit = length < previous_length ?
+						     length :
+						     previous_length;
+			for (size_t i = 0; i < limit && text[i] == previous[i];
+			     i++)
+				shared_front++;
+			for (size_t i = 0;
+			     i < limit &&
+			     text[length - i - 1] ==
+				     previous[previous_length - i - 1];
+			     i++)
+				shared_back++;
+		}
+		previous_length = length;
+		id++;
+	}
+	p->reverse = shared_back > shared_front;
+	pattern_node(p, 0);
+	for (id = 0; id < p->count; id++) {
+		const unsigned char *text = (const unsigned char *)p->text[id];
+		size_t length = strlen(p->text[id]);
 		int node = 0;
-		for (const unsigned char *s = (const unsigned char *)S(v); *s;
-		     s++) {
-			int e = pattern_edge(p, node, *s);
+		for (size_t i = 0; i < length; i++) {
+			unsigned char byte =
+				text[p->reverse ? length - i - 1 : i];
+			int e = pattern_edge(p, node, byte);
 			if (!e) {
-				e = pattern_node(p, *s);
+				e = pattern_node(p, byte);
 				p->nodes[e].sibling = p->nodes[node].edge;
 				p->nodes[node].edge = e;
 			}
 			node = e;
 		}
-		p->nodes[node].pattern = id++;
+		p->nodes[node].pattern = id;
 	}
 	int *queue = malloc((size_t)p->n * sizeof(*queue));
 	int head = 0, tail = 0;
@@ -98,11 +127,14 @@ static int patterns_find(Patterns *p, const char *text)
 		p->stamp = 1;
 	}
 	int node = 0, n = 0;
-	for (const unsigned char *s = (const unsigned char *)text; *s; s++) {
-		int next = pattern_edge(p, node, *s);
+	size_t length = strlen(text);
+	for (size_t i = 0; i < length; i++) {
+		unsigned char byte =
+			(unsigned char)text[p->reverse ? length - i - 1 : i];
+		int next = pattern_edge(p, node, byte);
 		while (node && !next) {
 			node = p->nodes[node].fail;
-			next = pattern_edge(p, node, *s);
+			next = pattern_edge(p, node, byte);
 		}
 		node = next;
 		int output = node;
