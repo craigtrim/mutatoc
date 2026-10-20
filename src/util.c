@@ -272,8 +272,44 @@ char *upper(const char *s)
 	return buf_take(&b);
 }
 
+static int ascii_space(unsigned char c)
+{
+	return c == 32 || (c >= 9 && c <= 13) || (c >= 28 && c <= 31);
+}
+
 char *norm(const char *s, int lc, int spaces)
 {
+	/* Common vocabulary text needs one allocation and no Unicode decoding.
+	 * Mixed text keeps the contextual case mappings and Unicode whitespace path. */
+	const unsigned char *ascii = (const unsigned char *)s;
+	while (*ascii && *ascii < 128)
+		ascii++;
+	if (!*ascii) {
+		const unsigned char *begin = (const unsigned char *)s,
+				    *end = ascii;
+		while (begin < end && ascii_space(*begin))
+			begin++;
+		while (end > begin && ascii_space(end[-1]))
+			end--;
+		char *out = malloc((size_t)(end - begin) + 1);
+		size_t length = 0;
+		int pending = 0;
+		for (const unsigned char *at = begin; at < end; at++) {
+			unsigned char c = *at;
+			if (spaces && ascii_space(c)) {
+				pending = 1;
+				continue;
+			}
+			if (pending)
+				out[length++] = ' ';
+			pending = 0;
+			out[length++] = (char)(lc && c >= 'A' && c <= 'Z' ?
+							     c + 'a' - 'A' :
+							     c);
+		}
+		out[length] = 0;
+		return out;
+	}
 	char *v = lc ? lower(s) : copy(s);
 	const char *p = v, *begin = NULL, *end = NULL;
 	while (*p) {

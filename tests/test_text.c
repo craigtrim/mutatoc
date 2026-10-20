@@ -18,8 +18,83 @@ static void same(char *actual, const char *expected)
 	free(actual);
 }
 
+/* Original normalization is the reference for the ASCII shortcut (craigtrim/axiom#129). */
+static char *reference_norm(const char *text, int lc, int spaces)
+{
+	char *v = lc ? lower(text) : copy(text);
+	const char *p = v, *begin = NULL, *end = NULL;
+	while (*p) {
+		const char *start = p;
+		uint32_t c = uread(&p);
+		if (!uspace(c)) {
+			if (!begin)
+				begin = start;
+			end = p;
+		}
+	}
+	if (!begin) {
+		free(v);
+		return copy("");
+	}
+	if (!spaces) {
+		char *out = slice(begin, (size_t)(end - begin));
+		free(v);
+		return out;
+	}
+	Buf out = { 0 };
+	int pending = 0;
+	p = begin;
+	while (p < end) {
+		const char *start = p;
+		uint32_t c = uread(&p);
+		if (uspace(c))
+			pending = 1;
+		else {
+			if (pending)
+				buf_put(&out, " ");
+			pending = 0;
+			buf_add(&out, start, (size_t)(p - start));
+		}
+	}
+	free(v);
+	return buf_take(&out);
+}
+static void normalization_vectors(void)
+{
+	for (int byte = 1; byte < 128; byte++) {
+		char text[] = {
+			(char)byte, 'A', (char)byte, 'B', (char)byte, 0
+		};
+		for (int lc = 0; lc < 2; lc++)
+			for (int spaces = 0; spaces < 2; spaces++) {
+				char *expected =
+					reference_norm(text, lc, spaces);
+				same(norm(text, lc, spaces), expected);
+				free(expected);
+			}
+	}
+	unsigned random = 129;
+	for (int run = 0; run < 400; run++) {
+		char text[129];
+		int length = run % 129;
+		for (int i = 0; i < length; i++) {
+			random = random * 1664525u + 1013904223u;
+			text[i] = (char)(1 + random % 127);
+		}
+		text[length] = 0;
+		for (int lc = 0; lc < 2; lc++)
+			for (int spaces = 0; spaces < 2; spaces++) {
+				char *expected =
+					reference_norm(text, lc, spaces);
+				same(norm(text, lc, spaces), expected);
+				free(expected);
+			}
+	}
+}
+
 int main(void)
 {
+	normalization_vectors();
 	const char *vectors[][2] = { { "g:h", "g:h" },
 				     { "g", "http://a/b/c/g" },
 				     { "./g", "http://a/b/c/g" },
