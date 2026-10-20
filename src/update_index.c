@@ -159,18 +159,7 @@ static void build_view_members(void *data)
 	BuildIndexes *job = data;
 	mc_engine *e = job->engine;
 	UpdateState *u = job->state;
-	J *plus = generate_spans(job->raw, e->distance, 1, e->comma_lists);
-	plus_refs(u, plus, 1);
-	DEL(plus);
-	prepare_view(u, e->snapshot);
-	if (e->live)
-		prepare_view(u, e->live);
 	J *syns = GET(e->snapshot, "synonyms");
-	u->cached_order =
-		source_groups_build(GET(syns, "fwd"), &u->ordinals, 0);
-	if (e->live)
-		u->live_order = source_groups_build(
-			GET(GET(e->live, "synonyms"), "fwd"), &u->ordinals, 0);
 	/* Reuse only reads the completed lookup JSON; matching builds its own
 	 * records from those same immutable strings in the other load job. */
 	u->snapshot = lookup_state_reuse_traced(
@@ -180,6 +169,17 @@ static void build_view_members(void *data)
 		lookup_state_mirror(u->snapshot, live_syns);
 		u->mirrored = 1;
 	}
+	J *plus = generate_spans(job->raw, e->distance, 1, e->comma_lists);
+	plus_refs(u, plus, 1);
+	DEL(plus);
+	prepare_view(u, e->snapshot);
+	if (e->live)
+		prepare_view(u, e->live);
+	u->cached_order =
+		source_groups_build(GET(syns, "fwd"), &u->ordinals, 0);
+	if (e->live)
+		u->live_order = source_groups_build(
+			GET(GET(e->live, "synonyms"), "fwd"), &u->ordinals, 0);
 }
 static void build_match_members(void *data)
 {

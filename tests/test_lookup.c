@@ -388,12 +388,12 @@ static int check_sorting(void)
 	return 1;
 }
 
-/* Split compressed boundary paths, remove their original owners, then reuse
- * nodes while matching substrings that end inside an edge (axiom#129). */
+/* Split compressed boundary paths, remove owners across several storage
+ * blocks, and reuse links while matching partial edges (axiom#129). */
 static int check_posting_edits(void)
 {
 	J *fwd = OBJ();
-	for (int i = 0; i < 128; i++) {
+	for (int i = 0; i < 640; i++) {
 		char key[32], term[160];
 		snprintf(key, sizeof(key), "posting%d", i);
 		snprintf(term, sizeof(term),
@@ -412,7 +412,8 @@ static int check_posting_edits(void)
 	int ok = 1;
 	for (int step = 0; step < 80 && ok; step++) {
 		char key[32], term[160];
-		snprintf(key, sizeof(key), "posting%d", step % 16);
+		snprintf(key, sizeof(key), "posting%d",
+			 (step % 4) * 160 + (step / 4) % 16);
 		J *old = OBJ();
 		PUT(old, key, DUP(GET(fwd, key)));
 		lookup_state_entity(state, old, -1);

@@ -1086,13 +1086,15 @@ struct MutableWord {
 	const char *text; /* Borrowed from a lookup JSON node until removal. */
 	char *alias;
 	MutableWord *available;
-	int words, rank;
+	int words;
 	size_t chars;
 };
 struct MutableWordBlock {
 	MutableWordBlock *next;
 	MutableWord words[256];
 };
+/* Plain lookup words need membership only; records describe alias candidates. */
+static const MutableWord literal_word = { 0 };
 static MutableWord *mutable_word_create(MatchIndex *x)
 {
 	if (!x->available_words) {
@@ -1162,8 +1164,10 @@ static void mutable_prefixes(MatchIndex *x, const char *s, int delta)
 static void mutable_alias(MatchIndex *x, const char *key)
 {
 	Map *candidates = map_get(&x->mutable_aliases, key);
+	if (!candidates)
+		return;
 	MutableWord *best = NULL;
-	if (!map_get(&x->mutable_words, key) && candidates) {
+	if (!map_get(&x->mutable_words, key)) {
 		for (size_t i = 0; i < candidates->cap; i++)
 			if (candidates->slots[i].key) {
 				MutableWord *w = candidates->slots[i].value;
@@ -1194,39 +1198,47 @@ static void mutable_alias(MatchIndex *x, const char *key)
 		mutable_prefixes(x, key, delta);
 	}
 }
+static void mutable_word_add(MatchIndex *x, int words, const char *text,
+			     int ensure_rank)
+{
+	char *alias = tokenize_key(text);
+	MutableWord *w = NULL;
+	if (alias) {
+		w = mutable_word_create(x);
+		w->text = text;
+		w->alias = alias;
+		w->words = words;
+		w->chars = ulen(text);
+	}
+	if (ensure_rank) {
+		char key[32];
+		snprintf(key, sizeof(key), "%d", words);
+		if (!map_get(&x->group_ranks, key))
+			map_put(&x->group_ranks, key,
+				(void *)(uintptr_t)(x->group_ranks.size + 1));
+	}
+	map_put_ref(&x->mutable_words, text,
+		    w ? (void *)w : (void *)&literal_word);
+	counter(mutable_group(x, words), text, 1);
+	mutable_prefixes(x, text, 1);
+	mutable_alias(x, text);
+	if (alias) {
+		Map *bucket = map_get(&x->mutable_aliases, alias);
+		if (!bucket) {
+			bucket = calloc(1, sizeof(*bucket));
+			map_put(&x->mutable_aliases, alias, bucket);
+		}
+		map_put_small(bucket, text, w);
+		if (bucket->size > 1)
+			map_put(&x->ambiguous_aliases, alias, bucket);
+		mutable_alias(x, alias);
+	}
+}
 void match_index_word(void *context, int words, const char *text, int delta)
 {
 	MatchIndex *x = context;
 	if (delta > 0) {
-		MutableWord *w = mutable_word_create(x);
-		w->text = text;
-		w->alias = tokenize_key(text);
-		w->words = words;
-		w->chars = ulen(text);
-		char key[32];
-		snprintf(key, sizeof(key), "%d", words);
-		w->rank = (int)(uintptr_t)map_get(&x->group_ranks, key);
-		if (!w->rank) {
-			w->rank = (int)x->group_ranks.size + 1;
-			map_put(&x->group_ranks, key,
-				(void *)(uintptr_t)w->rank);
-		}
-		map_put_ref(&x->mutable_words, w->text, w);
-		counter(mutable_group(x, words), text, 1);
-		mutable_prefixes(x, text, 1);
-		mutable_alias(x, text);
-		if (w->alias) {
-			Map *bucket = map_get(&x->mutable_aliases, w->alias);
-			if (!bucket) {
-				bucket = calloc(1, sizeof(*bucket));
-				map_put(&x->mutable_aliases, w->alias, bucket);
-			}
-			map_put_small(bucket, text, w);
-			if (bucket->size > 1)
-				map_put(&x->ambiguous_aliases, w->alias,
-					bucket);
-			mutable_alias(x, w->alias);
-		}
+		mutable_word_add(x, words, text, 1);
 	} else {
 		MutableWord *w = map_get(&x->mutable_words, text);
 		if (!w)
@@ -1235,6 +1247,8 @@ void match_index_word(void *context, int words, const char *text, int delta)
 		counter(mutable_group(x, words), text, -1);
 		mutable_prefixes(x, text, -1);
 		mutable_alias(x, text);
+		if (w == &literal_word)
+			return;
 		if (w->alias) {
 			Map *bucket = map_get(&x->mutable_aliases, w->alias);
 			map_delete(bucket, text);
@@ -1283,7 +1297,7 @@ void match_index_mutable(MatchIndex *x)
 			map_reserve(index, index->size + (size_t)SIZE(group));
 		}
 		EACH(word, group)
-			match_index_word(x, words, S(word), 1);
+			mutable_word_add(x, words, S(word), 0);
 	}
 }
 static void mutable_free(MatchIndex *x)
@@ -1291,7 +1305,8 @@ static void mutable_free(MatchIndex *x)
 	for (size_t i = 0; i < x->mutable_words.cap; i++)
 		if (x->mutable_words.slots[i].key) {
 			MutableWord *w = x->mutable_words.slots[i].value;
-			free(w->alias);
+			if (w != &literal_word)
+				free(w->alias);
 		}
 	for (size_t i = 0; i < x->mutable_aliases.cap; i++)
 		if (x->mutable_aliases.slots[i].key) {

@@ -51,35 +51,36 @@ void lookup_trace_free(LookupTrace *trace)
 typedef struct LookupValue LookupValue;
 typedef struct Posting Posting;
 typedef struct {
-	Posting *head;
-	size_t size;
-	int parent, child, next;
 	char *text;
-	size_t length;
+	size_t size, length;
+	int parent, child, next;
+	uint32_t head;
 } PostingNode;
 typedef struct {
 	PostingNode *nodes;
 	int count, capacity, available;
 } PostingIndex;
 struct Posting {
-	LookupValue *value;
-	int node, ends;
-	Posting *next, *prev;
+	uint32_t position, next, prev;
 };
 /* Only the first two and last two words need postings for an n-word gram. */
 typedef struct PostingSet {
+	union {
+		LookupValue *value;
+		struct PostingSet *available;
+	} owner;
+	uint32_t base;
 	int count;
 	Posting items[4];
-	struct PostingSet *available;
 } PostingSet;
-typedef struct PostingBlock {
-	struct PostingBlock *next;
+typedef struct {
 	PostingSet sets[256];
 } PostingBlock;
 typedef struct {
 	Map values, grams, dirty;
 	PostingIndex starts, ends;
-	PostingBlock *posting_blocks;
+	PostingBlock **posting_blocks;
+	size_t posting_count, posting_capacity;
 	PostingSet *available_postings;
 	LookupValue *root;
 	J *array, *mirror;
@@ -315,6 +316,49 @@ static LookupValue *adjust(LookupState *s, int words, const char *text,
 	return v;
 }
 
+/* Stable 32-bit links keep four postings in one cache line. Blocks never move;
+ * their small pointer table can grow without changing any link or owner. */
+static PostingSet *posting_set(LookupGroup *g, uint32_t id)
+{
+	size_t slot = (id - 1) / 4;
+	return &g->posting_blocks[slot / 256]->sets[slot % 256];
+}
+static Posting *posting_at(LookupGroup *g, uint32_t id)
+{
+	return &posting_set(g, id)->items[(id - 1) % 4];
+}
+static PostingSet *postings_create(LookupValue *v)
+{
+	LookupGroup *g = v->group;
+	if (!g->available_postings) {
+		assert(g->posting_count < UINT32_MAX / (256u * 4u));
+		if (g->posting_count == g->posting_capacity) {
+			g->posting_capacity = g->posting_capacity ?
+							    g->posting_capacity * 2 :
+							    8;
+			g->posting_blocks =
+				realloc(g->posting_blocks,
+					g->posting_capacity *
+						sizeof(*g->posting_blocks));
+		}
+		PostingBlock *block = calloc(1, sizeof(*block));
+		size_t first = g->posting_count * 256;
+		g->posting_blocks[g->posting_count++] = block;
+		for (int i = 255; i >= 0; i--) {
+			PostingSet *set = &block->sets[i];
+			set->base = (uint32_t)((first + (size_t)i) * 4 + 1);
+			set->owner.available = g->available_postings;
+			g->available_postings = set;
+		}
+	}
+	PostingSet *set = g->available_postings;
+	g->available_postings = set->owner.available;
+	set->owner.value = v;
+	set->count = 0;
+	memset(set->items, 0, sizeof(set->items));
+	return set;
+}
+
 static int post_node(PostingIndex *index, int parent, const char *text,
 		     size_t length, int reversed)
 {
@@ -408,44 +452,28 @@ static void post_add(PostingIndex *index, const char *text, size_t length,
 		index->nodes[node].size++;
 		offset += common;
 	}
-	if (!v->postings) {
-		LookupGroup *group = v->group;
-		if (!group->available_postings) {
-			PostingBlock *block = calloc(1, sizeof(*block));
-			block->next = group->posting_blocks;
-			group->posting_blocks = block;
-			for (int i = 255; i >= 0; i--) {
-				block->sets[i].available =
-					group->available_postings;
-				group->available_postings = &block->sets[i];
-			}
-		}
-		v->postings = group->available_postings;
-		group->available_postings = v->postings->available;
-		memset(v->postings, 0, sizeof(*v->postings));
-	}
+	if (!v->postings)
+		v->postings = postings_create(v);
 	assert(v->postings->count < 4);
+	uint32_t id = v->postings->base + (uint32_t)v->postings->count;
 	Posting *p = &v->postings->items[v->postings->count++];
-	p->value = v;
-	p->ends = index == &v->group->ends;
-	p->node = node;
+	p->position = (uint32_t)node * 2 + (index == &v->group->ends);
 	p->next = index->nodes[node].head;
 	if (p->next)
-		p->next->prev = p;
-	index->nodes[node].head = p;
+		posting_at(v->group, p->next)->prev = id;
+	index->nodes[node].head = id;
 }
 
-static void post_remove(Posting *p)
+static void post_remove(LookupGroup *g, Posting *p)
 {
-	PostingIndex *index = p->ends ? &p->value->group->ends :
-					      &p->value->group->starts;
+	PostingIndex *index = p->position & 1 ? &g->ends : &g->starts;
+	int node = (int)(p->position >> 1);
 	if (p->prev)
-		p->prev->next = p->next;
+		posting_at(g, p->prev)->next = p->next;
 	else
-		index->nodes[p->node].head = p->next;
+		index->nodes[node].head = p->next;
 	if (p->next)
-		p->next->prev = p->prev;
-	int node = p->node;
+		posting_at(g, p->next)->prev = p->prev;
 	while (node) {
 		PostingNode *at = &index->nodes[node];
 		int parent = at->parent;
@@ -488,14 +516,18 @@ static int post_find(PostingIndex *index, const char *text, size_t length,
 	return node;
 }
 
-static void post_values(PostingIndex *index, int root, const char *gram,
-			Map *affected)
+static void post_values(LookupGroup *g, PostingIndex *index, int root,
+			const char *gram, Map *affected)
 {
 	int node = root;
 	for (;;) {
-		for (Posting *p = index->nodes[node].head; p; p = p->next)
-			if (strstr(p->value->text, gram))
-				map_put(affected, p->value->text, p->value);
+		for (uint32_t id = index->nodes[node].head; id;) {
+			PostingSet *set = posting_set(g, id);
+			LookupValue *value = set->owner.value;
+			if (strstr(value->text, gram))
+				map_put(affected, value->text, value);
+			id = set->items[(id - 1) % 4].next;
+		}
 		if (index->nodes[node].child) {
 			node = index->nodes[node].child;
 			continue;
@@ -513,8 +545,9 @@ static void index_value(LookupValue *v, int add)
 	if (!add) {
 		if (v->postings) {
 			for (int i = 0; i < v->postings->count; i++)
-				post_remove(&v->postings->items[i]);
-			v->postings->available = v->group->available_postings;
+				post_remove(v->group, &v->postings->items[i]);
+			v->postings->owner.available =
+				v->group->available_postings;
 			v->group->available_postings = v->postings;
 			v->postings = NULL;
 		}
@@ -576,9 +609,9 @@ static void gram_values(LookupGroup *g, const char *gram, Map *affected)
 	    b = post_find(&g->ends, last + 1, strlen(last + 1), 0);
 	if (a && b) {
 		if (g->starts.nodes[a].size < g->ends.nodes[b].size)
-			post_values(&g->starts, a, gram, affected);
+			post_values(g, &g->starts, a, gram, affected);
 		else
-			post_values(&g->ends, b, gram, affected);
+			post_values(g, &g->ends, b, gram, affected);
 	}
 }
 
@@ -692,7 +725,7 @@ static void release_value(LookupState *s, LookupValue *v)
 static void index_change(LookupValue *v, Map *changed, size_t reserve)
 {
 	LookupGroup *g = v->group;
-	if (!!v->refs == v->indexed)
+	if ((unsigned)!!v->refs == v->indexed)
 		return;
 	if (v->refs) {
 		v->gram = lookup_leading_gram(v->text, g->words - 1);
@@ -746,7 +779,7 @@ void lookup_state_flush(LookupState *s)
 		SLOTS(i, g->dirty)
 		{
 			LookupValue *v = g->dirty.slots[i].value;
-			if (!!v->refs == v->indexed)
+			if ((unsigned)!!v->refs == v->indexed)
 				continue;
 			map_put(&affected, v->text, v);
 			index_change(v, &changed, 0);
@@ -883,11 +916,9 @@ void lookup_state_free(LookupState *s)
 			free(g->ends.nodes[n].text);
 		free(g->starts.nodes);
 		free(g->ends.nodes);
-		while (g->posting_blocks) {
-			PostingBlock *next = g->posting_blocks->next;
-			free(g->posting_blocks);
-			g->posting_blocks = next;
-		}
+		for (size_t n = 0; n < g->posting_count; n++)
+			free(g->posting_blocks[n]);
+		free(g->posting_blocks);
 		map_free(&g->values);
 		map_free(&g->grams);
 		map_free(&g->dirty);
