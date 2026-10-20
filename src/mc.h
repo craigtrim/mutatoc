@@ -74,6 +74,7 @@ const char *local(const char *);
 typedef struct {
 	char *key;
 	void *value;
+	uint64_t hash;
 } Slot;
 typedef struct {
 	Slot *slots;
@@ -81,6 +82,7 @@ typedef struct {
 } Map;
 void *map_get(Map *, const char *);
 void map_put(Map *, const char *, void *);
+void map_reserve(Map *, size_t);
 void map_put_small(Map *, const char *, void *);
 void map_free(Map *);
 void map_delete(Map *, const char *);

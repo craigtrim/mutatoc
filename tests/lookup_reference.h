@@ -1,3 +1,25 @@
+/* Original lookup ordering for craigtrim/axiom#129, independent of production. */
+static int reference_lex(const void *a, const void *b)
+{
+	return strcmp(S(*(J *const *)a), S(*(J *const *)b));
+}
+static int reference_length(const void *a, const void *b)
+{
+	size_t x = ulen(S(*(J *const *)a)), y = ulen(S(*(J *const *)b));
+	return x < y ? -1 : x > y ? 1 : reference_lex(a, b);
+}
+static void reference_sort(J *array, int mode)
+{
+	int n = SIZE(array);
+	J **values = malloc((size_t)(n ? n : 1) * sizeof(*values));
+	for (int i = 0; i < n; i++)
+		values[i] = cJSON_DetachItemFromArray(array, 0);
+	qsort(values, (size_t)n, sizeof(*values),
+	      mode ? reference_length : reference_lex);
+	for (int i = 0; i < n; i++)
+		ADD(array, values[mode < 0 ? n - 1 - i : i]);
+	free(values);
+}
 static int count(const char *s, char c)
 {
 	int n = 0;
@@ -105,6 +127,6 @@ J *reference_lookup(J *f)
 		DEL(values);
 	}
 	EACH(k, d)
-		sort_strings(k, -1);
+		reference_sort(k, -1);
 	return d;
 }

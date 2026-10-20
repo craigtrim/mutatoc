@@ -34,6 +34,7 @@ static ObjectIndex *object_index(UpdateState *u, J *object)
 	if (!x) {
 		x = calloc(1, sizeof(*x));
 		x->object = object;
+		map_reserve(&x->members, (size_t)SIZE(object));
 		EACH(v, object)
 			map_put(&x->members, v->string, v);
 		map_put(&u->objects, key, x);
@@ -168,6 +169,7 @@ void update_state_build(mc_engine *e)
 			return;
 	}
 	UpdateState *u = calloc(1, sizeof(*u));
+	map_reserve(&u->owners, e->graph->subjects.size);
 	J *raw = OBJ();
 	Map raw_keys = { 0 };
 	for (size_t i = 0; i < e->graph->n; i++) {
@@ -195,6 +197,7 @@ void update_state_build(mc_engine *e)
 	}
 	size_t ordinal = 0;
 	J *syns = GET(e->snapshot, "synonyms");
+	map_reserve(&u->ordinals, (size_t)SIZE(GET(syns, "fwd")));
 	EACH(k, GET(syns, "fwd"))
 		map_put(&u->ordinals, k->string, (void *)(uintptr_t)++ordinal);
 	J *plus = generate_spans(raw, e->distance, 1, e->comma_lists);

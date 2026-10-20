@@ -80,8 +80,8 @@ static double peak_mb(void)
 #ifdef _WIN32
 	PROCESS_MEMORY_COUNTERS c;
 	return GetProcessMemoryInfo(GetCurrentProcess(), &c, sizeof(c)) ?
-		       (double)c.PeakWorkingSetSize / 1048576.0 :
-		       0;
+			     (double)c.PeakWorkingSetSize / 1048576.0 :
+			     0;
 #else
 	struct rusage u;
 	getrusage(RUSAGE_SELF, &u);
@@ -153,33 +153,37 @@ static int generated_benchmark(int runs, int check)
 {
 	int failed = 0, over = 0;
 	double medians[2][2] = { { 0 } };
-	for (int live = 0; live < 2; live++)
+	for (int live = 0; live < 2; live++) {
+		char *wires[2];
+		double *times[2], *edits[2];
 		for (int size = 0; size < 2; size++) {
-			int entities = size ? 20000 : 10000;
-			char *turtle = generated_turtle(entities);
+			char *turtle = generated_turtle(size ? 20000 : 10000);
 			J *q = OBJ();
 			PUT(q, "op", STR("load"));
 			PUT(q, "turtle", STR(turtle));
 			PUT(q, "class_based", BOOL(1));
 			PUT(q, "interface", STR(live ? "data" : "json"));
-			char *wire = cJSON_PrintUnformatted(q);
+			wires[size] = cJSON_PrintUnformatted(q);
 			DEL(q);
 			free(turtle);
-			double *times = calloc((size_t)runs, sizeof(*times));
-			double *edits =
-				calloc((size_t)runs * 12, sizeof(*edits));
-			for (int run = 0; run < runs && !failed; run++) {
+			times[size] = calloc((size_t)runs, sizeof(double));
+			edits[size] = calloc((size_t)runs * 12, sizeof(double));
+		}
+		/* Alternate sizes and their order so their medians sample the same
+		 * allocator history and machine load. Every trial is retained. */
+		for (int run = 0; run < runs && !failed; run++)
+			for (int pass = 0; pass < 2 && !failed; pass++) {
+				int size = (run + pass) % 2;
 				mc_engine *e = mc_create();
 				double start = now_ms();
-				failed |= !request(e, wire);
-				times[run] = now_ms() - start;
+				failed |= !request(e, wires[size]);
+				times[size][run] = now_ms() - start;
 				for (int step = 0; step < 12 && !failed;
 				     step++) {
 					char *entity =
 						generated_entity(42, step + 1);
-					q = OBJ();
+					J *q = OBJ(), *replacement = OBJ();
 					PUT(q, "op", STR("update"));
-					J *replacement = OBJ();
 					PUT(replacement,
 					    "http://example.org/#id42",
 					    STR(entity));
@@ -192,24 +196,26 @@ static int generated_benchmark(int runs, int check)
 					failed |= !request(
 						e,
 						"{\"op\":\"parse\",\"text\":\"district00042 regional academy training center\"}");
-					edits[run * 12 + step] =
+					edits[size][run * 12 + step] =
 						now_ms() - start;
 					free(edit);
 				}
 				mc_destroy(e);
 			}
-			medians[live][size] = median(times, runs);
-			double edit_ms = median(edits, runs * 12);
+		for (int size = 0; size < 2; size++) {
+			medians[live][size] = median(times[size], runs);
+			double edit_ms = median(edits[size], runs * 12);
 			printf("{\"ontology\":\"generated-%d\",\"interface\":\"%s\",\"runs\":%d,\"load_ms\":%.2f,\"update_and_parse_ms\":%.3f}\n",
-			       entities, live ? "data" : "json", runs,
-			       medians[live][size], edit_ms);
+			       size ? 20000 : 10000, live ? "data" : "json",
+			       runs, medians[live][size], edit_ms);
 			if (check)
 				over += !within("update+parse", "generated",
 						edit_ms, 20, "ms");
-			free(times);
-			free(edits);
-			free(wire);
+			free(times[size]);
+			free(edits[size]);
+			free(wires[size]);
 		}
+	}
 	for (int live = 0; live < 2; live++) {
 		double ratio = medians[live][0] > 0 ?
 					     medians[live][1] / medians[live][0] :
@@ -366,7 +372,7 @@ int main(int argc, char **argv)
 		printf("Fixture performance gate: %s.\n",
 		       failed ? "a request failed" :
 		       over   ? "a ceiling was exceeded" :
-				"every median is under its ceiling");
+				      "every median is under its ceiling");
 	} else
 		printf("{\"peak_working_set_mb\":%.1f}\n", peak_mb());
 	free(load);

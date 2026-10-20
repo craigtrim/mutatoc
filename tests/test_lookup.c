@@ -47,8 +47,92 @@ static int check(J *fwd)
 	DEL(actual);
 	return ok;
 }
+static int check_maps(void)
+{
+	Map map = { 0 };
+	char key[32];
+	map_put(&map, "item0", (void *)(uintptr_t)1);
+	size_t boundary = map.cap / 2;
+	for (size_t i = 1; i < boundary; i++) {
+		snprintf(key, sizeof(key), "item%zu", i);
+		map_put(&map, key, (void *)(uintptr_t)(i + 1));
+	}
+	Slot *slots = map.slots;
+	map_put(&map, "item0", (void *)(uintptr_t)2);
+	if (map.slots != slots) {
+		fprintf(stderr, "updating an existing key resized its table\n");
+		return 0;
+	}
+	map_free(&map);
+	size_t expected[128] = { 0 };
+	unsigned random = 129;
+	for (int step = 0; step < 3000; step++) {
+		random = random * 1664525u + 1013904223u;
+		unsigned index = (random >> 8) % 128;
+		snprintf(key, sizeof(key), "item%u", index);
+		if (random & 1) {
+			expected[index] = (size_t)step + 1;
+			map_put(&map, key, (void *)(uintptr_t)expected[index]);
+		} else {
+			expected[index] = 0;
+			map_delete(&map, key);
+		}
+		if (step == 500)
+			map_reserve(&map, 300);
+		for (unsigned i = 0; i < 128; i++) {
+			snprintf(key, sizeof(key), "item%u", i);
+			if ((size_t)(uintptr_t)map_get(&map, key) !=
+			    expected[i]) {
+				fprintf(stderr,
+					"hash table mismatch after operation %d\n",
+					step);
+				return 0;
+			}
+		}
+	}
+	map_free(&map);
+	return 1;
+}
+
+static int check_sorting(void)
+{
+	const char *terms[] = {
+		"",	"x",	 "\xc3\xa9", "\xce\xbb", "\xf0\x9f\x90\x95",
+		"\x01", "longer"
+	};
+	for (int run = 0; run < 5; run++)
+		for (int mode = -1; mode <= 1; mode++) {
+			J *actual = ARR();
+			char prefix[514];
+			memset(prefix, 'p', sizeof(prefix) - 1);
+			prefix[run == 2 ? 513 : 8] = 0;
+			for (int i = 0; i < 700; i++) {
+				char text[640];
+				snprintf(text, sizeof(text), "%s%s%04d", prefix,
+					 terms[(i * 17 + run) % 7],
+					 run == 3 ? 0 : (i * 31) % 203);
+				ADD(actual, STR(run == 4 ? "" : text));
+			}
+			J *expected = DUP(actual);
+			reference_sort(expected, mode);
+			sort_strings(actual, mode);
+			int ok = cJSON_Compare(actual, expected, 1);
+			DEL(actual);
+			DEL(expected);
+			if (!ok) {
+				fprintf(stderr,
+					"large string sort mismatch: run %d mode %d\n",
+					run, mode);
+				return 0;
+			}
+		}
+	return 1;
+}
+
 int main(void)
 {
+	if (!check_sorting() || !check_maps())
+		return 1;
 	const char *terms[] = { "red green blue",
 				"bred green blue",
 				"red green blues",

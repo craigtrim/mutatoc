@@ -1252,13 +1252,23 @@ void match_index_mutable(MatchIndex *x)
 	map_free(&x->aliases);
 	map_free(&x->prefixes);
 	J *lookup = GET(GET(x->view, "synonyms"), "lookup");
+	size_t total = 0;
+	EACH(group, lookup)
+		total += (size_t)SIZE(group);
+	map_reserve(&x->mutable_words, total);
 	int rank = 0;
 	EACH(group, lookup)
 		map_put(&x->group_ranks, group->string,
 			(void *)(uintptr_t)++rank);
-	EACH(group, lookup)
+	EACH(group, lookup) {
+		int words = atoi(group->string);
+		if (group->child) {
+			Map *index = mutable_group(x, words);
+			map_reserve(index, index->size + (size_t)SIZE(group));
+		}
 		EACH(word, group)
-			match_index_word(x, atoi(group->string), S(word), 1);
+			match_index_word(x, words, S(word), 1);
+	}
 }
 static void mutable_free(MatchIndex *x)
 {

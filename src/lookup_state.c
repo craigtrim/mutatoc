@@ -578,6 +578,7 @@ static void seed_lookup(LookupState *s)
 		g->array = array;
 		map_put(&s->groups, array->string, g);
 		size_t n = (size_t)SIZE(array), depth = 0;
+		map_reserve(&g->values, n);
 		LookupValue **stack = malloc((n ? n : 1) * sizeof(*stack));
 		EACH(entry, array) {
 			LookupValue *v = calloc(1, sizeof(*v)), *left = NULL;

@@ -120,10 +120,10 @@ if(BUILD_TESTING)
   string(TOUPPER "${CMAKE_BUILD_TYPE}" build_type)
   if(NOT MUTATOC_SANITIZE)
     if(CMAKE_CONFIGURATION_TYPES)
-      add_test(NAME performance COMMAND mutatoc_bench ${CMAKE_CURRENT_SOURCE_DIR} --runs 5 --check
+      add_test(NAME performance COMMAND mutatoc_bench ${CMAKE_CURRENT_SOURCE_DIR} --runs 15 --check
         CONFIGURATIONS ${optimized_configurations})
     elseif(build_type IN_LIST optimized_build_types)
-      add_test(NAME performance COMMAND mutatoc_bench ${CMAKE_CURRENT_SOURCE_DIR} --runs 5 --check)
+      add_test(NAME performance COMMAND mutatoc_bench ${CMAKE_CURRENT_SOURCE_DIR} --runs 15 --check)
     endif()
     if(TEST performance)
       set_tests_properties(performance PROPERTIES LABELS performance RUN_SERIAL TRUE)

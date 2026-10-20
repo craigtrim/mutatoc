@@ -192,6 +192,18 @@ static int is_ignorable(uint32_t c)
 
 char *lower(const char *s)
 {
+	/* ASCII needs no contextual Unicode mappings. Keep mixed and non-ASCII
+	 * strings on the existing path, including final-sigma handling. */
+	const unsigned char *ascii = (const unsigned char *)s;
+	while (*ascii && *ascii < 128)
+		ascii++;
+	if (!*ascii) {
+		char *out = copy(s);
+		for (char *p = out; *p; p++)
+			if (*p >= 'A' && *p <= 'Z')
+				*p += 'a' - 'A';
+		return out;
+	}
 	Buf b = { 0 };
 	int preceding_cased = 0;
 	while (*s) {
@@ -597,42 +609,65 @@ void *map_get(Map *m, const char *k)
 {
 	if (!m->cap)
 		return NULL;
-	size_t i = (size_t)hash(k) & (m->cap - 1);
+	uint64_t key_hash = hash(k);
+	size_t i = (size_t)key_hash & (m->cap - 1);
 	while (m->slots[i].key) {
-		if (!strcmp(m->slots[i].key, k))
+		if (m->slots[i].hash == key_hash && !strcmp(m->slots[i].key, k))
 			return m->slots[i].value;
 		i = (i + 1) & (m->cap - 1);
 	}
 	return NULL;
 }
 
+static void map_resize(Map *m, size_t capacity)
+{
+	Map old = *m;
+	m->cap = capacity;
+	m->slots = calloc(m->cap, sizeof(*m->slots));
+	/* Transfer owned keys in the same probe order. */
+	for (size_t i = 0; i < old.cap; i++)
+		if (old.slots[i].key) {
+			size_t at = (size_t)old.slots[i].hash & (m->cap - 1);
+			while (m->slots[at].key)
+				at = (at + 1) & (m->cap - 1);
+			m->slots[at] = old.slots[i];
+		}
+	free(old.slots);
+}
+void map_reserve(Map *m, size_t entries)
+{
+	if (!entries)
+		return;
+	size_t capacity = m->cap ? m->cap : 8;
+	while (capacity / 2 < entries)
+		capacity *= 2;
+	if (capacity > m->cap)
+		map_resize(m, capacity);
+}
 void map_put(Map *m, const char *k, void *v)
 {
-	if (!m->cap || m->size * 2 >= m->cap) {
-		Map old = *m;
-		m->cap = m->cap ? m->cap * 2 : 64;
-		m->slots = calloc(m->cap, sizeof(Slot));
-		m->size = old.size;
-		/* Transfer owned keys in the same probe order; growth does not
-		 * need to copy and free every key string. */
-		for (size_t i = 0; i < old.cap; i++)
-			if (old.slots[i].key) {
-				size_t at = (size_t)hash(old.slots[i].key) &
-					    (m->cap - 1);
-				while (m->slots[at].key)
-					at = (at + 1) & (m->cap - 1);
-				m->slots[at] = old.slots[i];
+	uint64_t key_hash = hash(k);
+	size_t i = 0;
+	if (m->cap) {
+		i = (size_t)key_hash & (m->cap - 1);
+		while (m->slots[i].key) {
+			if (m->slots[i].hash == key_hash &&
+			    !strcmp(m->slots[i].key, k)) {
+				/* Updating an existing key must not rebuild the table. */
+				m->slots[i].value = v;
+				return;
 			}
-		free(old.slots);
+			i = (i + 1) & (m->cap - 1);
+		}
 	}
-	size_t i = (size_t)hash(k) & (m->cap - 1);
-	while (m->slots[i].key && strcmp(m->slots[i].key, k))
-		i = (i + 1) & (m->cap - 1);
-	if (!m->slots[i].key) {
-		m->slots[i].key = copy(k);
-		m->size++;
+	if (!m->cap || m->size * 2 >= m->cap) {
+		map_resize(m, m->cap ? m->cap * 2 : 64);
+		i = (size_t)key_hash & (m->cap - 1);
+		while (m->slots[i].key)
+			i = (i + 1) & (m->cap - 1);
 	}
-	m->slots[i].value = v;
+	m->slots[i] = (Slot){ copy(k), v, key_hash };
+	m->size++;
 }
 
 /* Per-word dependency and alias buckets usually contain only one entry. */
@@ -684,8 +719,10 @@ void map_delete(Map *m, const char *key)
 {
 	if (!m->cap)
 		return;
-	size_t mask = m->cap - 1, hole = (size_t)hash(key) & mask;
-	while (m->slots[hole].key && strcmp(m->slots[hole].key, key))
+	uint64_t key_hash = hash(key);
+	size_t mask = m->cap - 1, hole = (size_t)key_hash & mask;
+	while (m->slots[hole].key && (m->slots[hole].hash != key_hash ||
+				      strcmp(m->slots[hole].key, key)))
 		hole = (hole + 1) & mask;
 	if (!m->slots[hole].key)
 		return;
@@ -693,7 +730,7 @@ void map_delete(Map *m, const char *key)
 	m->size--;
 	size_t next = (hole + 1) & mask;
 	while (m->slots[next].key) {
-		size_t start = (size_t)hash(m->slots[next].key) & mask;
+		size_t start = (size_t)m->slots[next].hash & mask;
 		if (((next - start) & mask) >= ((next - hole) & mask)) {
 			m->slots[hole] = m->slots[next];
 			hole = next;
