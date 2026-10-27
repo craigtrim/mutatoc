@@ -305,9 +305,16 @@ static int add_span_rules(MatchIndex *x, const char *key, J *rules)
 		rule.content = DUP(content);
 		unique(rule.content, key);
 		sort_strings(rule.content, 1);
+		int words = SIZE(rule.content);
 		fold_strings(rule.content);
 		drop_empty(rule.content);
-		if (!rule.content->child) {
+		/*
+		 * A rule that dropping invisible words leaves with one word only
+		 * repeats the exact match its folded synonym already makes, and
+		 * two such rules could trade one token back and forth.
+		 */
+		int left = SIZE(rule.content);
+		if (!left || (left < 2 && words >= 2)) {
 			DEL(rule.content);
 			continue;
 		}
@@ -902,25 +909,14 @@ static void forms_free(Forms *f)
  * still covers those between its words (craigtrim/mutatoc#12).
  */
 /*
- * A span over a single token makes no progress when that token, or a token
- * it wraps one at a time, already carries the rule's canonical form. Folding
- * can leave a rule whose one word is its own result; reapplying it, or two
- * such rules in turn, would never end (craigtrim/mutatoc#25).
+ * A span over a single token changes nothing when that token is already the
+ * rule's entity. Folding can make a token's form equal to its own canonical
+ * form, so such a span would apply forever (craigtrim/mutatoc#25).
  */
 static int no_progress(J *t, const char *canon)
 {
-	while (t) {
-		J *swaps = GET(t, "swaps");
-		if (!swaps)
-			return 0;
-		if (!strcmp(S(GET(swaps, "canon")), canon))
-			return 1;
-		J *inner = GET(swaps, "tokens");
-		t = inner && inner->child && !inner->child->next ?
-			    inner->child :
-			    NULL;
-	}
-	return 0;
+	J *swaps = GET(t, "swaps");
+	return swaps && !strcmp(S(GET(swaps, "canon")), canon);
 }
 
 static J *spans(const MatchIndex *index, J *ts, const J *names,
@@ -935,8 +931,11 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 	int *token = malloc((size_t)(n ? n : 1) * sizeof(*token));
 	int *line = line_breaks ?
 		malloc((size_t)(n ? n : 1) * sizeof(*line)) : NULL;
+	/* Each token by index, refreshed every round (craigtrim/mutatoc#25). */
+	J **items = malloc((size_t)(n ? n : 1) * sizeof(*items));
 	Occurrences **words = NULL;
-	if (!form || !at || !spacing || !token || (line_breaks && !line)) {
+	if (!form || !at || !spacing || !token || !items ||
+	    (line_breaks && !line)) {
 		fail(e, 1, "Cannot allocate span positions");
 		goto done;
 	}
@@ -950,6 +949,9 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 		}
 	}
 	while (!e->code) {
+		i = 0;
+		EACH(t, ts)
+			items[i++] = t;
 		for (int g = 0; g < f.count; g++)
 			f.forms[g].at.n = 0;
 		for (i = 0; i < n; i++)
@@ -1013,10 +1015,24 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 						valid = 0;
 				}
 				int x = 0, y = 0;
-				if (valid &&
-				    span_window(words, k, r, line, &x, &y) &&
-				    (x != y || !no_progress(AT(ts, token[x]),
-							    r->canon))) {
+				valid = valid &&
+					span_window(words, k, r, line, &x, &y);
+				/*
+				 * One position means every word is the same form;
+				 * take its first occurrence that changes something.
+				 */
+				if (valid && x == y) {
+					const Occurrences *o = words[0];
+					valid = 0;
+					for (int j = 0; j < o->n && !valid; j++)
+						if (!no_progress(
+							    items[token[o->at[j]]],
+							    r->canon)) {
+							x = y = o->at[j];
+							valid = 1;
+						}
+				}
+				if (valid) {
 					best = r;
 					bx = token[x];
 					by = token[y] + 1;
@@ -1050,6 +1066,7 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 		n -= by - bx - 1;
 	}
 done:
+	free(items);
 	free(line);
 	free(words);
 	free(token);
