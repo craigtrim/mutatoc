@@ -30,14 +30,15 @@ typedef struct {
 	int minimum, cases, failed, xfail;
 } Category;
 static Category categories[] = {
-	{ "conformance", 19000 }, { "code points", 1112064 },
-	{ "ascii", 128 },	  { "words", 21600 },
-	{ "joined", 2304 },	  { "line breaks", 1152 },
-	{ "spans", 36000 },	  { "invisible fillers", 252 },
-	{ "letters", 40 },	  { "normals", 240 },
-	{ "collisions", 20 },	  { "updates", 240 },
-	{ "mixed runs", 1584 },	  { "punctuation edges", 32 },
-	{ "offsets", 516 },	  { "expected fails", 12 },
+	{ "conformance", 19000 },   { "code points", 1112064 },
+	{ "ascii", 128 },	    { "words", 21600 },
+	{ "joined", 2304 },	    { "line breaks", 1152 },
+	{ "spans", 36000 },	    { "invisible fillers", 252 },
+	{ "letters", 40 },	    { "normals", 240 },
+	{ "collisions", 20 },	    { "updates", 240 },
+	{ "mixed runs", 1584 },	    { "punctuation edges", 46 },
+	{ "invisible words", 240 }, { "offsets", 516 },
+	{ "expected fails", 12 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -1227,6 +1228,93 @@ static void mixed_runs(void)
 		}
 }
 
+static void compare_engines(Category *c, mc_engine *a, mc_engine *b,
+			    const char *const *texts, size_t count,
+			    const char *what)
+{
+	int matched = 0;
+	for (size_t t = 0; t < count; t++) {
+		c->cases++;
+		J *ra = request_tokens(a, "parse", texts[t], NULL, NULL),
+		  *rb = request_tokens(b, "parse", texts[t], NULL, NULL);
+		J *ea = ra ? entities_of(GET(ra, "tokens"), 1) : NULL,
+		  *eb = rb ? entities_of(GET(rb, "tokens"), 1) : NULL;
+		matched += eb && SIZE(eb) > 0;
+		if (!ea || !eb || !cJSON_Compare(ea, eb, 1))
+			fail_case(c, what, texts[t], eb, ea);
+		DEL(ea);
+		DEL(eb);
+		DEL(ra);
+		DEL(rb);
+	}
+	if (!matched)
+		fail_case(c, "no text matched", NULL, NULL, NULL);
+}
+
+/*
+ * A label word made only of invisible characters is no span requirement, so
+ * the label matches as the same label without it does: after a fresh load,
+ * and after updates to and from it, in both interfaces.
+ */
+static void invisible_words(void)
+{
+	static const char *const labels[] = {
+		"alpha \xc2\xad beta",
+		"\xc2\xad alpha beta",
+		"alpha beta \xc2\xad",
+		"alpha \xe2\x80\x8b beta",
+		"\xe2\x81\xa0 alpha \xe2\x81\xa0 beta",
+	};
+	static const char *const texts[] = {
+		"alpha beta",
+		"beta alpha",
+		"alpha x beta",
+		"beta x y alpha",
+		"beta \xc2\xad alpha",
+		"alpha x y z w beta",
+		"alpha",
+		"beta",
+	};
+	static const char *const interfaces[] = { "", "data" };
+	const size_t count = sizeof(texts) / sizeof(*texts);
+	Category *c = category("invisible words");
+	for (int i = 0; i < 2; i++)
+		for (size_t l = 0; l < sizeof(labels) / sizeof(*labels); l++) {
+			const char *const with[1][2] = { { "e_x", labels[l] } };
+			const char *const clean[1][2] = { { "e_x",
+							    "alpha beta" } };
+			mc_engine *dirty =
+					  turtle_engine(with, 1, interfaces[i]),
+				  *plain = turtle_engine(clean, 1,
+							 interfaces[i]),
+				  *changed = turtle_engine(clean, 1,
+							   interfaces[i]);
+			if (!dirty || !plain || !changed) {
+				fail_case(c, "load failed", labels[l], NULL,
+					  NULL);
+			} else {
+				compare_engines(
+					c, dirty, plain, texts, count,
+					"differs from the label without it");
+				if (!update_class(changed, "e_x", labels[l]))
+					fail_case(c, "update failed", labels[l],
+						  NULL, NULL);
+				compare_engines(
+					c, changed, dirty, texts, count,
+					"update to it differs from a fresh load");
+				if (!update_class(changed, "e_x", "alpha beta"))
+					fail_case(c, "update failed", labels[l],
+						  NULL, NULL);
+				compare_engines(
+					c, changed, plain, texts, count,
+					"update from it differs from a fresh load");
+			}
+			mc_destroy(dirty);
+			mc_destroy(plain);
+			mc_destroy(changed);
+		}
+}
+
 /* The punctuation rules look past invisible characters to their edges. */
 static void punctuation_edges(void)
 {
@@ -1242,8 +1330,16 @@ static void punctuation_edges(void)
 		{ "_name_", "ename", 1, 5 },
 		{ "_name_\xc2\xad", "ename", 1, 5 },
 		{ "\xc2\xad_name_", "ename", 2, 6 },
-		{ "_\xcc\x81name_", "ename", 1, 6 },
+		/* A mark belongs to the underscore before it. */
+		{ "_\xcc\x81name_", "ename", 2, 6 },
 		{ "_name\xe2\x80\x8b_", "ename", 1, 6 },
+		{ "__name__", "ename", 2, 6 },
+		{ "_\xc2\xad_name__", "ename", 3, 7 },
+		{ "__name_\xc2\xad_", "ename", 2, 6 },
+		{ "_\xc2\xad_name_\xc2\xad_", "ename", 3, 7 },
+		{ "2020,_", "eyear", 0, 4 },
+		{ "2020,\xc2\xad_", "eyear", 0, 4 },
+		{ "2020.\xc2\xad_\xc2\xad_", "eyear", 0, 4 },
 		{ "A&B", "eab", 0, 3 },
 		{ "a&b", "eab", 0, 3 },
 		{ "A&\xc2\xad"
@@ -1409,6 +1505,7 @@ int main(int argc, char **argv)
 	updates();
 	mixed_runs();
 	punctuation_edges();
+	invisible_words();
 	offsets();
 	expected_fails();
 	int total = 0, short_of = 0;
