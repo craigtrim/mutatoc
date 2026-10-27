@@ -129,6 +129,10 @@ if(BUILD_TESTING)
   mutatoc_program(mutatoc_normalization tests/test_normalization.c)
   target_include_directories(mutatoc_normalization PRIVATE vendor/utf8proc)
   target_compile_definitions(mutatoc_normalization PRIVATE UTF8PROC_STATIC)
+  # A shared library keeps utf8proc hidden, so the test calls its own copy.
+  if(BUILD_SHARED_LIBS)
+    target_sources(mutatoc_normalization PRIVATE vendor/utf8proc/utf8proc.c)
+  endif()
   add_test(NAME normalization COMMAND mutatoc_normalization ${CMAKE_CURRENT_SOURCE_DIR})
   # Timing ceilings only mean something in optimized builds without sanitizers.
   # Build type names are case-insensitive in CMake, so compare them uppercased.

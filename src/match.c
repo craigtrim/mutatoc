@@ -31,7 +31,7 @@ typedef struct {
 } SpanRule;
 typedef struct {
 	SpanRule *rules;
-	int n;
+	int n, cap;
 } SpanList;
 typedef struct MutableWord MutableWord;
 typedef struct MutableWordBlock MutableWordBlock;
@@ -241,70 +241,96 @@ static void rule_free(SpanRule *r)
 	free(r->origin);
 }
 
+/* Removes the empty strings that folding leaves for invisible-only words. */
+static void drop_empty(J *a)
+{
+	J *v = a ? a->child : NULL;
+	while (v) {
+		J *next = v->next;
+		if (!*S(v))
+			DEL(cJSON_DetachItemViaPointer(a, v));
+		v = next;
+	}
+}
+
+/*
+ * Keys that fold alike share a list ordered by unfolded key, so replacing one
+ * key's rules in an update leaves the order a fresh load builds.
+ */
+static int place_rule(MatchIndex *x, const char *name, const SpanRule *rule)
+{
+	SpanList *list = map_get(&x->spans, name);
+	if (!list) {
+		list = calloc(1, sizeof(*list));
+		if (!list)
+			return 0;
+		map_put(&x->spans, name, list);
+	}
+	if (list->n == list->cap) {
+		int cap = list->cap ? list->cap * 2 : 4;
+		SpanRule *grown =
+			realloc(list->rules, (size_t)cap * sizeof(*grown));
+		if (!grown)
+			return 0;
+		list->rules = grown;
+		list->cap = cap;
+	}
+	int at = list->n;
+	while (at > 0 && strcmp(list->rules[at - 1].origin, rule->origin) > 0)
+		at--;
+	memmove(list->rules + at + 1, list->rules + at,
+		(size_t)(list->n - at) * sizeof(*list->rules));
+	list->rules[at] = *rule;
+	list->n++;
+	return 1;
+}
+
 /*
  * Adds the rules stored under one unfolded key to the list its folded form
  * keys, so a rule written with accents matches text without them. Content
- * and context are folded too, and content keeps the order of its unfolded
- * words, which the direction flags read. Keys that fold alike share a list
- * ordered by unfolded key, so replacing one key's rules in an update leaves
- * the order a fresh load builds (craigtrim/mutatoc#25).
+ * and context are folded too, a word that folds away is no longer required,
+ * and content keeps the order of its unfolded words, which the direction
+ * flags read. A key that folds away hands its rules to their first remaining
+ * word (craigtrim/mutatoc#25).
  */
 static int add_span_rules(MatchIndex *x, const char *key, J *rules)
 {
 	char *name = ufold(key);
-	SpanList *list = map_get(&x->spans, name);
-	if (!list) {
-		list = calloc(1, sizeof(*list));
-		if (list)
-			map_put(&x->spans, name, list);
-	}
-	free(name);
-	int n = 0;
-	EACH(r, rules)
-		n++;
-	SpanRule *grown =
-		list ? realloc(list->rules,
-			       (size_t)(list->n + n + 1) * sizeof(*grown)) :
-		       NULL;
-	if (!grown)
-		return 0;
-	list->rules = grown;
-	int old = list->n;
+	int ok = 1;
 	EACH(r, rules) {
 		J *content = GET(r, "content");
 		if (!content || !cJSON_IsArray(content))
 			continue;
-		SpanRule *rule = &list->rules[list->n++];
-		rule->content = DUP(content);
-		unique(rule->content, key);
-		sort_strings(rule->content, 1);
-		fold_strings(rule->content);
-		rule->context = GET(r, "context") ? DUP(GET(r, "context")) :
-						    NULL;
-		fold_strings(rule->context);
-		rule->origin = copy(key);
-		rule->canon = S(GET(r, "canon"));
+		SpanRule rule = { 0 };
+		rule.content = DUP(content);
+		unique(rule.content, key);
+		sort_strings(rule.content, 1);
+		fold_strings(rule.content);
+		drop_empty(rule.content);
+		if (!rule.content->child) {
+			DEL(rule.content);
+			continue;
+		}
+		rule.context = GET(r, "context") ? DUP(GET(r, "context")) :
+						   NULL;
+		fold_strings(rule.context);
+		drop_empty(rule.context);
+		rule.origin = copy(key);
+		rule.canon = S(GET(r, "canon"));
 		J *distance = GET(r, "distance");
-		rule->distance = distance ? distance->valueint : 4;
-		rule->forward = cJSON_IsTrue(GET(r, "forward"));
-		rule->reverse = cJSON_IsTrue(GET(r, "reverse"));
-		rule->rank = underscore_count(rule->canon);
+		rule.distance = distance ? distance->valueint : 4;
+		rule.forward = cJSON_IsTrue(GET(r, "forward"));
+		rule.reverse = cJSON_IsTrue(GET(r, "reverse"));
+		rule.rank = underscore_count(rule.canon);
+		if (!place_rule(x, *name ? name : S(rule.content->child),
+				&rule)) {
+			rule_free(&rule);
+			ok = 0;
+			break;
+		}
 	}
-	int at = old, added = list->n - old;
-	while (at > 0 && strcmp(list->rules[at - 1].origin, key) > 0)
-		at--;
-	if (added && at < old) {
-		SpanRule *moved = malloc((size_t)added * sizeof(*moved));
-		if (!moved)
-			return 0;
-		memcpy(moved, list->rules + old,
-		       (size_t)added * sizeof(*moved));
-		memmove(list->rules + at + added, list->rules + at,
-			(size_t)(old - at) * sizeof(*moved));
-		memcpy(list->rules + at, moved, (size_t)added * sizeof(*moved));
-		free(moved);
-	}
-	return 1;
+	free(name);
+	return ok;
 }
 
 static int index_spans(MatchIndex *x, J *rules)
@@ -1500,11 +1526,22 @@ void match_index_member(MatchIndex *x, const char *kind, const char *key,
 	if (m == &x->spans) {
 		/*
 		 * The folded list may also hold rules of other keys that fold
-		 * alike; replace only this key's (craigtrim/mutatoc#25).
+		 * alike; replace only this key's. A key that folds away put its
+		 * rules under other words, so every list is searched for them
+		 * (craigtrim/mutatoc#25).
 		 */
 		char *name = ufold(key);
-		SpanList *list = map_get(m, name);
-		if (list) {
+		J *names = ARR();
+		if (*name)
+			ADD(names, STR(name));
+		else
+			for (size_t i = 0; i < m->cap; i++)
+				if (m->slots[i].key)
+					ADD(names, STR(m->slots[i].key));
+		EACH(n, names) {
+			SpanList *list = map_get(m, S(n));
+			if (!list)
+				continue;
 			int kept = 0;
 			for (int i = 0; i < list->n; i++) {
 				if (!strcmp(list->rules[i].origin, key))
@@ -1513,12 +1550,13 @@ void match_index_member(MatchIndex *x, const char *kind, const char *key,
 					list->rules[kept++] = list->rules[i];
 			}
 			list->n = kept;
-			if (!kept && !value) {
+			if (!kept) {
 				free(list->rules);
 				free(list);
-				map_delete(m, name);
+				map_delete(m, S(n));
 			}
 		}
+		DEL(names);
 		free(name);
 		if (value)
 			add_span_rules(x, key, value);

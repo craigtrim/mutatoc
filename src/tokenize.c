@@ -134,43 +134,55 @@ static int push(Pieces *ps, size_t start, size_t end, int space)
 
 /*
  * Underscores that open or close a piece, and a period or comma that ends a
- * number, become their own pieces. Joiners at either end stay with the
- * first or last piece, so they never hide its edges (craigtrim/mutatoc#25).
+ * number, become their own pieces. The rules count characters, each carrying
+ * the joiners after it, and joiners before the first character stay with it,
+ * so joiners never hide an edge (craigtrim/mutatoc#25).
  */
 static int edges(Pieces *ps, const char *s, size_t a, size_t b)
 {
-	size_t head = a, tail = b;
-	while (tail > a && pure_joiner(char_at(s, char_start(s, a, tail))))
-		tail = char_start(s, a, tail);
-	if (tail == a)
-		return push(ps, a, b, 0);
-	while (pure_joiner(char_at(s, head))) {
-		const char *p = s + head;
-		uread(&p);
-		head = (size_t)(p - s);
+	/* at[k] is where character k starts and base[k] what it is; at[n] = b. */
+	size_t small_at[65], *at = small_at, n = 0, cap = 64;
+	uint32_t small_base[64], *base = small_base;
+	if (b - a > cap) {
+		cap = b - a;
+		at = malloc((cap + 1) * sizeof(*at));
+		base = malloc(cap * sizeof(*base));
 	}
-	int first = ps->n;
-	size_t lead = head, trail = tail;
-	while (trail - lead > 1 && s[lead] == '_')
-		lead++;
-	while (trail - lead > 1 && s[trail - 1] == '_')
-		trail--;
-	size_t middle = trail;
-	if (trail - lead > 1 && (s[trail - 1] == '.' || s[trail - 1] == ',') &&
-	    unumeric(char_at(s, base_start(s, lead, trail - 1))))
-		middle = trail - 1;
-	for (size_t i = head; i < lead; i++)
-		if (!push(ps, i, i + 1, 0))
-			return 0;
-	if (!push(ps, lead, middle, 0) ||
-	    (middle < trail && !push(ps, middle, trail, 0)))
-		return 0;
-	for (size_t i = trail; i < tail; i++)
-		if (!push(ps, i, i + 1, 0))
-			return 0;
-	ps->p[first].start = a;
-	ps->p[ps->n - 1].end = b;
-	return 1;
+	int ok = at && base;
+	for (const char *p = s + a; ok && (size_t)(p - s) < b;) {
+		size_t start = (size_t)(p - s);
+		uint32_t c = uread(&p);
+		if (pure_joiner(c))
+			continue;
+		at[n] = n ? start : a;
+		base[n++] = c;
+	}
+	if (ok && !n)
+		ok = push(ps, a, b, 0);
+	else if (ok) {
+		at[n] = b;
+		size_t lead = 0, trail = n;
+		while (trail - lead > 1 && base[lead] == '_')
+			lead++;
+		while (trail - lead > 1 && base[trail - 1] == '_')
+			trail--;
+		size_t middle = trail;
+		if (trail - lead > 1 &&
+		    (base[trail - 1] == '.' || base[trail - 1] == ',') &&
+		    unumeric(base[trail - 2]))
+			middle = trail - 1;
+		for (size_t k = 0; ok && k < lead; k++)
+			ok = push(ps, at[k], at[k + 1], 0);
+		ok = ok && push(ps, at[lead], at[middle], 0) &&
+		     (middle == trail || push(ps, at[middle], at[trail], 0));
+		for (size_t k = trail; ok && k < n; k++)
+			ok = push(ps, at[k], at[k + 1], 0);
+	}
+	if (at != small_at) {
+		free(at);
+		free(base);
+	}
+	return ok;
 }
 
 /* Splits one word, s[start..end) with no whitespace, at its punctuation. */
