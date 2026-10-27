@@ -25,6 +25,7 @@ static int underscore_count(const char *s)
 typedef struct {
 	J *content; /* Owned rule content and key, folded, in match order. */
 	J *context; /* Owned and folded, or NULL. */
+	char *origin; /* Owned: the unfolded key the rule is stored under. */
 	const char *canon;
 	int distance, forward, reverse, rank;
 } SpanRule;
@@ -233,12 +234,79 @@ static void fold_strings(J *a)
 	}
 }
 
+static void rule_free(SpanRule *r)
+{
+	DEL(r->content);
+	DEL(r->context);
+	free(r->origin);
+}
+
 /*
- * Keys, content and context compare folded, so a rule written with accents
- * matches text without them, and keys that fold alike share one list in the
- * order they come. Content keeps the order of its unfolded words, which the
- * direction flags read (craigtrim/mutatoc#25).
+ * Adds the rules stored under one unfolded key to the list its folded form
+ * keys, so a rule written with accents matches text without them. Content
+ * and context are folded too, and content keeps the order of its unfolded
+ * words, which the direction flags read. Keys that fold alike share a list
+ * ordered by unfolded key, so replacing one key's rules in an update leaves
+ * the order a fresh load builds (craigtrim/mutatoc#25).
  */
+static int add_span_rules(MatchIndex *x, const char *key, J *rules)
+{
+	char *name = ufold(key);
+	SpanList *list = map_get(&x->spans, name);
+	if (!list) {
+		list = calloc(1, sizeof(*list));
+		if (list)
+			map_put(&x->spans, name, list);
+	}
+	free(name);
+	int n = 0;
+	EACH(r, rules)
+		n++;
+	SpanRule *grown =
+		list ? realloc(list->rules,
+			       (size_t)(list->n + n + 1) * sizeof(*grown)) :
+		       NULL;
+	if (!grown)
+		return 0;
+	list->rules = grown;
+	int old = list->n;
+	EACH(r, rules) {
+		J *content = GET(r, "content");
+		if (!content || !cJSON_IsArray(content))
+			continue;
+		SpanRule *rule = &list->rules[list->n++];
+		rule->content = DUP(content);
+		unique(rule->content, key);
+		sort_strings(rule->content, 1);
+		fold_strings(rule->content);
+		rule->context = GET(r, "context") ? DUP(GET(r, "context")) :
+						    NULL;
+		fold_strings(rule->context);
+		rule->origin = copy(key);
+		rule->canon = S(GET(r, "canon"));
+		J *distance = GET(r, "distance");
+		rule->distance = distance ? distance->valueint : 4;
+		rule->forward = cJSON_IsTrue(GET(r, "forward"));
+		rule->reverse = cJSON_IsTrue(GET(r, "reverse"));
+		rule->rank = underscore_count(rule->canon);
+	}
+	int at = old, added = list->n - old;
+	while (at > 0 && strcmp(list->rules[at - 1].origin, key) > 0)
+		at--;
+	if (added && at < old) {
+		SpanRule *moved = malloc((size_t)added * sizeof(*moved));
+		if (!moved)
+			return 0;
+		memcpy(moved, list->rules + old,
+		       (size_t)added * sizeof(*moved));
+		memmove(list->rules + at + added, list->rules + at,
+			(size_t)(old - at) * sizeof(*moved));
+		memcpy(list->rules + at, moved, (size_t)added * sizeof(*moved));
+		free(moved);
+	}
+	return 1;
+}
+
 static int index_spans(MatchIndex *x, J *rules)
 {
 	map_reserve(&x->spans, x->spans.size + (size_t)SIZE(rules));
@@ -248,45 +316,9 @@ static int index_spans(MatchIndex *x, J *rules)
 		if (!key->string || map_get(&seen, key->string))
 			continue;
 		map_put(&seen, key->string, (void *)1);
-		char *name = ufold(key->string);
-		SpanList *list = map_get(&x->spans, name);
-		if (!list) {
-			list = calloc(1, sizeof(*list));
-			if (list)
-				map_put(&x->spans, name, list);
-		}
-		int n = 0;
-		EACH(r, key)
-			n++;
-		SpanRule *grown =
-			list ? realloc(list->rules, (size_t)(list->n + n + 1) *
-							    sizeof(*grown)) :
-			       NULL;
-		free(name);
-		if (!grown) {
+		if (!add_span_rules(x, key->string, key)) {
 			ok = 0;
 			break;
-		}
-		list->rules = grown;
-		EACH(r, key) {
-			J *content = GET(r, "content");
-			if (!content || !cJSON_IsArray(content))
-				continue;
-			SpanRule *rule = &list->rules[list->n++];
-			rule->content = DUP(content);
-			unique(rule->content, key->string);
-			sort_strings(rule->content, 1);
-			fold_strings(rule->content);
-			rule->context = GET(r, "context") ?
-						DUP(GET(r, "context")) :
-						NULL;
-			fold_strings(rule->context);
-			rule->canon = S(GET(r, "canon"));
-			J *distance = GET(r, "distance");
-			rule->distance = distance ? distance->valueint : 4;
-			rule->forward = cJSON_IsTrue(GET(r, "forward"));
-			rule->reverse = cJSON_IsTrue(GET(r, "reverse"));
-			rule->rank = underscore_count(rule->canon);
 		}
 	}
 	map_free(&seen);
@@ -314,10 +346,8 @@ void match_index_free(MatchIndex *x)
 	for (size_t i = 0; i < x->spans.cap; i++)
 		if (x->spans.slots[i].key) {
 			SpanList *list = x->spans.slots[i].value;
-			for (int r = 0; r < list->n; r++) {
-				DEL(list->rules[r].content);
-				DEL(list->rules[r].context);
-			}
+			for (int r = 0; r < list->n; r++)
+				rule_free(&list->rules[r]);
 			free(list->rules);
 			free(list);
 		}
@@ -1468,20 +1498,30 @@ void match_index_member(MatchIndex *x, const char *kind, const char *key,
 		 !strcmp(kind, "ner") ? &x->ner :
 					      &x->spans;
 	if (m == &x->spans) {
-		SpanList *list = map_get(m, key);
+		/*
+		 * The folded list may also hold rules of other keys that fold
+		 * alike; replace only this key's (craigtrim/mutatoc#25).
+		 */
+		char *name = ufold(key);
+		SpanList *list = map_get(m, name);
 		if (list) {
-			for (int i = 0; i < list->n; i++)
-				DEL(list->rules[i].content);
-			free(list->rules);
-			free(list);
+			int kept = 0;
+			for (int i = 0; i < list->n; i++) {
+				if (!strcmp(list->rules[i].origin, key))
+					rule_free(&list->rules[i]);
+				else
+					list->rules[kept++] = list->rules[i];
+			}
+			list->n = kept;
+			if (!kept && !value) {
+				free(list->rules);
+				free(list);
+				map_delete(m, name);
+			}
 		}
-		map_delete(m, key);
-		if (value) {
-			J *one = OBJ();
-			cJSON_AddItemReferenceToObject(one, key, value);
-			index_spans(x, one);
-			DEL(one);
-		}
+		free(name);
+		if (value)
+			add_span_rules(x, key, value);
 	} else if (value)
 		map_put(m, key, value);
 	else

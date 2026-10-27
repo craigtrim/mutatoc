@@ -81,13 +81,31 @@ static size_t char_start(const char *s, size_t lo, size_t end)
 	return at;
 }
 
+/* A combining mark or invisible character that is not a letter or digit. */
+static int pure_joiner(uint32_t c)
+{
+	return ujoiner(c) && !letter(c) && !unumeric(c);
+}
+
 /* The start of the last code point in s[lo..end) that is not a joiner. */
 static size_t base_start(const char *s, size_t lo, size_t end)
 {
 	size_t at = char_start(s, lo, end);
-	while (at > lo && ujoiner(char_at(s, at)))
+	while (at > lo && pure_joiner(char_at(s, at)))
 		at = char_start(s, lo, at);
 	return at;
+}
+
+/* The first code point in s[at..end) that is not a joiner, or 0. */
+static uint32_t base_at(const char *s, size_t at, size_t end)
+{
+	const char *p = s + at;
+	while ((size_t)(p - s) < end) {
+		uint32_t c = uread(&p);
+		if (!pure_joiner(c))
+			return c;
+	}
+	return 0;
 }
 
 /* A byte span of the input; space marks a run of whitespace. */
@@ -116,28 +134,42 @@ static int push(Pieces *ps, size_t start, size_t end, int space)
 
 /*
  * Underscores that open or close a piece, and a period or comma that ends a
- * number, become their own pieces.
+ * number, become their own pieces. Joiners at either end stay with the
+ * first or last piece, so they never hide its edges (craigtrim/mutatoc#25).
  */
 static int edges(Pieces *ps, const char *s, size_t a, size_t b)
 {
-	size_t lead = a, trail = b;
+	size_t head = a, tail = b;
+	while (tail > a && pure_joiner(char_at(s, char_start(s, a, tail))))
+		tail = char_start(s, a, tail);
+	if (tail == a)
+		return push(ps, a, b, 0);
+	while (pure_joiner(char_at(s, head))) {
+		const char *p = s + head;
+		uread(&p);
+		head = (size_t)(p - s);
+	}
+	int first = ps->n;
+	size_t lead = head, trail = tail;
 	while (trail - lead > 1 && s[lead] == '_')
 		lead++;
 	while (trail - lead > 1 && s[trail - 1] == '_')
 		trail--;
 	size_t middle = trail;
 	if (trail - lead > 1 && (s[trail - 1] == '.' || s[trail - 1] == ',') &&
-	    unumeric(char_at(s, char_start(s, lead, trail - 1))))
+	    unumeric(char_at(s, base_start(s, lead, trail - 1))))
 		middle = trail - 1;
-	for (size_t i = a; i < lead; i++)
+	for (size_t i = head; i < lead; i++)
 		if (!push(ps, i, i + 1, 0))
 			return 0;
 	if (!push(ps, lead, middle, 0) ||
 	    (middle < trail && !push(ps, middle, trail, 0)))
 		return 0;
-	for (size_t i = trail; i < b; i++)
+	for (size_t i = trail; i < tail; i++)
 		if (!push(ps, i, i + 1, 0))
 			return 0;
+	ps->p[first].start = a;
+	ps->p[ps->n - 1].end = b;
 	return 1;
 }
 
@@ -157,7 +189,7 @@ static int split_word(Pieces *ps, const char *s, size_t start, size_t end)
 		 * A joiner stays with the word or punctuation before it and never
 		 * becomes prev, so rules that look back see the base character.
 		 */
-		if (ujoiner(ch) && !letter(ch) && !unumeric(ch)) {
+		if (pure_joiner(ch)) {
 			Piece *last = ps->n ? &ps->p[ps->n - 1] : NULL;
 			if (!building && last && !last->space &&
 			    last->end == at)
@@ -179,7 +211,8 @@ static int split_word(Pieces *ps, const char *s, size_t start, size_t end)
 		} else if (letter(ch) || unumeric(ch) || ch == '_' ||
 			   ((ch == '.' || ch == ',') && unumeric(prev)) ||
 			   (apostrophe(ch) && letter(prev)) ||
-			   (ch == '&' && letter(prev) && letter(next))) {
+			   (ch == '&' && letter(prev) &&
+			    letter(base_at(s, after, end)))) {
 			if (!building)
 				open = at;
 			building = 1;
@@ -206,7 +239,7 @@ static int scan(Pieces *ps, const char *s)
 		while (*q) {
 			const char *r = q;
 			uint32_t c = uread(&r);
-			if (!ujoiner(c)) {
+			if (!pure_joiner(c)) {
 				if (space < 0)
 					space = uspace(c);
 				else if (uspace(c) != space)
@@ -380,10 +413,25 @@ static char *normal_form(const char *text)
 		else
 			buf_add(&b, at, (size_t)(p - at));
 	}
-	char *lowered = norm(b.p ? b.p : "", 1, 0), *out = ufold(lowered);
+	char *lowered = norm(b.p ? b.p : "", 1, 0), *owned;
 	free(b.p);
+	ufold_view(lowered, &owned);
+	if (!owned)
+		return lowered;
+	/* Whitespace between dropped characters is now at an end; trim it. */
+	char *out = norm(owned, 0, 0);
+	free(owned);
 	free(lowered);
 	return out;
+}
+
+/* Code points of trailing whitespace; y leaves only these out. */
+static size_t trailing_spaces(const char *s)
+{
+	size_t n = 0;
+	while (*s)
+		n = uspace(uread(&s)) ? n + 1 : 0;
+	return n;
 }
 
 J *tokenize_text(const char *text)
@@ -408,7 +456,7 @@ J *tokenize_text(const char *text)
 			end = ++next->start;
 		char *t = slice(text + pc.start, end - pc.start),
 		     *s = slice(text + pc.start, source - pc.start),
-		     *trim = norm(t, 0, 0), *normal = normal_form(t);
+		     *normal = normal_form(t);
 		char id[48];
 		snprintf(id, sizeof(id), "%" PRIu64 "#%d", text_hash(s),
 			 count++);
@@ -416,13 +464,15 @@ J *tokenize_text(const char *text)
 		PUT(token, "id", STR(id));
 		PUT(token, "text", STR(t));
 		PUT(token, "x", NUM((double)pos));
-		PUT(token, "y", NUM((double)(pos + ulen(trim))));
+		/* y drops only trailing whitespace (craigtrim/mutatoc#25). */
+		size_t length = ulen(t);
+		PUT(token, "y",
+		    NUM((double)(pos + length - trailing_spaces(t))));
 		PUT(token, "normal", STR(normal));
 		ADD(result, token);
-		pos += ulen(t);
+		pos += length;
 		free(t);
 		free(s);
-		free(trim);
 		free(normal);
 	}
 	free(ps.p);
