@@ -253,25 +253,6 @@ static void drop_empty(J *a)
 	}
 }
 
-/* Removes words that folding made equal to an earlier one; returns the count. */
-static int drop_repeats(J *a)
-{
-	int n = 0;
-	J *v = a ? a->child : NULL;
-	while (v) {
-		J *next = v->next;
-		int seen = 0;
-		for (J *w = a->child; w != v && !seen; w = w->next)
-			seen = !strcmp(S(w), S(v));
-		if (seen)
-			DEL(cJSON_DetachItemViaPointer(a, v));
-		else
-			n++;
-		v = next;
-	}
-	return n;
-}
-
 /*
  * Keys that fold alike share a list ordered by unfolded key, so replacing one
  * key's rules in an update leaves the order a fresh load builds.
@@ -324,16 +305,9 @@ static int add_span_rules(MatchIndex *x, const char *key, J *rules)
 		rule.content = DUP(content);
 		unique(rule.content, key);
 		sort_strings(rule.content, 1);
-		int words = SIZE(rule.content);
 		fold_strings(rule.content);
 		drop_empty(rule.content);
-		/*
-		 * A rule that folding leaves with one distinct word would match
-		 * its own result again forever; the exact stage already matches
-		 * that word through the folded synonym.
-		 */
-		int left = drop_repeats(rule.content);
-		if (!left || (left < 2 && words >= 2)) {
+		if (!rule.content->child) {
 			DEL(rule.content);
 			continue;
 		}
@@ -927,6 +901,28 @@ static void forms_free(Forms *f)
  * no position, just as they never interrupt an exact phrase, but a span
  * still covers those between its words (craigtrim/mutatoc#12).
  */
+/*
+ * A span over a single token makes no progress when that token, or a token
+ * it wraps one at a time, already carries the rule's canonical form. Folding
+ * can leave a rule whose one word is its own result; reapplying it, or two
+ * such rules in turn, would never end (craigtrim/mutatoc#25).
+ */
+static int no_progress(J *t, const char *canon)
+{
+	while (t) {
+		J *swaps = GET(t, "swaps");
+		if (!swaps)
+			return 0;
+		if (!strcmp(S(GET(swaps, "canon")), canon))
+			return 1;
+		J *inner = GET(swaps, "tokens");
+		t = inner && inner->child && !inner->child->next ?
+			    inner->child :
+			    NULL;
+	}
+	return 0;
+}
+
 static J *spans(const MatchIndex *index, J *ts, const J *names,
 		int line_breaks, mc_error *e)
 {
@@ -1018,7 +1014,9 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 				}
 				int x = 0, y = 0;
 				if (valid &&
-				    span_window(words, k, r, line, &x, &y)) {
+				    span_window(words, k, r, line, &x, &y) &&
+				    (x != y || !no_progress(AT(ts, token[x]),
+							    r->canon))) {
 					best = r;
 					bx = token[x];
 					by = token[y] + 1;
