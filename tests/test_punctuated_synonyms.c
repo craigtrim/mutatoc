@@ -157,7 +157,9 @@ static void keys(void)
 		{ "abc", NULL },
 		{ "ABC", NULL },
 		{ "a_b", NULL },
-		{ "café au lait", NULL },
+		/* Accents fold, so this needs an alias (craigtrim/mutatoc#25). */
+		{ "café au lait", "cafe au lait" },
+		{ "straße", NULL },
 		{ "", NULL },
 		/* The tokenizer keeps these characters inside the word. */
 		{ "a&p", NULL },
@@ -175,7 +177,7 @@ static void keys(void)
 		  "well / health / physical education" },
 		{ "anat/phys", "anat / phys" },
 		{ "x/y/z", "x / y / z" },
-		{ "café/thé", "café / thé" },
+		{ "café/thé", "cafe / the" },
 		{ "spanish i/ii", "spanish i / ii" },
 		{ "driver's ed/safety", "driver's ed / safety" },
 		/* Colons. */

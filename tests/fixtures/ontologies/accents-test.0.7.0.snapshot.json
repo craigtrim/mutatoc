@@ -1,0 +1,158 @@
+{
+ "children": {},
+ "parents": {},
+ "trie": null,
+ "ngrams": {
+  "1": null,
+  "2": null,
+  "3": null,
+  "4": null,
+  "5": null,
+  "6": null,
+  "7": null,
+  "8": null,
+  "9": null
+ },
+ "spans": {
+  "naïve": [
+   {
+    "content": [
+     "résumé"
+    ],
+    "distance": 4,
+    "forward": true,
+    "reverse": true,
+    "canon": "enaiveresume"
+   }
+  ]
+ },
+ "labels": {
+  "Ecafecreme": "Café Crème",
+  "Ecafecremejoined": "cafecreme",
+  "Eistanbul": "İstanbul",
+  "Estrasse": "Straße",
+  "Enaiveresume": "Naïve Résumé",
+  "Ecoffee": "coffee"
+ },
+ "equivalents": null,
+ "predicates": [],
+ "by_predicate": {
+  "rdf:type": {
+   "ecafecreme": [
+    "class"
+   ],
+   "ecafecremejoined": [
+    "class"
+   ],
+   "eistanbul": [
+    "class"
+   ],
+   "estrasse": [
+    "class"
+   ],
+   "enaiveresume": [
+    "class"
+   ],
+   "ecoffee": [
+    "class"
+   ]
+  },
+  "rdfs:label": {
+   "ecafecreme": [
+    "café crème"
+   ],
+   "ecafecremejoined": [
+    "cafecreme"
+   ],
+   "eistanbul": [
+    "i̇stanbul"
+   ],
+   "estrasse": [
+    "straße"
+   ],
+   "enaiveresume": [
+    "naïve résumé"
+   ],
+   "ecoffee": [
+    "coffee"
+   ]
+  },
+  "rdfs:seeAlso": {
+   "enaiveresume": [
+    "naïve+résumé"
+   ]
+  }
+ },
+ "ner": {
+  "Café Crème": "NER",
+  "cafecreme": "NER",
+  "İstanbul": "NER",
+  "Straße": "NER",
+  "Naïve Résumé": "NER",
+  "coffee": "NER"
+ },
+ "synonyms": {
+  "lookup": {
+   "1": [
+    "ecafecremejoined",
+    "enaiveresume",
+    "ecafecreme",
+    "i̇stanbul",
+    "eistanbul",
+    "cafecreme",
+    "estrasse",
+    "ecoffee",
+    "straße",
+    "coffee"
+   ],
+   "2": [
+    "naïve résumé",
+    "café crème"
+   ],
+   "3": [],
+   "4": [],
+   "5": [],
+   "6": []
+  },
+  "fwd": {
+   "ecafecreme": [
+    "café crème"
+   ],
+   "ecafecremejoined": [
+    "cafecreme"
+   ],
+   "eistanbul": [
+    "i̇stanbul"
+   ],
+   "estrasse": [
+    "straße"
+   ],
+   "enaiveresume": [
+    "naïve résumé"
+   ],
+   "ecoffee": [
+    "coffee"
+   ]
+  },
+  "rev": {
+   "café crème": [
+    "ecafecreme"
+   ],
+   "cafecreme": [
+    "ecafecremejoined"
+   ],
+   "i̇stanbul": [
+    "eistanbul"
+   ],
+   "straße": [
+    "estrasse"
+   ],
+   "naïve résumé": [
+    "enaiveresume"
+   ],
+   "coffee": [
+    "ecoffee"
+   ]
+  }
+ }
+}

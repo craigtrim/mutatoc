@@ -23,8 +23,8 @@ static int underscore_count(const char *s)
  */
 #define DENSE_WORDS 4096
 typedef struct {
-	J *content; /* Owned rule content and key, in match order. */
-	J *context;
+	J *content; /* Owned rule content and key, folded, in match order. */
+	J *context; /* Owned and folded, or NULL. */
 	const char *canon;
 	int distance, forward, reverse, rank;
 } SpanRule;
@@ -220,22 +220,54 @@ static int index_lookup(MatchIndex *x, J *lookup)
 	return ok;
 }
 
+/* Replaces each string in a with its folded form, keeping the order. */
+static void fold_strings(J *a)
+{
+	EACH(v, a) {
+		char *owned;
+		ufold_view(S(v), &owned);
+		if (owned) {
+			cJSON_SetValuestring(v, owned);
+			free(owned);
+		}
+	}
+}
+
+/*
+ * Keys, content and context compare folded, so a rule written with accents
+ * matches text without them, and keys that fold alike share one list in the
+ * order they come. Content keeps the order of its unfolded words, which the
+ * direction flags read (craigtrim/mutatoc#25).
+ */
 static int index_spans(MatchIndex *x, J *rules)
 {
 	map_reserve(&x->spans, x->spans.size + (size_t)SIZE(rules));
+	Map seen = { 0 };
+	int ok = 1;
 	EACH(key, rules) {
-		if (!key->string || map_get(&x->spans, key->string))
+		if (!key->string || map_get(&seen, key->string))
 			continue;
-		SpanList *list = calloc(1, sizeof(*list));
-		if (!list)
-			return 0;
-		map_put(&x->spans, key->string, list);
+		map_put(&seen, key->string, (void *)1);
+		char *name = ufold(key->string);
+		SpanList *list = map_get(&x->spans, name);
+		if (!list) {
+			list = calloc(1, sizeof(*list));
+			if (list)
+				map_put(&x->spans, name, list);
+		}
 		int n = 0;
 		EACH(r, key)
 			n++;
-		list->rules = calloc((size_t)n + 1, sizeof(*list->rules));
-		if (!list->rules)
-			return 0;
+		SpanRule *grown =
+			list ? realloc(list->rules, (size_t)(list->n + n + 1) *
+							    sizeof(*grown)) :
+			       NULL;
+		free(name);
+		if (!grown) {
+			ok = 0;
+			break;
+		}
+		list->rules = grown;
 		EACH(r, key) {
 			J *content = GET(r, "content");
 			if (!content || !cJSON_IsArray(content))
@@ -244,7 +276,11 @@ static int index_spans(MatchIndex *x, J *rules)
 			rule->content = DUP(content);
 			unique(rule->content, key->string);
 			sort_strings(rule->content, 1);
-			rule->context = GET(r, "context");
+			fold_strings(rule->content);
+			rule->context = GET(r, "context") ?
+						DUP(GET(r, "context")) :
+						NULL;
+			fold_strings(rule->context);
 			rule->canon = S(GET(r, "canon"));
 			J *distance = GET(r, "distance");
 			rule->distance = distance ? distance->valueint : 4;
@@ -253,7 +289,8 @@ static int index_spans(MatchIndex *x, J *rules)
 			rule->rank = underscore_count(rule->canon);
 		}
 	}
-	return 1;
+	map_free(&seen);
+	return ok;
 }
 
 static void mutable_free(MatchIndex *x);
@@ -277,8 +314,10 @@ void match_index_free(MatchIndex *x)
 	for (size_t i = 0; i < x->spans.cap; i++)
 		if (x->spans.slots[i].key) {
 			SpanList *list = x->spans.slots[i].value;
-			for (int r = 0; r < list->n; r++)
+			for (int r = 0; r < list->n; r++) {
 				DEL(list->rules[r].content);
+				DEL(list->rules[r].context);
+			}
 			free(list->rules);
 			free(list);
 		}
@@ -313,8 +352,15 @@ static MatchIndex *build_index(const J *view, int mutable)
 		put_first(&x->fwd, k->string, (void *)1, 0);
 	EACH(k, GET(synonyms, "rev"))
 		put_first(&x->rev, k->string, k, 1);
+	/*
+	 * Folded entity names lead back to the first entity that folds to
+	 * them (craigtrim/mutatoc#25).
+	 */
 	EACH(v, GET(view, "entities")) {
-		put_first(&x->entities, S(v), (void *)1, 1);
+		char *owned;
+		const char *name = ufold_view(S(v), &owned);
+		put_first(&x->entities, name, (void *)S(v), !owned);
+		free(owned);
 		x->entity_count++;
 	}
 	EACH(k, GET(view, "ner"))
@@ -403,11 +449,28 @@ static int spacing_token(J *token)
 {
 	if (*S(GET(token, "normal")) || GET(token, "swaps"))
 		return 0;
+	/* Joiners are as invisible as whitespace (craigtrim/mutatoc#25). */
 	const char *text = S(GET(token, "text"));
-	while (*text)
-		if (!uspace(uread(&text)))
+	while (*text) {
+		uint32_t c = uread(&text);
+		if (!uspace(c) && !ujoiner(c))
 			return 0;
+	}
 	return 1;
+}
+
+/*
+ * Window text compares folded whoever produced the tokens, so tokens prepared
+ * before folding still match (craigtrim/mutatoc#25). Takes ownership of s.
+ */
+static char *folded(char *s)
+{
+	char *owned;
+	ufold_view(s, &owned);
+	if (!owned)
+		return s;
+	free(s);
+	return owned;
 }
 
 /* Mandatory line breaks in whitespace tokens (craigtrim/mutatoc#19). */
@@ -436,7 +499,7 @@ static char *exact_sequence(J *token, int length)
 			buf_put(&b, " ");
 		buf_put(&b, S(GET(token, "normal")));
 	}
-	char *s = norm(b.p ? b.p : "", 1, 0);
+	char *s = folded(norm(b.p ? b.p : "", 1, 0));
 	free(b.p);
 	return s;
 }
@@ -460,7 +523,7 @@ static void window_matches(ExactWindow *window, int remaining,
 			buf_put(&b, " ");
 		buf_put(&b, S(GET(token, "normal")));
 		Map *words = words_at(x, n);
-		char *s = norm(b.p, 1, 0);
+		char *s = folded(norm(b.p, 1, 0));
 		if (words && words->size &&
 		    !(n == 1 && GET(window->token, "swaps")) &&
 		    map_get(words, s)) {
@@ -703,12 +766,19 @@ typedef struct {
 	int *keyed, keyed_count; /* forms that key span rules, in byte order */
 } Forms;
 
-/* The index of a normal form, added on first sight; -1 if memory runs out. */
-static int form_id(Forms *f, const MatchIndex *index, const char *name)
+/*
+ * The index of a normal form, added on first sight; -1 if memory runs out.
+ * Forms are folded like the span rules they key (craigtrim/mutatoc#25).
+ */
+static int form_id(Forms *f, const MatchIndex *index, const char *unfolded)
 {
+	char *owned;
+	const char *name = ufold_view(unfolded, &owned);
 	int id = (int)(uintptr_t)map_get(&f->ids, name);
-	if (id)
+	if (id) {
+		free(owned);
 		return id - 1;
+	}
 	if (f->count == f->cap) {
 		int cap = f->cap ? f->cap * 2 : 64;
 		Form *forms = realloc(f->forms, (size_t)cap * sizeof(*forms));
@@ -717,14 +787,17 @@ static int form_id(Forms *f, const MatchIndex *index, const char *name)
 			f->forms = forms;
 		if (keyed)
 			f->keyed = keyed;
-		if (!forms || !keyed)
+		if (!forms || !keyed) {
+			free(owned);
 			return -1;
+		}
 		f->cap = cap;
 	}
 	Form *x = &f->forms[f->count];
-	x->name = copy(name);
+	x->name = owned ? owned : copy(name);
 	if (!x->name)
 		return -1;
+	name = x->name;
 	x->rules = map_get((Map *)&index->spans, name);
 	x->at = (Occurrences){ 0 };
 	map_put(&f->ids, name, (void *)(uintptr_t)(f->count + 1));
@@ -917,11 +990,10 @@ static char *product(J **choices, int count, int at, Buf *parts, Map *entities,
 		return NULL;
 	if (at == count) {
 		/* Lowercase the joined form, not each part, because final sigma is contextual. */
-		char *l = lower(parts->p ? parts->p : "");
-		if (map_get(entities, l))
-			return l;
+		char *l = folded(lower(parts->p ? parts->p : ""));
+		const char *entity = map_get(entities, l);
 		free(l);
-		return NULL;
+		return entity ? copy(entity) : NULL;
 	}
 	size_t mark = parts->n;
 	EACH(v, choices[at]) {

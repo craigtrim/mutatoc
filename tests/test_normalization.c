@@ -1,0 +1,1056 @@
+/*
+ * test_normalization.c - Accents and invisible characters fold out of every
+ * match key.
+ *
+ * Runs Unicode's NormalizationTest.txt against the vendored utf8proc, checks
+ * the fold of every code point against an oracle read from UnicodeData.txt
+ * and DerivedCoreProperties.txt that shares no code with utf8proc, and checks
+ * that ASCII never changes. Matching families then cross case, accent form
+ * and invisible characters against tests/fixtures/ontologies/accents-test.json
+ * through parse, parse_tokens, the exact stage, the live interface, an update
+ * and a snapshot that mutatoc 0.7.0 prepared. Expected entities follow from
+ * where the words were put, never from an engine run. Every case is a match,
+ * a no match or an expected fail; an expected fail runs every time, and one
+ * that starts passing fails the suite. craigtrim/mutatoc#25
+ */
+
+#include "testlib.h"
+#include "utf8proc.h"
+
+#define FIXTURE "tests/fixtures/ontologies/accents-test.json"
+#define SNAPSHOT "tests/fixtures/ontologies/accents-test.0.7.0.snapshot.json"
+#define UNICODE_DIR "tests/fixtures/unicode/"
+#define CODE_POINTS 0x110000
+
+/* ---------------------------------------------------------------------- */
+/* Bookkeeping.                                                           */
+
+typedef struct {
+	const char *name;
+	int minimum, cases, failed, xfail;
+} Category;
+static Category categories[] = {
+	{ "conformance", 19000 }, { "code points", 1112064 },
+	{ "ascii", 128 },	  { "words", 21600 },
+	{ "joined", 2304 },	  { "line breaks", 1152 },
+	{ "spans", 36000 },	  { "invisible fillers", 252 },
+	{ "letters", 40 },	  { "normals", 240 },
+	{ "collisions", 20 },	  { "expected fails", 12 },
+};
+#define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
+static int failures, printed, xpasses;
+
+static Category *category(const char *name)
+{
+	for (int i = 0; i < CATEGORY_COUNT; i++)
+		if (!strcmp(categories[i].name, name))
+			return &categories[i];
+	fprintf(stderr, "unknown category %s\n", name);
+	exit(2);
+}
+
+static void fail_case(Category *c, const char *what, const char *input,
+		      const J *expected, const J *actual)
+{
+	failures++;
+	c->failed++;
+	if (++printed > 40)
+		return;
+	J *shown = STR(input ? input : "");
+	char *in = cJSON_PrintUnformatted(shown);
+	fprintf(stderr, "%s | %.200s | %s\n", c->name, in, what);
+	if (expected || actual)
+		test_print_diff("", expected, actual);
+	free(in);
+	DEL(shown);
+}
+
+/* ---------------------------------------------------------------------- */
+/* UTF-8 helpers that share no code with the fold.                        */
+
+static void put_cp(Buf *b, uint32_t c)
+{
+	uwrite(b, c);
+}
+
+static char *encode(const uint32_t *cps, size_t n)
+{
+	Buf b = { 0 };
+	for (size_t i = 0; i < n; i++)
+		put_cp(&b, cps[i]);
+	return buf_take(&b);
+}
+
+static char *read_text(const char *root, const char *relative)
+{
+	char *path = test_path(root, relative);
+	mc_error err = { 0 };
+	char *text = read_file(path, &err);
+	if (!text)
+		fprintf(stderr, "%s: %s\n", path, err.message);
+	free(path);
+	return text;
+}
+
+/* Splits text into lines in place, dropping carriage returns. */
+static char **lines_of(char *text, int *count)
+{
+	int cap = 1024, n = 0;
+	char **out = malloc((size_t)cap * sizeof(*out));
+	for (char *p = text; p && *p;) {
+		char *end = strchr(p, '\n');
+		if (end)
+			*end = 0;
+		size_t len = strlen(p);
+		if (len && p[len - 1] == '\r')
+			p[len - 1] = 0;
+		if (n == cap) {
+			cap *= 2;
+			out = realloc(out, (size_t)cap * sizeof(*out));
+		}
+		out[n++] = p;
+		p = end ? end + 1 : NULL;
+	}
+	*count = n;
+	return out;
+}
+
+/* Parses space-separated hex code points; returns the count. */
+static size_t hex_points(const char *s, uint32_t *out, size_t cap)
+{
+	size_t n = 0;
+	while (*s && n < cap) {
+		while (*s == ' ')
+			s++;
+		if (!isxdigit((unsigned char)*s))
+			break;
+		char *end;
+		out[n++] = (uint32_t)strtoul(s, &end, 16);
+		s = end;
+	}
+	return n;
+}
+
+/* ---------------------------------------------------------------------- */
+/* NormalizationTest.txt against the vendored utf8proc.                   */
+
+static void conformance(const char *root)
+{
+	Category *c = category("conformance");
+	char *text = read_text(root, UNICODE_DIR "NormalizationTest.txt");
+	if (!text) {
+		fail_case(c, "NormalizationTest.txt missing", NULL, NULL, NULL);
+		return;
+	}
+	int count;
+	char **lines = lines_of(text, &count);
+	for (int i = 0; i < count; i++) {
+		char *line = lines[i];
+		if (!*line || *line == '#' || *line == '@')
+			continue;
+		char *col[5] = { 0 };
+		char *p = line;
+		for (int k = 0; k < 5 && p; k++) {
+			col[k] = p;
+			p = strchr(p, ';');
+			if (p)
+				*p++ = 0;
+		}
+		if (!col[4])
+			continue;
+		char *s[5];
+		for (int k = 0; k < 5; k++) {
+			uint32_t cps[64];
+			size_t n = hex_points(col[k], cps, 64);
+			s[k] = encode(cps, n);
+		}
+		c->cases++;
+		/* UAX #15 conformance: c2 = NFC(c1..c3), c4 = NFC(c4..c5), and so on. */
+		int ok = 1;
+		for (int k = 0; k < 5 && ok; k++) {
+			const utf8proc_uint8_t *in =
+				(const utf8proc_uint8_t *)s[k];
+			char *nfc = (char *)utf8proc_NFC(in),
+			     *nfd = (char *)utf8proc_NFD(in),
+			     *nfkc = (char *)utf8proc_NFKC(in),
+			     *nfkd = (char *)utf8proc_NFKD(in);
+			ok = nfc && nfd && nfkc && nfkd &&
+			     !strcmp(nfc, s[k < 3 ? 1 : 3]) &&
+			     !strcmp(nfd, s[k < 3 ? 2 : 4]) &&
+			     !strcmp(nfkc, s[3]) && !strcmp(nfkd, s[4]);
+			utf8proc_free(nfc);
+			utf8proc_free(nfd);
+			utf8proc_free(nfkc);
+			utf8proc_free(nfkd);
+		}
+		if (!ok)
+			fail_case(c, "normalization form", s[0], NULL, NULL);
+		for (int k = 0; k < 5; k++)
+			free(s[k]);
+	}
+	free(lines);
+	free(text);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Every code point against an oracle read from the Unicode data files.   */
+
+typedef struct {
+	unsigned char mark, ignorable;
+	uint32_t *decomposition; /* canonical only, terminated by 0 */
+} Point;
+static Point *points;
+
+static int load_oracle(const char *root)
+{
+	char *data = read_text(root, UNICODE_DIR "UnicodeData.txt"),
+	     *derived =
+		     read_text(root, UNICODE_DIR "DerivedCoreProperties.txt");
+	if (!data || !derived) {
+		free(data);
+		free(derived);
+		return 0;
+	}
+	points = calloc(CODE_POINTS, sizeof(*points));
+	int count;
+	char **lines = lines_of(data, &count);
+	uint32_t first = 0;
+	for (int i = 0; i < count; i++) {
+		char *f[6] = { 0 }, *p = lines[i];
+		for (int k = 0; k < 6 && p; k++) {
+			f[k] = p;
+			p = strchr(p, ';');
+			if (p)
+				*p++ = 0;
+		}
+		if (!f[5])
+			continue;
+		uint32_t cp = (uint32_t)strtoul(f[0], NULL, 16);
+		int mark = f[2][0] == 'M';
+		/* Ranges come as a First line and a Last line. */
+		if (strstr(f[1], ", First>")) {
+			first = cp;
+			continue;
+		}
+		uint32_t lo = strstr(f[1], ", Last>") ? first : cp;
+		for (uint32_t c = lo; c <= cp; c++)
+			points[c].mark = (unsigned char)mark;
+		if (*f[5] && *f[5] != '<') {
+			uint32_t cps[32];
+			size_t n = hex_points(f[5], cps, 31);
+			points[cp].decomposition = calloc(
+				n + 1, sizeof(*points[cp].decomposition));
+			memcpy(points[cp].decomposition, cps, n * sizeof(*cps));
+		}
+	}
+	free(lines);
+	lines = lines_of(derived, &count);
+	for (int i = 0; i < count; i++) {
+		char *line = lines[i];
+		if (!*line || *line == '#' ||
+		    !strstr(line, "; Default_Ignorable_Code_Point"))
+			continue;
+		char *end;
+		uint32_t lo = (uint32_t)strtoul(line, &end, 16), hi = lo;
+		if (end[0] == '.' && end[1] == '.')
+			hi = (uint32_t)strtoul(end + 2, NULL, 16);
+		for (uint32_t c = lo; c <= hi; c++)
+			points[c].ignorable = 1;
+	}
+	free(lines);
+	free(data);
+	free(derived);
+	return 1;
+}
+
+/* The fold the issue defines: decompose, then drop marks and ignorables. */
+static void oracle_fold(uint32_t cp, Buf *b)
+{
+	const Point *pt = &points[cp];
+	int hangul = cp >= 0xac00 && cp <= 0xd7a3;
+	if (pt->decomposition && !hangul) {
+		for (const uint32_t *d = pt->decomposition; *d; d++)
+			oracle_fold(*d, b);
+		return;
+	}
+	if ((pt->mark || pt->ignorable) && cp >= 0x80)
+		return;
+	put_cp(b, cp);
+}
+
+static void code_points(void)
+{
+	Category *c = category("code points");
+	for (uint32_t cp = 0; cp < CODE_POINTS; cp++) {
+		if (cp >= 0xd800 && cp <= 0xdfff)
+			continue;
+		c->cases++;
+		Buf in = { 0 }, want = { 0 };
+		put_cp(&in, cp);
+		oracle_fold(cp, &want);
+		char *s = buf_take(&in), *expected = buf_take(&want),
+		     *actual = ufold(s);
+		int joiner = cp >= 0x80 &&
+			     (points[cp].mark || points[cp].ignorable);
+		if (strcmp(actual, expected) || ujoiner(cp) != joiner ||
+		    ufolds(cp) != !!strcmp(s, expected)) {
+			char label[48];
+			snprintf(label, sizeof(label), "U+%04X fold", cp);
+			J *e = STR(expected), *a = STR(actual);
+			fail_case(c, label, s, e, a);
+			DEL(e);
+			DEL(a);
+		}
+		free(s);
+		free(expected);
+		free(actual);
+	}
+}
+
+/* ASCII never changes, on the fast path or inside non-ASCII text. */
+static void ascii(void)
+{
+	Category *c = category("ascii");
+	for (uint32_t cp = 0; cp < 0x80; cp++) {
+		c->cases++;
+		Buf b = { 0 };
+		put_cp(&b, cp);
+		char *alone = buf_take(&b);
+		buf_put(&b, alone);
+		buf_put(&b, "\xc3\x9f"); /* ß, which the fold keeps */
+		buf_put(&b, alone);
+		char *mixed = buf_take(&b), *fast = ufold(alone),
+		     *slow = ufold(mixed);
+		utf8proc_int32_t out[4], bc = 0;
+		utf8proc_ssize_t n = utf8proc_decompose_char(
+			(utf8proc_int32_t)cp, out, 4,
+			UTF8PROC_DECOMPOSE | UTF8PROC_STRIPMARK |
+				UTF8PROC_IGNORE,
+			&bc);
+		if (strcmp(fast, alone) || strcmp(slow, mixed) || n != 1 ||
+		    out[0] != (utf8proc_int32_t)cp || ujoiner(cp))
+			fail_case(c, "ASCII changed", mixed, NULL, NULL);
+		free(alone);
+		free(mixed);
+		free(fast);
+		free(slow);
+	}
+}
+
+/* ---------------------------------------------------------------------- */
+/* Word variants: accent form, case and invisible characters.              */
+
+/* Precomposed, decomposed and unaccented forms of each word. */
+typedef struct {
+	const char *forms[3];
+} Word;
+static const Word cafe = { { "caf\xc3\xa9", "cafe\xcc\x81", "cafe" } },
+		  creme = { { "cr\xc3\xa8me", "cre\xcc\x80me", "creme" } },
+		  naive = { { "na\xc3\xafve", "nai\xcc\x88ve", "naive" } },
+		  resume = { { "r\xc3\xa9sum\xc3\xa9", "re\xcc\x81sume\xcc\x81",
+			       "resume" } };
+
+/*
+ * Cases: lower, upper, title, alternating. Invisibles: none, a soft hyphen
+ * inside, a zero width joiner inside, a left-to-right mark before, a zero
+ * width space after.
+ */
+enum { CASES = 4, INVISIBLES = 5, VARIANTS = 3 * CASES * INVISIBLES };
+
+static char *recase(const char *s, int mode)
+{
+	Buf b = { 0 };
+	const char *p = s;
+	int letters = 0;
+	while (*p) {
+		uint32_t c = uread(&p);
+		Buf one = { 0 };
+		put_cp(&one, c);
+		char *ch = buf_take(&one);
+		int up = mode == 1 || (mode == 2 && letters == 0) ||
+			 (mode == 3 && letters % 2 == 1);
+		if (ualpha(c))
+			letters++;
+		char *out = up ? upper(ch) : lower(ch);
+		buf_put(&b, out);
+		free(out);
+		free(ch);
+	}
+	return buf_take(&b);
+}
+
+/* Inserts an invisible character; returns a new string. */
+static char *invisible(const char *s, int mode)
+{
+	Buf b = { 0 };
+	if (mode == 3)
+		buf_put(&b, "\xe2\x80\x8e"); /* U+200E */
+	const char *p = s;
+	int at = 0;
+	while (*p) {
+		const char *start = p;
+		uread(&p);
+		buf_add(&b, start, (size_t)(p - start));
+		at++;
+		if (mode == 1 && at == 2)
+			buf_put(&b, "\xc2\xad"); /* U+00AD */
+		if (mode == 2 && at == 1)
+			buf_put(&b, "\xe2\x80\x8d"); /* U+200D */
+	}
+	if (mode == 4)
+		buf_put(&b, "\xe2\x80\x8b"); /* U+200B */
+	return buf_take(&b);
+}
+
+/* Variant v of w: accent form v / 20, case (v / 5) % 4, invisible v % 5. */
+static char *variant(const Word *w, int v)
+{
+	char *cased = recase(w->forms[v / (CASES * INVISIBLES)],
+			     (v / INVISIBLES) % CASES),
+	     *out = invisible(cased, v % INVISIBLES);
+	free(cased);
+	return out;
+}
+
+static int leads_with_mark(int v)
+{
+	return v % INVISIBLES == 3;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Engines and paths.                                                     */
+
+enum { FRESH, SNAPSHOT_070, LIVE, UPDATED, ENGINES };
+static mc_engine *engines[ENGINES];
+static const char *const engine_names[ENGINES] = { "fresh load",
+						   "0.7.0 snapshot", "live",
+						   "update" };
+
+static int load_engines(const char *root)
+{
+	char *content = read_text(root, FIXTURE);
+	J *snapshot = test_read_json(root, SNAPSHOT);
+	if (!content || !snapshot) {
+		free(content);
+		DEL(snapshot);
+		return 0;
+	}
+	int ok = 1;
+	for (int i = 0; i < ENGINES; i++) {
+		engines[i] = mc_create();
+		J *q = OBJ();
+		PUT(q, "op", STR("load"));
+		PUT(q, "name", STR("accents-test"));
+		if (i == SNAPSHOT_070) {
+			PUT(q, "snapshot", DUP(snapshot));
+		} else {
+			PUT(q, "content", STR(content));
+			PUT(q, "format", STR("json"));
+		}
+		if (i == LIVE)
+			PUT(q, "interface", STR("data"));
+		J *r = test_request(engines[i], q);
+		ok = ok && cJSON_IsTrue(GET(r, "ok"));
+		DEL(r);
+		DEL(q);
+	}
+	/* Replace the accented class with an ASCII label, then restore it. */
+	const char *iri = "http://example.org/accents#Ecafecreme";
+	const char *labels[] = { "placeholder words",
+				 "Caf\xc3\xa9 Cr\xc3\xa8me" };
+	for (int i = 0; i < 2 && ok; i++) {
+		Buf b = { 0 };
+		buf_put(&b, "<");
+		buf_put(&b, iri);
+		buf_put(&b, "> a <http://www.w3.org/2002/07/owl#Class> ; "
+			    "<http://www.w3.org/2000/01/rdf-schema#label> \"");
+		buf_put(&b, labels[i]);
+		buf_put(&b, "\" .");
+		char *turtle = buf_take(&b);
+		J *q = OBJ(), *replace = OBJ();
+		PUT(q, "op", STR("update"));
+		PUT(replace, iri, STR(turtle));
+		PUT(q, "replace", replace);
+		J *r = test_request(engines[UPDATED], q);
+		ok = cJSON_IsTrue(GET(r, "ok"));
+		if (!ok)
+			test_print_diff("update failed", q, r);
+		DEL(r);
+		DEL(q);
+		free(turtle);
+	}
+	free(content);
+	DEL(snapshot);
+	return ok;
+}
+
+/* canon, x and y of every entity, plus text when with_text. */
+static J *entities_of(const J *tokens, int with_text)
+{
+	J *out = ARR();
+	EACH(t, tokens) {
+		J *swaps = GET(t, "swaps");
+		if (!swaps)
+			continue;
+		J *e = OBJ();
+		PUT(e, "canon", DUP(GET(swaps, "canon")));
+		PUT(e, "x", DUP(GET(t, "x")));
+		PUT(e, "y", DUP(GET(t, "y")));
+		if (with_text)
+			PUT(e, "text", DUP(GET(t, "text")));
+		ADD(out, e);
+	}
+	return out;
+}
+
+static J *request_tokens(mc_engine *e, const char *op, const char *text,
+			 J *tokens, const char *line_breaks)
+{
+	J *q = OBJ();
+	PUT(q, "op", STR(op));
+	if (text)
+		PUT(q, "text", STR(text));
+	if (tokens)
+		PUT(q, "tokens", tokens);
+	if (!strcmp(op, "transform_tokens"))
+		PUT(q, "stage", STR("exact"));
+	if (line_breaks)
+		PUT(q, "line_breaks", STR(line_breaks));
+	J *r = test_request(e, q);
+	DEL(q);
+	J *result =
+		cJSON_IsTrue(GET(r, "ok")) ?
+			cJSON_DetachItemFromObjectCaseSensitive(r, "result") :
+			NULL;
+	DEL(r);
+	return result;
+}
+
+/* Strips each expected entity down to canon, x and y. */
+static J *without_text(const J *expected)
+{
+	J *out = DUP(expected);
+	EACH(e, out)
+		cJSON_DeleteItemFromObjectCaseSensitive(e, "text");
+	return out;
+}
+
+enum { MATCH, NO_MATCH, XFAIL };
+enum { ALL_PATHS = 1, EXACT_ONLY = 2 };
+
+/*
+ * Runs one text through every engine and path and compares the entities.
+ * An expected fail runs on the fresh engine only and must still fail.
+ */
+static void check(const char *name, const char *text, const J *expected,
+		  int kind, int flags, const char *line_breaks)
+{
+	Category *c = category(name);
+	c->cases++;
+	if (kind == XFAIL) {
+		J *r = request_tokens(engines[FRESH], "parse", text, NULL,
+				      line_breaks);
+		J *actual = r ? entities_of(GET(r, "tokens"), 1) : NULL;
+		if (actual && cJSON_Compare(actual, expected, 1)) {
+			xpasses++;
+			fail_case(c,
+				  "expected fail now passes; update its label",
+				  text, expected, actual);
+		} else
+			c->xfail++;
+		DEL(actual);
+		DEL(r);
+		return;
+	}
+	J *bare = without_text(expected);
+	for (int i = 0; i < ENGINES; i++) {
+		J *r = request_tokens(engines[i], "parse", text, NULL,
+				      line_breaks);
+		J *actual = r ? entities_of(GET(r, "tokens"), 1) : NULL;
+		if (!actual || !cJSON_Compare(actual, expected, 1)) {
+			char what[64];
+			snprintf(what, sizeof(what), "parse, %s",
+				 engine_names[i]);
+			fail_case(c, what, text, expected, actual);
+		}
+		DEL(actual);
+		DEL(r);
+	}
+	if (flags & ALL_PATHS) {
+		J *tokens = request_tokens(engines[FRESH], "tokenize", text,
+					   NULL, NULL);
+		const char *ops[] = { "parse_tokens", "transform_tokens" };
+		for (int k = 0; k < 2; k++) {
+			if (k == 1 && !(flags & EXACT_ONLY))
+				continue;
+			J *r = request_tokens(engines[FRESH], ops[k], NULL,
+					      DUP(tokens), line_breaks);
+			J *list = k ? r : GET(r, "tokens");
+			J *actual = r ? entities_of(list, 0) : NULL;
+			if (!actual || !cJSON_Compare(actual, bare, 1))
+				fail_case(c, ops[k], text, bare, actual);
+			DEL(actual);
+			DEL(r);
+		}
+		/*
+		 * Tokens prepared before folding keep accented normals. 0.7.0
+		 * split invisible characters off, so only texts without them
+		 * have the same tokens then and now.
+		 */
+		int visible = 1;
+		for (const char *p = text; *p && visible;)
+			visible = !ujoiner(uread(&p));
+		if (visible) {
+			J *old = DUP(tokens);
+			EACH(t, old) {
+				char *trim = norm(S(GET(t, "text")), 1, 0);
+				set(t, "normal", STR(trim));
+				free(trim);
+			}
+			J *r = request_tokens(engines[FRESH], "parse_tokens",
+					      NULL, old, line_breaks);
+			J *actual = r ? entities_of(GET(r, "tokens"), 0) : NULL;
+			if (!actual || !cJSON_Compare(actual, bare, 1))
+				fail_case(c,
+					  "parse_tokens with unfolded normals",
+					  text, bare, actual);
+			DEL(actual);
+			DEL(r);
+		}
+		DEL(tokens);
+	}
+	DEL(bare);
+	(void)kind;
+}
+
+static J *one_entity(const char *canon, const char *text, size_t x, size_t y)
+{
+	J *list = ARR(), *e = OBJ();
+	PUT(e, "canon", STR(canon));
+	PUT(e, "x", NUM((double)x));
+	PUT(e, "y", NUM((double)y));
+	/* The entity's text is the input from x to y. */
+	const char *p = text;
+	for (size_t i = 0; i < x; i++)
+		uread(&p);
+	const char *start = p;
+	for (size_t i = x; i < y; i++)
+		uread(&p);
+	char *s = slice(start, (size_t)(p - start));
+	PUT(e, "text", STR(s));
+	free(s);
+	ADD(list, e);
+	return list;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Families.                                                              */
+
+static const char *const contexts[][2] = { { "", "" },
+					   { "I went to ", " today" } };
+#define CONTEXTS 2
+
+/*
+ * Where a phrase starts: a mark before the first word joins the whitespace
+ * in front of it, so the word starts after the mark unless the text does.
+ */
+static size_t phrase_x(const char *prefix, int v)
+{
+	size_t x = ulen(prefix);
+	return x + (leads_with_mark(v) && *prefix ? 1 : 0);
+}
+
+static void words(void)
+{
+	static const char *const seps[] = { " ", "  ", "\t" };
+	for (int a = 0; a < VARIANTS; a++) {
+		char *w1 = variant(&cafe, a);
+		for (int b = 0; b < VARIANTS; b++) {
+			char *w2 = variant(&creme, b);
+			for (int s = 0; s < 3; s++)
+				for (int k = 0; k < CONTEXTS; k++) {
+					Buf t = { 0 };
+					buf_put(&t, contexts[k][0]);
+					buf_put(&t, w1);
+					buf_put(&t, seps[s]);
+					buf_put(&t, w2);
+					size_t y = ulen(t.p);
+					buf_put(&t, contexts[k][1]);
+					char *text = buf_take(&t);
+					J *expected = one_entity(
+						"ecafecreme", text,
+						phrase_x(contexts[k][0], a), y);
+					/* Prepared tokens and the exact stage on a sample. */
+					int flags = (a + b + s + k) % 7 == 0 ?
+							    ALL_PATHS |
+								    EXACT_ONLY :
+							    0;
+					check("words", text, expected, MATCH,
+					      flags, NULL);
+					DEL(expected);
+					free(text);
+				}
+			free(w2);
+		}
+		free(w1);
+	}
+}
+
+/* An invisible character with no space after it joins two words into one. */
+static void joined(void)
+{
+	static const char *const joiners[] = { "\xe2\x80\x8b", "\xc2\xad",
+					       "\xe2\x80\x8d", "\xe2\x81\xa0" };
+	for (int a = 0; a < VARIANTS; a += INVISIBLES)
+		for (int b = 0; b < VARIANTS; b += INVISIBLES)
+			for (int j = 0; j < 4; j++)
+				for (int spaced = 0; spaced < 2; spaced++)
+					for (int k = 0; k < CONTEXTS; k++) {
+						char *w1 = variant(&cafe, a),
+						     *w2 = variant(&creme, b);
+						Buf t = { 0 };
+						buf_put(&t, contexts[k][0]);
+						buf_put(&t, w1);
+						buf_put(&t, joiners[j]);
+						if (spaced)
+							buf_put(&t, " ");
+						buf_put(&t, w2);
+						size_t y = ulen(t.p);
+						buf_put(&t, contexts[k][1]);
+						char *text = buf_take(&t);
+						J *expected = one_entity(
+							spaced ?
+								"ecafecreme" :
+								"ecafecremejoined",
+							text,
+							ulen(contexts[k][0]),
+							y);
+						check("joined", text, expected,
+						      MATCH,
+						      ALL_PATHS | EXACT_ONLY,
+						      NULL);
+						DEL(expected);
+						free(text);
+						free(w1);
+						free(w2);
+					}
+}
+
+static void line_breaks(void)
+{
+	static const char *const breaks[] = { "\n", "\r\n", "\xe2\x80\xa8",
+					      " \xe2\x80\x8b\n" };
+	for (int a = 0; a < VARIANTS; a += INVISIBLES)
+		for (int b = 0; b < VARIANTS; b += INVISIBLES)
+			for (int s = 0; s < 4; s++)
+				for (int mode = 0; mode < 2; mode++) {
+					char *w1 = variant(&cafe, a),
+					     *w2 = variant(&creme, b);
+					Buf t = { 0 };
+					buf_put(&t, w1);
+					buf_put(&t, breaks[s]);
+					buf_put(&t, w2);
+					char *text = buf_take(&t);
+					J *expected =
+						mode ? ARR() :
+						       one_entity("ecafecreme",
+								  text, 0,
+								  ulen(text));
+					check("line breaks", text, expected,
+					      mode ? NO_MATCH : MATCH,
+					      ALL_PATHS | EXACT_ONLY,
+					      mode ? "boundary" : "ignore");
+					DEL(expected);
+					free(text);
+					free(w1);
+					free(w2);
+				}
+}
+
+/* naïve+résumé in both orders, 0 to 4 words apart. */
+static void spans(void)
+{
+	for (int a = 0; a < VARIANTS; a++)
+		for (int b = 0; b < VARIANTS; b++)
+			for (int order = 0; order < 2; order++)
+				for (int gap = 0; gap <= 4; gap++) {
+					char *w1 = variant(order ? &resume :
+								   &naive,
+							   a),
+					     *w2 = variant(order ? &naive :
+								   &resume,
+							   b);
+					Buf t = { 0 };
+					buf_put(&t, w1);
+					buf_put(&t, " ");
+					for (int g = 0; g < gap; g++)
+						buf_put(&t, "x ");
+					buf_put(&t, w2);
+					char *text = buf_take(&t);
+					/* Four words apart is past the distance of 4. */
+					J *expected =
+						gap < 4 ?
+							one_entity(
+								"enaiveresume",
+								text, 0,
+								ulen(text)) :
+							ARR();
+					check("spans", text, expected,
+					      gap < 4 ? MATCH : NO_MATCH, 0,
+					      NULL);
+					DEL(expected);
+					free(text);
+					free(w1);
+					free(w2);
+				}
+}
+
+/* Tokens made only of invisible characters take no position. */
+static void invisible_fillers(void)
+{
+	static const char *const fillers[] = { "\xc2\xad", "\xe2\x80\x8b",
+					       "\xe2\x80\x8e" };
+	for (int a = 0; a < VARIANTS; a += 5)
+		for (int f = 0; f < 3; f++)
+			for (int n = 0; n <= 6; n++) {
+				char *w1 = variant(&resume, a),
+				     *w2 = variant(&naive, a);
+				Buf t = { 0 };
+				buf_put(&t, w1);
+				buf_put(&t, " ");
+				for (int g = 0; g < n; g++) {
+					buf_put(&t, fillers[f]);
+					buf_put(&t, " ");
+				}
+				buf_put(&t, w2);
+				char *text = buf_take(&t);
+				J *expected = one_entity("enaiveresume", text,
+							 0, ulen(text));
+				check("invisible fillers", text, expected,
+				      MATCH, 0, NULL);
+				DEL(expected);
+				free(text);
+				free(w1);
+				free(w2);
+			}
+}
+
+static void letters(void)
+{
+	static const struct {
+		const char *text, *canon;
+	} table[] = {
+		{ "\xc4\xb0stanbul", "eistanbul" },
+		{ "\xc4\xb0STANBUL", "eistanbul" },
+		{ "istanbul", "eistanbul" },
+		{ "Istanbul", "eistanbul" },
+		{ "ISTANBUL", "eistanbul" },
+		{ "i\xcc\x87stanbul", "eistanbul" },
+		{ "I\xcc\x87STANBUL", "eistanbul" },
+		{ "\xc4\xb1stanbul", NULL }, /* dotless ı is another letter */
+		{ "stra\xc3\x9f"
+		  "e",
+		  "estrasse" },
+		{ "STRA\xe1\xba\x9e"
+		  "E",
+		  "estrasse" },
+		{ "Stra\xc3\x9f"
+		  "e",
+		  "estrasse" },
+		{ "STRASSE", NULL }, /* ß is not ss */
+		{ "strasse", NULL },
+		{ "Strasse", NULL },
+		{ "coffee", "ecoffee" },
+		{ "COFFEE", "ecoffee" },
+		{ "Coffee", "ecoffee" },
+		{ "cOfFeE", "ecoffee" },
+		{ "co\xc2\xad"
+		  "ffee",
+		  "ecoffee" },
+		{ "coffee\xcc\x81", "ecoffee" },
+	};
+	for (size_t i = 0; i < sizeof(table) / sizeof(*table); i++)
+		for (int k = 0; k < CONTEXTS; k++) {
+			Buf t = { 0 };
+			buf_put(&t, contexts[k][0]);
+			size_t x = ulen(t.p ? t.p : "");
+			buf_put(&t, table[i].text);
+			size_t y = ulen(t.p);
+			buf_put(&t, contexts[k][1]);
+			char *text = buf_take(&t);
+			J *expected =
+				table[i].canon ?
+					one_entity(table[i].canon, text, x, y) :
+					ARR();
+			check("letters", text, expected,
+			      table[i].canon ? MATCH : NO_MATCH,
+			      ALL_PATHS | EXACT_ONLY, NULL);
+			DEL(expected);
+			free(text);
+		}
+}
+
+/* Every variant's normal is the unaccented lowercase word. */
+static void normals(void)
+{
+	const Word *ws[] = { &cafe, &creme, &naive, &resume };
+	for (int w = 0; w < 4; w++)
+		for (int v = 0; v < VARIANTS; v++) {
+			Category *c = category("normals");
+			c->cases++;
+			char *text = variant(ws[w], v);
+			J *tokens = request_tokens(engines[FRESH], "tokenize",
+						   text, NULL, NULL);
+			const char *want = ws[w]->forms[2];
+			int ok = SIZE(tokens) == 1 &&
+				 !strcmp(S(GET(tokens->child, "normal")),
+					 want) &&
+				 !strcmp(S(GET(tokens->child, "text")), text);
+			if (!ok) {
+				J *e = STR(want);
+				fail_case(c, "normal", text, e, tokens);
+				DEL(e);
+			}
+			DEL(tokens);
+			free(text);
+		}
+}
+
+/*
+ * When cafe and café are both labels, text in either form folds to cafe, and
+ * the label stored in exactly that form wins whichever comes first.
+ */
+static void collisions(void)
+{
+	static const char *const orders[] = {
+		"[{\"format\":\"mutatoc/1\",\"namespace\":\"http://example.org/c#\"},"
+		"{\"id\":\"Eplain\",\"type\":\"owl:Class\",\"label\":\"cafe\"},"
+		"{\"id\":\"Eaccent\",\"type\":\"owl:Class\",\"label\":\"caf\xc3\xa9\"}]",
+		"[{\"format\":\"mutatoc/1\",\"namespace\":\"http://example.org/c#\"},"
+		"{\"id\":\"Eaccent\",\"type\":\"owl:Class\",\"label\":\"caf\xc3\xa9\"},"
+		"{\"id\":\"Eplain\",\"type\":\"owl:Class\",\"label\":\"cafe\"}]",
+	};
+	static const char *const texts[] = { "cafe", "caf\xc3\xa9",
+					     "CAF\xc3\x89", "cafe\xcc\x81",
+					     "Cafe\xcc\x81" };
+	Category *c = category("collisions");
+	for (int o = 0; o < 2; o++) {
+		mc_engine *e = mc_create();
+		J *q = OBJ();
+		PUT(q, "op", STR("load"));
+		PUT(q, "content", STR(orders[o]));
+		PUT(q, "format", STR("json"));
+		J *r = test_request(e, q);
+		DEL(q);
+		if (!cJSON_IsTrue(GET(r, "ok")))
+			fail_case(c, "load", orders[o], NULL, r);
+		DEL(r);
+		for (size_t t = 0; t < sizeof(texts) / sizeof(*texts); t++)
+			for (int k = 0; k < CONTEXTS; k++) {
+				c->cases++;
+				Buf b = { 0 };
+				buf_put(&b, contexts[k][0]);
+				size_t x = ulen(b.p ? b.p : "");
+				buf_put(&b, texts[t]);
+				size_t y = ulen(b.p);
+				buf_put(&b, contexts[k][1]);
+				char *text = buf_take(&b);
+				J *expected = one_entity("eplain", text, x, y);
+				J *result = request_tokens(e, "parse", text,
+							   NULL, NULL);
+				J *actual = result ? entities_of(GET(result,
+								     "tokens"),
+								 1) :
+						     NULL;
+				if (!actual ||
+				    !cJSON_Compare(actual, expected, 1))
+					fail_case(c, "folded tie", text,
+						  expected, actual);
+				DEL(actual);
+				DEL(result);
+				DEL(expected);
+				free(text);
+			}
+		mc_destroy(e);
+	}
+}
+
+/* The right answer, which the engine does not give yet. */
+static void expected_fails(void)
+{
+	static const struct {
+		const char *text, *canon, *why;
+	} table[] = {
+		/* Fullwidth letters are not folded (craigtrim/mutatoc#25). */
+		{ "\xef\xbd\x83\xef\xbd\x81\xef\xbd\x86\xc3\xa9 "
+		  "\xef\xbd\x83\xef\xbd\x92\xc3\xa8\xef\xbd\x8d\xef\xbd\x85",
+		  "ecafecreme", "fullwidth letters" },
+		{ "\xef\xbd\x83\xef\xbd\x8f\xef\xbd\x86\xef\xbd\x86\xef\xbd\x85"
+		  "\xef\xbd\x85",
+		  "ecoffee", "fullwidth letters" },
+		/* Punctuation between words (craigtrim/mutatoc#16). */
+		{ "caf\xc3\xa9-cr\xc3\xa8me", "ecafecreme", "#16" },
+		{ "caf\xc3\xa9/cr\xc3\xa8me", "ecafecreme", "#16" },
+		{ "caf\xc3\xa9, cr\xc3\xa8me", "ecafecreme", "#16" },
+		{ "cafe - creme", "ecafecreme", "#16" },
+	};
+	for (size_t i = 0; i < sizeof(table) / sizeof(*table); i++)
+		for (int k = 0; k < CONTEXTS; k++) {
+			Buf t = { 0 };
+			buf_put(&t, contexts[k][0]);
+			size_t x = ulen(t.p ? t.p : "");
+			buf_put(&t, table[i].text);
+			size_t y = ulen(t.p);
+			buf_put(&t, contexts[k][1]);
+			char *text = buf_take(&t);
+			J *expected = one_entity(table[i].canon, text, x, y);
+			check("expected fails", text, expected, XFAIL, 0, NULL);
+			DEL(expected);
+			free(text);
+		}
+}
+
+int main(int argc, char **argv)
+{
+	const char *root = argc > 1 ? argv[1] : ".";
+	conformance(root);
+	if (!load_oracle(root))
+		failures++;
+	else {
+		code_points();
+		ascii();
+	}
+	if (!load_engines(root)) {
+		fprintf(stderr, "FAIL loading the accent fixtures\n");
+		return 1;
+	}
+	words();
+	joined();
+	line_breaks();
+	spans();
+	invisible_fillers();
+	letters();
+	normals();
+	collisions();
+	expected_fails();
+	int total = 0, short_of = 0;
+	for (int i = 0; i < CATEGORY_COUNT; i++) {
+		Category *c = &categories[i];
+		total += c->cases;
+		printf("%-18s %8d cases, %d failed", c->name, c->cases,
+		       c->failed);
+		if (c->xfail)
+			printf(", %d expected fails", c->xfail);
+		if (c->cases < c->minimum) {
+			printf(" (below minimum %d)", c->minimum);
+			short_of++;
+		}
+		printf("\n");
+	}
+	for (int i = 0; i < ENGINES; i++)
+		mc_destroy(engines[i]);
+	printf("Normalization: %d cases, %d failed, %d expected fails now "
+	       "passing.\n",
+	       total, failures, xpasses);
+	return failures || short_of ? 1 : 0;
+}
