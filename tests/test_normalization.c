@@ -40,7 +40,7 @@ static Category categories[] = {
 	{ "mixed runs", 1584 },	    { "punctuation edges", 46 },
 	{ "invisible words", 240 }, { "offsets", 516 },
 	{ "self spans", 30 },	    { "legacy tokens", 70 },
-	{ "expected fails", 12 },
+	{ "folded repeats", 46 },   { "expected fails", 12 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -1318,6 +1318,112 @@ static void invisible_words(void)
 }
 
 /*
+ * Words that fold alike are the same word. A rule left with one word on a
+ * class of that name finishes and matches as the plain label does, café cafe
+ * matches as cafe cafe does, an authored rule repeating an ASCII word keeps
+ * its match, and two rules that would turn a token back and forth finish.
+ */
+static void folded_repeats(void)
+{
+	static const struct {
+		const char *id, *label, *plain;
+	} pairs[] = {
+		/* A plus label is also its words as an exact phrase. */
+		{ "cafe", "caf\xc3\xa9+caf\xc3\xa9",
+		  "caf\xc3\xa9 caf\xc3\xa9" },
+		{ "caf\xc3\xa9", "cafe+cafe", "cafe cafe" },
+		{ "e_test", "caf\xc3\xa9 cafe", "cafe cafe" },
+	};
+	static const char *const texts[] = {
+		"cafe",
+		"caf\xc3\xa9",
+		"cafe x caf\xc3\xa9",
+		"caf\xc3\xa9 cafe",
+		"x cafe y",
+		"caf\xc3\xa9 x y z cafe",
+	};
+	static const char *const interfaces[] = { "", "data" };
+	Category *c = category("folded repeats");
+	for (int i = 0; i < 2; i++) {
+		for (size_t p = 0; p < sizeof(pairs) / sizeof(*pairs); p++) {
+			const char *const with[1][2] = { { pairs[p].id,
+							   pairs[p].label } };
+			const char *const clean[1][2] = { { pairs[p].id,
+							    pairs[p].plain } };
+			mc_engine *dirty =
+					  turtle_engine(with, 1, interfaces[i]),
+				  *plain = turtle_engine(clean, 1,
+							 interfaces[i]);
+			if (!dirty || !plain)
+				fail_case(c, "load failed", pairs[p].label,
+					  NULL, NULL);
+			else
+				compare_engines(
+					c, dirty, plain, texts,
+					sizeof(texts) / sizeof(*texts),
+					"differs from the label it folds to");
+			mc_destroy(dirty);
+			mc_destroy(plain);
+		}
+		/* Each rule's one word is the other class's name. */
+		const char *const cycle[2][2] = { { "y", "x+\xc2\xad" },
+						  { "x", "y+\xc2\xad" } };
+		mc_engine *e = turtle_engine(cycle, 2, interfaces[i]);
+		static const char *const cycle_texts[] = { "x", "y", "x y",
+							   "y x y" };
+		for (size_t t = 0; e && t < 4; t++) {
+			c->cases++;
+			J *r = request_tokens(e, "parse", cycle_texts[t], NULL,
+					      NULL);
+			J *found = r ? entities_of(GET(r, "tokens"), 1) : NULL;
+			if (!found || !SIZE(found))
+				fail_case(c,
+					  "cycle did not finish with a match",
+					  cycle_texts[t], NULL, r);
+			DEL(found);
+			DEL(r);
+		}
+		if (!e)
+			fail_case(c, "load failed", "cycle", NULL, NULL);
+		mc_destroy(e);
+	}
+	/* An authored rule repeating one ASCII word, as 0.7.0 matched it. */
+	J *snapshot = cJSON_Parse(
+		"{\"synonyms\":{\"fwd\":{\"e_test\":[\"zzz\"]},"
+		"\"rev\":{\"zzz\":[\"e_test\"]},\"lookup\":{\"1\":[\"zzz\"]}},"
+		"\"spans\":{\"alpha\":[{\"content\":[\"alpha\",\"alpha\"],"
+		"\"canon\":\"e_test\",\"distance\":4,\"forward\":true,"
+		"\"reverse\":true}]}}");
+	mc_engine *e = mc_create();
+	J *q = OBJ();
+	PUT(q, "op", STR("load"));
+	PUT(q, "name", STR("authored"));
+	PUT(q, "snapshot", snapshot);
+	J *loaded = test_request(e, q);
+	if (!cJSON_IsTrue(GET(loaded, "ok")))
+		fail_case(c, "authored snapshot failed to load", NULL, NULL,
+			  loaded);
+	static const char *const authored[] = { "alpha", "x alpha y" };
+	for (int t = 0; t < 2; t++) {
+		c->cases++;
+		J *expected = one_entity("e_test", authored[t],
+					 (size_t)(t ? 2 : 0),
+					 (size_t)(t ? 7 : 5));
+		J *r = request_tokens(e, "parse", authored[t], NULL, NULL);
+		J *found = r ? entities_of(GET(r, "tokens"), 1) : NULL;
+		if (!found || !cJSON_Compare(found, expected, 1))
+			fail_case(c, "authored repeated-word rule", authored[t],
+				  expected, found);
+		DEL(found);
+		DEL(r);
+		DEL(expected);
+	}
+	DEL(loaded);
+	DEL(q);
+	mc_destroy(e);
+}
+
+/*
  * A span rule that folding leaves with one word, on a class of that name,
  * must not match its own result again; it matches as the plain label does.
  */
@@ -1629,6 +1735,7 @@ int main(int argc, char **argv)
 	punctuation_edges();
 	invisible_words();
 	self_spans();
+	folded_repeats();
 	legacy_tokens(root);
 	offsets();
 	expected_fails();
