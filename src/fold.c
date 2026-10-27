@@ -23,6 +23,15 @@ static int reserved_ignorable(uint32_t c)
 		(c >= 0xe0000 && c <= 0xe0fff));
 }
 
+/* Default ignorable code points, some of which are also letters. */
+int uignorable(uint32_t c)
+{
+	if (c < 0x80 || c >= 0x110000)
+		return 0;
+	return utf8proc_get_property((utf8proc_int32_t)c)->ignorable ||
+	       reserved_ignorable(c);
+}
+
 /* Combining marks and default ignorable code points; ASCII has neither. */
 int ujoiner(uint32_t c)
 {

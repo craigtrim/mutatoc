@@ -81,10 +81,13 @@ static size_t char_start(const char *s, size_t lo, size_t end)
 	return at;
 }
 
-/* A combining mark or invisible character that is not a letter or digit. */
+/*
+ * An invisible character, including the Hangul fillers that are also
+ * letters, or a combining mark that is not a letter or digit.
+ */
 static int pure_joiner(uint32_t c)
 {
-	return ujoiner(c) && !letter(c) && !unumeric(c);
+	return uignorable(c) || (ujoiner(c) && !letter(c) && !unumeric(c));
 }
 
 /* The start of the last code point in s[lo..end) that is not a joiner. */
