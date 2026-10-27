@@ -92,7 +92,7 @@ Matching compares folded text, so a word matches whether or not it carries accen
 2. applies canonical decomposition, so a precomposed `é` and `e` followed by U+0301 become the same;
 3. drops every combining mark (general categories Mn, Mc and Me) and every default ignorable code point, including the reserved code points Unicode already marks default ignorable. Hangul syllables stay whole.
 
-A span rule word that folds away, such as a lone soft hyphen between two words of a label, is no longer required, so `alpha` U+00AD `beta` matches as `alpha beta` does.
+A span rule word that folds away, such as a lone soft hyphen between two words of a label, is no longer required, so `alpha` U+00AD `beta` matches as `alpha beta` does. A span rule that folding leaves with a single word is dropped, because the exact stage already matches that word.
 
 | Label | Text | Match |
 | --- | --- | --- |
@@ -107,7 +107,7 @@ A span rule word that folds away, such as a lone soft hyphen between two words o
 
 Folding leaves alone dotless `ı`, `ß`, fullwidth and other compatibility forms, and punctuation between words ([#16](https://github.com/craigtrim/mutatoc/issues/16)).
 
-A match reports the input exactly as sent: `text`, `x` and `y` never change, and only `normal` shows the folded form matching compared. Prepared snapshots keep their stored views. Their keys are folded when the match index is built, so a snapshot prepared before folding matches exactly as a fresh load of the same ontology does. Tokens supplied to `parse_tokens` and `transform_tokens` are compared folded as well, so tokens prepared before folding still match, and their `normal` comes back as sent.
+A match reports the input exactly as sent: `text`, `x` and `y` never change, and only `normal` shows the folded form matching compared. Prepared snapshots keep their stored views. Their keys are folded when the match index is built, so a snapshot prepared before folding matches exactly as a fresh load of the same ontology does. Tokens supplied to `parse_tokens` and `transform_tokens` are compared folded as well, including a token whose `normal` folds to nothing, which counts as whitespace. Tokens prepared before folding therefore still match, and their `normal` comes back as sent.
 
 When two entries of one ontology fold to the same key, such as `cafe` and `café`, a lookup word stored in exactly the folded form wins, and otherwise the first entry does. Span rules whose keys fold alike apply in source order, and a hierarchy match takes the first entity name that folds to it.
 
