@@ -19,6 +19,7 @@
 
 #define FIXTURE "tests/fixtures/ontologies/accents-test.json"
 #define SNAPSHOT "tests/fixtures/ontologies/accents-test.0.7.0.snapshot.json"
+#define LEGACY "tests/fixtures/ontologies/accents-test.0.7.0.tokens.json"
 #define UNICODE_DIR "tests/fixtures/unicode/"
 #define CODE_POINTS 0x110000
 
@@ -38,6 +39,7 @@ static Category categories[] = {
 	{ "collisions", 20 },	    { "updates", 240 },
 	{ "mixed runs", 1584 },	    { "punctuation edges", 46 },
 	{ "invisible words", 240 }, { "offsets", 516 },
+	{ "self spans", 30 },	    { "legacy tokens", 70 },
 	{ "expected fails", 12 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
@@ -1315,6 +1317,126 @@ static void invisible_words(void)
 		}
 }
 
+/*
+ * A span rule that folding leaves with one word, on a class of that name,
+ * must not match its own result again; it matches as the plain label does.
+ */
+static void self_spans(void)
+{
+	static const char *const labels[] = {
+		"alpha+\xc2\xad",
+		"\xc2\xad+alpha",
+		"alpha+\xe2\x80\x8b+\xc2\xad",
+	};
+	static const char *const texts[] = { "alpha", "alpha alpha",
+					     "x alpha y", "alpha \xc2\xad",
+					     "\xc2\xad alpha" };
+	static const char *const interfaces[] = { "", "data" };
+	Category *c = category("self spans");
+	for (int i = 0; i < 2; i++)
+		for (size_t l = 0; l < sizeof(labels) / sizeof(*labels); l++) {
+			const char *const with[1][2] = { { "alpha",
+							   labels[l] } };
+			const char *const clean[1][2] = { { "alpha",
+							    "alpha" } };
+			mc_engine *dirty =
+					  turtle_engine(with, 1, interfaces[i]),
+				  *plain = turtle_engine(clean, 1,
+							 interfaces[i]);
+			if (!dirty || !plain)
+				fail_case(c, "load failed", labels[l], NULL,
+					  NULL);
+			else
+				compare_engines(c, dirty, plain, texts,
+						sizeof(texts) / sizeof(*texts),
+						"differs from the plain label");
+			mc_destroy(dirty);
+			mc_destroy(plain);
+		}
+}
+
+/* canon, x and y of the entities in a parse or parse_tokens result. */
+static J *placed(const J *result)
+{
+	return entities_of(
+		cJSON_IsArray(result) ? result : GET(result, "tokens"), 0);
+}
+
+/*
+ * Tokens that mutatoc 0.7.0 produced, which split invisible characters into
+ * tokens of their own, match as new tokens of the same text do, and every
+ * token that matched nothing comes back with the normal it was sent with.
+ */
+static void legacy_tokens(const char *root)
+{
+	Category *c = category("legacy tokens");
+	J *doc = test_read_json(root, LEGACY);
+	if (!doc || strcmp(S(GET(doc, "version")), "0.7.0")) {
+		fail_case(c, "0.7.0 token fixture missing", LEGACY, NULL, NULL);
+		DEL(doc);
+		return;
+	}
+	int matched = 0;
+	EACH(k, GET(doc, "cases")) {
+		const char *text = S(GET(k, "text"));
+		J *legacy = GET(k, "tokens");
+		for (int i = 0; i < ENGINES; i++) {
+			c->cases++;
+			J *now = request_tokens(engines[i], "parse", text, NULL,
+						NULL),
+			  *old = request_tokens(engines[i], "parse_tokens",
+						NULL, DUP(legacy), NULL);
+			J *want = now ? placed(now) : NULL,
+			  *got = old ? placed(old) : NULL;
+			matched += want && SIZE(want) > 0;
+			if (!want || !got || !cJSON_Compare(want, got, 1)) {
+				char what[64];
+				snprintf(what, sizeof(what),
+					 "0.7.0 tokens, parse_tokens, %s",
+					 engine_names[i]);
+				fail_case(c, what, text, want, got);
+			}
+			if (old && i == FRESH)
+				EACH(t, GET(old, "tokens")) {
+					if (GET(t, "swaps"))
+						continue;
+					const char *id = S(GET(t, "id"));
+					EACH(s, legacy)
+						if (!strcmp(S(GET(s, "id")),
+							    id) &&
+						    strcmp(S(GET(s, "normal")),
+							   S(GET(t, "normal"))))
+							fail_case(
+								c,
+								"normal not returned as sent",
+								text, s, t);
+				}
+			DEL(want);
+			DEL(got);
+			DEL(now);
+			DEL(old);
+		}
+		c->cases++;
+		J *fresh = request_tokens(engines[FRESH], "tokenize", text,
+					  NULL, NULL);
+		J *a = request_tokens(engines[FRESH], "transform_tokens", NULL,
+				      fresh, NULL),
+		  *b = request_tokens(engines[FRESH], "transform_tokens", NULL,
+				      DUP(legacy), NULL);
+		J *want = a ? placed(a) : NULL, *got = b ? placed(b) : NULL;
+		if (!want || !got || !cJSON_Compare(want, got, 1))
+			fail_case(c, "0.7.0 tokens, exact stage", text, want,
+				  got);
+		DEL(want);
+		DEL(got);
+		DEL(a);
+		DEL(b);
+	}
+	if (!matched)
+		fail_case(c, "no legacy text matched", NULL, NULL, NULL);
+	DEL(doc);
+}
+
 /* The punctuation rules look past invisible characters to their edges. */
 static void punctuation_edges(void)
 {
@@ -1506,6 +1628,8 @@ int main(int argc, char **argv)
 	mixed_runs();
 	punctuation_edges();
 	invisible_words();
+	self_spans();
+	legacy_tokens(root);
 	offsets();
 	expected_fails();
 	int total = 0, short_of = 0;
