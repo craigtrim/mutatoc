@@ -37,10 +37,10 @@ static Category categories[] = {
 	{ "spans", 36000 },	    { "invisible fillers", 252 },
 	{ "letters", 40 },	    { "normals", 240 },
 	{ "collisions", 20 },	    { "updates", 240 },
-	{ "mixed runs", 1584 },	    { "punctuation edges", 46 },
+	{ "mixed runs", 1584 },	    { "punctuation edges", 58 },
 	{ "invisible words", 240 }, { "offsets", 516 },
 	{ "self spans", 30 },	    { "legacy tokens", 70 },
-	{ "folded repeats", 50 },   { "expected fails", 12 },
+	{ "folded repeats", 58 },   { "expected fails", 12 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -1386,6 +1386,48 @@ static void folded_repeats(void)
 		if (!e)
 			fail_case(c, "load failed", "cycle", NULL, NULL);
 		mc_destroy(e);
+
+		/*
+		 * Visible words that fold alike close a cycle 0.7.0 never had:
+		 * tea becomes cafe as before, and cafe and café finish.
+		 */
+		const char *const visible[2][2] = {
+			{ "cafe", "tea+tea" },
+			{ "tea", "caf\xc3\xa9+caf\xc3\xa9" }
+		};
+		e = turtle_engine(visible, 2, interfaces[i]);
+		static const struct {
+			const char *text, *canon;
+			int x, y;
+		} tea[] = {
+			{ "tea", "cafe", 0, 3 },
+			{ "tea x cafe", "cafe", 0, 3 },
+			{ "cafe", NULL, 0, 0 },
+			{ "caf\xc3\xa9", NULL, 0, 0 },
+		};
+		for (size_t t = 0; e && t < sizeof(tea) / sizeof(*tea); t++) {
+			c->cases++;
+			J *r = request_tokens(e, "parse", tea[t].text, NULL,
+					      NULL);
+			J *found = r ? entities_of(GET(r, "tokens"), 1) : NULL;
+			int ok = found && SIZE(found) > 0;
+			if (ok && tea[t].canon) {
+				J *want = one_entity(tea[t].canon, tea[t].text,
+						     (size_t)tea[t].x,
+						     (size_t)tea[t].y);
+				ok = cJSON_Compare(found->child, want->child,
+						   1);
+				DEL(want);
+			}
+			if (!ok)
+				fail_case(c, "folded cycle", tea[t].text, NULL,
+					  found);
+			DEL(found);
+			DEL(r);
+		}
+		if (!e)
+			fail_case(c, "load failed", "tea and cafe", NULL, NULL);
+		mc_destroy(e);
 	}
 	/* An authored rule repeating one ASCII word, as 0.7.0 matched it. */
 	J *snapshot = cJSON_Parse(
@@ -1647,6 +1689,15 @@ static void punctuation_edges(void)
 		{ "2020,_", "eyear", 0, 4 },
 		{ "2020,\xc2\xad_", "eyear", 0, 4 },
 		{ "2020.\xc2\xad_\xc2\xad_", "eyear", 0, 4 },
+		/* Hangul fillers are letters and default ignorables at once. */
+		{ "2020.\xe3\x85\xa4", "eyear", 0, 4 },
+		{ "2020.\xe1\x85\x9f", "eyear", 0, 4 },
+		{ "2020.\xe1\x85\xa0", "eyear", 0, 4 },
+		{ "2020.\xef\xbe\xa0", "eyear", 0, 4 },
+		{ "_\xe3\x85\xa4_name__", "ename", 3, 7 },
+		{ "A&\xe3\x85\xa4"
+		  "B",
+		  "eab", 0, 4 },
 		{ "A&B", "eab", 0, 3 },
 		{ "a&b", "eab", 0, 3 },
 		{ "A&\xc2\xad"
