@@ -40,7 +40,7 @@ static Category categories[] = {
 	{ "mixed runs", 1584 },	    { "punctuation edges", 46 },
 	{ "invisible words", 240 }, { "offsets", 516 },
 	{ "self spans", 30 },	    { "legacy tokens", 70 },
-	{ "folded repeats", 46 },   { "expected fails", 12 },
+	{ "folded repeats", 50 },   { "expected fails", 12 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -1421,6 +1421,85 @@ static void folded_repeats(void)
 	DEL(loaded);
 	DEL(q);
 	mc_destroy(e);
+
+	/*
+	 * A chain that comes back to an earlier canonical form after its
+	 * context changed, as 0.7.0 runs it: a p, b p, b z, a z, then e.
+	 */
+	e = mc_create();
+	loaded = test_call(
+		e,
+		"{\"op\":\"load\",\"name\":\"chain\",\"snapshot\":{"
+		"\"synonyms\":{\"fwd\":{\"a\":[\"a\"]},\"rev\":{\"a\":[\"a\"]},"
+		"\"lookup\":{\"1\":[\"a\"]}},\"spans\":{\"a\":[{\"content\":"
+		"[\"a\"],\"canon\":\"b\",\"context\":[\"p\"],\"distance\":4,"
+		"\"forward\":true,\"reverse\":true},{\"content\":[\"z\"],"
+		"\"canon\":\"e\",\"distance\":4,\"forward\":true,\"reverse\":"
+		"true}],\"p\":[{\"content\":[\"p\"],\"canon\":\"z\",\"distance"
+		"\":4,\"forward\":true,\"reverse\":true}],\"b\":[{\"content\":"
+		"[\"b\"],\"canon\":\"a\",\"context\":[\"z\"],\"distance\":4,"
+		"\"forward\":true,\"reverse\":true}]}}}");
+	if (!loaded)
+		fail_case(c, "chain snapshot failed to load", NULL, NULL, NULL);
+	for (int ctr = 0; ctr < 3; ctr += 2) {
+		c->cases++;
+		J *expected = one_entity("e", "a p", 0, 3);
+		J *rq = OBJ();
+		PUT(rq, "op", STR("parse"));
+		PUT(rq, "text", STR("a p"));
+		PUT(rq, "ctr", NUM(ctr));
+		J *r = test_request(e, rq);
+		J *found = cJSON_IsTrue(GET(r, "ok")) ?
+				   entities_of(GET(GET(r, "result"), "tokens"),
+					       1) :
+				   NULL;
+		if (!found || !cJSON_Compare(found, expected, 1))
+			fail_case(c, "chain that revisits a canonical form",
+				  "a p", expected, found);
+		DEL(found);
+		DEL(r);
+		DEL(rq);
+		DEL(expected);
+	}
+	DEL(loaded);
+	mc_destroy(e);
+
+	/*
+	 * The spans stage on its own: a match that changes nothing at the
+	 * first cafe must not hide the second one, as in 0.7.0.
+	 */
+	for (int i = 0; i < 2; i++) {
+		const char *const label[1][2] = { { "caf\xc3\xa9",
+						    "cafe+cafe" } };
+		e = turtle_engine(label, 1, interfaces[i]);
+		c->cases++;
+		J *tokens = e ? request_tokens(e, "tokenize", "cafe x cafe",
+					       NULL, NULL) :
+				NULL;
+		J *q2 = OBJ();
+		PUT(q2, "op", STR("transform_tokens"));
+		PUT(q2, "stage", STR("spans"));
+		PUT(q2, "tokens", tokens ? tokens : ARR());
+		J *r = e ? test_request(e, q2) : NULL;
+		J *found = cJSON_IsTrue(GET(r, "ok")) ?
+				   entities_of(GET(r, "result"), 1) :
+				   NULL;
+		J *expected = ARR();
+		J *a = one_entity("caf\xc3\xa9", "cafe x cafe", 0, 4),
+		  *b = one_entity("caf\xc3\xa9", "cafe x cafe", 7, 11);
+		ADD(expected, DUP(a->child));
+		ADD(expected, DUP(b->child));
+		if (!found || !cJSON_Compare(found, expected, 1))
+			fail_case(c, "spans stage stopped after one cafe",
+				  "cafe x cafe", expected, found);
+		DEL(a);
+		DEL(b);
+		DEL(expected);
+		DEL(found);
+		DEL(r);
+		DEL(q2);
+		mc_destroy(e);
+	}
 }
 
 /*
