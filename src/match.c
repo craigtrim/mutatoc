@@ -253,6 +253,25 @@ static void drop_empty(J *a)
 	}
 }
 
+/* Removes words that folding made equal to an earlier one; returns the count. */
+static int drop_repeats(J *a)
+{
+	int n = 0;
+	J *v = a ? a->child : NULL;
+	while (v) {
+		J *next = v->next;
+		int seen = 0;
+		for (J *w = a->child; w != v && !seen; w = w->next)
+			seen = !strcmp(S(w), S(v));
+		if (seen)
+			DEL(cJSON_DetachItemViaPointer(a, v));
+		else
+			n++;
+		v = next;
+	}
+	return n;
+}
+
 /*
  * Keys that fold alike share a list ordered by unfolded key, so replacing one
  * key's rules in an update leaves the order a fresh load builds.
@@ -305,9 +324,16 @@ static int add_span_rules(MatchIndex *x, const char *key, J *rules)
 		rule.content = DUP(content);
 		unique(rule.content, key);
 		sort_strings(rule.content, 1);
+		int words = SIZE(rule.content);
 		fold_strings(rule.content);
 		drop_empty(rule.content);
-		if (!rule.content->child) {
+		/*
+		 * A rule that folding leaves with one distinct word would match
+		 * its own result again forever; the exact stage already matches
+		 * that word through the folded synonym.
+		 */
+		int left = drop_repeats(rule.content);
+		if (!left || (left < 2 && words >= 2)) {
 			DEL(rule.content);
 			continue;
 		}
@@ -503,9 +529,22 @@ typedef struct {
 } ExactWindow;
 static int spacing_token(J *token)
 {
-	if (*S(GET(token, "normal")) || GET(token, "swaps"))
+	if (GET(token, "swaps"))
 		return 0;
-	/* Joiners are as invisible as whitespace (craigtrim/mutatoc#25). */
+	/*
+	 * Joiners are as invisible as whitespace, and a normal counts as empty
+	 * when it folds away, so tokens prepared before folding agree with new
+	 * ones. Folding never removes ASCII (craigtrim/mutatoc#25).
+	 */
+	const char *normal = S(GET(token, "normal"));
+	if ((unsigned char)*normal >= 0x80) {
+		char *owned;
+		int empty = !*ufold_view(normal, &owned);
+		free(owned);
+		if (!empty)
+			return 0;
+	} else if (*normal)
+		return 0;
 	const char *text = S(GET(token, "text"));
 	while (*text) {
 		uint32_t c = uread(&text);
