@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Matching folds accents and invisible characters ([#25](https://github.com/craigtrim/mutatoc/issues/25)). `cafe` matches `café` in either direction, a decomposed accent matches a precomposed one, `İstanbul` matches `istanbul`, and a soft hyphen or zero width space inside a word no longer blocks a match. `ß` still differs from `ss`, and fullwidth letters are not folded. A match reports the input exactly as sent; only token `normal` values change, and a combining mark or invisible character no longer splits a word. Prepared snapshots load unchanged and match as fresh loads do. See [Normalization](docs/protocol.md#normalization).
+- utf8proc 2.12.0 (MIT, Unicode 18.0.0) is vendored and compiled into the library for the decomposition and character data.
+
 ## 0.7.0 (2026-10-20)
 
 ### Added
