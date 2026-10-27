@@ -92,6 +92,8 @@ Matching compares folded text, so a word matches whether or not it carries accen
 2. applies canonical decomposition, so a precomposed `é` and `e` followed by U+0301 become the same;
 3. drops every combining mark (general categories Mn, Mc and Me) and every default ignorable code point, including the reserved code points Unicode already marks default ignorable. Hangul syllables stay whole.
 
+A span rule word that folds away, such as a lone soft hyphen between two words of a label, is no longer required, so `alpha` U+00AD `beta` matches as `alpha beta` does.
+
 | Label | Text | Match |
 | --- | --- | --- |
 | `Café Crème` | `cafe creme`, `CAFÉ CRÈME`, `cafe` U+0301 ` cre` U+0300 `me` | yes |
