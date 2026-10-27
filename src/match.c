@@ -954,12 +954,16 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 	int *line = line_breaks ?
 		malloc((size_t)(n ? n : 1) * sizeof(*line)) : NULL;
 	/*
-	 * Each token's key in the sequence and its weight in the sequence
-	 * hash, refreshed every round, and every sequence hash so far
+	 * Each token's code in the sequence hash, computed at the first span
+	 * over a single token and kept up to date after it; a round's weights
+	 * and hash, computed only when that round weighs such a span; and the
+	 * hashes recorded so far. Only spans over a single token keep the
+	 * token count, so only they can bring a sequence back
 	 * (craigtrim/mutatoc#25).
 	 */
 	uint64_t *code = malloc((size_t)(n ? n : 1) * sizeof(*code));
 	uint64_t *weight = malloc((size_t)(n ? n : 1) * sizeof(*weight));
+	int coded = 0;
 	Map seen = { 0 };
 	Occurrences **words = NULL;
 	if (!form || !at || !spacing || !token || !code || !weight ||
@@ -978,17 +982,7 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 	}
 	while (!e->code) {
 		uint64_t state = 0;
-		i = 0;
-		EACH(t, ts) {
-			code[i] = token_key(t, &f, form[i]);
-			state = state * 0x100000001b3ull + code[i];
-			i++;
-		}
-		for (i = n - 1; i >= 0; i--)
-			weight[i] = i == n - 1 ?
-					    1 :
-					    weight[i + 1] * 0x100000001b3ull;
-		seen_state(&seen, state, 1);
+		int stated = 0;
 		for (int g = 0; g < f.count; g++)
 			f.forms[g].at.n = 0;
 		for (i = 0; i < n; i++)
@@ -1060,6 +1054,29 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 				 * a token sequence the stage has not had yet.
 				 */
 				if (valid && x == y) {
+					if (!coded) {
+						int u = 0;
+						EACH(t, ts) {
+							code[u] = token_key(
+								t, &f, form[u]);
+							u++;
+						}
+						coded = 1;
+					}
+					if (!stated) {
+						for (int u = 0; u < n; u++)
+							state = state * 0x100000001b3ull +
+								code[u];
+						for (int u = n - 1; u >= 0; u--)
+							weight[u] =
+								u == n - 1 ?
+									1 :
+									weight[u +
+									       1] *
+										0x100000001b3ull;
+						seen_state(&seen, state, 1);
+						stated = 1;
+					}
 					const Occurrences *o = words[0];
 					uint64_t made =
 						token_hash('E', r->canon);
@@ -1109,6 +1126,11 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 			(size_t)(n - by) * sizeof(*form));
 		memmove(spacing + bx + 1, spacing + by,
 			(size_t)(n - by) * sizeof(*spacing));
+		if (coded) {
+			code[bx] = token_hash('E', canon);
+			memmove(code + bx + 1, code + by,
+				(size_t)(n - by) * sizeof(*code));
+		}
 		n -= by - bx - 1;
 	}
 done:
