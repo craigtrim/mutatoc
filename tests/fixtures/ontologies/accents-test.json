@@ -5,5 +5,8 @@
   {"id":"Eistanbul", "type":"owl:Class", "label":"İstanbul"},
   {"id":"Estrasse", "type":"owl:Class", "label":"Straße"},
   {"id":"Enaiveresume", "type":"owl:Class", "label":"Naïve Résumé", "spans":["naïve+résumé"]},
-  {"id":"Ecoffee", "type":"owl:Class", "label":"coffee"}
+  {"id":"Ecoffee", "type":"owl:Class", "label":"coffee"},
+  {"id":"Eyear", "type":"owl:Class", "label":"2020"},
+  {"id":"Ename", "type":"owl:Class", "label":"name"},
+  {"id":"Eab", "type":"owl:Class", "label":"A&B"}
 ]

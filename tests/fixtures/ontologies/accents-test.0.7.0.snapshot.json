@@ -32,7 +32,10 @@
   "Eistanbul": "İstanbul",
   "Estrasse": "Straße",
   "Enaiveresume": "Naïve Résumé",
-  "Ecoffee": "coffee"
+  "Ecoffee": "coffee",
+  "Eyear": "2020",
+  "Ename": "name",
+  "Eab": "A&B"
  },
  "equivalents": null,
  "predicates": [],
@@ -55,6 +58,15 @@
    ],
    "ecoffee": [
     "class"
+   ],
+   "eyear": [
+    "class"
+   ],
+   "ename": [
+    "class"
+   ],
+   "eab": [
+    "class"
    ]
   },
   "rdfs:label": {
@@ -75,6 +87,15 @@
    ],
    "ecoffee": [
     "coffee"
+   ],
+   "eyear": [
+    "2020"
+   ],
+   "ename": [
+    "name"
+   ],
+   "eab": [
+    "a&b"
    ]
   },
   "rdfs:seeAlso": {
@@ -89,7 +110,10 @@
   "İstanbul": "NER",
   "Straße": "NER",
   "Naïve Résumé": "NER",
-  "coffee": "NER"
+  "coffee": "NER",
+  "2020": "NER",
+  "name": "NER",
+  "A&B": "NER"
  },
  "synonyms": {
   "lookup": {
@@ -103,7 +127,13 @@
     "estrasse",
     "ecoffee",
     "straße",
-    "coffee"
+    "coffee",
+    "eyear",
+    "ename",
+    "name",
+    "2020",
+    "eab",
+    "a&b"
    ],
    "2": [
     "naïve résumé",
@@ -132,6 +162,15 @@
    ],
    "ecoffee": [
     "coffee"
+   ],
+   "eyear": [
+    "2020"
+   ],
+   "ename": [
+    "name"
+   ],
+   "eab": [
+    "a&b"
    ]
   },
   "rev": {
@@ -152,6 +191,15 @@
    ],
    "coffee": [
     "ecoffee"
+   ],
+   "2020": [
+    "eyear"
+   ],
+   "name": [
+    "ename"
+   ],
+   "a&b": [
+    "eab"
    ]
   }
  }

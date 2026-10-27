@@ -35,7 +35,9 @@ static Category categories[] = {
 	{ "joined", 2304 },	  { "line breaks", 1152 },
 	{ "spans", 36000 },	  { "invisible fillers", 252 },
 	{ "letters", 40 },	  { "normals", 240 },
-	{ "collisions", 20 },	  { "expected fails", 12 },
+	{ "collisions", 20 },	  { "updates", 240 },
+	{ "mixed runs", 1584 },	  { "punctuation edges", 32 },
+	{ "offsets", 516 },	  { "expected fails", 12 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -975,6 +977,378 @@ static void collisions(void)
 	}
 }
 
+/* ---------------------------------------------------------------------- */
+/* Incremental updates against a fresh load of the same graph.            */
+
+#define UPDATE_PREFIXES                                    \
+	"@prefix : <http://example.org/u#> . "             \
+	"@prefix owl: <http://www.w3.org/2002/07/owl#> . " \
+	"@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> . "
+
+static char *turtle_class(const char *id, const char *label)
+{
+	Buf b = { 0 };
+	buf_put(&b, ":");
+	buf_put(&b, id);
+	buf_put(&b, " a owl:Class ; rdfs:label \"");
+	buf_put(&b, label);
+	buf_put(&b, "\" . ");
+	return buf_take(&b);
+}
+
+static mc_engine *turtle_engine(const char *const (*classes)[2], int n,
+				const char *interface)
+{
+	Buf b = { 0 };
+	buf_put(&b, UPDATE_PREFIXES);
+	for (int i = 0; i < n; i++) {
+		if (!classes[i][1])
+			continue;
+		char *c = turtle_class(classes[i][0], classes[i][1]);
+		buf_put(&b, c);
+		free(c);
+	}
+	char *ttl = buf_take(&b);
+	mc_engine *e = mc_create();
+	J *q = OBJ();
+	PUT(q, "op", STR("load"));
+	PUT(q, "turtle", STR(ttl));
+	if (*interface)
+		PUT(q, "interface", STR(interface));
+	J *r = test_request(e, q);
+	int ok = cJSON_IsTrue(GET(r, "ok"));
+	DEL(r);
+	DEL(q);
+	free(ttl);
+	if (!ok) {
+		mc_destroy(e);
+		return NULL;
+	}
+	return e;
+}
+
+/* Applies one replacement, or a removal when label is NULL. */
+static int update_class(mc_engine *e, const char *id, const char *label)
+{
+	char iri[96];
+	snprintf(iri, sizeof(iri), "http://example.org/u#%s", id);
+	J *q = OBJ();
+	PUT(q, "op", STR("update"));
+	if (label) {
+		Buf b = { 0 };
+		buf_put(&b, "<");
+		buf_put(&b, iri);
+		buf_put(&b, "> a <http://www.w3.org/2002/07/owl#Class> ; "
+			    "<http://www.w3.org/2000/01/rdf-schema#label> \"");
+		buf_put(&b, label);
+		buf_put(&b, "\" .");
+		char *ttl = buf_take(&b);
+		J *replace = OBJ();
+		PUT(replace, iri, STR(ttl));
+		PUT(q, "replace", replace);
+		free(ttl);
+	} else {
+		J *remove = ARR();
+		ADD(remove, STR(iri));
+		PUT(q, "remove", remove);
+	}
+	J *r = test_request(e, q);
+	int ok = cJSON_IsTrue(GET(r, "ok"));
+	DEL(r);
+	DEL(q);
+	return ok;
+}
+
+/* Texts for a two-word label: both orders, a gap, unaccented and upper. */
+static void label_texts(const char *label, J *out)
+{
+	const char *space = strchr(label, ' ');
+	if (!space)
+		return;
+	char *first = slice(label, (size_t)(space - label)),
+	     *second = copy(space + 1);
+	const char *const pairs[][2] = { { first, second }, { second, first } };
+	for (int o = 0; o < 2; o++)
+		for (int gap = 0; gap < 2; gap++)
+			for (int form = 0; form < 3; form++) {
+				Buf b = { 0 };
+				buf_put(&b, pairs[o][0]);
+				buf_put(&b, gap ? " x " : " ");
+				buf_put(&b, pairs[o][1]);
+				char *text = buf_take(&b), *shown;
+				if (form == 1) {
+					/* The unaccented form, folded by hand. */
+					shown = ufold(text);
+				} else if (form == 2)
+					shown = upper(text);
+				else
+					shown = copy(text);
+				unique(out, shown);
+				free(shown);
+				free(text);
+			}
+	free(first);
+	free(second);
+}
+
+/*
+ * Each scenario starts from one set of labels and applies its updates. The
+ * updated engine must match a fresh load of the final labels on every text.
+ */
+static void updates(void)
+{
+	static const struct {
+		const char *before[2][2], *after[2][2];
+	} scenarios[] = {
+		{ { { "e_test", "caf\xc3\xa9 cream" }, { "e_other", NULL } },
+		  { { "e_test", "coffee cream" }, { "e_other", NULL } } },
+		{ { { "e_test", "coffee cream" }, { "e_other", NULL } },
+		  { { "e_test", "caf\xc3\xa9 cream" }, { "e_other", NULL } } },
+		{ { { "e_a", "caf\xc3\xa9 au" }, { "e_b", "cafe noir" } },
+		  { { "e_a", "th\xc3\xa9 au" }, { "e_b", "cafe noir" } } },
+		{ { { "e_a", "r\xc3\xa9sum\xc3\xa9 writing" },
+		    { "e_b", "resume editing" } },
+		  { { "e_a", "r\xc3\xa9sum\xc3\xa9 writing" },
+		    { "e_b", "resume formatting" } } },
+		{ { { "e_a", "caf\xc3\xa9 au" }, { "e_b", "cafe noir" } },
+		  { { "e_a", NULL }, { "e_b", "cafe noir" } } },
+	};
+	static const char *const interfaces[] = { "", "data" };
+	Category *c = category("updates");
+	for (size_t s = 0; s < sizeof(scenarios) / sizeof(*scenarios); s++)
+		for (int i = 0; i < 2; i++) {
+			mc_engine *updated = turtle_engine(scenarios[s].before,
+							   2, interfaces[i]),
+				  *fresh = turtle_engine(scenarios[s].after, 2,
+							 interfaces[i]);
+			int ok = updated && fresh;
+			for (int k = 0; k < 2 && ok; k++) {
+				const char *const *was = scenarios[s].before[k];
+				const char *const *now = scenarios[s].after[k];
+				if (was[1] != now[1])
+					ok = update_class(updated, now[0],
+							  now[1]);
+			}
+			if (!ok) {
+				fail_case(c, "load or update failed", NULL,
+					  NULL, NULL);
+				mc_destroy(updated);
+				mc_destroy(fresh);
+				continue;
+			}
+			J *texts = ARR();
+			for (int k = 0; k < 2; k++) {
+				if (scenarios[s].before[k][1])
+					label_texts(scenarios[s].before[k][1],
+						    texts);
+				if (scenarios[s].after[k][1])
+					label_texts(scenarios[s].after[k][1],
+						    texts);
+			}
+			int matched = 0;
+			EACH(t, texts) {
+				c->cases++;
+				J *a = request_tokens(updated, "parse", S(t),
+						      NULL, NULL),
+				  *b = request_tokens(fresh, "parse", S(t),
+						      NULL, NULL);
+				J *ea = a ? entities_of(GET(a, "tokens"), 1) :
+					    NULL,
+				  *eb = b ? entities_of(GET(b, "tokens"), 1) :
+					    NULL;
+				matched += eb && SIZE(eb) > 0;
+				if (!ea || !eb || !cJSON_Compare(ea, eb, 1))
+					fail_case(
+						c,
+						"update differs from a fresh load",
+						S(t), eb, ea);
+				DEL(ea);
+				DEL(eb);
+				DEL(a);
+				DEL(b);
+			}
+			/* A scenario that matches nothing would prove nothing. */
+			if (!matched)
+				fail_case(c, "scenario matched no text", NULL,
+					  NULL, NULL);
+			DEL(texts);
+			mc_destroy(updated);
+			mc_destroy(fresh);
+		}
+}
+
+/* Runs of whitespace and invisible characters between two words. */
+static void mixed_runs(void)
+{
+	static const char *const runs[] = { " \xc2\xad ", "\t\xe2\x80\x8b\t",
+					    " \xe2\x81\xa0 \xe2\x80\x8b ",
+					    "\xc2\xad \xc2\xad ",
+					    " \xe2\x80\x8e\xe2\x80\x8f " };
+	static const char *const breaks[] = { " \xc2\xad\n\xc2\xad ",
+					      "\xe2\x80\x8b\n\xe2\x80\x8b",
+					      "\xc2\xad\r\n" };
+	for (int a = 0; a < VARIANTS; a += INVISIBLES)
+		for (int b = 0; b < VARIANTS; b += INVISIBLES) {
+			char *w1 = variant(&cafe, a), *w2 = variant(&creme, b);
+			for (int r = 0; r < 5; r++) {
+				Buf t = { 0 };
+				buf_put(&t, w1);
+				buf_put(&t, runs[r]);
+				buf_put(&t, w2);
+				char *text = buf_take(&t);
+				J *expected = one_entity("ecafecreme", text, 0,
+							 ulen(text));
+				check("mixed runs", text, expected, MATCH,
+				      ALL_PATHS | EXACT_ONLY, NULL);
+				DEL(expected);
+				free(text);
+			}
+			for (int r = 0; r < 3; r++)
+				for (int mode = 0; mode < 2; mode++) {
+					Buf t = { 0 };
+					buf_put(&t, w1);
+					buf_put(&t, breaks[r]);
+					buf_put(&t, w2);
+					char *text = buf_take(&t);
+					J *expected =
+						mode ? ARR() :
+						       one_entity("ecafecreme",
+								  text, 0,
+								  ulen(text));
+					check("mixed runs", text, expected,
+					      mode ? NO_MATCH : MATCH,
+					      ALL_PATHS | EXACT_ONLY,
+					      mode ? "boundary" : "ignore");
+					DEL(expected);
+					free(text);
+				}
+			free(w1);
+			free(w2);
+		}
+}
+
+/* The punctuation rules look past invisible characters to their edges. */
+static void punctuation_edges(void)
+{
+	static const struct {
+		const char *text, *canon;
+		int x, y;
+	} table[] = {
+		{ "2020.", "eyear", 0, 4 },
+		{ "2020.\xc2\xad", "eyear", 0, 4 },
+		{ "2020\xcc\x81.", "eyear", 0, 5 },
+		{ "2020\xcc\x81,", "eyear", 0, 5 },
+		{ "2020\xe2\x80\x8b.", "eyear", 0, 5 },
+		{ "_name_", "ename", 1, 5 },
+		{ "_name_\xc2\xad", "ename", 1, 5 },
+		{ "\xc2\xad_name_", "ename", 2, 6 },
+		{ "_\xcc\x81name_", "ename", 1, 6 },
+		{ "_name\xe2\x80\x8b_", "ename", 1, 6 },
+		{ "A&B", "eab", 0, 3 },
+		{ "a&b", "eab", 0, 3 },
+		{ "A&\xc2\xad"
+		  "B",
+		  "eab", 0, 4 },
+		{ "A\xc2\xad&B", "eab", 0, 4 },
+		{ "A\xcc\x81&B", "eab", 0, 4 },
+		{ "A&\xe2\x80\x8d"
+		  "B",
+		  "eab", 0, 4 },
+	};
+	for (size_t i = 0; i < sizeof(table) / sizeof(*table); i++)
+		for (int k = 0; k < CONTEXTS; k++) {
+			Buf t = { 0 };
+			buf_put(&t, contexts[k][0]);
+			size_t x = ulen(t.p ? t.p : "");
+			buf_put(&t, table[i].text);
+			buf_put(&t, contexts[k][1]);
+			char *text = buf_take(&t);
+			J *expected = one_entity(table[i].canon, text,
+						 x + (size_t)table[i].x,
+						 x + (size_t)table[i].y);
+			check("punctuation edges", text, expected, MATCH,
+			      ALL_PATHS | EXACT_ONLY, NULL);
+			DEL(expected);
+			free(text);
+		}
+}
+
+/*
+ * Every run of up to three whitespace and invisible characters, alone and
+ * between two letters, keeps the token contract: tokens cover the input, y
+ * leaves out only trailing whitespace, and a token of whitespace and
+ * invisible characters has an empty normal.
+ */
+static void offsets(void)
+{
+	static const char *const alphabet[] = {
+		" ", "\t", "\n", "\xc2\xad", "\xe2\x80\x8b", "\xe2\x80\x8e"
+	};
+	Category *c = category("offsets");
+	int idx[3];
+	for (int len = 1; len <= 3; len++) {
+		int total = 1;
+		for (int i = 0; i < len; i++)
+			total *= 6;
+		for (int n = 0; n < total; n++) {
+			int v = n;
+			for (int i = 0; i < len; i++, v /= 6)
+				idx[i] = v % 6;
+			for (int wrap = 0; wrap < 2; wrap++) {
+				c->cases++;
+				Buf b = { 0 };
+				if (wrap)
+					buf_put(&b, "a");
+				for (int i = 0; i < len; i++)
+					buf_put(&b, alphabet[idx[i]]);
+				if (wrap)
+					buf_put(&b, "b");
+				char *text = buf_take(&b);
+				J *tokens = request_tokens(engines[FRESH],
+							   "tokenize", text,
+							   NULL, NULL);
+				Buf joined = { 0 };
+				size_t pos = 0;
+				int ok = tokens != NULL;
+				EACH(t, tokens) {
+					const char *s = S(GET(t, "text")),
+						   *normal =
+							   S(GET(t, "normal"));
+					size_t count = ulen(s), trailing = 0;
+					int invisible = 1;
+					for (const char *p = s; *p;) {
+						uint32_t ch = uread(&p);
+						trailing =
+							uspace(ch) ?
+								trailing + 1 :
+								0;
+						invisible = invisible &&
+							    (uspace(ch) ||
+							     ujoiner(ch));
+					}
+					ok = ok &&
+					     GET(t, "x")->valuedouble ==
+						     (double)pos &&
+					     GET(t, "y")->valuedouble ==
+						     (double)(pos + count -
+							      trailing) &&
+					     (!invisible || !*normal);
+					buf_put(&joined, s);
+					pos += count;
+				}
+				char *all = buf_take(&joined);
+				ok = ok && !strcmp(all, text);
+				if (!ok)
+					fail_case(c, "token contract", text,
+						  NULL, tokens);
+				free(all);
+				DEL(tokens);
+				free(text);
+			}
+		}
+	}
+}
+
 /* The right answer, which the engine does not give yet. */
 static void expected_fails(void)
 {
@@ -1032,6 +1406,10 @@ int main(int argc, char **argv)
 	letters();
 	normals();
 	collisions();
+	updates();
+	mixed_runs();
+	punctuation_edges();
+	offsets();
 	expected_fails();
 	int total = 0, short_of = 0;
 	for (int i = 0; i < CATEGORY_COUNT; i++) {

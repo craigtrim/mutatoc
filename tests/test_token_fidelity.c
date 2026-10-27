@@ -116,9 +116,12 @@ static char *expected_normal(const char *text)
 		else
 			buf_add(&b, at, (size_t)(p - at));
 	}
-	char *lowered = norm(b.p ? b.p : "", 1, 0), *out = ufold(lowered);
+	/* Folding can leave whitespace at an end, which is trimmed too. */
+	char *lowered = norm(b.p ? b.p : "", 1, 0), *folded = ufold(lowered),
+	     *out = norm(folded, 0, 0);
 	free(b.p);
 	free(lowered);
+	free(folded);
 	return out;
 }
 
