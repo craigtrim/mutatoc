@@ -92,7 +92,7 @@ Matching compares folded text, so a word matches whether or not it carries accen
 2. applies canonical decomposition, so a precomposed `é` and `e` followed by U+0301 become the same;
 3. drops every combining mark (general categories Mn, Mc and Me) and every default ignorable code point, including the reserved code points Unicode already marks default ignorable. Hangul syllables stay whole.
 
-A span rule word that folds away, such as a lone soft hyphen between two words of a label, is no longer required, so `alpha` U+00AD `beta` matches as `alpha beta` does. A span rule that folding leaves with a single word is dropped, because the exact stage already matches that word.
+A span rule word that folds away, such as a lone soft hyphen between two words of a label, is no longer required, so `alpha` U+00AD `beta` matches as `alpha beta` does. Words that fold alike are the same word, so `café cafe` matches as `cafe cafe` does. A span over one token is skipped when that token, or a token it wraps one at a time, is already the rule's entity, so a rule whose one word is its own canonical form, or two such rules that would trade a token back and forth, always finish.
 
 | Label | Text | Match |
 | --- | --- | --- |
