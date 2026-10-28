@@ -41,7 +41,8 @@ static Category categories[] = {
 	{ "mixed runs", 1584 },	    { "punctuation edges", 58 },
 	{ "invisible words", 240 }, { "offsets", 516 },
 	{ "self spans", 30 },	    { "legacy tokens", 70 },
-	{ "folded repeats", 71 },   { "expected fails", 12 },
+	{ "folded repeats", 71 },   { "span cycles", 115 },
+	{ "expected fails", 12 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -1390,9 +1391,9 @@ static void folded_repeats(void)
 
 		/*
 		 * Visible words that fold alike close a cycle 0.7.0 never had.
-		 * A span folding lets match never repeats a form an earlier
-		 * span over the same token made, so tea ends on cafe as in
-		 * 0.7.0, and cafe and café stay cafe.
+		 * A token's forms never repeat, so tea ends on cafe as in
+		 * 0.7.0, and cafe and café end on tea, which the folded café
+		 * rule makes before the tea rule would bring cafe back.
 		 */
 		const char *const visible[2][2] = {
 			{ "cafe", "tea+tea" },
@@ -1402,29 +1403,33 @@ static void folded_repeats(void)
 		static const struct {
 			const char *text, *canon;
 			int x, y;
+			const char *then;
+			int then_x, then_y;
 		} tea[] = {
-			{ "tea", "cafe", 0, 3 },
-			{ "tea x cafe", "cafe", 0, 3 },
-			{ "cafe", "cafe", 0, 4 },
-			{ "caf\xc3\xa9", "cafe", 0, 4 },
+			{ "tea", "cafe", 0, 3, NULL, 0, 0 },
+			{ "tea x cafe", "cafe", 0, 3, "cafe", 6, 10 },
+			{ "cafe", "tea", 0, 4, NULL, 0, 0 },
+			{ "caf\xc3\xa9", "tea", 0, 4, NULL, 0, 0 },
 		};
 		for (size_t t = 0; e && t < sizeof(tea) / sizeof(*tea); t++) {
 			c->cases++;
 			J *r = request_tokens(e, "parse", tea[t].text, NULL,
 					      NULL);
 			J *found = r ? entities_of(GET(r, "tokens"), 1) : NULL;
-			int ok = found && SIZE(found) > 0;
-			if (ok && tea[t].canon) {
-				J *want = one_entity(tea[t].canon, tea[t].text,
-						     (size_t)tea[t].x,
-						     (size_t)tea[t].y);
-				ok = cJSON_Compare(found->child, want->child,
-						   1);
-				DEL(want);
+			J *want = one_entity(tea[t].canon, tea[t].text,
+					     (size_t)tea[t].x,
+					     (size_t)tea[t].y);
+			if (tea[t].then) {
+				J *then = one_entity(tea[t].then, tea[t].text,
+						     (size_t)tea[t].then_x,
+						     (size_t)tea[t].then_y);
+				ADD(want, DUP(then->child));
+				DEL(then);
 			}
-			if (!ok)
-				fail_case(c, "folded cycle", tea[t].text, NULL,
+			if (!found || !cJSON_Compare(found, want, 1))
+				fail_case(c, "folded cycle", tea[t].text, want,
 					  found);
+			DEL(want);
 			DEL(found);
 			DEL(r);
 		}
@@ -1689,6 +1694,260 @@ static void folded_repeats(void)
 		DEL(found);
 		DEL(r);
 		DEL(q2);
+		mc_destroy(e);
+	}
+}
+
+typedef struct {
+	const char *canon;
+	int x, y;
+} Placed;
+
+/* The entities a list of places names, as entities_of lists them. */
+static J *places(const Placed *p)
+{
+	J *out = ARR();
+	for (; p->canon; p++) {
+		J *o = OBJ();
+		PUT(o, "canon", STR(p->canon));
+		PUT(o, "x", NUM(p->x));
+		PUT(o, "y", NUM(p->y));
+		ADD(out, o);
+	}
+	return out;
+}
+
+/* An engine whose only synonym is a and whose span rules are spans. */
+static mc_engine *span_engine(const char *spans)
+{
+	Buf b = { 0 };
+	buf_put(&b, "{\"op\":\"load\",\"name\":\"cycle\",\"snapshot\":{"
+		    "\"synonyms\":{\"fwd\":{\"a\":[\"a\"]},\"rev\":{\"a\":"
+		    "[\"a\"]},\"lookup\":{\"1\":[\"a\"]}},\"spans\":");
+	buf_put(&b, spans);
+	buf_put(&b, "}}");
+	char *wire = buf_take(&b);
+	mc_engine *e = mc_create();
+	J *loaded = test_call(e, wire);
+	free(wire);
+	if (!loaded) {
+		mc_destroy(e);
+		return NULL;
+	}
+	DEL(loaded);
+	return e;
+}
+
+/*
+ * Single-word span rules that turn one token back and forth: a to b, which
+ * may need a context word, and b to a. Folding opens the cycle through the
+ * rule's context, a context word in the text or the exact match that starts
+ * it, and ASCII rules open it on their own; 0.7.0 never finished any of these
+ * texts that reach the cycle. A token stops where its forms would repeat:
+ * one that no span covers takes its first span, and a covered token does not
+ * go back to a sequence of forms the stage already had. The result is the
+ * same for every sweep count and for the spans stage on its own. An authored
+ * empty word still never matches, as in 0.7.0. craigtrim/mutatoc#25
+ */
+static void span_cycles(void)
+{
+#define RULE "\"distance\":4,\"forward\":true,\"reverse\":true}]"
+	static const struct {
+		const char *spans, *text;
+		Placed parse[4], stage[4];
+	} cases[] = {
+		/* The context café, met by folding cafe or as written. */
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"caf\xc3\xa9\"]," RULE ",\"b\":[{\"canon\":\"a\","
+		  "\"content\":[\"b\"]," RULE "}",
+		  "a cafe",
+		  { { "b", 0, 1 } },
+		  { { "b", 0, 1 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"caf\xc3\xa9\"]," RULE ",\"b\":[{\"canon\":\"a\","
+		  "\"content\":[\"b\"]," RULE "}",
+		  "a caf\xc3\xa9",
+		  { { "b", 0, 1 } },
+		  { { "b", 0, 1 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"caf\xc3\xa9\"]," RULE ",\"b\":[{\"canon\":\"a\","
+		  "\"content\":[\"b\"]," RULE "}",
+		  "cafe a",
+		  { { "b", 5, 6 } },
+		  { { "b", 5, 6 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"caf\xc3\xa9\"]," RULE ",\"b\":[{\"canon\":\"a\","
+		  "\"content\":[\"b\"]," RULE "}",
+		  "a",
+		  { { "a", 0, 1 } },
+		  { { NULL } } },
+		/* The context cafe, met by folding café or as written. */
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"cafe\"]," RULE ",\"b\":[{\"canon\":\"a\","
+		  "\"content\":[\"b\"]," RULE "}",
+		  "a caf\xc3\xa9",
+		  { { "b", 0, 1 } },
+		  { { "b", 0, 1 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"cafe\"]," RULE ",\"b\":[{\"canon\":\"a\","
+		  "\"content\":[\"b\"]," RULE "}",
+		  "a cafe",
+		  { { "b", 0, 1 } },
+		  { { "b", 0, 1 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"cafe\"]," RULE ",\"b\":[{\"canon\":\"a\","
+		  "\"content\":[\"b\"]," RULE "}",
+		  "a",
+		  { { "a", 0, 1 } },
+		  { { NULL } } },
+		/* A context of one soft hyphen folds away. */
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"\xc2\xad\"]," RULE ",\"b\":[{\"canon\":\"a\","
+		  "\"content\":[\"b\"]," RULE "}",
+		  "a",
+		  { { "b", 0, 1 } },
+		  { { "b", 0, 1 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"\xc2\xad\"]," RULE ",\"b\":[{\"canon\":\"a\","
+		  "\"content\":[\"b\"]," RULE "}",
+		  "a b",
+		  { { "b", 0, 1 }, { "a", 2, 3 } },
+		  { { "b", 0, 1 }, { "a", 2, 3 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"\xc2\xad\"]," RULE ",\"b\":[{\"canon\":\"a\","
+		  "\"content\":[\"b\"]," RULE "}",
+		  "a cafe",
+		  { { "b", 0, 1 } },
+		  { { "b", 0, 1 } } },
+		/* No context: folding makes the exact match, or ASCII does. */
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"]," RULE
+		  ",\"b\":[{\"canon\":\"a\",\"content\":[\"b\"]," RULE "}",
+		  "\xc3\xa1",
+		  { { "b", 0, 1 } },
+		  { { "b", 0, 1 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"]," RULE
+		  ",\"b\":[{\"canon\":\"a\",\"content\":[\"b\"]," RULE "}",
+		  "a\xcc\x81",
+		  { { "b", 0, 2 } },
+		  { { "b", 0, 2 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"]," RULE
+		  ",\"b\":[{\"canon\":\"a\",\"content\":[\"b\"]," RULE "}",
+		  "a\xc2\xad",
+		  { { "b", 0, 2 } },
+		  { { "b", 0, 2 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"]," RULE
+		  ",\"b\":[{\"canon\":\"a\",\"content\":[\"b\"]," RULE "}",
+		  "\xe2\x80\x8b"
+		  "a",
+		  { { "b", 0, 2 } },
+		  { { "b", 0, 2 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"]," RULE
+		  ",\"b\":[{\"canon\":\"a\",\"content\":[\"b\"]," RULE "}",
+		  "a",
+		  { { "b", 0, 1 } },
+		  { { "b", 0, 1 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"]," RULE
+		  ",\"b\":[{\"canon\":\"a\",\"content\":[\"b\"]," RULE "}",
+		  "a b",
+		  { { "b", 0, 1 }, { "a", 2, 3 } },
+		  { { "b", 0, 1 }, { "a", 2, 3 } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"]," RULE
+		  ",\"b\":[{\"canon\":\"a\",\"content\":[\"b\"]," RULE "}",
+		  "a x a",
+		  { { "a", 0, 1 }, { "b", 4, 5 } },
+		  { { "a", 0, 1 }, { "b", 4, 5 } } },
+		/*
+		 * A span over several tokens starts the record again: d_d_d
+		 * may turn back into c, which a sequence from before the span
+		 * held, and c then stops before d_d_d comes back.
+		 */
+		{ "{\"c\":[{\"canon\":\"d_d_d\",\"content\":[\"c\"]," RULE
+		  ",\"q\":[{\"canon\":\"m_m\",\"content\":[\"q\",\"r\"]," RULE
+		  ",\"d_d_d\":[{\"canon\":\"c\",\"content\":"
+		  "[\"d_d_d\"]," RULE "}",
+		  "c q r",
+		  { { "c", 0, 1 }, { "m_m", 2, 5 } },
+		  { { "c", 0, 1 }, { "m_m", 2, 5 } } },
+		/* A frozen token stays frozen when a span before it collapses. */
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"]," RULE
+		  ",\"b\":[{\"canon\":\"a\",\"content\":[\"b\"]," RULE
+		  ",\"q\":[{\"canon\":\"m\",\"content\":[\"q\",\"r\"]," RULE
+		  "}",
+		  "q r a",
+		  { { "m", 0, 3 }, { "b", 4, 5 } },
+		  { { "m", 0, 3 }, { "b", 4, 5 } } },
+		/* Authored empty words never match, as in 0.7.0. */
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"\"]," RULE "}",
+		  "a",
+		  { { "a", 0, 1 } },
+		  { { NULL } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+		  "[\"\"]," RULE "}",
+		  "a x",
+		  { { "a", 0, 1 } },
+		  { { NULL } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\",\"\",\"x\"]," RULE
+		  "}",
+		  "a x",
+		  { { "a", 0, 1 } },
+		  { { NULL } } },
+		{ "{\"a\":[{\"canon\":\"b\",\"content\":[\"a\",\"\",\"x\"]," RULE
+		  "}",
+		  "x a",
+		  { { "a", 2, 3 } },
+		  { { NULL } } },
+	};
+#undef RULE
+	static const int sweeps[] = { 0, 1, 2, -1000 };
+	Category *c = category("span cycles");
+	for (size_t k = 0; k < sizeof(cases) / sizeof(*cases); k++) {
+		mc_engine *e = span_engine(cases[k].spans);
+		if (!e) {
+			fail_case(c, "cycle snapshot failed to load",
+				  cases[k].text, NULL, NULL);
+			continue;
+		}
+		J *parsed = places(cases[k].parse),
+		  *staged = places(cases[k].stage);
+		for (int s = 0; s < 4; s++) {
+			c->cases++;
+			J *q = OBJ();
+			PUT(q, "op", STR("parse"));
+			PUT(q, "text", STR(cases[k].text));
+			PUT(q, "ctr", NUM(sweeps[s]));
+			J *r = test_request(e, q);
+			J *found = cJSON_IsTrue(GET(r, "ok")) ?
+					   entities_of(GET(GET(r, "result"),
+							   "tokens"),
+						       0) :
+					   NULL;
+			if (!found || !cJSON_Compare(found, parsed, 1))
+				fail_case(c, "parse cycle", cases[k].text,
+					  parsed, found);
+			DEL(found);
+			DEL(r);
+			DEL(q);
+		}
+		c->cases++;
+		J *tokens = request_tokens(e, "tokenize", cases[k].text, NULL,
+					   NULL);
+		J *q = OBJ();
+		PUT(q, "op", STR("transform_tokens"));
+		PUT(q, "stage", STR("spans"));
+		PUT(q, "tokens", tokens ? tokens : ARR());
+		J *r = test_request(e, q);
+		J *found = cJSON_IsTrue(GET(r, "ok")) ?
+				   entities_of(GET(r, "result"), 0) :
+				   NULL;
+		if (!found || !cJSON_Compare(found, staged, 1))
+			fail_case(c, "spans stage cycle", cases[k].text, staged,
+				  found);
+		DEL(found);
+		DEL(r);
+		DEL(q);
+		DEL(parsed);
+		DEL(staged);
 		mc_destroy(e);
 	}
 }
@@ -2015,6 +2274,7 @@ int main(int argc, char **argv)
 	invisible_words();
 	self_spans();
 	folded_repeats();
+	span_cycles();
 	legacy_tokens(root);
 	offsets();
 	expected_fails();
