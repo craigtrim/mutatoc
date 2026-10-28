@@ -209,6 +209,8 @@ J *tokenize_text(const char *);
 char *tokenize_key(const char *);
 /* Entity text from the input between x and y (craigtrim/mutatoc#7). */
 void source_entities(J *, const char *);
+/* Where each term occurs in a text, with no ontology (craigtrim/mutatoc#23). */
+J *match_terms(const J *, int, mc_error *);
 typedef struct MatchIndex MatchIndex;
 MatchIndex *match_index_build(const J *);
 MatchIndex *match_index_build_mutable(const J *);
