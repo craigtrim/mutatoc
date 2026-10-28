@@ -134,6 +134,9 @@ if(BUILD_TESTING)
     target_sources(mutatoc_normalization PRIVATE vendor/utf8proc/utf8proc.c)
   endif()
   add_test(NAME normalization COMMAND mutatoc_normalization ${CMAKE_CURRENT_SOURCE_DIR})
+  # Term matching without an ontology (craigtrim/mutatoc#23).
+  mutatoc_program(mutatoc_match_terms tests/test_match_terms.c)
+  add_test(NAME match_terms COMMAND mutatoc_match_terms)
   # Timing ceilings only mean something in optimized builds without sanitizers.
   # Build type names are case-insensitive in CMake, so compare them uppercased.
   set(optimized_configurations Release RelWithDebInfo MinSizeRel)
