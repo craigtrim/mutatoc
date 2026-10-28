@@ -899,32 +899,28 @@ static void forms_free(Forms *f)
 	map_free(&f->ids);
 }
 
-/* FNV-1a over a tag and a string: one token's place in a token sequence. */
-static uint64_t token_hash(char tag, const char *s)
-{
-	uint64_t h = 0xcbf29ce484222325ull;
-	h = (h ^ (unsigned char)tag) * 0x100000001b3ull;
-	for (; *s; s++)
-		h = (h ^ (unsigned char)*s) * 0x100000001b3ull;
-	return h;
-}
-
-/* An entity counts by its canonical form, any other token by its form. */
-static uint64_t token_key(J *t, const Forms *f, int form)
+/*
+ * A span over one token makes no progress when the token already is the
+ * rule's entity, or when an earlier span over that one token already made
+ * the rule's canonical form. Rules that folding sets against each other
+ * would otherwise trade one token back and forth; each token can change
+ * only a few times, and a form the exact stage made may still come back
+ * once the context changes (craigtrim/mutatoc#25).
+ */
+static int no_progress(J *t, const char *canon)
 {
 	J *swaps = GET(t, "swaps");
-	return swaps ? token_hash('E', S(GET(swaps, "canon"))) :
-		       token_hash('F', f->forms[form].name);
-}
-
-static int seen_state(Map *seen, uint64_t state, int add)
-{
-	char key[24];
-	snprintf(key, sizeof(key), "%016llx", (unsigned long long)state);
-	if (map_get(seen, key))
+	if (swaps && !strcmp(S(GET(swaps, "canon")), canon))
 		return 1;
-	if (add)
-		map_put(seen, key, (void *)1);
+	while (swaps && !strcmp(S(GET(swaps, "type")), "spans")) {
+		J *inner = GET(swaps, "tokens");
+		if (!inner || !inner->child || inner->child->next)
+			return 0;
+		swaps = GET(inner->child, "swaps");
+		if (swaps && !strcmp(S(GET(swaps, "type")), "spans") &&
+		    !strcmp(S(GET(swaps, "canon")), canon))
+			return 1;
+	}
 	return 0;
 }
 
@@ -936,10 +932,8 @@ static int seen_state(Map *seen, uint64_t state, int add)
  * instead of being rebuilt from the token list. Whitespace-only tokens take
  * no position, just as they never interrupt an exact phrase, but a span
  * still covers those between its words (craigtrim/mutatoc#12). A span over a
- * single token never brings back a token sequence the stage has already
- * had, since folding can turn one token's form into another's and back
- * forever; the stage tries the word's next occurrence instead
- * (craigtrim/mutatoc#25).
+ * single token that makes no progress is skipped for the word's next
+ * occurrence (craigtrim/mutatoc#25).
  */
 static J *spans(const MatchIndex *index, J *ts, const J *names,
 		int line_breaks, mc_error *e)
@@ -954,19 +948,12 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 	int *line = line_breaks ?
 		malloc((size_t)(n ? n : 1) * sizeof(*line)) : NULL;
 	/*
-	 * Each token's code in the sequence hash, computed at the first span
-	 * over a single token and kept up to date after it; a round's weights
-	 * and hash, computed only when that round weighs such a span; and the
-	 * hashes recorded so far. Only spans over a single token keep the
-	 * token count, so only they can bring a sequence back
-	 * (craigtrim/mutatoc#25).
+	 * Each token by index, listed only in a round that weighs a span over
+	 * a single token (craigtrim/mutatoc#25).
 	 */
-	uint64_t *code = malloc((size_t)(n ? n : 1) * sizeof(*code));
-	uint64_t *weight = malloc((size_t)(n ? n : 1) * sizeof(*weight));
-	int coded = 0;
-	Map seen = { 0 };
+	J **items = malloc((size_t)(n ? n : 1) * sizeof(*items));
 	Occurrences **words = NULL;
-	if (!form || !at || !spacing || !token || !code || !weight ||
+	if (!form || !at || !spacing || !token || !items ||
 	    (line_breaks && !line)) {
 		fail(e, 1, "Cannot allocate span positions");
 		goto done;
@@ -981,8 +968,7 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 		}
 	}
 	while (!e->code) {
-		uint64_t state = 0;
-		int stated = 0;
+		int listed = 0;
 		for (int g = 0; g < f.count; g++)
 			f.forms[g].at.n = 0;
 		for (i = 0; i < n; i++)
@@ -1054,46 +1040,21 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 				 * a token sequence the stage has not had yet.
 				 */
 				if (valid && x == y) {
-					if (!coded) {
+					if (!listed) {
 						int u = 0;
-						EACH(t, ts) {
-							code[u] = token_key(
-								t, &f, form[u]);
-							u++;
-						}
-						coded = 1;
-					}
-					if (!stated) {
-						for (int u = 0; u < n; u++)
-							state = state * 0x100000001b3ull +
-								code[u];
-						for (int u = n - 1; u >= 0; u--)
-							weight[u] =
-								u == n - 1 ?
-									1 :
-									weight[u +
-									       1] *
-										0x100000001b3ull;
-						seen_state(&seen, state, 1);
-						stated = 1;
+						EACH(t, ts)
+							items[u++] = t;
+						listed = 1;
 					}
 					const Occurrences *o = words[0];
-					uint64_t made =
-						token_hash('E', r->canon);
 					valid = 0;
-					for (int j = 0; j < o->n && !valid;
-					     j++) {
-						int t = token[o->at[j]];
-						if (!seen_state(
-							    &seen,
-							    state + (made -
-								     code[t]) *
-									    weight[t],
-							    0)) {
+					for (int j = 0; j < o->n && !valid; j++)
+						if (!no_progress(
+							    items[token[o->at[j]]],
+							    r->canon)) {
 							x = y = o->at[j];
 							valid = 1;
 						}
-					}
 				}
 				if (valid) {
 					best = r;
@@ -1126,17 +1087,10 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 			(size_t)(n - by) * sizeof(*form));
 		memmove(spacing + bx + 1, spacing + by,
 			(size_t)(n - by) * sizeof(*spacing));
-		if (coded) {
-			code[bx] = token_hash('E', canon);
-			memmove(code + bx + 1, code + by,
-				(size_t)(n - by) * sizeof(*code));
-		}
 		n -= by - bx - 1;
 	}
 done:
-	map_free(&seen);
-	free(weight);
-	free(code);
+	free(items);
 	free(line);
 	free(words);
 	free(token);
