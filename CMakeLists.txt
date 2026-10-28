@@ -6,8 +6,13 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 option(MUTATOC_SANITIZE "Enable address and undefined behavior sanitizers" OFF)
-add_library(mutatoc src/util.c src/parallel.c src/prefix_index.c src/uri.c src/literal.c src/graph.c src/rdf.c src/source.c src/json_rdf.c src/ontology.c src/lookup_state.c src/update.c src/update_index.c src/data_query.c src/views.c src/match.c src/tokenize.c src/api.c vendor/cjson/cJSON.c)
-target_include_directories(mutatoc PUBLIC include PRIVATE src vendor/cjson)
+add_library(mutatoc src/util.c src/parallel.c src/prefix_index.c src/uri.c src/literal.c src/graph.c src/rdf.c src/source.c src/json_rdf.c src/ontology.c src/lookup_state.c src/update.c src/update_index.c src/data_query.c src/views.c src/match.c src/tokenize.c src/fold.c src/api.c vendor/cjson/cJSON.c vendor/utf8proc/utf8proc.c)
+target_include_directories(mutatoc PUBLIC include PRIVATE src vendor/cjson vendor/utf8proc)
+# utf8proc compiles into the library, with its symbols hidden where the compiler supports it (craigtrim/mutatoc#25).
+target_compile_definitions(mutatoc PRIVATE UTF8PROC_STATIC)
+if(NOT MSVC)
+  set_source_files_properties(vendor/utf8proc/utf8proc.c PROPERTIES COMPILE_OPTIONS "-fvisibility=hidden")
+endif()
 if(NOT WIN32)
   find_package(Threads REQUIRED)
   target_link_libraries(mutatoc PRIVATE Threads::Threads)
@@ -120,6 +125,15 @@ if(BUILD_TESTING)
   # Request-local line boundaries (craigtrim/mutatoc#19).
   mutatoc_program(mutatoc_line_breaks tests/test_line_breaks.c)
   add_test(NAME line_breaks COMMAND mutatoc_line_breaks ${CMAKE_CURRENT_SOURCE_DIR})
+  # Accents and invisible characters fold out of match keys (craigtrim/mutatoc#25).
+  mutatoc_program(mutatoc_normalization tests/test_normalization.c)
+  target_include_directories(mutatoc_normalization PRIVATE vendor/utf8proc)
+  target_compile_definitions(mutatoc_normalization PRIVATE UTF8PROC_STATIC)
+  # A shared library keeps utf8proc hidden, so the test calls its own copy.
+  if(BUILD_SHARED_LIBS)
+    target_sources(mutatoc_normalization PRIVATE vendor/utf8proc/utf8proc.c)
+  endif()
+  add_test(NAME normalization COMMAND mutatoc_normalization ${CMAKE_CURRENT_SOURCE_DIR})
   # Timing ceilings only mean something in optimized builds without sanitizers.
   # Build type names are case-insensitive in CMake, so compare them uppercased.
   set(optimized_configurations Release RelWithDebInfo MinSizeRel)

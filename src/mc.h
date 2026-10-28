@@ -61,6 +61,12 @@ void uwrite(Buf *, uint32_t);
 int ualpha(uint32_t);
 int unumeric(uint32_t);
 int uspace(uint32_t);
+/* Accent and invisible-character folding for match keys (craigtrim/mutatoc#25). */
+int ujoiner(uint32_t);
+int uignorable(uint32_t);
+int ufolds(uint32_t);
+char *ufold(const char *);
+const char *ufold_view(const char *, char **owned);
 void fail(mc_error *, int, const char *, ...);
 FILE *mc_fopen(const char *, const char *);
 char *read_file(const char *, mc_error *);

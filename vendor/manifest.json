@@ -15,5 +15,40 @@
     "path": "vendor/cjson/LICENSE",
     "url": "https://raw.githubusercontent.com/DaveGamble/cJSON/v1.7.19/LICENSE",
     "sha256": "a36dda207c36db5818729c54e7ad4e8b0c6fba847491ba64f372c1a2037b6d5c"
+  },
+  {
+    "path": "vendor/utf8proc/utf8proc.c",
+    "url": "https://raw.githubusercontent.com/JuliaStrings/utf8proc/v2.12.0/utf8proc.c",
+    "sha256": "f38438eb986ba7eedad0f2e820a70fae1aaf05197364ba0381a5e84775099ef8"
+  },
+  {
+    "path": "vendor/utf8proc/utf8proc.h",
+    "url": "https://raw.githubusercontent.com/JuliaStrings/utf8proc/v2.12.0/utf8proc.h",
+    "sha256": "08da85e820efaa3613500946c26b2dc427a07f76001ed7c16bc90f298b814c35"
+  },
+  {
+    "path": "vendor/utf8proc/utf8proc_data.c",
+    "url": "https://raw.githubusercontent.com/JuliaStrings/utf8proc/v2.12.0/utf8proc_data.c",
+    "sha256": "b4911d4162d216afa612317a9b981851e15d672f4d93b25f3a1eb986f8c0aedb"
+  },
+  {
+    "path": "vendor/utf8proc/LICENSE.md",
+    "url": "https://raw.githubusercontent.com/JuliaStrings/utf8proc/v2.12.0/LICENSE.md",
+    "sha256": "3b510150d34f248a221bb88e1d811238d6c6c18b51231822c42974c39bb07256"
+  },
+  {
+    "path": "tests/fixtures/unicode/UnicodeData.txt",
+    "url": "https://www.unicode.org/Public/18.0.0/ucd/UnicodeData.txt",
+    "sha256": "0736451de439ae7baf1425136617da495e09ee5afbe6e394374db7009ea08950"
+  },
+  {
+    "path": "tests/fixtures/unicode/DerivedCoreProperties.txt",
+    "url": "https://www.unicode.org/Public/18.0.0/ucd/DerivedCoreProperties.txt",
+    "sha256": "09c928886a178fcafd93c29e4bd59073a058e5a100b716d425cb563ab50f68c9"
+  },
+  {
+    "path": "tests/fixtures/unicode/NormalizationTest.txt",
+    "url": "https://www.unicode.org/Public/18.0.0/ucd/NormalizationTest.txt",
+    "sha256": "25a50d816764b04abfb4a646d3eb2b2a803284c3873d9a06757b94fe4513dde3"
   }
 ]

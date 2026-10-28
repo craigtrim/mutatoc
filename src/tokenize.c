@@ -9,7 +9,9 @@
  * between letters. A period or comma that ends a number, and underscores that
  * open or close a word, are split off. A word keeps the one space that follows
  * it; any other run of whitespace is its own token with an empty normal.
- * craigtrim/mutatoc#1, craigtrim/mutatoc#7
+ * Combining marks and default ignorable code points never split a word or a
+ * whitespace run; they stay in the token they touch, and normal drops them.
+ * craigtrim/mutatoc#1, craigtrim/mutatoc#7, craigtrim/mutatoc#25
  */
 
 #include "mc.h"
@@ -79,6 +81,36 @@ static size_t char_start(const char *s, size_t lo, size_t end)
 	return at;
 }
 
+/*
+ * An invisible character, including the Hangul fillers that are also
+ * letters, or a combining mark that is not a letter or digit.
+ */
+static int pure_joiner(uint32_t c)
+{
+	return uignorable(c) || (ujoiner(c) && !letter(c) && !unumeric(c));
+}
+
+/* The start of the last code point in s[lo..end) that is not a joiner. */
+static size_t base_start(const char *s, size_t lo, size_t end)
+{
+	size_t at = char_start(s, lo, end);
+	while (at > lo && pure_joiner(char_at(s, at)))
+		at = char_start(s, lo, at);
+	return at;
+}
+
+/* The first code point in s[at..end) that is not a joiner, or 0. */
+static uint32_t base_at(const char *s, size_t at, size_t end)
+{
+	const char *p = s + at;
+	while ((size_t)(p - s) < end) {
+		uint32_t c = uread(&p);
+		if (!pure_joiner(c))
+			return c;
+	}
+	return 0;
+}
+
 /* A byte span of the input; space marks a run of whitespace. */
 typedef struct {
 	size_t start, end;
@@ -105,29 +137,55 @@ static int push(Pieces *ps, size_t start, size_t end, int space)
 
 /*
  * Underscores that open or close a piece, and a period or comma that ends a
- * number, become their own pieces.
+ * number, become their own pieces. The rules count characters, each carrying
+ * the joiners after it, and joiners before the first character stay with it,
+ * so joiners never hide an edge (craigtrim/mutatoc#25).
  */
 static int edges(Pieces *ps, const char *s, size_t a, size_t b)
 {
-	size_t lead = a, trail = b;
-	while (trail - lead > 1 && s[lead] == '_')
-		lead++;
-	while (trail - lead > 1 && s[trail - 1] == '_')
-		trail--;
-	size_t middle = trail;
-	if (trail - lead > 1 && (s[trail - 1] == '.' || s[trail - 1] == ',') &&
-	    unumeric(char_at(s, char_start(s, lead, trail - 1))))
-		middle = trail - 1;
-	for (size_t i = a; i < lead; i++)
-		if (!push(ps, i, i + 1, 0))
-			return 0;
-	if (!push(ps, lead, middle, 0) ||
-	    (middle < trail && !push(ps, middle, trail, 0)))
-		return 0;
-	for (size_t i = trail; i < b; i++)
-		if (!push(ps, i, i + 1, 0))
-			return 0;
-	return 1;
+	/* at[k] is where character k starts and base[k] what it is; at[n] = b. */
+	size_t small_at[65], *at = small_at, n = 0, cap = 64;
+	uint32_t small_base[64], *base = small_base;
+	if (b - a > cap) {
+		cap = b - a;
+		at = malloc((cap + 1) * sizeof(*at));
+		base = malloc(cap * sizeof(*base));
+	}
+	int ok = at && base;
+	for (const char *p = s + a; ok && (size_t)(p - s) < b;) {
+		size_t start = (size_t)(p - s);
+		uint32_t c = uread(&p);
+		if (pure_joiner(c))
+			continue;
+		at[n] = n ? start : a;
+		base[n++] = c;
+	}
+	if (ok && !n)
+		ok = push(ps, a, b, 0);
+	else if (ok) {
+		at[n] = b;
+		size_t lead = 0, trail = n;
+		while (trail - lead > 1 && base[lead] == '_')
+			lead++;
+		while (trail - lead > 1 && base[trail - 1] == '_')
+			trail--;
+		size_t middle = trail;
+		if (trail - lead > 1 &&
+		    (base[trail - 1] == '.' || base[trail - 1] == ',') &&
+		    unumeric(base[trail - 2]))
+			middle = trail - 1;
+		for (size_t k = 0; ok && k < lead; k++)
+			ok = push(ps, at[k], at[k + 1], 0);
+		ok = ok && push(ps, at[lead], at[middle], 0) &&
+		     (middle == trail || push(ps, at[middle], at[trail], 0));
+		for (size_t k = trail; ok && k < n; k++)
+			ok = push(ps, at[k], at[k + 1], 0);
+	}
+	if (at != small_at) {
+		free(at);
+		free(base);
+	}
+	return ok;
 }
 
 /* Splits one word, s[start..end) with no whitespace, at its punctuation. */
@@ -142,6 +200,21 @@ static int split_word(Pieces *ps, const char *s, size_t start, size_t end)
 		uint32_t ch = uread(&p);
 		size_t after = (size_t)(p - s);
 		uint32_t next = after < end ? char_at(s, after) : 0;
+		/*
+		 * A joiner stays with the word or punctuation before it and never
+		 * becomes prev, so rules that look back see the base character.
+		 */
+		if (pure_joiner(ch)) {
+			Piece *last = ps->n ? &ps->p[ps->n - 1] : NULL;
+			if (!building && last && !last->space &&
+			    last->end == at)
+				last->end = after;
+			else if (!building) {
+				open = at;
+				building = 1;
+			}
+			continue;
+		}
 		/* A pair of backticks or acute accents is one double quote. */
 		if ((ch == '`' || ch == 0x00b4) && next == ch) {
 			if (building && !edges(ps, s, open, at))
@@ -153,7 +226,8 @@ static int split_word(Pieces *ps, const char *s, size_t start, size_t end)
 		} else if (letter(ch) || unumeric(ch) || ch == '_' ||
 			   ((ch == '.' || ch == ',') && unumeric(prev)) ||
 			   (apostrophe(ch) && letter(prev)) ||
-			   (ch == '&' && letter(prev) && letter(next))) {
+			   (ch == '&' && letter(prev) &&
+			    letter(base_at(s, after, end)))) {
 			if (!building)
 				open = at;
 			building = 1;
@@ -175,13 +249,21 @@ static int scan(Pieces *ps, const char *s)
 	while (*p) {
 		size_t start = (size_t)(p - s);
 		const char *q = p;
-		int space = uspace(uread(&q));
+		/* Joiners continue either kind of run; one made only of them is space. */
+		int space = -1;
 		while (*q) {
 			const char *r = q;
-			if (uspace(uread(&r)) != space)
-				break;
+			uint32_t c = uread(&r);
+			if (!pure_joiner(c)) {
+				if (space < 0)
+					space = uspace(c);
+				else if (uspace(c) != space)
+					break;
+			}
 			q = r;
 		}
+		if (space < 0)
+			space = 1;
 		size_t end = (size_t)(q - s);
 		if (space ? !push(ps, start, end, 1) :
 			    !split_word(ps, s, start, end))
@@ -194,17 +276,17 @@ static int scan(Pieces *ps, const char *s)
 /* Where the apostrophe ending a word starts, or 0 when no word ends in one. */
 static size_t closing(const char *s, const Piece *pc)
 {
-	size_t at = char_start(s, pc->start, pc->end);
+	size_t at = base_start(s, pc->start, pc->end);
 	return at > pc->start && apostrophe(char_at(s, at)) &&
 			       letter(char_at(s,
-					      char_start(s, pc->start, at))) ?
+					      base_start(s, pc->start, at))) ?
 		       at :
 		       0;
 }
 
 static int lone_apostrophe(const char *s, const Piece *pc)
 {
-	return !pc->space && char_start(s, pc->start, pc->end) == pc->start &&
+	return !pc->space && base_start(s, pc->start, pc->end) == pc->start &&
 	       apostrophe(char_at(s, pc->start));
 }
 
@@ -233,7 +315,7 @@ static int quotes(Pieces *ps, const char *s)
 		Piece pc = ps->p[i];
 		int last = i + 1 == ps->n || ps->p[i + 1].space;
 		size_t at = pc.space || !last ? 0 : closing(s, &pc);
-		uint32_t before = at ? char_at(s, char_start(s, pc.start, at)) :
+		uint32_t before = at ? char_at(s, base_start(s, pc.start, at)) :
 				       's';
 		if (before != 's' && before != 'S' ?
 			    !push(&out, pc.start, at, 0) ||
@@ -321,7 +403,10 @@ static uint64_t text_hash(const char *s)
 	return h;
 }
 
-/* Lowercase, with every hyphen, dash and quote folded to its ASCII form. */
+/*
+ * Lowercase, with every hyphen, dash and quote folded to its ASCII form and
+ * accents and invisible characters dropped (craigtrim/mutatoc#25).
+ */
 static char *normal_form(const char *text)
 {
 	Buf b = { 0 };
@@ -343,9 +428,25 @@ static char *normal_form(const char *text)
 		else
 			buf_add(&b, at, (size_t)(p - at));
 	}
-	char *out = norm(b.p ? b.p : "", 1, 0);
+	char *lowered = norm(b.p ? b.p : "", 1, 0), *owned;
 	free(b.p);
+	ufold_view(lowered, &owned);
+	if (!owned)
+		return lowered;
+	/* Whitespace between dropped characters is now at an end; trim it. */
+	char *out = norm(owned, 0, 0);
+	free(owned);
+	free(lowered);
 	return out;
+}
+
+/* Code points of trailing whitespace; y leaves only these out. */
+static size_t trailing_spaces(const char *s)
+{
+	size_t n = 0;
+	while (*s)
+		n = uspace(uread(&s)) ? n + 1 : 0;
+	return n;
 }
 
 J *tokenize_text(const char *text)
@@ -370,7 +471,7 @@ J *tokenize_text(const char *text)
 			end = ++next->start;
 		char *t = slice(text + pc.start, end - pc.start),
 		     *s = slice(text + pc.start, source - pc.start),
-		     *trim = norm(t, 0, 0), *normal = normal_form(t);
+		     *normal = normal_form(t);
 		char id[48];
 		snprintf(id, sizeof(id), "%" PRIu64 "#%d", text_hash(s),
 			 count++);
@@ -378,13 +479,15 @@ J *tokenize_text(const char *text)
 		PUT(token, "id", STR(id));
 		PUT(token, "text", STR(t));
 		PUT(token, "x", NUM((double)pos));
-		PUT(token, "y", NUM((double)(pos + ulen(trim))));
+		/* y drops only trailing whitespace (craigtrim/mutatoc#25). */
+		size_t length = ulen(t);
+		PUT(token, "y",
+		    NUM((double)(pos + length - trailing_spaces(t))));
 		PUT(token, "normal", STR(normal));
 		ADD(result, token);
-		pos += ulen(t);
+		pos += length;
 		free(t);
 		free(s);
-		free(trim);
 		free(normal);
 	}
 	free(ps.p);
@@ -432,7 +535,8 @@ void source_entities(J *tokens, const char *text)
 /*
  * Letters and digits separated by single spaces, with underscores only inside
  * words, come back from the tokenizer unchanged apart from case. U+02BC is
- * not a letter here either, so a synonym written with it is folded too.
+ * not a letter here either, so a synonym written with it is folded too, and
+ * neither is a letter that folding changes (craigtrim/mutatoc#25).
  */
 static int plain(const char *s)
 {
@@ -445,7 +549,8 @@ static int plain(const char *s)
 		int alphanumeric = c < 128 ? ((c >= 'a' && c <= 'z') ||
 					      (c >= 'A' && c <= 'Z') ||
 					      (c >= '0' && c <= '9')) :
-						   letter(c) || unumeric(c);
+						   (letter(c) || unumeric(c)) &&
+							   !ufolds(c);
 		if (c == ' ' ? prev == ' ' || next == ' ' :
 		    c == '_' ? prev == ' ' || next == ' ' :
 				     !alphanumeric)

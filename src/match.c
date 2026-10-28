@@ -23,14 +23,15 @@ static int underscore_count(const char *s)
  */
 #define DENSE_WORDS 4096
 typedef struct {
-	J *content; /* Owned rule content and key, in match order. */
-	J *context;
+	J *content; /* Owned rule content and key, folded, in match order. */
+	J *context; /* Owned and folded, or NULL. */
+	char *origin; /* Owned: the unfolded key the rule is stored under. */
 	const char *canon;
 	int distance, forward, reverse, rank;
 } SpanRule;
 typedef struct {
 	SpanRule *rules;
-	int n;
+	int n, cap;
 } SpanList;
 typedef struct MutableWord MutableWord;
 typedef struct MutableWordBlock MutableWordBlock;
@@ -220,40 +221,137 @@ static int index_lookup(MatchIndex *x, J *lookup)
 	return ok;
 }
 
+/*
+ * Replaces each string in a with its folded form, keeping the order, and
+ * removes the words folding empties, which are invisible-only. A word that
+ * was already empty stays, as in 0.7.0.
+ */
+static void fold_strings(J *a)
+{
+	J *v = a ? a->child : NULL;
+	while (v) {
+		J *next = v->next;
+		char *owned;
+		ufold_view(S(v), &owned);
+		if (owned) {
+			if (!*owned && *S(v))
+				DEL(cJSON_DetachItemViaPointer(a, v));
+			else
+				cJSON_SetValuestring(v, owned);
+			free(owned);
+		}
+		v = next;
+	}
+}
+
+static void rule_free(SpanRule *r)
+{
+	DEL(r->content);
+	DEL(r->context);
+	free(r->origin);
+}
+
+/*
+ * Keys that fold alike share a list ordered by unfolded key, so replacing one
+ * key's rules in an update leaves the order a fresh load builds.
+ */
+static int place_rule(MatchIndex *x, const char *name, const SpanRule *rule)
+{
+	SpanList *list = map_get(&x->spans, name);
+	if (!list) {
+		list = calloc(1, sizeof(*list));
+		if (!list)
+			return 0;
+		map_put(&x->spans, name, list);
+	}
+	if (list->n == list->cap) {
+		int cap = list->cap ? list->cap * 2 : 4;
+		SpanRule *grown =
+			realloc(list->rules, (size_t)cap * sizeof(*grown));
+		if (!grown)
+			return 0;
+		list->rules = grown;
+		list->cap = cap;
+	}
+	int at = list->n;
+	while (at > 0 && strcmp(list->rules[at - 1].origin, rule->origin) > 0)
+		at--;
+	memmove(list->rules + at + 1, list->rules + at,
+		(size_t)(list->n - at) * sizeof(*list->rules));
+	list->rules[at] = *rule;
+	list->n++;
+	return 1;
+}
+
+/*
+ * Adds the rules stored under one unfolded key to the list its folded form
+ * keys, so a rule written with accents matches text without them. Content
+ * and context are folded too, a word that folds away is no longer required,
+ * and content keeps the order of its unfolded words, which the direction
+ * flags read. A key that folds away hands its rules to their first remaining
+ * word (craigtrim/mutatoc#25).
+ */
+static int add_span_rules(MatchIndex *x, const char *key, J *rules)
+{
+	char *name = ufold(key);
+	int ok = 1;
+	EACH(r, rules) {
+		J *content = GET(r, "content");
+		if (!content || !cJSON_IsArray(content))
+			continue;
+		SpanRule rule = { 0 };
+		rule.content = DUP(content);
+		unique(rule.content, key);
+		sort_strings(rule.content, 1);
+		int words = SIZE(rule.content);
+		fold_strings(rule.content);
+		/*
+		 * A rule that dropping invisible words leaves with one word only
+		 * repeats the exact match its folded synonym already makes, and
+		 * two such rules could trade one token back and forth.
+		 */
+		int left = SIZE(rule.content);
+		if (!left || (left < 2 && words >= 2)) {
+			DEL(rule.content);
+			continue;
+		}
+		rule.context = GET(r, "context") ? DUP(GET(r, "context")) :
+						   NULL;
+		fold_strings(rule.context);
+		rule.origin = copy(key);
+		rule.canon = S(GET(r, "canon"));
+		J *distance = GET(r, "distance");
+		rule.distance = distance ? distance->valueint : 4;
+		rule.forward = cJSON_IsTrue(GET(r, "forward"));
+		rule.reverse = cJSON_IsTrue(GET(r, "reverse"));
+		rule.rank = underscore_count(rule.canon);
+		if (!place_rule(x, *name ? name : S(rule.content->child),
+				&rule)) {
+			rule_free(&rule);
+			ok = 0;
+			break;
+		}
+	}
+	free(name);
+	return ok;
+}
+
 static int index_spans(MatchIndex *x, J *rules)
 {
 	map_reserve(&x->spans, x->spans.size + (size_t)SIZE(rules));
+	Map seen = { 0 };
+	int ok = 1;
 	EACH(key, rules) {
-		if (!key->string || map_get(&x->spans, key->string))
+		if (!key->string || map_get(&seen, key->string))
 			continue;
-		SpanList *list = calloc(1, sizeof(*list));
-		if (!list)
-			return 0;
-		map_put(&x->spans, key->string, list);
-		int n = 0;
-		EACH(r, key)
-			n++;
-		list->rules = calloc((size_t)n + 1, sizeof(*list->rules));
-		if (!list->rules)
-			return 0;
-		EACH(r, key) {
-			J *content = GET(r, "content");
-			if (!content || !cJSON_IsArray(content))
-				continue;
-			SpanRule *rule = &list->rules[list->n++];
-			rule->content = DUP(content);
-			unique(rule->content, key->string);
-			sort_strings(rule->content, 1);
-			rule->context = GET(r, "context");
-			rule->canon = S(GET(r, "canon"));
-			J *distance = GET(r, "distance");
-			rule->distance = distance ? distance->valueint : 4;
-			rule->forward = cJSON_IsTrue(GET(r, "forward"));
-			rule->reverse = cJSON_IsTrue(GET(r, "reverse"));
-			rule->rank = underscore_count(rule->canon);
+		map_put(&seen, key->string, (void *)1);
+		if (!add_span_rules(x, key->string, key)) {
+			ok = 0;
+			break;
 		}
 	}
-	return 1;
+	map_free(&seen);
+	return ok;
 }
 
 static void mutable_free(MatchIndex *x);
@@ -278,7 +376,7 @@ void match_index_free(MatchIndex *x)
 		if (x->spans.slots[i].key) {
 			SpanList *list = x->spans.slots[i].value;
 			for (int r = 0; r < list->n; r++)
-				DEL(list->rules[r].content);
+				rule_free(&list->rules[r]);
 			free(list->rules);
 			free(list);
 		}
@@ -313,8 +411,15 @@ static MatchIndex *build_index(const J *view, int mutable)
 		put_first(&x->fwd, k->string, (void *)1, 0);
 	EACH(k, GET(synonyms, "rev"))
 		put_first(&x->rev, k->string, k, 1);
+	/*
+	 * Folded entity names lead back to the first entity that folds to
+	 * them (craigtrim/mutatoc#25).
+	 */
 	EACH(v, GET(view, "entities")) {
-		put_first(&x->entities, S(v), (void *)1, 1);
+		char *owned;
+		const char *name = ufold_view(S(v), &owned);
+		put_first(&x->entities, name, (void *)S(v), !owned);
+		free(owned);
 		x->entity_count++;
 	}
 	EACH(k, GET(view, "ner"))
@@ -401,13 +506,43 @@ typedef struct {
 } ExactWindow;
 static int spacing_token(J *token)
 {
-	if (*S(GET(token, "normal")) || GET(token, "swaps"))
+	if (GET(token, "swaps"))
+		return 0;
+	/*
+	 * Joiners are as invisible as whitespace, and a normal counts as empty
+	 * when it folds away, so tokens prepared before folding agree with new
+	 * ones. Folding never removes ASCII (craigtrim/mutatoc#25).
+	 */
+	const char *normal = S(GET(token, "normal"));
+	if ((unsigned char)*normal >= 0x80) {
+		char *owned;
+		int empty = !*ufold_view(normal, &owned);
+		free(owned);
+		if (!empty)
+			return 0;
+	} else if (*normal)
 		return 0;
 	const char *text = S(GET(token, "text"));
-	while (*text)
-		if (!uspace(uread(&text)))
+	while (*text) {
+		uint32_t c = uread(&text);
+		if (!uspace(c) && !ujoiner(c))
 			return 0;
+	}
 	return 1;
+}
+
+/*
+ * Window text compares folded whoever produced the tokens, so tokens prepared
+ * before folding still match (craigtrim/mutatoc#25). Takes ownership of s.
+ */
+static char *folded(char *s)
+{
+	char *owned;
+	ufold_view(s, &owned);
+	if (!owned)
+		return s;
+	free(s);
+	return owned;
 }
 
 /* Mandatory line breaks in whitespace tokens (craigtrim/mutatoc#19). */
@@ -436,7 +571,7 @@ static char *exact_sequence(J *token, int length)
 			buf_put(&b, " ");
 		buf_put(&b, S(GET(token, "normal")));
 	}
-	char *s = norm(b.p ? b.p : "", 1, 0);
+	char *s = folded(norm(b.p ? b.p : "", 1, 0));
 	free(b.p);
 	return s;
 }
@@ -460,7 +595,7 @@ static void window_matches(ExactWindow *window, int remaining,
 			buf_put(&b, " ");
 		buf_put(&b, S(GET(token, "normal")));
 		Map *words = words_at(x, n);
-		char *s = norm(b.p, 1, 0);
+		char *s = folded(norm(b.p, 1, 0));
 		if (words && words->size &&
 		    !(n == 1 && GET(window->token, "swaps")) &&
 		    map_get(words, s)) {
@@ -703,12 +838,19 @@ typedef struct {
 	int *keyed, keyed_count; /* forms that key span rules, in byte order */
 } Forms;
 
-/* The index of a normal form, added on first sight; -1 if memory runs out. */
-static int form_id(Forms *f, const MatchIndex *index, const char *name)
+/*
+ * The index of a normal form, added on first sight; -1 if memory runs out.
+ * Forms are folded like the span rules they key (craigtrim/mutatoc#25).
+ */
+static int form_id(Forms *f, const MatchIndex *index, const char *unfolded)
 {
+	char *owned;
+	const char *name = ufold_view(unfolded, &owned);
 	int id = (int)(uintptr_t)map_get(&f->ids, name);
-	if (id)
+	if (id) {
+		free(owned);
 		return id - 1;
+	}
 	if (f->count == f->cap) {
 		int cap = f->cap ? f->cap * 2 : 64;
 		Form *forms = realloc(f->forms, (size_t)cap * sizeof(*forms));
@@ -717,14 +859,17 @@ static int form_id(Forms *f, const MatchIndex *index, const char *name)
 			f->forms = forms;
 		if (keyed)
 			f->keyed = keyed;
-		if (!forms || !keyed)
+		if (!forms || !keyed) {
+			free(owned);
 			return -1;
+		}
 		f->cap = cap;
 	}
 	Form *x = &f->forms[f->count];
-	x->name = copy(name);
+	x->name = owned ? owned : copy(name);
 	if (!x->name)
 		return -1;
+	name = x->name;
 	x->rules = map_get((Map *)&index->spans, name);
 	x->at = (Occurrences){ 0 };
 	map_put(&f->ids, name, (void *)(uintptr_t)(f->count + 1));
@@ -751,16 +896,169 @@ static void forms_free(Forms *f)
 }
 
 /*
+ * The forms the spans stage has had at each token since its last span over
+ * several tokens. Only spans over one token keep the token count, so only
+ * they can bring a sequence back, and a stage that brings one back would
+ * pick the same spans again without end (craigtrim/mutatoc#25).
+ */
+typedef struct {
+	uint64_t hash; /* of the current sequence */
+	uint64_t *hashes; /* hashes[c]: the sequence before change c */
+	int *at, *was; /* change c gave token at[c] a new form; was[c] before */
+	int count, cap, started;
+	Map seen; /* each hash in hashes, and the current one */
+} Sequence;
+
+/* One token's form at one position, mixed so that sequences XOR together. */
+static uint64_t place_hash(int at, int form)
+{
+	uint64_t z = ((uint64_t)(uint32_t)at << 32 | (uint32_t)form) +
+		     0x9e3779b97f4a7c15ull;
+	z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ull;
+	z = (z ^ (z >> 27)) * 0x94d049bb133111ebull;
+	return z ^ (z >> 31);
+}
+
+static void sequence_mark(Sequence *q, uint64_t hash)
+{
+	char key[24];
+	snprintf(key, sizeof(key), "%016llx", (unsigned long long)hash);
+	map_put(&q->seen, key, (void *)1);
+}
+
+static void sequence_reset(Sequence *q)
+{
+	q->count = q->started = 0;
+	map_free(&q->seen);
+}
+
+static void sequence_free(Sequence *q)
+{
+	sequence_reset(q);
+	free(q->hashes);
+	free(q->at);
+	free(q->was);
+}
+
+/* Starts the record at the current sequence. */
+static void sequence_start(Sequence *q, const int *form, int n)
+{
+	q->hash = 0;
+	for (int i = 0; i < n; i++)
+		q->hash ^= place_hash(i, form[i]);
+	sequence_mark(q, q->hash);
+	q->started = 1;
+}
+
+/* Records that token at changed from form was to form now; 0 if memory runs out. */
+static int sequence_change(Sequence *q, int at, int was, int now)
+{
+	if (q->count == q->cap) {
+		int cap = q->cap ? q->cap * 2 : 16;
+		uint64_t *hashes =
+			realloc(q->hashes, (size_t)cap * sizeof(*hashes));
+		if (hashes)
+			q->hashes = hashes;
+		int *a = realloc(q->at, (size_t)cap * sizeof(*a));
+		if (a)
+			q->at = a;
+		int *w = realloc(q->was, (size_t)cap * sizeof(*w));
+		if (w)
+			q->was = w;
+		if (!hashes || !a || !w)
+			return 0;
+		q->cap = cap;
+	}
+	q->hashes[q->count] = q->hash;
+	q->at[q->count] = at;
+	q->was[q->count++] = was;
+	q->hash ^= place_hash(at, was) ^ place_hash(at, now);
+	sequence_mark(q, q->hash);
+	return 1;
+}
+
+/*
+ * Whether giving token at the form now brings back a sequence the record
+ * holds. A matching hash is confirmed against the sequence it names, rebuilt
+ * by undoing the later changes, so a hash collision never stops a span.
+ * Returns -1 if memory runs out.
+ */
+static int sequence_seen(Sequence *q, const int *form, int n, int at, int now)
+{
+	uint64_t hash = q->hash ^ place_hash(at, form[at]) ^
+			place_hash(at, now);
+	char key[24];
+	snprintf(key, sizeof(key), "%016llx", (unsigned long long)hash);
+	if (!map_get(&q->seen, key))
+		return 0;
+	int *old = malloc((size_t)(n ? n : 1) * sizeof(*old));
+	if (!old)
+		return -1;
+	memcpy(old, form, (size_t)n * sizeof(*old));
+	int found = 0;
+	for (int c = q->count; c >= 0 && !found; c--) {
+		if (c < q->count)
+			old[q->at[c]] = q->was[c];
+		if ((c == q->count ? q->hash : q->hashes[c]) != hash)
+			continue;
+		found = 1;
+		for (int i = 0; i < n && found; i++)
+			found = old[i] == (i == at ? now : form[i]);
+	}
+	free(old);
+	return found;
+}
+
+/* Whether a span already covers this token on its own or with others. */
+static int spanned(const J *t)
+{
+	return !strcmp(S(GET(GET(t, "swaps"), "type")), "spans");
+}
+
+/* A token's text offsets, which name it across the sweeps of one parse. */
+static void range_key(const J *t, char key[48])
+{
+	snprintf(key, 48, "%.0f,%.0f", GET(t, "x")->valuedouble,
+		 GET(t, "y")->valuedouble);
+}
+
+/*
+ * A token whose history holds this many spans along one branch takes no more
+ * spans over it alone. Each span is three levels of JSON and a request holds
+ * at most 1,000, so the spans leave room for exact and hierarchy matches in a
+ * result that goes back in through parse_tokens; the limit also bounds the
+ * work of rules that keep a token changing without bringing a sequence back
+ * (craigtrim/mutatoc#25).
+ */
+#define HISTORY_DEPTH 256
+
+/* The most spans along one branch of a token's history. */
+static int history_depth(const J *t)
+{
+	int deepest = 0;
+	EACH(u, GET(GET(t, "swaps"), "tokens")) {
+		int depth = history_depth(u);
+		if (depth > deepest)
+			deepest = depth;
+	}
+	return deepest + spanned(t);
+}
+
+/*
  * Applies span rules until none fits, so a text gets every span its words
  * allow rather than one per sweep (craigtrim/mutatoc#11). Each round takes the
  * best-ranked rule's tightest window, as a single pass always did. The forms
  * and their positions are indexed once and updated after each collapse
  * instead of being rebuilt from the token list. Whitespace-only tokens take
  * no position, just as they never interrupt an exact phrase, but a span
- * still covers those between its words (craigtrim/mutatoc#12).
+ * still covers those between its words (craigtrim/mutatoc#12). A token
+ * takes no more spans over it alone once its history is HISTORY_DEPTH deep,
+ * or, in this sweep or a later one, once its span would bring back an
+ * earlier sequence; frozen_at holds those by their offsets
+ * (craigtrim/mutatoc#25).
  */
-static J *spans(const MatchIndex *index, J *ts, const J *names,
-		int line_breaks, mc_error *e)
+static J *spans(const MatchIndex *index, J *ts, const J *names, int line_breaks,
+		Map *frozen_at, mc_error *e)
 {
 	int n = SIZE(ts), applications = 0, word_cap = 0, i = 0;
 	Forms f = { 0 };
@@ -771,8 +1069,13 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 	int *token = malloc((size_t)(n ? n : 1) * sizeof(*token));
 	int *line = line_breaks ?
 		malloc((size_t)(n ? n : 1) * sizeof(*line)) : NULL;
+	/* Whether each token is frozen, and how deep its history goes. */
+	int *frozen = calloc((size_t)(n ? n : 1), sizeof(*frozen));
+	int *depth = malloc((size_t)(n ? n : 1) * sizeof(*depth));
+	Sequence q = { 0 };
 	Occurrences **words = NULL;
-	if (!form || !at || !spacing || !token || (line_breaks && !line)) {
+	if (!form || !at || !spacing || !token || !frozen || !depth ||
+	    (line_breaks && !line)) {
 		fail(e, 1, "Cannot allocate span positions");
 		goto done;
 	}
@@ -780,6 +1083,12 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 		spacing[i] = spacing_token(t);
 		if (line_breaks && line_boundary(t))
 			spacing[i] |= 2;
+		if (frozen_at->size) {
+			char key[48];
+			range_key(t, key);
+			frozen[i] = map_get(frozen_at, key) != NULL;
+		}
+		depth[i] = history_depth(t);
 		if ((form[i++] = form_id(&f, index, S(GET(t, "normal")))) < 0) {
 			fail(e, 1, "Cannot allocate span positions");
 			goto done;
@@ -849,8 +1158,24 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 						valid = 0;
 				}
 				int x = 0, y = 0;
-				if (valid &&
-				    span_window(words, k, r, line, &x, &y)) {
+				valid = valid &&
+					span_window(words, k, r, line, &x, &y);
+				/*
+				 * One position means every word is the same form;
+				 * take its first occurrence that may change.
+				 */
+				if (valid && x == y) {
+					const Occurrences *o = words[0];
+					valid = 0;
+					for (int j = 0; j < o->n && !valid; j++)
+						if (!frozen[token[o->at[j]]] &&
+						    depth[token[o->at[j]]] <
+							    HISTORY_DEPTH) {
+							x = y = o->at[j];
+							valid = 1;
+						}
+				}
+				if (valid) {
 					best = r;
 					bx = token[x];
 					by = token[y] + 1;
@@ -860,14 +1185,40 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 		}
 		if (!best)
 			break;
-		if (++applications > 100000) {
-			fail(e, 4, "Matching operation limit exceeded");
-			break;
-		}
 		const char *canon = best->canon;
 		int id = form_id(&f, index, canon);
 		if (id < 0) {
 			fail(e, 1, "Cannot allocate span positions");
+			break;
+		}
+		/*
+		 * A span over one token that a span already covers must not bring
+		 * back a sequence of forms the stage has had, or the stage would
+		 * pick the same spans again without end. That token takes no more
+		 * spans over it alone, and the stage picks again. A stage that ends
+		 * never brings a sequence back, so this changes none of its results.
+		 */
+		if (by - bx == 1) {
+			if (!q.started)
+				sequence_start(&q, form, n);
+			J *t = cJSON_GetArrayItem(ts, bx);
+			int seen = spanned(t) ?
+					   sequence_seen(&q, form, n, bx, id) :
+					   0;
+			if (seen < 0) {
+				fail(e, 1, "Cannot allocate span positions");
+				break;
+			}
+			if (seen) {
+				char key[48];
+				range_key(t, key);
+				map_put(frozen_at, key, (void *)1);
+				frozen[bx] = 1;
+				continue;
+			}
+		}
+		if (++applications > 100000) {
+			fail(e, 4, "Matching operation limit exceeded");
 			break;
 		}
 		J *ner = index->live ? STR("NER") :
@@ -875,15 +1226,33 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 		J *r = swap(ts, bx, by, canon, "spans", names, ner, 100.0);
 		DEL(ner);
 		ts = collapse(ts, bx, by, r);
+		if (by - bx > 1)
+			sequence_reset(&q);
+		else if (!sequence_change(&q, bx, form[bx], id)) {
+			fail(e, 1, "Cannot allocate span positions");
+			break;
+		}
+		for (i = bx + 1; i < by; i++)
+			if (depth[i] > depth[bx])
+				depth[bx] = depth[i];
+		depth[bx]++;
 		form[bx] = id;
 		spacing[bx] = 0;
+		frozen[bx] = 0;
 		memmove(form + bx + 1, form + by,
 			(size_t)(n - by) * sizeof(*form));
 		memmove(spacing + bx + 1, spacing + by,
 			(size_t)(n - by) * sizeof(*spacing));
+		memmove(frozen + bx + 1, frozen + by,
+			(size_t)(n - by) * sizeof(*frozen));
+		memmove(depth + bx + 1, depth + by,
+			(size_t)(n - by) * sizeof(*depth));
 		n -= by - bx - 1;
 	}
 done:
+	sequence_free(&q);
+	free(depth);
+	free(frozen);
 	free(line);
 	free(words);
 	free(token);
@@ -917,11 +1286,10 @@ static char *product(J **choices, int count, int at, Buf *parts, Map *entities,
 		return NULL;
 	if (at == count) {
 		/* Lowercase the joined form, not each part, because final sigma is contextual. */
-		char *l = lower(parts->p ? parts->p : "");
-		if (map_get(entities, l))
-			return l;
+		char *l = folded(lower(parts->p ? parts->p : ""));
+		const char *entity = map_get(entities, l);
 		free(l);
-		return NULL;
+		return entity ? copy(entity) : NULL;
 	}
 	size_t mark = parts->n;
 	EACH(v, choices[at]) {
@@ -1051,13 +1419,15 @@ J *match_tokens(const MatchIndex *x, J *ts, const J *names, int ctr,
 		return NULL;
 	}
 	int sweeps = ctr >= 2 ? 1 : 3 - ctr;
+	Map frozen = { 0 };
 	for (int i = 0; i < sweeps && !e->code; i++) {
 		ts = exact(x, ts, names, line_breaks, e);
 		if (!e->code)
-			ts = spans(x, ts, names, line_breaks, e);
+			ts = spans(x, ts, names, line_breaks, &frozen, e);
 		if (!e->code)
 			ts = hierarchy(x, ts, names, line_breaks, e);
 	}
+	map_free(&frozen);
 	if (e->code) {
 		DEL(ts);
 		return NULL;
@@ -1073,8 +1443,12 @@ J *transform_tokens(J *d, const MatchIndex *x, const J *input, const J *names,
 	J *ts = DUP(input);
 	if (!strcmp(stage, "exact"))
 		return exact(x, ts, names, line_breaks, err);
-	if (!strcmp(stage, "spans"))
-		return spans(x, ts, names, line_breaks, err);
+	if (!strcmp(stage, "spans")) {
+		Map frozen = { 0 };
+		ts = spans(x, ts, names, line_breaks, &frozen, err);
+		map_free(&frozen);
+		return ts;
+	}
 	if (!strcmp(stage, "hierarchy"))
 		return hierarchy(x, ts, names, line_breaks, err);
 	if (!strcmp(stage, "augment")) {
@@ -1396,20 +1770,42 @@ void match_index_member(MatchIndex *x, const char *kind, const char *key,
 		 !strcmp(kind, "ner") ? &x->ner :
 					      &x->spans;
 	if (m == &x->spans) {
-		SpanList *list = map_get(m, key);
-		if (list) {
-			for (int i = 0; i < list->n; i++)
-				DEL(list->rules[i].content);
-			free(list->rules);
-			free(list);
+		/*
+		 * The folded list may also hold rules of other keys that fold
+		 * alike; replace only this key's. A key that folds away put its
+		 * rules under other words, so every list is searched for them
+		 * (craigtrim/mutatoc#25).
+		 */
+		char *name = ufold(key);
+		J *names = ARR();
+		if (*name)
+			ADD(names, STR(name));
+		else
+			for (size_t i = 0; i < m->cap; i++)
+				if (m->slots[i].key)
+					ADD(names, STR(m->slots[i].key));
+		EACH(n, names) {
+			SpanList *list = map_get(m, S(n));
+			if (!list)
+				continue;
+			int kept = 0;
+			for (int i = 0; i < list->n; i++) {
+				if (!strcmp(list->rules[i].origin, key))
+					rule_free(&list->rules[i]);
+				else
+					list->rules[kept++] = list->rules[i];
+			}
+			list->n = kept;
+			if (!kept) {
+				free(list->rules);
+				free(list);
+				map_delete(m, S(n));
+			}
 		}
-		map_delete(m, key);
-		if (value) {
-			J *one = OBJ();
-			cJSON_AddItemReferenceToObject(one, key, value);
-			index_spans(x, one);
-			DEL(one);
-		}
+		DEL(names);
+		free(name);
+		if (value)
+			add_span_rules(x, key, value);
 	} else if (value)
 		map_put(m, key, value);
 	else

@@ -74,13 +74,50 @@ A prepared MDA snapshot stores extracted matching views. Loading one does not re
 `parse` and `tokenize` split plain text natively, as sent. A consumer that wants spaced apostrophes rejoined, or contractions and abbreviations expanded, does that before sending the text (see [Input text](index.md#input-text)). Each token is `{id, text, x, y, normal}`:
 
 - `text` is a slice of the input, and concatenating every token's `text` reproduces the input. A word keeps the one space that follows it. Any other run of whitespace (tabs, line breaks, further spaces) is its own token, whose `normal` is empty.
-- `x` and `y` are code point offsets into the input: `x` is where the token starts and `y` is where it ends without its trailing whitespace, so a whitespace token has `y` equal to `x`.
-- `normal` is the text lowercased, with every hyphen and dash folded to `-`, every apostrophe and single quote folded to `'`, and every double quote, including the pairs ``` `` ``` and `´´`, folded to `"`. Matching reads `normal` for word forms; optional line boundaries also inspect whitespace token `text`.
+- `x` and `y` are code point offsets into the input: `x` is where the token starts and `y` is where it ends without its trailing whitespace, so a whitespace token has `y` equal to `x`. Invisible characters are not whitespace, so they count toward `y`.
+- `normal` is the text lowercased, with every hyphen and dash folded to `-`, every apostrophe and single quote folded to `'`, and every double quote, including the pairs ``` `` ``` and `´´`, folded to `"`. Accents and invisible characters are then dropped, so `Café` has the `normal` `cafe` (see [Normalization](#normalization)). Matching reads `normal` for word forms; optional line boundaries also inspect whitespace token `text`.
 - `id` is `<hash>#<index>`: the MurmurHash64A (seed 1) of the token's text without its trailing space, and its position in the result. Treat ids as opaque identifiers scoped to one tokenization result; they are not stable across tokenizer changes.
 
-Punctuation becomes its own token, except a period or comma inside a number, an apostrophe inside a word, and an ampersand between letters. A period or comma that ends a number is split off (`2020.` becomes `2020` and `.`), and so are underscores that open or close a word (`_name_`). An apostrophe that ends a word is split off as a closing quote, except after a plural `s` (`dogs'`). A pair of backticks or acute accents is one token. Every character that folds to `'` behaves as `'` in these rules, so `Driver’s` is one token just as `Driver's` is. Contractions stay whole (`don't`, `can't`, `y'all`, `O'Brien`), and so do numbers written with units (`5G`, `9am`, `500mg`) and words such as `cannot`. Abbreviations split at their periods (`dept.` becomes `dept` and `.`). `tests/test_tokenize.c` pins these cases, and `tests/test_token_fidelity.c` holds every token and entity to the input.
+Punctuation becomes its own token, except a period or comma inside a number, an apostrophe inside a word, and an ampersand between letters. A period or comma that ends a number is split off (`2020.` becomes `2020` and `.`), and so are underscores that open or close a word (`_name_`). An apostrophe that ends a word is split off as a closing quote, except after a plural `s` (`dogs'`). A pair of backticks or acute accents is one token. Every character that folds to `'` behaves as `'` in these rules, so `Driver’s` is one token just as `Driver's` is. Contractions stay whole (`don't`, `can't`, `y'all`, `O'Brien`), and so do numbers written with units (`5G`, `9am`, `500mg`) and words such as `cannot`. Abbreviations split at their periods (`dept.` becomes `dept` and `.`). A combining mark or default ignorable code point, including the Hangul fillers that are also letters, never splits a word or a run of whitespace: it stays in the token it follows, and one at the start of the text joins the token after it. `cafe` followed by U+0301 is one token, `da` U+00AD `ta` is one token, and `data` U+200B `science` is the one word `datascience`. The punctuation rules above look past these characters, so `2020.` followed by U+00AD still splits off its period and `A&` U+00AD `B` stays one token. A token made only of whitespace and invisible characters has an empty `normal` and counts as whitespace in matching. `tests/test_tokenize.c` pins these cases, and `tests/test_token_fidelity.c` holds every token and entity to the input.
 
 A matched entity is a new token `{id, x, y, ner, text, normal, swaps}` whose `normal` is the canonical form and whose `swaps.tokens` holds the original tokens. For `parse`, its `text` is the input from its `x` to its `y`; for `parse_tokens`, it is its tokens' trimmed texts joined by single spaces. `ner` comes from the ontology; a `hierarchy` match with no ontology label has a null `ner`.
+
+## Normalization
+
+<!-- craigtrim/mutatoc#25 -->
+
+Matching compares folded text, so a word matches whether or not it carries accents or invisible characters. The fold is the same on both sides: input tokens get it in `normal`, and labels, synonyms, span rules and hierarchy entity names get it when the match index is built. Folding a word:
+
+1. lowercases it as before, so `ẞ` becomes `ß` and `İ` becomes `i` with a combining dot above;
+2. applies canonical decomposition, so a precomposed `é` and `e` followed by U+0301 become the same;
+3. drops every combining mark (general categories Mn, Mc and Me) and every default ignorable code point, including the reserved code points Unicode already marks default ignorable. Hangul syllables stay whole.
+
+A span rule word that folds away, such as a lone soft hyphen between two words of a label, is no longer required, so `alpha` U+00AD `beta` matches as `alpha beta` does. Words that fold alike are the same word, so `café cafe` matches as `cafe cafe` does. A span rule that dropping its invisible-only words leaves with a single word is removed, since the exact stage already matches that word through the folded synonym. A span rule word that was already empty stays required and never matches, as before.
+
+Span rules can turn one token back and forth: folding can let a rule match the entity another rule made, through its words or its context, and rules written without accents can do the same. 0.7.0 kept applying such spans without end. The spans stage now keeps the sequence of forms it has had since its last span over several tokens. When the span it picks covers one token that a span already covers, and would bring back a sequence the stage has already had, that token takes no more spans over it alone, in this sweep or a later one, and the stage picks again, trying the word's next occurrence. A stage that finishes never brings a sequence back, so this changes no result that finished before.
+
+A token whose history holds 256 spans along one branch takes no more spans over it alone; exact and hierarchy matches in that history do not count. Each span is three levels of JSON and a request accepts at most 1,000, so the spans leave room for those matches in a result that goes back in through `parse_tokens`. The limit also bounds rules that keep a token changing without bringing a sequence back: single-word rules with context words can count in binary, so a counter of 12 bits would otherwise take 24,570 spans before its sequence repeats. Results differ from 0.7.0 only where one token went past 256 such spans; for a seven-bit counter 0.7.0 returned a history 509 spans deep, which its own `parse_tokens` rejected as invalid JSON.
+
+With `tea+tea` on a class `cafe` and `café+café` on a class `tea`, the text `tea` ends on `cafe` and the text `cafe` ends on `tea`. A token that no span covers yet always takes its first span, so `cafe+cafe` on a class `café` matches both words of `cafe x cafe`.
+
+| Label | Text | Match |
+| --- | --- | --- |
+| `Café Crème` | `cafe creme`, `CAFÉ CRÈME`, `cafe` U+0301 ` cre` U+0300 `me` | yes |
+| `cafe` | `I went to café  san martin` | yes, reporting `café` at 10 to 14 |
+| `İstanbul` | `istanbul`, `ISTANBUL` | yes |
+| `Straße` | `STRAẞE` | yes |
+| `Straße` | `STRASSE` | no: `ß` is not folded to `ss` |
+| `data science` | `da` U+00AD `ta science`, `data` U+200B ` science` | yes |
+| `data science` | `data` U+200B `science` | no: the invisible character joins the one word `datascience` |
+| `Café Crème` | `ｃａｆé ｃｒèｍｅ` (fullwidth) | no: fullwidth letters are not folded |
+
+Folding leaves alone dotless `ı`, `ß`, fullwidth and other compatibility forms, and punctuation between words ([#16](https://github.com/craigtrim/mutatoc/issues/16)).
+
+A match reports the input exactly as sent: `text`, `x` and `y` never change, and only `normal` shows the folded form matching compared. Prepared snapshots keep their stored views. Their keys are folded when the match index is built, so a snapshot prepared before folding matches exactly as a fresh load of the same ontology does. Tokens supplied to `parse_tokens` and `transform_tokens` are compared folded as well, including a token whose `normal` folds to nothing, which counts as whitespace. Tokens prepared before folding therefore still match, and their `normal` comes back as sent.
+
+When two entries of one ontology fold to the same key, such as `cafe` and `café`, a lookup word stored in exactly the folded form wins, and otherwise the first entry does. Span rules whose keys fold alike apply in source order, and a hierarchy match takes the first entity name that folds to it.
+
+The Unicode data comes from the vendored utf8proc 2.12.0, which implements Unicode 18.0.0. `tests/test_normalization.c` runs Unicode's `NormalizationTest.txt` against it and checks the fold of every code point against `UnicodeData.txt` and `DerivedCoreProperties.txt`. It also crosses accent forms, case and invisible characters through fresh, live, updated and 0.7.0-snapshot engines, `parse_tokens` and the exact stage.
 
 ## Line boundaries
 
@@ -96,7 +133,7 @@ With the label `Glacier Survey` loaded, the default mode matches this text as a 
 
 Boundary mode prevents exact, span and hierarchy windows from crossing a whitespace-only token containing LF (U+000A), CR (U+000D), VT (U+000B), FF (U+000C), NEL (U+0085), LINE SEPARATOR (U+2028) or PARAGRAPH SEPARATOR (U+2029). CRLF and runs containing blank lines also block matching. Spaces, tabs and other non-breaking whitespace keep their existing behavior. Span distance still counts only non-whitespace tokens; context requirements still search the whole document. The `augment` stage accepts and validates the option, but annotation does not create matching windows.
 
-Tokenization, source text, code point offsets and swap history are unchanged. For caller-supplied tokens, a boundary token must have empty `normal`, contain only whitespace in `text`, and have no `swaps` field. Supplied tokens remain atomic: embedded breaks in a visible token, a nonempty `normal`, or existing swap history do not cause retokenization.
+Tokenization, source text, code point offsets and swap history are unchanged. For caller-supplied tokens, a boundary token must have empty `normal`, contain only whitespace and invisible characters in `text` (see [Normalization](#normalization)), and have no `swaps` field. Supplied tokens remain atomic: embedded breaks in a visible token, a nonempty `normal`, or existing swap history do not cause retokenization.
 
 ## Span rules
 

@@ -5,8 +5,10 @@
  * Every case checks the token contract: the tokens concatenate back to the
  * input, each token's text sits at its x, y leaves out trailing whitespace,
  * no token is empty, a whitespace token is zero-width with an empty normal,
- * normal is the text lowercased with every hyphen, dash and quote folded,
- * and an entity's text is the input from its x to its y. Each family of
+ * normal is the text lowercased with every hyphen, dash and quote folded and
+ * accents and invisible characters dropped (craigtrim/mutatoc#25, whose fold
+ * the normalization suite checks against the Unicode data files), and an
+ * entity's text is the input from its x to its y. Each family of
  * generated inputs also asserts its token split or its matches against
  * tests/fixtures/ontologies/apostrophe-synonyms-test.ttl. Expected results
  * come from the rules in the issue, never from an earlier engine run, and
@@ -114,8 +116,12 @@ static char *expected_normal(const char *text)
 		else
 			buf_add(&b, at, (size_t)(p - at));
 	}
-	char *out = norm(b.p ? b.p : "", 1, 0);
+	/* Folding can leave whitespace at an end, which is trimmed too. */
+	char *lowered = norm(b.p ? b.p : "", 1, 0), *folded = ufold(lowered),
+	     *out = norm(folded, 0, 0);
 	free(b.p);
+	free(lowered);
+	free(folded);
 	return out;
 }
 
