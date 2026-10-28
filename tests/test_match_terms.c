@@ -24,10 +24,10 @@ typedef struct {
 	int minimum, cases, failed, xfail;
 } Category;
 static Category categories[] = {
-	{ "table", 57 },	{ "case", 288 },	 { "whitespace", 150 },
-	{ "punctuation", 581 }, { "unicode", 74 },	 { "position", 176 },
-	{ "spans", 615 },	{ "lists", 30 },	 { "engines", 6 },
-	{ "errors", 65 },	{ "cross-check", 1953 },
+	{ "table", 57 },	{ "case", 288 },      { "whitespace", 150 },
+	{ "punctuation", 581 }, { "unicode", 74 },    { "position", 176 },
+	{ "spans", 615 },	{ "lists", 30 },      { "engines", 6 },
+	{ "errors", 65 },	{ "isolation", 111 }, { "cross-check", 2054 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -1080,8 +1080,11 @@ static void spans_family(void)
 /* ---------------------------------------------------------------------- */
 /* Term lists.                                                            */
 
-/* Terms topicN area for N below count, matched where text names them. */
-static void long_list(int count)
+/*
+ * Terms topicN area for N below count, matched where text names them. Returns
+ * the seconds the check took.
+ */
+static double long_list(int count)
 {
 	J *terms = ARR();
 	for (int i = 0; i < count; i++) {
@@ -1105,19 +1108,27 @@ static void long_list(int count)
 	clock_t started = clock();
 	check("lists", terms, text_of(&t), NULL, want, MATCH);
 	double seconds = (double)(clock() - started) / CLOCKS_PER_SEC;
-	if (seconds > 10.0)
-		fail_case(category("lists"), "long list took over 10 seconds",
-			  text_of(&t), NULL, NULL);
 	DEL(want);
 	DEL(terms);
 	text_free(&t);
+	return seconds;
 }
 
 static void lists_family(void)
 {
+	/*
+	 * Work grows with the list: 100 times the terms may take at most 300
+	 * times as long, in any build, sanitized or not.
+	 */
 	long_list(1);
-	long_list(100);
-	long_list(10000);
+	double hundred = long_list(100), ten_thousand = long_list(10000);
+	if (ten_thousand > 300 * (hundred > 0.001 ? hundred : 0.001)) {
+		char what[96];
+		snprintf(what, sizeof(what),
+			 "10,000 terms took %.3f s against %.3f s for 100",
+			 ten_thousand, hundred);
+		fail_case(category("lists"), what, NULL, NULL, NULL);
+	}
 	static const struct {
 		const char *terms[6], *text;
 		int m[3][3];
@@ -1220,6 +1231,79 @@ static void lists_family(void)
 		DEL(terms);
 		DEL(want);
 	}
+}
+
+/* ---------------------------------------------------------------------- */
+/* Isolation: one term's match is never another term's input.             */
+
+static void isolation_family(void)
+{
+	/*
+	 * A term's list index after its words in the text, which a canonical
+	 * form built from the index must not match.
+	 */
+	static const int places[] = { 0, 1, 9, 10, 99 };
+	static const struct {
+		const char *term, *words;
+	} forms[] = {
+		{ "alpha", "alpha" },
+		{ "alpha beta", "alpha beta" },
+		{ "alpha+beta", "alpha x beta" },
+		{ "alpha_beta", "alpha beta" },
+		{ "caf\xc3\xa9", "cafe" },
+	};
+	static const char *const seps[] = { " ", "  ", "\t", "\n" };
+	for (size_t i = 0; i < sizeof(places) / sizeof(*places); i++)
+		for (size_t f = 0; f < sizeof(forms) / sizeof(*forms); f++)
+			for (size_t s = 0; s < 4; s++) {
+				J *terms = ARR();
+				for (int k = 0; k < places[i]; k++) {
+					char pad[24];
+					snprintf(pad, sizeof(pad), "pad%d", k);
+					ADD(terms, STR(pad));
+				}
+				ADD(terms, STR(forms[f].term));
+				char index[16];
+				snprintf(index, sizeof(index), "%d", places[i]);
+				Text t = { 0 };
+				J *want = ARR();
+				Mark m = mark(&t);
+				put(&t, forms[f].words);
+				expect(want, places[i], &t, m);
+				put(&t, seps[s]);
+				put(&t, index);
+				both("isolation", terms, text_of(&t), NULL,
+				     want, MATCH);
+				DEL(want);
+				DEL(terms);
+				text_free(&t);
+			}
+	/* An index joined to the word by an underscore is one other word. */
+	J *terms = ARR(), *want = ARR();
+	ADD(terms, STR("alpha"));
+	both("isolation", terms, "alpha_0", NULL, want, NO_MATCH);
+	DEL(terms);
+	DEL(want);
+	/*
+	 * A + term whose first part folds to another term's canonical form
+	 * once an invisible character drops away.
+	 */
+	static const char *const invisible[] = { "\xe2\x80\x8b", "\xc2\xad",
+						 "\xcc\x81", "\xe2\x81\xa0",
+						 "\xef\xb8\x8f" };
+	for (size_t v = 0; v < 5; v++)
+		for (int mode = 0; mode < 2; mode++) {
+			char second[32];
+			snprintf(second, sizeof(second), "x 0 %s+y",
+				 invisible[v]);
+			const char *const list[] = { "x", second };
+			J *pair = terms_of(list, 2), *one_match = ARR();
+			expect_at(one_match, 0, "x y", 0, 1);
+			check("isolation", pair, "x y", modes[mode], one_match,
+			      MATCH);
+			DEL(pair);
+			DEL(one_match);
+		}
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1674,6 +1758,7 @@ int main(void)
 	position_family();
 	spans_family();
 	lists_family();
+	isolation_family();
 	engines_family();
 	errors_family();
 	int total = 0, short_of = 0;
