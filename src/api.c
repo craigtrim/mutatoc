@@ -500,8 +500,9 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 	/* Matching boundaries belong to each request (craigtrim/mutatoc#19). */
 	int line_breaks = 0;
 	J *mode = GET(q, "line_breaks");
-	if (mode && (!strcmp(op, "parse") || !strcmp(op, "parse_tokens") ||
-		     !strcmp(op, "transform_tokens"))) {
+	if (mode &&
+	    (!strcmp(op, "parse") || !strcmp(op, "parse_tokens") ||
+	     !strcmp(op, "transform_tokens") || !strcmp(op, "match_terms"))) {
 		if (!cJSON_IsString(mode) ||
 		    (strcmp(S(mode), "ignore") && strcmp(S(mode), "boundary"))) {
 			fail(err, 2, "line_breaks must be ignore or boundary");
@@ -647,6 +648,12 @@ static J *dispatch(mc_engine *e, J *q, mc_error *err)
 			fail(err, 1, "Cannot allocate tokens");
 		return tokens;
 	}
+	/*
+	 * Terms match without an ontology, on any engine, and never touch the
+	 * loaded one or its match index (craigtrim/mutatoc#23).
+	 */
+	if (!strcmp(op, "match_terms"))
+		return match_terms(q, line_breaks, err);
 	if (!strcmp(op, "generate_spans"))
 		return generate_spans(
 			GET(q, "data"),

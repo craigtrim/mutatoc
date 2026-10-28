@@ -6,7 +6,7 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 option(MUTATOC_SANITIZE "Enable address and undefined behavior sanitizers" OFF)
-add_library(mutatoc src/util.c src/parallel.c src/prefix_index.c src/uri.c src/literal.c src/graph.c src/rdf.c src/source.c src/json_rdf.c src/ontology.c src/lookup_state.c src/update.c src/update_index.c src/data_query.c src/views.c src/match.c src/tokenize.c src/fold.c src/api.c vendor/cjson/cJSON.c vendor/utf8proc/utf8proc.c)
+add_library(mutatoc src/util.c src/parallel.c src/prefix_index.c src/uri.c src/literal.c src/graph.c src/rdf.c src/source.c src/json_rdf.c src/ontology.c src/lookup_state.c src/update.c src/update_index.c src/data_query.c src/views.c src/match.c src/tokenize.c src/fold.c src/terms.c src/api.c vendor/cjson/cJSON.c vendor/utf8proc/utf8proc.c)
 target_include_directories(mutatoc PUBLIC include PRIVATE src vendor/cjson vendor/utf8proc)
 # utf8proc compiles into the library, with its symbols hidden where the compiler supports it (craigtrim/mutatoc#25).
 target_compile_definitions(mutatoc PRIVATE UTF8PROC_STATIC)
@@ -134,6 +134,9 @@ if(BUILD_TESTING)
     target_sources(mutatoc_normalization PRIVATE vendor/utf8proc/utf8proc.c)
   endif()
   add_test(NAME normalization COMMAND mutatoc_normalization ${CMAKE_CURRENT_SOURCE_DIR})
+  # Term matching without an ontology (craigtrim/mutatoc#23).
+  mutatoc_program(mutatoc_match_terms tests/test_match_terms.c)
+  add_test(NAME match_terms COMMAND mutatoc_match_terms)
   # Timing ceilings only mean something in optimized builds without sanitizers.
   # Build type names are case-insensitive in CMake, so compare them uppercased.
   set(optimized_configurations Release RelWithDebInfo MinSizeRel)

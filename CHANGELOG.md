@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- A `match_terms` request finds where each term in a list occurs in a text, with no ontology loaded ([#23](https://github.com/craigtrim/mutatoc/issues/23)). It returns `[{term, x, y}]`, where `term` is the position in the list. A plain term matches as an exact phrase and an `alpha+beta` term also as a span rule, the way the same text matches as an ontology label, and the request never touches a loaded ontology. See [Term matching](docs/protocol.md#term-matching).
+
 ### Changed
 
 - Matching folds accents and invisible characters ([#25](https://github.com/craigtrim/mutatoc/issues/25)). `cafe` matches `café` in either direction, a decomposed accent matches a precomposed one, `İstanbul` matches `istanbul`, and a soft hyphen or zero width space inside a word no longer blocks a match. `ß` still differs from `ss`, and fullwidth letters are not folded. A match reports the input exactly as sent; only token `normal` values change, and a combining mark or invisible character no longer splits a word. Prepared snapshots load unchanged and match as fresh loads do. See [Normalization](docs/protocol.md#normalization).
