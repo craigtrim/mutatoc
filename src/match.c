@@ -28,6 +28,7 @@ typedef struct {
 	char *origin; /* Owned: the unfolded key the rule is stored under. */
 	const char *canon;
 	int distance, forward, reverse, rank;
+	int folded; /* Folding changed or dropped a content word. */
 } SpanRule;
 typedef struct {
 	SpanRule *rules;
@@ -221,17 +222,23 @@ static int index_lookup(MatchIndex *x, J *lookup)
 	return ok;
 }
 
-/* Replaces each string in a with its folded form, keeping the order. */
-static void fold_strings(J *a)
+/*
+ * Replaces each string in a with its folded form, keeping the order, and
+ * says whether any changed.
+ */
+static int fold_strings(J *a)
 {
+	int changed = 0;
 	EACH(v, a) {
 		char *owned;
 		ufold_view(S(v), &owned);
 		if (owned) {
+			changed |= strcmp(owned, S(v)) != 0;
 			cJSON_SetValuestring(v, owned);
 			free(owned);
 		}
 	}
+	return changed;
 }
 
 static void rule_free(SpanRule *r)
@@ -251,6 +258,26 @@ static void drop_empty(J *a)
 			DEL(cJSON_DetachItemViaPointer(a, v));
 		v = next;
 	}
+}
+
+/*
+ * Whether folding changed a token's form: an entity's canonical form, or a
+ * word whose normal or text holds accents or invisible characters.
+ */
+static int folded_token(J *t)
+{
+	J *swaps = GET(t, "swaps");
+	const char *s = swaps ? S(GET(swaps, "canon")) : S(GET(t, "normal"));
+	char *owned;
+	ufold_view(s, &owned);
+	int changed = owned && strcmp(owned, s);
+	free(owned);
+	if (changed || swaps)
+		return changed;
+	for (const char *p = S(GET(t, "text")); *p;)
+		if (ufolds(uread(&p)))
+			return 1;
+	return 0;
 }
 
 /*
@@ -306,7 +333,7 @@ static int add_span_rules(MatchIndex *x, const char *key, J *rules)
 		unique(rule.content, key);
 		sort_strings(rule.content, 1);
 		int words = SIZE(rule.content);
-		fold_strings(rule.content);
+		rule.folded = fold_strings(rule.content);
 		drop_empty(rule.content);
 		/*
 		 * A rule that dropping invisible words leaves with one word only
@@ -901,17 +928,22 @@ static void forms_free(Forms *f)
 
 /*
  * A span over one token makes no progress when the token already is the
- * rule's entity, or when an earlier span over that one token already made
- * the rule's canonical form. Rules that folding sets against each other
- * would otherwise trade one token back and forth; each token can change
- * only a few times, and a form the exact stage made may still come back
- * once the context changes (craigtrim/mutatoc#25).
+ * rule's entity. When folding is what lets the rule match the token, the
+ * span also makes none when an earlier span over that one token already
+ * made the rule's canonical form: rules that folding sets against each
+ * other would otherwise trade the token back and forth, and with the check
+ * each token changes only a few times. Rules and tokens folding leaves
+ * alone keep 0.7.0's behavior, where a form may come back once the context
+ * changes (craigtrim/mutatoc#25).
  */
-static int no_progress(J *t, const char *canon)
+static int no_progress(J *t, const SpanRule *r)
 {
+	const char *canon = r->canon;
 	J *swaps = GET(t, "swaps");
 	if (swaps && !strcmp(S(GET(swaps, "canon")), canon))
 		return 1;
+	if (!r->folded && !folded_token(t))
+		return 0;
 	while (swaps && !strcmp(S(GET(swaps, "type")), "spans")) {
 		J *inner = GET(swaps, "tokens");
 		if (!inner || !inner->child || inner->child->next)
@@ -1051,7 +1083,7 @@ static J *spans(const MatchIndex *index, J *ts, const J *names,
 					for (int j = 0; j < o->n && !valid; j++)
 						if (!no_progress(
 							    items[token[o->at[j]]],
-							    r->canon)) {
+							    r)) {
 							x = y = o->at[j];
 							valid = 1;
 						}
