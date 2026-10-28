@@ -17,6 +17,7 @@ Each request is one JSON object. The CLI's `--serve` mode accepts newline-delimi
 | `transform_tokens` | `stage`, `tokens`, optional `line_breaks` | one optional service: `exact`, `spans`, `hierarchy`, or `augment` |
 | `parse_tokens` | `tokens`, optional `ctr`, `line_breaks` | matched tokens and canonical text, without tokenizing |
 | `tokenize` | `text` | the tokens `parse` would match |
+| `match_terms` | `text`, `terms`, optional `line_breaks` | where each term occurs in the text, with no ontology; see [Term matching](#term-matching) |
 | `generate_synonyms` | `data`, optional `reverse` | synonym view |
 | `generate_lookup` | `data` | lookup view |
 | `generate_spans` | `data`, optional `distance`, `plus_only`, `comma_lists` | span rules |
@@ -152,6 +153,36 @@ A span rule matches the words of a multiword label when they appear near each ot
 The spans stage applies rules one at a time until none fits. Each round takes the rule whose canonical form has the most underscores, at its tightest window, and collapses that window, so a text gets every span its words allow. A parse runs three sweeps of exact, span and hierarchy matching (the request's `ctr` field changes the count), and the number of sweeps does not limit the spans; `transform_tokens` with `stage: "spans"` runs the same loop. A collapsed match is one position, so a later span may cover an earlier match, as `Psychology Behavioral` covers the exact match `psychology` with the span `behavioral_psychology`. The distance bounds each window in the stream as it stands, so nested spans can cover more of the original text than the distance suggests. A stage that applies 100,000 spans fails with code 4, as exact matching does.
 
 `tests/test_span_distance.c` holds these rules.
+
+## Term matching
+
+<!-- craigtrim/mutatoc#23 -->
+
+`match_terms` finds where each term in a list occurs in a text, with no ontology:
+
+```json
+{"op":"match_terms","text":"Intro to Data Science","terms":["data science","intro"]}
+```
+
+returns
+
+```json
+[{"term":1,"x":0,"y":5},{"term":0,"x":9,"y":21}]
+```
+
+`term` is the position of the matched term in `terms`, and `x` and `y` are code point offsets into `text`, as for tokens. Matches come in text order. The request works on any engine, with or without an ontology, and never reads, replaces or invalidates a loaded ontology or its match index.
+
+A term matches the way the same text matches as an ontology label, through the same tokenizer and [normalization](#normalization):
+
+- A plain term such as `data science` matches only as its exact phrase, in any case and with any whitespace between its words. An underscore inside a term is a word break, as in a label, so `data_science` matches `data science` and not `data_science`.
+- A term written `alpha+beta` also matches as a span rule with key `alpha` and content `beta`, under the [span rules](#span-rules) at distance 4: its words in either order, up to four positions apart. Case and spaces around `+` do not matter. An empty part, as in `alpha++beta` or `+beta`, never matches, so that term has no span, and its other words still match as a phrase. Only `+` terms make span rules; a plain term with several words does not, unlike a multiword label in a load.
+- `line_breaks` takes `ignore`, the default, or `boundary`, as for `parse`; see [line boundaries](#line-boundaries).
+
+When terms compete for the same words, the stages decide as they do for labels. The exact stage takes the longest phrase, then the leftmost. Among `+` terms, the one with the most words wins, then the one whose first word sorts first. Words that one match has taken are not reported again inside another term's match.
+
+Terms that read the same once lowercased, with the whitespace around their words and their `+` parts trimmed, are one term, and a match reports the first of them. Terms that differ only in accents are separate: as when two labels fold alike, a term already written in the folded form wins, such as `cafe` beside `café`, and otherwise the first one listed. An empty term, or one of only whitespace and `+`, never matches, and an empty `terms` array returns `[]`.
+
+A `text` that is not a string, `terms` that is not an array, a term that is not a string, or an invalid `line_breaks` returns error 2.
 
 ## Errors and ownership
 
