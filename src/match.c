@@ -1023,15 +1023,16 @@ static void range_key(const J *t, char key[48])
 }
 
 /*
- * A token whose swap history is this deep takes no more spans over it alone.
- * Each level is three levels of JSON and a request holds at most 1,000, so a
- * result still goes back in through parse_tokens; the limit also bounds the
+ * A token whose history holds this many spans along one branch takes no more
+ * spans over it alone. Each span is three levels of JSON and a request holds
+ * at most 1,000, so the spans leave room for exact and hierarchy matches in a
+ * result that goes back in through parse_tokens; the limit also bounds the
  * work of rules that keep a token changing without bringing a sequence back
  * (craigtrim/mutatoc#25).
  */
 #define HISTORY_DEPTH 256
 
-/* How many swaps deep a token's history goes. */
+/* The most spans along one branch of a token's history. */
 static int history_depth(const J *t)
 {
 	int deepest = 0;
@@ -1040,7 +1041,7 @@ static int history_depth(const J *t)
 		if (depth > deepest)
 			deepest = depth;
 	}
-	return GET(t, "swaps") ? deepest + 1 : 0;
+	return deepest + spanned(t);
 }
 
 /*
