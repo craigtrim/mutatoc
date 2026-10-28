@@ -41,7 +41,7 @@ static Category categories[] = {
 	{ "mixed runs", 1584 },	    { "punctuation edges", 58 },
 	{ "invisible words", 240 }, { "offsets", 516 },
 	{ "self spans", 30 },	    { "legacy tokens", 70 },
-	{ "folded repeats", 61 },   { "expected fails", 12 },
+	{ "folded repeats", 71 },   { "expected fails", 12 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -1390,9 +1390,9 @@ static void folded_repeats(void)
 
 		/*
 		 * Visible words that fold alike close a cycle 0.7.0 never had.
-		 * A token stops before a span repeats a form an earlier span
-		 * over it made: tea goes to cafe and back to tea, and cafe and
-		 * café stay cafe, as in 0.7.0.
+		 * A span folding lets match never repeats a form an earlier
+		 * span over the same token made, so tea ends on cafe as in
+		 * 0.7.0, and cafe and café stay cafe.
 		 */
 		const char *const visible[2][2] = {
 			{ "cafe", "tea+tea" },
@@ -1403,8 +1403,8 @@ static void folded_repeats(void)
 			const char *text, *canon;
 			int x, y;
 		} tea[] = {
-			{ "tea", "tea", 0, 3 },
-			{ "tea x cafe", "tea", 0, 3 },
+			{ "tea", "cafe", 0, 3 },
+			{ "tea x cafe", "cafe", 0, 3 },
 			{ "cafe", "cafe", 0, 4 },
 			{ "caf\xc3\xa9", "cafe", 0, 4 },
 		};
@@ -1484,6 +1484,100 @@ static void folded_repeats(void)
 	DEL(want);
 	DEL(chain);
 	mc_destroy(acyclic);
+
+	/*
+	 * ASCII chains that come back to a form a span made, once the context
+	 * changed, as 0.7.0 runs them: q p to a p, b p, b z, a z, then e, and
+	 * the same entered through a two-word span.
+	 */
+	static const struct {
+		const char *q_rule, *lookup, *text;
+		int y;
+	} entries[] = {
+		{ "{\"canon\":\"a\",\"content\":[\"q\"]", "[\"q\"]", "q p", 3 },
+		{ "{\"canon\":\"a\",\"content\":[\"r\"]", "[\"q\",\"r\"]",
+		  "q r p", 5 },
+	};
+	for (size_t k = 0; k < 2; k++) {
+		Buf b = { 0 };
+		buf_put(&b,
+			"{\"op\":\"load\",\"name\":\"context\",\"snapshot\":{"
+			"\"synonyms\":{\"fwd\":{\"q\":[\"q\"],\"r\":[\"r\"]},"
+			"\"rev\":{\"q\":[\"q\"],\"r\":[\"r\"]},\"lookup\":{\"1\":");
+		buf_put(&b, entries[k].lookup);
+		buf_put(&b, "}},\"spans\":{\"q\":[");
+		buf_put(&b, entries[k].q_rule);
+		buf_put(&b,
+			",\"distance\":4,\"forward\":true,\"reverse\":true}],"
+			"\"a\":[{\"canon\":\"b\",\"content\":[\"a\"],\"context\":"
+			"[\"p\"],\"distance\":4,\"forward\":true,\"reverse\":"
+			"true},{\"canon\":\"e\",\"content\":[\"z\"],\"distance\":"
+			"4,\"forward\":true,\"reverse\":true}],\"p\":[{\"canon\":"
+			"\"z\",\"content\":[\"p\"],\"context\":[\"b\"],"
+			"\"distance\":4,\"forward\":true,\"reverse\":true}],"
+			"\"b\":[{\"canon\":\"a\",\"content\":[\"b\"],\"context\":"
+			"[\"z\"],\"distance\":4,\"forward\":true,\"reverse\":"
+			"true}]}}}");
+		char *wire = buf_take(&b);
+		mc_engine *ctx = mc_create();
+		J *loaded_ctx = test_call(ctx, wire);
+		if (!loaded_ctx)
+			fail_case(c, "context snapshot failed to load", NULL,
+				  NULL, NULL);
+		for (int ctr = 0; ctr < 3; ctr += 2) {
+			c->cases++;
+			J *expected = one_entity("e", entries[k].text, 0,
+						 (size_t)entries[k].y);
+			J *rq = OBJ();
+			PUT(rq, "op", STR("parse"));
+			PUT(rq, "text", STR(entries[k].text));
+			PUT(rq, "ctr", NUM(ctr));
+			J *rs = test_request(ctx, rq);
+			J *got = cJSON_IsTrue(GET(rs, "ok")) ?
+					 entities_of(GET(GET(rs, "result"),
+							 "tokens"),
+						     1) :
+					 NULL;
+			if (!got || !cJSON_Compare(got, expected, 1))
+				fail_case(c, "context chain through spans",
+					  entries[k].text, expected, got);
+			DEL(got);
+			DEL(rs);
+			DEL(rq);
+			DEL(expected);
+		}
+		DEL(loaded_ctx);
+		mc_destroy(ctx);
+		free(wire);
+	}
+
+	/*
+	 * ASCII rules whose canonical form has an accent: folding lets the
+	 * second rule match the first one's entity, and the parse finishes.
+	 */
+	for (int i = 0; i < 2; i++) {
+		const char *const accented[2][2] = {
+			{ "caf\xc3\xa9", "tea+tea" }, { "tea", "cafe+cafe" }
+		};
+		mc_engine *ae = turtle_engine(accented, 2, interfaces[i]);
+		static const char *const ae_texts[] = { "tea", "cafe",
+							"tea x cafe x tea" };
+		for (size_t t = 0; ae && t < 3; t++) {
+			c->cases++;
+			J *rs = request_tokens(ae, "parse", ae_texts[t], NULL,
+					       NULL);
+			J *got = rs ? entities_of(GET(rs, "tokens"), 1) : NULL;
+			if (!got || !SIZE(got))
+				fail_case(c, "accented canonical cycle",
+					  ae_texts[t], NULL, got);
+			DEL(got);
+			DEL(rs);
+		}
+		if (!ae)
+			fail_case(c, "load failed", "accented cycle", NULL,
+				  NULL);
+		mc_destroy(ae);
+	}
 	/* An authored rule repeating one ASCII word, as 0.7.0 matched it. */
 	J *snapshot = cJSON_Parse(
 		"{\"synonyms\":{\"fwd\":{\"e_test\":[\"zzz\"]},"
