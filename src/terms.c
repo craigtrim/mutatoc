@@ -55,6 +55,69 @@ static int label(const char *term, Buf *value, Buf *words)
 	return ok;
 }
 
+/*
+ * Keeps only the lookup words that are a term's aliases. generate_lookup also
+ * lists each canonical form and its variants, as it does for class names, and
+ * those must never match text.
+ */
+static void aliases_only(J *lookup, const J *fwd)
+{
+	Map aliases = { 0 };
+	EACH(k, fwd)
+		EACH(v, k)
+			map_put(&aliases, S(v), (void *)1);
+	EACH(group, lookup) {
+		J *v = group->child;
+		while (v) {
+			J *next = v->next;
+			if (!map_get(&aliases, S(v)))
+				DEL(cJSON_DetachItemViaPointer(group, v));
+			v = next;
+		}
+	}
+	map_free(&aliases);
+}
+
+/* Whether a span word keeps whitespace once folded. */
+static int spaced(const char *s)
+{
+	char *owned;
+	const char *p = ufold_view(s, &owned);
+	int found = 0;
+	while (*p && !found)
+		found = uspace(uread(&p));
+	free(owned);
+	return found;
+}
+
+/*
+ * Drops span rules with a word that keeps whitespace once folded. Whitespace
+ * splits tokens, so such a word never matches text; it could only match a
+ * canonical form, which always holds a space.
+ */
+static void text_rules_only(J *spans)
+{
+	J *k = spans ? spans->child : NULL;
+	while (k) {
+		J *next = k->next;
+		J *r = spaced(k->string) ? NULL : k->child;
+		while (r) {
+			J *after = r->next;
+			int drop = 0;
+			EACH(w, GET(r, "content"))
+				drop |= spaced(S(w));
+			EACH(w, GET(r, "context"))
+				drop |= spaced(S(w));
+			if (drop)
+				DEL(cJSON_DetachItemViaPointer(k, r));
+			r = after;
+		}
+		if (spaced(k->string) || !k->child)
+			DEL(cJSON_DetachItemViaPointer(spans, k));
+		k = next;
+	}
+}
+
 J *match_terms(const J *q, int line_breaks, mc_error *e)
 {
 	const J *text = GET(q, "text"), *terms = GET(q, "terms");
@@ -74,9 +137,10 @@ J *match_terms(const J *q, int line_breaks, mc_error *e)
 	/*
 	 * Each distinct term gets its own canonical form: its words joined by
 	 * underscores, which the spans stage ranks by, then the index of the
-	 * first term that reads that way and a space. No word, span key or
-	 * alias ends in a space, so one term's match never feeds another term's
-	 * rule, and the side map gives back that first term.
+	 * first term that reads that way and a space. A canonical form always
+	 * holds a space, which no word of text does, so with the lookup and
+	 * span rules kept to text one term's match never feeds another term,
+	 * and the side map gives back that first term.
 	 */
 	J *raw = OBJ(), *out = ARR();
 	Map patterns = { 0 }, first = { 0 };
@@ -121,12 +185,16 @@ J *match_terms(const J *q, int line_breaks, mc_error *e)
 		return out;
 	}
 	J *view = OBJ(), *synonyms = OBJ(), *fwd = generate_synonyms(raw, 0);
-	PUT(synonyms, "lookup", generate_lookup(fwd));
+	J *lookup = generate_lookup(fwd);
+	aliases_only(lookup, fwd);
+	PUT(synonyms, "lookup", lookup);
 	PUT(synonyms, "fwd", fwd);
 	PUT(synonyms, "rev", generate_synonyms(raw, 1));
 	PUT(view, "synonyms", synonyms);
 	/* Only + terms make span rules, as plus_only does for labels. */
-	PUT(view, "spans", generate_spans(raw, 4, 1, 0));
+	J *spans = generate_spans(raw, 4, 1, 0);
+	text_rules_only(spans);
+	PUT(view, "spans", spans);
 	DEL(raw);
 	MatchIndex *index = match_index_build(view);
 	J *tokens = index ? tokenize_text(S(text)) : NULL;
