@@ -42,7 +42,7 @@ static Category categories[] = {
 	{ "invisible words", 240 }, { "offsets", 516 },
 	{ "self spans", 30 },	    { "legacy tokens", 70 },
 	{ "folded repeats", 71 },   { "span cycles", 115 },
-	{ "expected fails", 12 },
+	{ "span bounds", 14 },	    { "expected fails", 12 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -1953,6 +1953,266 @@ static void span_cycles(void)
 }
 
 /*
+ * A binary counter of n bits in span rules: six single-word rules per bit,
+ * each needing a context word, step a pointer token c through the bits while
+ * the bit tokens flip between z and o. start becomes c0 when the text holds
+ * the entry word, and the pointer then counts to 2^n: at the top it stops at
+ * done, or wraps to c0, so the sequence repeats only after 6(2^n - 1) spans.
+ */
+static char *counter_load(int bits, const char *entry, int wraps)
+{
+	Buf b = { 0 };
+	char rule[256];
+	buf_put(&b, "{\"op\":\"load\",\"name\":\"counter\",\"snapshot\":{"
+		    "\"synonyms\":{\"fwd\":{\"seed\":[\"seed\"]},\"rev\":"
+		    "{\"seed\":[\"seed\"]},\"lookup\":{\"1\":[\"seed\"]}},"
+		    "\"spans\":{\"start\":[{\"canon\":\"c0\",\"content\":"
+		    "[\"start\"],\"context\":[\"");
+	buf_put(&b, entry);
+	buf_put(&b, "\"],\"distance\":4,\"forward\":true,\"reverse\":true}]");
+	for (int i = 0; i < bits; i++) {
+		char next[16];
+		if (i + 1 < bits || wraps)
+			snprintf(next, sizeof(next), "c%d", (i + 1) % bits);
+		else
+			snprintf(next, sizeof(next), "done");
+		const char *const shape =
+			",\"%s%d\":[{\"canon\":\"%s\",\"content\":[\"%s%d\"],"
+			"\"context\":[\"%s%d\"],\"distance\":4,\"forward\":true,"
+			"\"reverse\":true}";
+		char canon[16];
+		/* c to s when the bit is zero, c to r when it is one. */
+		snprintf(canon, sizeof(canon), "s%d", i);
+		snprintf(rule, sizeof(rule), shape, "c", i, canon, "c", i, "z",
+			 i);
+		buf_put(&b, rule);
+		snprintf(canon, sizeof(canon), "r%d", i);
+		snprintf(rule, sizeof(rule),
+			 ",{\"canon\":\"%s\",\"content\":[\"c%d\"],\"context\":"
+			 "[\"o%d\"],\"distance\":4,\"forward\":true,"
+			 "\"reverse\":true}]",
+			 canon, i, i);
+		buf_put(&b, rule);
+		/* The bit flips under s and r. */
+		snprintf(canon, sizeof(canon), "o%d", i);
+		snprintf(rule, sizeof(rule), shape, "z", i, canon, "z", i, "s",
+			 i);
+		buf_put(&b, rule);
+		buf_put(&b, "]");
+		snprintf(canon, sizeof(canon), "z%d", i);
+		snprintf(rule, sizeof(rule), shape, "o", i, canon, "o", i, "r",
+			 i);
+		buf_put(&b, rule);
+		buf_put(&b, "]");
+		/* s returns to the lowest bit; r carries to the next one. */
+		snprintf(rule, sizeof(rule), shape, "s", i, "c0", "s", i, "o",
+			 i);
+		buf_put(&b, rule);
+		buf_put(&b, "]");
+		snprintf(rule, sizeof(rule), shape, "r", i, next, "r", i, "z",
+			 i);
+		buf_put(&b, rule);
+		buf_put(&b, "]");
+	}
+	buf_put(&b, "}}}");
+	return buf_take(&b);
+}
+
+/*
+ * A chain of single-word rules w0 to w1 to w300, where w256 and tail in
+ * either order become m0, and m0 becomes m1.
+ */
+static char *chain_load(void)
+{
+	Buf b = { 0 };
+	char rule[200];
+	buf_put(&b, "{\"op\":\"load\",\"name\":\"chain\",\"snapshot\":{"
+		    "\"synonyms\":{\"fwd\":{\"seed\":[\"seed\"]},\"rev\":"
+		    "{\"seed\":[\"seed\"]},\"lookup\":{\"1\":[\"seed\"]}},"
+		    "\"spans\":{\"m0\":[{\"canon\":\"m1\",\"content\":[\"m0\"],"
+		    "\"distance\":4,\"forward\":true,\"reverse\":true}]");
+	for (int k = 0; k < 300; k++) {
+		snprintf(rule, sizeof(rule),
+			 ",\"w%d\":[{\"canon\":\"w%d\",\"content\":[\"w%d\"],"
+			 "\"distance\":4,\"forward\":true,\"reverse\":true}",
+			 k, k + 1, k);
+		buf_put(&b, rule);
+		if (k == 256)
+			buf_put(&b, ",{\"canon\":\"m0\",\"content\":[\"w256\","
+				    "\"tail\"],\"distance\":4,\"forward\":true,"
+				    "\"reverse\":true}");
+		buf_put(&b, "]");
+	}
+	buf_put(&b, "}}}");
+	return buf_take(&b);
+}
+
+/* The most spans over one token alone that any token in tokens carries. */
+static int deepest_history(const J *tokens, const char **canon)
+{
+	int deepest = 0;
+	EACH(t, tokens) {
+		int depth = 0;
+		const J *u = t;
+		while (GET(u, "swaps")) {
+			const J *inner = GET(GET(u, "swaps"), "tokens");
+			depth++;
+			if (SIZE(inner) != 1)
+				break;
+			u = inner->child;
+		}
+		if (depth > deepest) {
+			deepest = depth;
+			*canon = S(GET(GET(t, "swaps"), "canon"));
+		}
+	}
+	return deepest;
+}
+
+/*
+ * Rules that keep a token changing without bringing a sequence back: the
+ * counter. 0.7.0 finishes a counter that stops, with 2^(n+2) - 3 spans over
+ * the pointer token, and never finishes one that wraps. A token takes at most
+ * 256 spans over it alone in one parse, so every counter returns at once and
+ * its result goes back through parse_tokens. A counter that stops within 256
+ * spans ends on done as in 0.7.0, and one that wraps within them stops one
+ * span short of its first sequence, at 2^(n+2) - 4. craigtrim/mutatoc#25
+ */
+static void span_bounds(void)
+{
+	static const struct {
+		int bits, wraps, ctr;
+		const char *entry;
+		int deepest;
+		const char *canon;
+	} cases[] = {
+		{ 5, 0, 0, "cafe", 125, "done" },
+		{ 6, 0, 0, "cafe", 253, "done" },
+		{ 7, 0, 0, "cafe", 256, NULL },
+		{ 6, 1, 0, "caf\xc3\xa9", 252, NULL },
+		{ 8, 1, 0, "caf\xc3\xa9", 256, NULL },
+		{ 12, 1, 0, "caf\xc3\xa9", 256, NULL },
+		{ 12, 1, 2, "caf\xc3\xa9", 256, NULL },
+		{ 12, 1, -1000, "caf\xc3\xa9", 256, NULL },
+		{ 24, 1, 0, "caf\xc3\xa9", 256, NULL },
+		{ 64, 1, 0, "caf\xc3\xa9", 256, NULL },
+		{ 12, 1, 0, "cafe", 256, NULL },
+	};
+	Category *c = category("span bounds");
+	for (size_t k = 0; k < sizeof(cases) / sizeof(*cases); k++) {
+		char *load = counter_load(cases[k].bits, cases[k].entry,
+					  cases[k].wraps);
+		mc_engine *e = mc_create();
+		J *loaded = test_call(e, load);
+		free(load);
+		c->cases++;
+		Buf b = { 0 };
+		buf_put(&b, "start cafe");
+		for (int i = 0; i < cases[k].bits; i++) {
+			char word[16];
+			snprintf(word, sizeof(word), " z%d", i);
+			buf_put(&b, word);
+		}
+		char *text = buf_take(&b);
+		J *q = OBJ();
+		PUT(q, "op", STR("parse"));
+		PUT(q, "text", STR(text));
+		PUT(q, "ctr", NUM(cases[k].ctr));
+		clock_t started = clock();
+		J *r = loaded ? test_request(e, q) : NULL;
+		double seconds = (double)(clock() - started) / CLOCKS_PER_SEC;
+		J *tokens = cJSON_IsTrue(GET(r, "ok")) ?
+				    GET(GET(r, "result"), "tokens") :
+				    NULL;
+		const char *canon = "";
+		int deepest = tokens ? deepest_history(tokens, &canon) : -1;
+		int ok = tokens && seconds < 2.0 &&
+			 deepest == cases[k].deepest &&
+			 (!cases[k].canon || !strcmp(canon, cases[k].canon));
+		if (ok) {
+			/* The result goes back in as tokens. */
+			J *again = OBJ();
+			PUT(again, "op", STR("parse_tokens"));
+			PUT(again, "tokens", DUP(tokens));
+			J *back = test_request(e, again);
+			ok = cJSON_IsTrue(GET(back, "ok"));
+			DEL(back);
+			DEL(again);
+		}
+		if (!ok) {
+			char what[160];
+			snprintf(what, sizeof(what),
+				 "counter of %d bits: deepest %d, %.2f s, %s",
+				 cases[k].bits, deepest, seconds, canon);
+			fail_case(c, what, cases[k].entry, NULL, NULL);
+		}
+		DEL(r);
+		DEL(q);
+		DEL(loaded);
+		free(text);
+		mc_destroy(e);
+	}
+	/*
+	 * A chain stops at w256, where 0.7.0 went on to w300. A span over
+	 * several tokens keeps the deepest history it covers, so m0, one span
+	 * over tail and w256, stays m0.
+	 */
+	static const struct {
+		const char *text, *canon;
+		int deepest;
+	} chained[] = { { "w0", "w256", 256 }, { "tail w0", "m0", 1 } };
+	char *chain = chain_load();
+	mc_engine *ce = mc_create();
+	J *chain_loaded = test_call(ce, chain);
+	free(chain);
+	for (int k = 0; k < 2; k++) {
+		c->cases++;
+		J *r = chain_loaded ?
+			       request_tokens(ce, "parse", chained[k].text,
+					      NULL, NULL) :
+			       NULL;
+		const char *canon = "";
+		int deepest = r ? deepest_history(GET(r, "tokens"), &canon) :
+				  -1;
+		if (deepest != chained[k].deepest ||
+		    strcmp(canon, chained[k].canon))
+			fail_case(c, "chain past the history limit",
+				  chained[k].text, NULL, r);
+		DEL(r);
+	}
+	DEL(chain_loaded);
+	mc_destroy(ce);
+
+	/* The spans stage on its own is bounded the same way. */
+	char *load = counter_load(12, "caf\xc3\xa9", 1);
+	mc_engine *e = mc_create();
+	J *loaded = test_call(e, load);
+	free(load);
+	c->cases++;
+	const char *text = "start cafe z0 z1 z2 z3 z4 z5 z6 z7 z8 z9 z10 z11";
+	J *tokens = loaded ? request_tokens(e, "tokenize", text, NULL, NULL) :
+			     NULL;
+	J *q = OBJ();
+	PUT(q, "op", STR("transform_tokens"));
+	PUT(q, "stage", STR("spans"));
+	PUT(q, "tokens", tokens ? tokens : ARR());
+	clock_t started = clock();
+	J *r = test_request(e, q);
+	double seconds = (double)(clock() - started) / CLOCKS_PER_SEC;
+	const char *canon = "";
+	int deepest = cJSON_IsTrue(GET(r, "ok")) ?
+			      deepest_history(GET(r, "result"), &canon) :
+			      -1;
+	if (deepest != 256 || seconds >= 2.0)
+		fail_case(c, "spans stage counter of 12 bits", text, NULL,
+			  NULL);
+	DEL(r);
+	DEL(q);
+	DEL(loaded);
+	mc_destroy(e);
+}
+
+/*
  * A span rule that folding leaves with one word, on a class of that name,
  * must not match its own result again; it matches as the plain label does.
  */
@@ -2275,6 +2535,7 @@ int main(int argc, char **argv)
 	self_spans();
 	folded_repeats();
 	span_cycles();
+	span_bounds();
 	legacy_tokens(root);
 	offsets();
 	expected_fails();
