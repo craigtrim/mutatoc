@@ -56,26 +56,37 @@ static int label(const char *term, Buf *value, Buf *words)
 }
 
 /*
- * Keeps only the lookup words that are a term's aliases. generate_lookup also
- * lists each canonical form and its variants, as it does for class names, and
- * those must never match text.
+ * The lookup for the terms' aliases alone. generate_lookup also lists every
+ * key, which here is a canonical form that must never match text, and a key
+ * of several words would open its word-count group ahead of the aliases and
+ * change which of two aliases that fold alike wins. So the lookup is built
+ * with single-word placeholder keys, as an ontology's class ids are, and the
+ * placeholders are removed. They are uppercase, and an alias never is.
  */
-static void aliases_only(J *lookup, const J *fwd)
+static J *alias_lookup(const J *fwd)
 {
-	Map aliases = { 0 };
-	EACH(k, fwd)
-		EACH(v, k)
-			map_put(&aliases, S(v), (void *)1);
+	J *placed = OBJ();
+	Map placeholders = { 0 };
+	int i = 0;
+	EACH(k, fwd) {
+		char name[24];
+		snprintf(name, sizeof(name), "P%d", i++);
+		PUT(placed, name, DUP(k));
+		map_put(&placeholders, name, (void *)1);
+	}
+	J *lookup = generate_lookup(placed);
 	EACH(group, lookup) {
 		J *v = group->child;
 		while (v) {
 			J *next = v->next;
-			if (!map_get(&aliases, S(v)))
+			if (map_get(&placeholders, S(v)))
 				DEL(cJSON_DetachItemViaPointer(group, v));
 			v = next;
 		}
 	}
-	map_free(&aliases);
+	map_free(&placeholders);
+	DEL(placed);
+	return lookup;
 }
 
 /* Whether a span word keeps whitespace once folded. */
@@ -185,9 +196,7 @@ J *match_terms(const J *q, int line_breaks, mc_error *e)
 		return out;
 	}
 	J *view = OBJ(), *synonyms = OBJ(), *fwd = generate_synonyms(raw, 0);
-	J *lookup = generate_lookup(fwd);
-	aliases_only(lookup, fwd);
-	PUT(synonyms, "lookup", lookup);
+	PUT(synonyms, "lookup", alias_lookup(fwd));
 	PUT(synonyms, "fwd", fwd);
 	PUT(synonyms, "rev", generate_synonyms(raw, 1));
 	PUT(view, "synonyms", synonyms);
