@@ -16,6 +16,7 @@
 
 #include "testlib.h"
 #include "utf8proc.h"
+#include <time.h>
 
 #define FIXTURE "tests/fixtures/ontologies/accents-test.json"
 #define SNAPSHOT "tests/fixtures/ontologies/accents-test.0.7.0.snapshot.json"
@@ -40,7 +41,7 @@ static Category categories[] = {
 	{ "mixed runs", 1584 },	    { "punctuation edges", 58 },
 	{ "invisible words", 240 }, { "offsets", 516 },
 	{ "self spans", 30 },	    { "legacy tokens", 70 },
-	{ "folded repeats", 58 },   { "expected fails", 12 },
+	{ "folded repeats", 61 },   { "expected fails", 12 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -1388,8 +1389,10 @@ static void folded_repeats(void)
 		mc_destroy(e);
 
 		/*
-		 * Visible words that fold alike close a cycle 0.7.0 never had:
-		 * tea becomes cafe as before, and cafe and café finish.
+		 * Visible words that fold alike close a cycle 0.7.0 never had.
+		 * A token stops before a span repeats a form an earlier span
+		 * over it made: tea goes to cafe and back to tea, and cafe and
+		 * café stay cafe, as in 0.7.0.
 		 */
 		const char *const visible[2][2] = {
 			{ "cafe", "tea+tea" },
@@ -1400,10 +1403,10 @@ static void folded_repeats(void)
 			const char *text, *canon;
 			int x, y;
 		} tea[] = {
-			{ "tea", "cafe", 0, 3 },
-			{ "tea x cafe", "cafe", 0, 3 },
-			{ "cafe", NULL, 0, 0 },
-			{ "caf\xc3\xa9", NULL, 0, 0 },
+			{ "tea", "tea", 0, 3 },
+			{ "tea x cafe", "tea", 0, 3 },
+			{ "cafe", "cafe", 0, 4 },
+			{ "caf\xc3\xa9", "cafe", 0, 4 },
 		};
 		for (size_t t = 0; e && t < sizeof(tea) / sizeof(*tea); t++) {
 			c->cases++;
@@ -1425,10 +1428,62 @@ static void folded_repeats(void)
 			DEL(found);
 			DEL(r);
 		}
+		/*
+		 * The same cycle at 200 places costs a few changes per token,
+		 * not a search over every combination of them.
+		 */
+		Buf many = { 0 };
+		for (int k = 0; k < 200; k++)
+			buf_put(&many, k ? " x tea" : "tea");
+		char *text = buf_take(&many);
+		c->cases++;
+		clock_t started = clock();
+		J *r = e ? request_tokens(e, "parse", text, NULL, NULL) : NULL;
+		double seconds = (double)(clock() - started) / CLOCKS_PER_SEC;
+		J *found = r ? entities_of(GET(r, "tokens"), 1) : NULL;
+		if (!found || SIZE(found) != 200 || seconds > 5.0)
+			fail_case(c, "folded cycle at 200 places", NULL, NULL,
+				  NULL);
+		DEL(found);
+		DEL(r);
+		free(text);
 		if (!e)
 			fail_case(c, "load failed", "tea and cafe", NULL, NULL);
 		mc_destroy(e);
 	}
+
+	/*
+	 * Entity sequences a ga and c ea once shared a sequence hash; an
+	 * acyclic chain through them ends as in 0.7.0.
+	 */
+	mc_engine *acyclic = mc_create();
+	J *chain = test_call(
+		acyclic,
+		"{\"op\":\"load\",\"name\":\"collision\",\"snapshot\":{"
+		"\"synonyms\":{\"fwd\":{\"a\":[\"a\"],\"ga\":[\"ga\"]},"
+		"\"rev\":{\"a\":[\"a\"],\"ga\":[\"ga\"]},\"lookup\":{\"1\":"
+		"[\"a\",\"ga\"]}},\"spans\":{\"a\":[{\"canon\":\"c\","
+		"\"content\":[\"a\"],\"distance\":4,\"forward\":true,"
+		"\"reverse\":true}],\"c\":[{\"canon\":\"end\",\"content\":"
+		"[\"ea\"],\"distance\":4,\"forward\":true,\"reverse\":true}],"
+		"\"ga\":[{\"canon\":\"ea\",\"content\":[\"ga\"],\"distance\":4,"
+		"\"forward\":true,\"reverse\":true},{\"canon\":\"wrong\","
+		"\"content\":[\"c\"],\"distance\":4,\"forward\":true,"
+		"\"reverse\":true}]}}}");
+	if (!chain)
+		fail_case(c, "collision snapshot failed to load", NULL, NULL,
+			  NULL);
+	c->cases++;
+	J *want = one_entity("end", "a ga", 0, 4);
+	J *r = request_tokens(acyclic, "parse", "a ga", NULL, NULL);
+	J *found = r ? entities_of(GET(r, "tokens"), 1) : NULL;
+	if (!found || !cJSON_Compare(found, want, 1))
+		fail_case(c, "acyclic chain through a ga", "a ga", want, found);
+	DEL(found);
+	DEL(r);
+	DEL(want);
+	DEL(chain);
+	mc_destroy(acyclic);
 	/* An authored rule repeating one ASCII word, as 0.7.0 matched it. */
 	J *snapshot = cJSON_Parse(
 		"{\"synonyms\":{\"fwd\":{\"e_test\":[\"zzz\"]},"
