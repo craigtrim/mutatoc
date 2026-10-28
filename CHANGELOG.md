@@ -9,7 +9,7 @@
 
 ### Fixed
 
-- Span rules that turn one token back and forth no longer keep the spans stage running without end ([#25](https://github.com/craigtrim/mutatoc/issues/25)). Two single-word rules such as `a` to `b` and `b` to `a` made 0.7.0 keep applying spans without returning; the stage now stops changing that token once its forms would repeat. Every result that 0.7.0 finished is unchanged. See [Normalization](docs/protocol.md#normalization).
+- Span rules that turn one token back and forth no longer keep the spans stage running without end ([#25](https://github.com/craigtrim/mutatoc/issues/25)). Two single-word rules such as `a` to `b` and `b` to `a` made 0.7.0 keep applying spans without returning; the stage now stops changing that token once its forms would repeat. A token whose history is 256 spans deep also takes no more spans over it alone, which bounds rules that keep changing a token without repeating and keeps every result readable by `parse_tokens`. Results that 0.7.0 finished differ only where one token went past 256 such spans. See [Normalization](docs/protocol.md#normalization).
 
 ## 0.7.0 (2026-10-20)
 
