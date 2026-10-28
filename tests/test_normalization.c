@@ -42,7 +42,7 @@ static Category categories[] = {
 	{ "invisible words", 240 }, { "offsets", 516 },
 	{ "self spans", 30 },	    { "legacy tokens", 70 },
 	{ "folded repeats", 71 },   { "span cycles", 115 },
-	{ "span bounds", 14 },	    { "expected fails", 12 },
+	{ "span bounds", 16 },	    { "expected fails", 12 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -1958,15 +1958,23 @@ static void span_cycles(void)
  * the bit tokens flip between z and o. start becomes c0 when the text holds
  * the entry word, and the pointer then counts to 2^n: at the top it stops at
  * done, or wraps to c0, so the sequence repeats only after 6(2^n - 1) spans.
+ * With exact, start itself comes from four exact matches: p x0 is e0, e0 x1
+ * is e1, e1 x2 is e2 and e2 x3 is start.
  */
-static char *counter_load(int bits, const char *entry, int wraps)
+static char *counter_load(int bits, const char *entry, int wraps, int exact)
 {
 	Buf b = { 0 };
 	char rule[256];
-	buf_put(&b, "{\"op\":\"load\",\"name\":\"counter\",\"snapshot\":{"
-		    "\"synonyms\":{\"fwd\":{\"seed\":[\"seed\"]},\"rev\":"
-		    "{\"seed\":[\"seed\"]},\"lookup\":{\"1\":[\"seed\"]}},"
-		    "\"spans\":{\"start\":[{\"canon\":\"c0\",\"content\":"
+	buf_put(&b, "{\"op\":\"load\",\"name\":\"counter\",\"snapshot\":{");
+	buf_put(&b,
+		exact ? "\"synonyms\":{\"fwd\":{\"e0\":[\"p x0\"],\"e1\":"
+			"[\"e0 x1\"],\"e2\":[\"e1 x2\"],\"start\":[\"e2 x3\"]},"
+			"\"rev\":{\"p x0\":[\"e0\"],\"e0 x1\":[\"e1\"],"
+			"\"e1 x2\":[\"e2\"],\"e2 x3\":[\"start\"]},\"lookup\":"
+			"{\"2\":[\"p x0\",\"e0 x1\",\"e1 x2\",\"e2 x3\"]}}," :
+			"\"synonyms\":{\"fwd\":{\"seed\":[\"seed\"]},\"rev\":"
+			"{\"seed\":[\"seed\"]},\"lookup\":{\"1\":[\"seed\"]}},");
+	buf_put(&b, "\"spans\":{\"start\":[{\"canon\":\"c0\",\"content\":"
 		    "[\"start\"],\"context\":[\"");
 	buf_put(&b, entry);
 	buf_put(&b, "\"],\"distance\":4,\"forward\":true,\"reverse\":true}]");
@@ -2047,20 +2055,24 @@ static char *chain_load(void)
 	return buf_take(&b);
 }
 
-/* The most spans over one token alone that any token in tokens carries. */
+/* The most spans along one branch of a token's history. */
+static int span_levels(const J *t)
+{
+	int deepest = 0;
+	EACH(u, GET(GET(t, "swaps"), "tokens")) {
+		int depth = span_levels(u);
+		if (depth > deepest)
+			deepest = depth;
+	}
+	return deepest + !strcmp(S(GET(GET(t, "swaps"), "type")), "spans");
+}
+
+/* The most spans along one branch of any token's history in tokens. */
 static int deepest_history(const J *tokens, const char **canon)
 {
 	int deepest = 0;
 	EACH(t, tokens) {
-		int depth = 0;
-		const J *u = t;
-		while (GET(u, "swaps")) {
-			const J *inner = GET(GET(u, "swaps"), "tokens");
-			depth++;
-			if (SIZE(inner) != 1)
-				break;
-			u = inner->child;
-		}
+		int depth = span_levels(t);
 		if (depth > deepest) {
 			deepest = depth;
 			*canon = S(GET(GET(t, "swaps"), "canon"));
@@ -2072,42 +2084,46 @@ static int deepest_history(const J *tokens, const char **canon)
 /*
  * Rules that keep a token changing without bringing a sequence back: the
  * counter. 0.7.0 finishes a counter that stops, with 2^(n+2) - 3 spans over
- * the pointer token, and never finishes one that wraps. A token takes at most
- * 256 spans over it alone in one parse, so every counter returns at once and
- * its result goes back through parse_tokens. A counter that stops within 256
- * spans ends on done as in 0.7.0, and one that wraps within them stops one
- * span short of its first sequence, at 2^(n+2) - 4. craigtrim/mutatoc#25
+ * the pointer token, and never finishes one that wraps. A token whose history
+ * holds 256 spans takes no more spans over it alone, so every counter returns
+ * at once and its result goes back through parse_tokens. A counter that stops
+ * within 256 spans ends on done as in 0.7.0, also when exact matches made its
+ * start, and one that wraps within them stops one span short of its first
+ * sequence, at 2^(n+2) - 4. craigtrim/mutatoc#25
  */
 static void span_bounds(void)
 {
 	static const struct {
-		int bits, wraps, ctr;
+		int bits, wraps, ctr, exact;
 		const char *entry;
 		int deepest;
 		const char *canon;
 	} cases[] = {
-		{ 5, 0, 0, "cafe", 125, "done" },
-		{ 6, 0, 0, "cafe", 253, "done" },
-		{ 7, 0, 0, "cafe", 256, NULL },
-		{ 6, 1, 0, "caf\xc3\xa9", 252, NULL },
-		{ 8, 1, 0, "caf\xc3\xa9", 256, NULL },
-		{ 12, 1, 0, "caf\xc3\xa9", 256, NULL },
-		{ 12, 1, 2, "caf\xc3\xa9", 256, NULL },
-		{ 12, 1, -1000, "caf\xc3\xa9", 256, NULL },
-		{ 24, 1, 0, "caf\xc3\xa9", 256, NULL },
-		{ 64, 1, 0, "caf\xc3\xa9", 256, NULL },
-		{ 12, 1, 0, "cafe", 256, NULL },
+		{ 5, 0, 0, 0, "cafe", 125, "done" },
+		{ 6, 0, 0, 0, "cafe", 253, "done" },
+		{ 7, 0, 0, 0, "cafe", 256, NULL },
+		{ 6, 0, 0, 1, "cafe", 253, "done" },
+		{ 6, 1, 0, 0, "caf\xc3\xa9", 252, NULL },
+		{ 8, 1, 0, 0, "caf\xc3\xa9", 256, NULL },
+		{ 12, 1, 0, 0, "caf\xc3\xa9", 256, NULL },
+		{ 12, 1, 2, 0, "caf\xc3\xa9", 256, NULL },
+		{ 12, 1, -1000, 0, "caf\xc3\xa9", 256, NULL },
+		{ 24, 1, 0, 0, "caf\xc3\xa9", 256, NULL },
+		{ 64, 1, 0, 0, "caf\xc3\xa9", 256, NULL },
+		{ 12, 1, 0, 0, "cafe", 256, NULL },
+		{ 12, 1, 0, 1, "caf\xc3\xa9", 256, NULL },
 	};
 	Category *c = category("span bounds");
 	for (size_t k = 0; k < sizeof(cases) / sizeof(*cases); k++) {
 		char *load = counter_load(cases[k].bits, cases[k].entry,
-					  cases[k].wraps);
+					  cases[k].wraps, cases[k].exact);
 		mc_engine *e = mc_create();
 		J *loaded = test_call(e, load);
 		free(load);
 		c->cases++;
 		Buf b = { 0 };
-		buf_put(&b, "start cafe");
+		buf_put(&b,
+			cases[k].exact ? "p x0 x1 x2 x3 cafe" : "start cafe");
 		for (int i = 0; i < cases[k].bits; i++) {
 			char word[16];
 			snprintf(word, sizeof(word), " z%d", i);
@@ -2160,7 +2176,7 @@ static void span_bounds(void)
 	static const struct {
 		const char *text, *canon;
 		int deepest;
-	} chained[] = { { "w0", "w256", 256 }, { "tail w0", "m0", 1 } };
+	} chained[] = { { "w0", "w256", 256 }, { "tail w0", "m0", 257 } };
 	char *chain = chain_load();
 	mc_engine *ce = mc_create();
 	J *chain_loaded = test_call(ce, chain);
@@ -2184,7 +2200,7 @@ static void span_bounds(void)
 	mc_destroy(ce);
 
 	/* The spans stage on its own is bounded the same way. */
-	char *load = counter_load(12, "caf\xc3\xa9", 1);
+	char *load = counter_load(12, "caf\xc3\xa9", 1, 0);
 	mc_engine *e = mc_create();
 	J *loaded = test_call(e, load);
 	free(load);
