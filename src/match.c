@@ -1023,6 +1023,27 @@ static void range_key(const J *t, char key[48])
 }
 
 /*
+ * A token whose swap history is this deep takes no more spans over it alone.
+ * Each level is three levels of JSON and a request holds at most 1,000, so a
+ * result still goes back in through parse_tokens; the limit also bounds the
+ * work of rules that keep a token changing without bringing a sequence back
+ * (craigtrim/mutatoc#25).
+ */
+#define HISTORY_DEPTH 256
+
+/* How many swaps deep a token's history goes. */
+static int history_depth(const J *t)
+{
+	int deepest = 0;
+	EACH(u, GET(GET(t, "swaps"), "tokens")) {
+		int depth = history_depth(u);
+		if (depth > deepest)
+			deepest = depth;
+	}
+	return GET(t, "swaps") ? deepest + 1 : 0;
+}
+
+/*
  * Applies span rules until none fits, so a text gets every span its words
  * allow rather than one per sweep (craigtrim/mutatoc#11). Each round takes the
  * best-ranked rule's tightest window, as a single pass always did. The forms
@@ -1030,8 +1051,9 @@ static void range_key(const J *t, char key[48])
  * instead of being rebuilt from the token list. Whitespace-only tokens take
  * no position, just as they never interrupt an exact phrase, but a span
  * still covers those between its words (craigtrim/mutatoc#12). A token
- * whose span would bring back an earlier sequence takes no more spans over
- * it alone, in this sweep or a later one; frozen holds their offsets
+ * takes no more spans over it alone once its history is HISTORY_DEPTH deep,
+ * or, in this sweep or a later one, once its span would bring back an
+ * earlier sequence; frozen_at holds those by their offsets
  * (craigtrim/mutatoc#25).
  */
 static J *spans(const MatchIndex *index, J *ts, const J *names, int line_breaks,
@@ -1046,11 +1068,12 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, int line_breaks,
 	int *token = malloc((size_t)(n ? n : 1) * sizeof(*token));
 	int *line = line_breaks ?
 		malloc((size_t)(n ? n : 1) * sizeof(*line)) : NULL;
-	/* Whether each token takes no more spans over it alone. */
+	/* Whether each token is frozen, and how deep its history goes. */
 	int *frozen = calloc((size_t)(n ? n : 1), sizeof(*frozen));
+	int *depth = malloc((size_t)(n ? n : 1) * sizeof(*depth));
 	Sequence q = { 0 };
 	Occurrences **words = NULL;
-	if (!form || !at || !spacing || !token || !frozen ||
+	if (!form || !at || !spacing || !token || !frozen || !depth ||
 	    (line_breaks && !line)) {
 		fail(e, 1, "Cannot allocate span positions");
 		goto done;
@@ -1064,6 +1087,7 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, int line_breaks,
 			range_key(t, key);
 			frozen[i] = map_get(frozen_at, key) != NULL;
 		}
+		depth[i] = history_depth(t);
 		if ((form[i++] = form_id(&f, index, S(GET(t, "normal")))) < 0) {
 			fail(e, 1, "Cannot allocate span positions");
 			goto done;
@@ -1137,13 +1161,15 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, int line_breaks,
 					span_window(words, k, r, line, &x, &y);
 				/*
 				 * One position means every word is the same form;
-				 * take its first occurrence that is not frozen.
+				 * take its first occurrence that may change.
 				 */
 				if (valid && x == y) {
 					const Occurrences *o = words[0];
 					valid = 0;
 					for (int j = 0; j < o->n && !valid; j++)
-						if (!frozen[token[o->at[j]]]) {
+						if (!frozen[token[o->at[j]]] &&
+						    depth[token[o->at[j]]] <
+							    HISTORY_DEPTH) {
 							x = y = o->at[j];
 							valid = 1;
 						}
@@ -1205,6 +1231,10 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, int line_breaks,
 			fail(e, 1, "Cannot allocate span positions");
 			break;
 		}
+		for (i = bx + 1; i < by; i++)
+			if (depth[i] > depth[bx])
+				depth[bx] = depth[i];
+		depth[bx]++;
 		form[bx] = id;
 		spacing[bx] = 0;
 		frozen[bx] = 0;
@@ -1214,10 +1244,13 @@ static J *spans(const MatchIndex *index, J *ts, const J *names, int line_breaks,
 			(size_t)(n - by) * sizeof(*spacing));
 		memmove(frozen + bx + 1, frozen + by,
 			(size_t)(n - by) * sizeof(*frozen));
+		memmove(depth + bx + 1, depth + by,
+			(size_t)(n - by) * sizeof(*depth));
 		n -= by - bx - 1;
 	}
 done:
 	sequence_free(&q);
+	free(depth);
 	free(frozen);
 	free(line);
 	free(words);
