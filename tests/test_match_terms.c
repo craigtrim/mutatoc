@@ -26,8 +26,8 @@ typedef struct {
 static Category categories[] = {
 	{ "table", 57 },	{ "case", 288 },      { "whitespace", 150 },
 	{ "punctuation", 581 }, { "unicode", 74 },    { "position", 176 },
-	{ "spans", 615 },	{ "lists", 30 },      { "engines", 6 },
-	{ "errors", 65 },	{ "isolation", 111 }, { "cross-check", 2054 },
+	{ "spans", 615 },	{ "lists", 72 },      { "engines", 6 },
+	{ "errors", 65 },	{ "isolation", 112 }, { "cross-check", 2097 },
 };
 #define CATEGORY_COUNT ((int)(sizeof(categories) / sizeof(*categories)))
 static int failures, printed, xpasses;
@@ -1222,6 +1222,56 @@ static void lists_family(void)
 		DEL(want);
 		DEL(terms);
 	}
+	/*
+	 * Spellings a label derives: an underscore is a word break and a final
+	 * ! ? or . may drop, together too.
+	 */
+	static const char *const derived[] = {
+		"data_science!", "data_science?", "data_science.",
+		"data science!", "Data_Science!", "DATA_SCIENCE."
+	};
+	for (size_t i = 0; i < sizeof(derived) / sizeof(*derived); i++)
+		for (int mode = 0; mode < 2; mode++) {
+			J *terms = ARR(), *want = ARR();
+			ADD(terms, STR(derived[i]));
+			expect_at(want, 0, "data science", 0, 12);
+			both("lists", terms, "data science", modes[mode], want,
+			     MATCH);
+			DEL(terms);
+			DEL(want);
+		}
+	/*
+	 * Two spellings that fold to cafe, the second with an invisible
+	 * character after a space: the first listed wins wherever an
+	 * unrelated term stands in the list.
+	 */
+	static const char *const invisible[] = { "\xe2\x80\x8b", "\xc2\xad",
+						 "\xcc\x81", "\xe2\x81\xa0",
+						 "\xef\xb8\x8f" };
+	for (size_t v = 0; v < 5; v++)
+		for (int place = 0; place < 3; place++)
+			for (int mode = 0; mode < 2; mode++) {
+				char second[24];
+				snprintf(second, sizeof(second),
+					 "caf\xc3\xa9 %s", invisible[v]);
+				const char *list[3];
+				int k = 0, first = -1;
+				for (int slot = 0; slot < 3; slot++) {
+					if (slot == place)
+						list[k++] = "alpha beta";
+					else if (first < 0) {
+						first = k;
+						list[k++] = "caf\xc3\xa9";
+					} else
+						list[k++] = second;
+				}
+				J *terms = terms_of(list, 3), *want = ARR();
+				expect_at(want, first, "cafe", 0, 4);
+				both("lists", terms, "cafe", modes[mode], want,
+				     MATCH);
+				DEL(terms);
+				DEL(want);
+			}
 	/* An empty list matches nothing in any text. */
 	static const char *const any[] = { "", "data science", "alpha x beta",
 					   "\xf0\x9f\x98\x80" };
@@ -1278,6 +1328,12 @@ static void isolation_family(void)
 				DEL(terms);
 				text_free(&t);
 			}
+	/* The lookup's internal key names never match text. */
+	static const char *const placed[] = { "alpha", "beta" };
+	J *pair = terms_of(placed, 2), *none = ARR();
+	both("isolation", pair, "p0 P1 p1 P0", NULL, none, NO_MATCH);
+	DEL(pair);
+	DEL(none);
 	/* An index joined to the word by an underscore is one other word. */
 	J *terms = ARR(), *want = ARR();
 	ADD(terms, STR("alpha"));
