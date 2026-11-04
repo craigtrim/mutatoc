@@ -88,7 +88,9 @@ static J *synonyms_build(J *raw, int reverse, int consume, J **reverse_out)
 		}
 		for (J *v = input->child, *next; v; v = next) {
 			next = v->next;
-			char *replaced = strchr(S(v), '+') ?
+			/* A literal + stays in the key, so C++ keys as c++ and its
+			 * tokenized alias c + + (craigtrim/mutatoc#28). */
+			char *replaced = plus_syntax(S(v)) ?
 						       replace(S(v), "+", " ") :
 						       NULL;
 			const char *r = replaced ? replaced : S(v);
@@ -662,7 +664,7 @@ static J *spans_build(J *raw, int distance, int plus_only, int comma_lists,
 				DEL(ts);
 			}
 		EACH(v, syns) {
-			if (!strchr(S(v), '+'))
+			if (!plus_syntax(S(v)))
 				continue;
 			J *ts = split(S(v), "+"), *content = ARR();
 			for (int i = 1; i < SIZE(ts); i++) {

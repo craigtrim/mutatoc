@@ -15,43 +15,54 @@
  * A term as load reads a label literal, lowercased and trimmed, with each
  * part between + trimmed too, since span keys come from those parts as they
  * stand. Terms that read alike are one term. The normal forms of its tokens,
- * joined by underscores, give the words of its canonical form.
+ * joined by underscores, give the words of its canonical form. A term whose
+ * plus signs are text takes those words from all its tokens, plus signs
+ * included, so C++ and a lone + are terms too (craigtrim/mutatoc#28).
  */
+static int words_of(const char *text, Buf *words)
+{
+	J *tokens = tokenize_text(text);
+	if (!tokens)
+		return 0;
+	EACH(t, tokens) {
+		const char *normal = S(GET(t, "normal"));
+		if (!*normal)
+			continue;
+		if (words->n)
+			buf_put(words, "_");
+		buf_put(words, normal);
+	}
+	DEL(tokens);
+	return 1;
+}
+
 static int label(const char *term, Buf *value, Buf *words)
 {
 	char *copy_of = copy(term);
 	if (!copy_of)
 		return 0;
-	int ok = 1;
+	int ok = 1, literal = strchr(term, '+') && !plus_syntax(term);
 	char *part = copy_of;
 	for (;;) {
 		char *plus = strchr(part, '+');
 		if (plus)
 			*plus = 0;
 		char *trimmed = norm(part, 1, 1);
-		J *tokens = trimmed ? tokenize_text(trimmed) : NULL;
-		if (!tokens) {
+		if (!trimmed || (!literal && !words_of(trimmed, words))) {
 			free(trimmed);
 			ok = 0;
 			break;
 		}
 		buf_put(value, trimmed);
 		free(trimmed);
-		EACH(t, tokens) {
-			const char *normal = S(GET(t, "normal"));
-			if (!*normal)
-				continue;
-			if (words->n)
-				buf_put(words, "_");
-			buf_put(words, normal);
-		}
-		DEL(tokens);
 		if (!plus)
 			break;
 		buf_put(value, "+");
 		part = plus + 1;
 	}
 	free(copy_of);
+	if (ok && literal)
+		ok = words_of(value->p ? value->p : "", words);
 	return ok;
 }
 

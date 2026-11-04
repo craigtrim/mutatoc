@@ -80,6 +80,8 @@ int contains(const J *, const char *);
 void sort_strings(J *, int mode);
 char *join(const J *, const char *);
 J *split(const char *, const char *);
+/* Whether a literal's + signs are span syntax (craigtrim/mutatoc#28). */
+int plus_syntax(const char *);
 const char *local(const char *);
 typedef struct {
 	char *key;
