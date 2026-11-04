@@ -6,9 +6,10 @@
  * matches only as written, and it makes no span rule. Hand-written families of
  * labels, each with the texts it must and must not match, run through ten
  * sentence frames and three casings, across Turtle, JSON and JSONL sources and
- * five predicates, on default, live, deferred and reloaded engines, engines
- * built by update, and match_terms. Span literals with a word in every part
- * keep their rules. No expected match comes from the engine.
+ * five predicates, on default, live, deferred and reloaded engines with
+ * single-word and underscored class IDs, engines built by update, and
+ * match_terms. Span literals with a word in every part keep their rules. No
+ * expected match comes from the engine.
  * craigtrim/mutatoc#28
  */
 
@@ -18,6 +19,21 @@ static int assertions, failures, parses, terms_checked;
 static const char *root;
 /* Failures per family, and the family whose cases are running (-1: none). */
 static int family_failed[64], current = -1;
+/*
+ * Whether class IDs carry an underscore. A class key with one also makes
+ * ordinary multiword span rules from its labels, which single-word IDs skip,
+ * so every family runs both ways.
+ */
+static int underscored;
+
+static char *class_id(const char *id)
+{
+	Buf b = { 0 };
+	buf_put(&b, id);
+	if (underscored)
+		buf_put(&b, "_Class");
+	return buf_take(&b);
+}
 
 #define CHECK(value)                                                  \
 	do {                                                          \
@@ -60,6 +76,13 @@ typedef struct {
 	Scenario scenarios[4];
 	int comma_lists; /* load with comma_lists on */
 	int skip_terms; /* load-only behavior, such as spans with spaced words */
+	/*
+	 * Span positives that fail on underscored IDs before and after #28: the
+	 * plus rule is keyed "gamma " and the ordinary rule "gamma", and trimming
+	 * the keys keeps only one bucket. Counted as expected fails, and reported
+	 * if they start to pass.
+	 */
+	int known_underscore_span;
 } Family;
 
 static const Family families[] = {
@@ -75,6 +98,27 @@ static const Family families[] = {
 	      { { "CppProgramming", "C++ Programming", 0, "exact" } } },
 	    { "C Programming, then C++ Programming",
 	      { { "CppProgramming", "C++ Programming", 20, "exact" } } } } },
+	/* Spaced plus signs give the label words of their own; they still make
+	 * no span rule of any kind. */
+	{ "C + + Programming",
+	  { { "CppProgramming", "C + + Programming" } },
+	  { { "C++ Programming", "CppProgramming", "exact" },
+	    { "C + + Programming", "CppProgramming", "exact" },
+	    { "c ++ programming", "CppProgramming", "exact" } },
+	  { "C + Programming", "Programming + C", "Programming C++",
+	    "C Programming", "C+ Programming", "Programming + + C",
+	    "C + x + Programming" } },
+	{ "Notepad + + Editor",
+	  { { "NotepadEditor", "Notepad + + Editor" } },
+	  { { "Notepad++ Editor", "NotepadEditor", "exact" },
+	    { "notepad + + editor", "NotepadEditor", "exact" } },
+	  { "Notepad + Editor", "Editor + Notepad", "Notepad Editor",
+	    "Editor Notepad++", "Notepad + + x Editor" } },
+	{ "+ alpha beta",
+	  { { "LeadingSpaced", "+ alpha beta" } },
+	  { { "+alpha beta", "LeadingSpaced", "exact" },
+	    { "+ alpha beta", "LeadingSpaced", "exact" } },
+	  { "alpha beta", "beta + alpha", "alpha + beta", "beta alpha +" } },
 	{ "C++ beside C and C#",
 	  { { "Cpp", "C++" }, { "C", "C" }, { "CSharp", "C#" } },
 	  { { "C++", "Cpp", "exact" },
@@ -183,7 +227,11 @@ static const Family families[] = {
 	  { { "GammaDelta", "gamma + delta" } },
 	  { { "gamma delta", "GammaDelta", "exact" },
 	    { "delta x gamma", "GammaDelta", "spans" } },
-	  { "gamma", "delta" } },
+	  { "gamma", "delta" },
+	  { { 0 } },
+	  0,
+	  0,
+	  1 },
 	{ "ALPHA+BETA keeps its span",
 	  { { "Upper", "ALPHA+BETA" } },
 	  { { "alpha beta", "Upper", "exact" },
@@ -289,8 +337,10 @@ static char *source_text(const Family *f, int source)
 			"@prefix skos: <http://www.w3.org/2004/02/skos/core#> .\n"
 			"@prefix : <" NS "> .\n");
 		for (int i = 0; i < 4 && f->classes[i].id; i++) {
+			char *id = class_id(f->classes[i].id);
 			buf_put(&b, ":");
-			buf_put(&b, f->classes[i].id);
+			buf_put(&b, id);
+			free(id);
 			buf_put(&b, " rdf:type owl:Class ; ");
 			buf_put(&b, predicates[source]);
 			buf_put(&b, " ");
@@ -306,7 +356,9 @@ static char *source_text(const Family *f, int source)
 	ADD(records, header);
 	for (int i = 0; i < 4 && f->classes[i].id; i++) {
 		J *r = OBJ();
-		PUT(r, "id", STR(f->classes[i].id));
+		char *id = class_id(f->classes[i].id);
+		PUT(r, "id", STR(id));
+		free(id);
 		PUT(r, "type", STR("owl:Class"));
 		if (source == JSON_SYNONYMS) {
 			J *s = ARR();
@@ -402,9 +454,10 @@ static mc_engine *load(const Family *f, int source, int mode)
 static J *entity(const char *id, const char *surface, int x, const char *type)
 {
 	J *e = OBJ();
-	char *canon = lowered(id);
+	char *written = class_id(id), *canon = lowered(written);
 	PUT(e, "canon", STR(canon));
 	free(canon);
+	free(written);
 	PUT(e, "text", STR(surface));
 	PUT(e, "x", NUM(x));
 	PUT(e, "y", NUM(x + (int)ulen(surface)));
@@ -422,8 +475,14 @@ static void leaves(Buf *b, const J *t)
 		buf_put(b, S(GET(t, "text")));
 }
 
-static void check_parse(mc_engine *e, const char *label, const char *text,
-			const J *expected)
+static int known_fails, known_passing;
+
+/*
+ * A known case is one the issue above leaves failing: a mismatch counts as an
+ * expected fail, and a match fails the run so the expectation gets updated.
+ */
+static void check_parse_known(mc_engine *e, const char *label,
+			      const char *text, const J *expected, int known)
 {
 	parses++;
 	J *q = OBJ();
@@ -445,7 +504,13 @@ static void check_parse(mc_engine *e, const char *label, const char *text,
 		ADD(actual, item);
 	}
 	int same = result && cJSON_Compare(actual, expected, 1);
-	if (!same && failures < 40) {
+	if (known) {
+		if (same && known_passing++ < 5)
+			fprintf(stderr, "known fail now passing: %s | %s\n",
+				label, text);
+		known_fails += !same;
+		same = !same;
+	} else if (!same && failures < 40) {
 		Buf b = { 0 };
 		buf_put(&b, label);
 		buf_put(&b, " | ");
@@ -460,6 +525,12 @@ static void check_parse(mc_engine *e, const char *label, const char *text,
 	free(original.p);
 	DEL(actual);
 	DEL(result);
+}
+
+static void check_parse(mc_engine *e, const char *label, const char *text,
+			const J *expected)
+{
+	check_parse_known(e, label, text, expected, 0);
 }
 
 static void check_terms(const Family *f, const char *text, const J *expected)
@@ -495,6 +566,7 @@ typedef struct {
 	char *text;
 	J *entities; /* parse expectation */
 	J *terms; /* match_terms expectation */
+	int known; /* a known_underscore_span case on underscored IDs */
 } Case;
 
 static void add_entity(Case *c, const Family *f, const char *id,
@@ -514,7 +586,7 @@ static Case framed(const char *prefix, const char *inner, const char *suffix)
 	buf_put(&b, prefix);
 	buf_put(&b, inner);
 	buf_put(&b, suffix);
-	Case c = { buf_take(&b), ARR(), ARR() };
+	Case c = { buf_take(&b), ARR(), ARR(), 0 };
 	return c;
 }
 
@@ -545,6 +617,8 @@ static int family_cases(const Family *f, Case **out)
 				Case c = framed(prefix, inner, suffix);
 				add_entity(&c, f, f->positives[i].id, inner, x,
 					   f->positives[i].type);
+				c.known = underscored && f->known_underscore_span &&
+					  !strcmp(f->positives[i].type, "spans");
 				cases[n++] = c;
 				free(inner);
 			}
@@ -578,11 +652,13 @@ static int family_cases(const Family *f, Case **out)
 static void run_cases(mc_engine *e, const char *label, Case *cases, int n)
 {
 	for (int i = 0; i < n; i++)
-		check_parse(e, label, cases[i].text, cases[i].entities);
+		check_parse_known(e, label, cases[i].text, cases[i].entities,
+				  cases[i].known);
 }
 
 static void test_loads(void)
 {
+	for (underscored = 0; underscored < 2; underscored++)
 	for (int fi = 0; fi < FAMILY_COUNT; fi++) {
 		const Family *f = &families[fi];
 		current = fi;
@@ -600,25 +676,31 @@ static void test_loads(void)
 				buf_put(&label, source_names[source]);
 				buf_put(&label, ", ");
 				buf_put(&label, mode_names[mode]);
+				if (underscored)
+					buf_put(&label, ", underscored IDs");
 				run_cases(e, label.p, cases, n);
 				free(label.p);
 				mc_destroy(e);
 			}
-		if (!f->skip_terms)
+		/* Terms have no class IDs, so they run once. */
+		if (!f->skip_terms && !underscored)
 			for (int i = 0; i < n; i++)
 				check_terms(f, cases[i].text, cases[i].terms);
 		for (int i = 0; i < n; i++)
 			case_free(&cases[i]);
 		free(cases);
 	}
+	underscored = 0;
 }
 
 /* Turtle fragments for update use full IRIs. */
 static char *fragment(const char *id, const char *label)
 {
 	Buf b = { 0 };
+	char *written = class_id(id);
 	buf_put(&b, "<" NS);
-	buf_put(&b, id);
+	buf_put(&b, written);
+	free(written);
 	buf_put(&b, "> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> "
 		    "<http://www.w3.org/2002/07/owl#Class> ; "
 		    "<http://www.w3.org/2000/01/rdf-schema#label> ");
@@ -632,8 +714,10 @@ static J *update_request(const char *id, const char *text)
 	J *q = OBJ();
 	PUT(q, "op", STR("update"));
 	Buf iri = { 0 };
+	char *written = class_id(id);
 	buf_put(&iri, NS);
-	buf_put(&iri, id);
+	buf_put(&iri, written);
+	free(written);
 	if (text) {
 		J *replace = OBJ();
 		PUT(replace, iri.p, STR(text));
@@ -676,6 +760,7 @@ static J *snapshot_of(mc_engine *e)
 static void test_updates(void)
 {
 	static const char seed_id[] = "Seed";
+	for (underscored = 0; underscored < 2; underscored++)
 	for (int fi = 0; fi < FAMILY_COUNT; fi++) {
 		const Family *f = &families[fi];
 		if (f->comma_lists)
@@ -711,6 +796,8 @@ static void test_updates(void)
 			Buf label = { 0 };
 			buf_put(&label, f->name);
 			buf_put(&label, live ? ", update live" : ", update");
+			if (underscored)
+				buf_put(&label, ", underscored IDs");
 			run_cases(e, label.p, cases, n);
 			run_cases(fresh, label.p, cases, n);
 			free(label.p);
@@ -722,6 +809,7 @@ static void test_updates(void)
 			case_free(&cases[i]);
 		free(cases);
 	}
+	underscored = 0;
 }
 
 static J *expect_one(const char *id, const char *surface, int x,
@@ -980,7 +1068,9 @@ int main(int argc, char **argv)
 			fprintf(stderr, "family %s: %d failed checks\n",
 				families[fi].name, family_failed[fi]);
 	printf("plus_literals: %d families, %d parses, %d match_terms calls, "
-	       "%d assertions, %d failures\n",
-	       FAMILY_COUNT, parses, terms_checked, assertions, failures);
+	       "%d assertions, %d failures, %d expected fails, %d expected "
+	       "fails now passing\n",
+	       FAMILY_COUNT, parses, terms_checked, assertions, failures,
+	       known_fails, known_passing);
 	return failures ? 1 : 0;
 }
