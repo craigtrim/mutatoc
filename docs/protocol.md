@@ -138,9 +138,11 @@ Tokenization, source text, code point offsets and swap history are unchanged. Fo
 
 ## Span rules
 
-<!-- craigtrim/mutatoc#9, craigtrim/mutatoc#11, craigtrim/mutatoc#12 -->
+<!-- craigtrim/mutatoc#9, craigtrim/mutatoc#11, craigtrim/mutatoc#12, craigtrim/mutatoc#28 -->
 
 A span rule matches the words of a multiword label when they appear near each other in any order rather than as the exact phrase. The snapshot's `spans` view keys each rule by the label's first word and lists the label's other words, without stopwords, as `content`. A rule matches when the text holds the key and every content word, and one occurrence of each can be chosen so that the first and last chosen positions are at most `distance` apart. The distance is 4 unless `load` or `generate_spans` sets another value. The `spans` entity covers the tokens from the first chosen occurrence to the last.
+
+A label or synonym written with `+`, such as `abdomen+wound`, also makes a span rule keyed by its first part, with the other parts as content, and its exact phrase reads each `+` as a space. A `+` is span syntax only when every part between the plus signs holds a word. Otherwise the plus signs are text: `C++ Programming`, `Notepad++`, `alpha++beta` and a lone `+` keep their plus signs, match only as written and make no span rule, so `C++ Programming` matches the text `C++ Programming` and not `C Programming`.
 
 - Every word of the rule is held to the distance, not only two of them. A rule whose key and content words, after stopwords are dropped, number more than `distance + 1` can therefore match only as its exact phrase: `Office of Tidal Records` needs three words, not four.
 - Positions count every token except whitespace. Punctuation takes a position, while a run of whitespace beyond the single space after a word (a second space, a tab or a line break) takes none, just as it never interrupts an exact phrase in the default `ignore` mode. In `marine, pottery, workshop` the first and last words are four positions apart; in `marine pottery workshop` they are two, and they stay two when tabs or line breaks replace the spaces. A span still covers the whitespace between its words, so its `text`, `x` and `y` are those of the input. An entity matched exactly earlier in the parse is one position.
@@ -175,12 +177,12 @@ returns
 A term matches the way the same text matches as an ontology label, through the same tokenizer and [normalization](#normalization):
 
 - A plain term such as `data science` matches only as its exact phrase, in any case and with any whitespace between its words. An underscore inside a term is a word break, as in a label, so `data_science` matches `data science` and not `data_science`.
-- A term written `alpha+beta` also matches as a span rule with key `alpha` and content `beta`, under the [span rules](#span-rules) at distance 4: its words in either order, up to four positions apart. Case and spaces around `+` do not matter. An empty part, as in `alpha++beta` or `+beta`, never matches, so that term has no span, and its other words still match as a phrase. Only `+` terms make span rules; a plain term with several words does not, unlike a multiword label in a load.
+- A term written `alpha+beta` also matches as a span rule with key `alpha` and content `beta`, under the [span rules](#span-rules) at distance 4: its words in either order, up to four positions apart. Case and spaces around `+` do not matter. A term with an empty part, such as `C++`, `alpha++beta`, `+beta` or a lone `+`, has no span syntax: its plus signs are text, and it matches only as written. Only `+` terms make span rules; a plain term with several words does not, unlike a multiword label in a load.
 - `line_breaks` takes `ignore`, the default, or `boundary`, as for `parse`; see [line boundaries](#line-boundaries).
 
 When terms compete for the same words, the stages decide as they do for labels. The exact stage takes the longest phrase, then the leftmost. Among `+` terms, the one with the most words wins, then the one whose first word sorts first. Words that one match has taken are not reported again inside another term's match.
 
-Terms that read the same once lowercased, with the whitespace around their words and their `+` parts trimmed, are one term, and a match reports the first of them. Terms that differ only in accents are separate: as when two labels fold alike, a term already written in the folded form wins, such as `cafe` beside `café`, and otherwise the first one listed. An empty term, or one of only whitespace and `+`, never matches, and an empty `terms` array returns `[]`.
+Terms that read the same once lowercased, with the whitespace around their words and their `+` parts trimmed, are one term, and a match reports the first of them. Terms that differ only in accents are separate: as when two labels fold alike, a term already written in the folded form wins, such as `cafe` beside `café`, and otherwise the first one listed. An empty term, or one of only whitespace, never matches, a term of only plus signs matches those plus signs, and an empty `terms` array returns `[]`.
 
 A `text` that is not a string, `terms` that is not an array, a term that is not a string, or an invalid `line_breaks` returns error 2.
 
