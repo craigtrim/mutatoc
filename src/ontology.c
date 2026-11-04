@@ -704,6 +704,10 @@ static J *spans_build(J *raw, int distance, int plus_only, int comma_lists,
 		EACH(v, values) {
 			if (!strchr(S(v), ' ') && !strchr(S(v), '_'))
 				continue;
+			/* Plus signs that are text make no span rule of any kind, so
+			 * C + + Programming never matches C + Programming. */
+			if (strchr(S(v), '+') && !plus_syntax(S(v)))
+				continue;
 			char *l = lower(S(v)), *s = replace(l, " ", "_");
 			if (strcmp(s, k->string))
 				ordinary_rule(d, k->string, s, distance, &seen,
