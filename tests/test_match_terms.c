@@ -1046,7 +1046,8 @@ static void spans_family(void)
 		}
 	/*
 	 * A pattern with an empty part has no span syntax: its plus signs are
-	 * text, so it matches only as written (craigtrim/mutatoc#28).
+	 * text, so it matches only as written (craigtrim/mutatoc#28). An escaped
+	 * \+ is text too, even between two words (craigtrim/mutatoc#29).
 	 */
 	static const struct {
 		const char *term, *text;
@@ -1075,6 +1076,15 @@ static void spans_family(void)
 		{ "C++ Programming", "C++ Programming", 0, 15 },
 		{ "Notepad++", "Notepad", -1, -1 },
 		{ "Notepad++", "Notepad++", 0, 9 },
+		{ "A\\+ Certification", "A+ Certification", 0, 16 },
+		{ "A\\+ Certification", "A + Certification", 0, 17 },
+		{ "A\\+ Certification", "A Certification", -1, -1 },
+		{ "A\\+ Certification", "Certification A", -1, -1 },
+		{ "\\+", "1 + 2", 2, 3 },
+		{ "C\\+\\+", "I know C++.", 7, 10 },
+		{ "C\\+\\+", "I know C.", -1, -1 },
+		{ "alpha\\+beta", "alpha+beta", 0, 10 },
+		{ "alpha\\+beta", "alpha beta", -1, -1 },
 	};
 	for (size_t i = 0; i < sizeof(malformed) / sizeof(*malformed); i++) {
 		J *want = ARR();

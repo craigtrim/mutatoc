@@ -11,6 +11,10 @@
  * match_terms. Span literals with a word in every part keep their rules. No
  * expected match comes from the engine.
  * craigtrim/mutatoc#28
+ *
+ * The two characters \+ stand for a literal plus sign anywhere, so a plus
+ * between two words can be text too, as in A\+ Certification. Turtle and JSON
+ * spell it \\+. craigtrim/mutatoc#29
  */
 
 #include "testlib.h"
@@ -249,12 +253,59 @@ static const Family families[] = {
 	    { "A+ Certification", "APlus", "spans" },
 	    { "Certification level A", "APlus", "spans" } },
 	  { "Certification", "A" } },
+	/* An escaped \+ is a plus sign that is text (craigtrim/mutatoc#29). */
+	{ "A\\+ Certification",
+	  { { "APlusCert", "A\\+ Certification" } },
+	  { { "A+ Certification", "APlusCert", "exact" },
+	    { "A + Certification", "APlusCert", "exact" },
+	    { "A+Certification", "APlusCert", "exact" } },
+	  { "A Certification", "Certification level A", "Certification", "A",
+	    "A\\+ Certification", "Certification A+", "A- Certification" } },
+	{ "C\\+\\+ Programming",
+	  { { "CppEscaped", "C\\+\\+ Programming" } },
+	  { { "C++ Programming", "CppEscaped", "exact" },
+	    { "C + + Programming", "CppEscaped", "exact" } },
+	  { "C Programming", "C+ Programming", "Programming C++",
+	    "C + Programming" } },
+	{ "\\+",
+	  { { "EscapedPlus", "\\+" } },
+	  { { "+", "EscapedPlus", "exact" } },
+	  { "plus", "\\" },
+	  { { "1 + 2", { { "EscapedPlus", "+", 2, "exact" } } } } },
+	{ "Security\\+",
+	  { { "SecurityPlus", "Security\\+" } },
+	  { { "Security+", "SecurityPlus", "exact" },
+	    { "security +", "SecurityPlus", "exact" } },
+	  { "Security", "Security-" } },
+	{ "A\\+ Certification+exam",
+	  { { "CertExam", "A\\+ Certification+exam" } },
+	  { { "A+ Certification exam", "CertExam", "exact" },
+	    { "A + Certification exam", "CertExam", "exact" } },
+	  { "A Certification exam", "A+ Certification", "exam",
+	    "exam A+ Certification" } },
+	{ "C\\++ Programming",
+	  { { "CPlusSpan", "C\\++ Programming" } },
+	  { { "C+ Programming", "CPlusSpan", "exact" } },
+	  { "C Programming", "C++ Programming", "Programming C+" } },
+	{ "A\\B Testing keeps its backslash",
+	  { { "BackslashTest", "A\\B Testing" } },
+	  { { "A\\B Testing", "BackslashTest", "exact" },
+	    { "a \\ b testing", "BackslashTest", "exact" } },
+	  { "AB Testing", "A B Testing", "A/B Testing" } },
 	{ "decrease+ in a comma list",
 	  { { "Lessening", "decrease+, Decreases" } },
 	  { { "decrease+", "Lessening", "exact" },
 	    { "decrease +", "Lessening", "exact" },
 	    { "Decreases", "Lessening", "exact" } },
 	  { "decrease", "decreased" },
+	  { { "0" } },
+	  1,
+	  1 },
+	{ "escaped plus in a comma list",
+	  { { "Certs", "A\\+ Certification, Security\\+" } },
+	  { { "A+ Certification", "Certs", "exact" },
+	    { "Security+", "Certs", "exact" } },
+	  { "A Certification", "Security" },
 	  { { "0" } },
 	  1,
 	  1 },
@@ -914,6 +965,20 @@ static void test_plus_syntax(void)
 		{ "plain text", 0 },
 		{ "", 0 },
 		{ "alpha_beta", 0 },
+		/* \+ is text and never separates parts (craigtrim/mutatoc#29). */
+		{ "A\\+ Certification", 0 },
+		{ "a\\+b", 0 },
+		{ "\\+", 0 },
+		{ "Security\\+", 0 },
+		{ "C\\+\\+ Programming", 0 },
+		{ "+\\+", 0 },
+		{ "\\++", 0 },
+		{ "a\\\\+b", 0 }, /* the second backslash escapes the plus */
+		{ "A\\+ Certification+exam", 1 },
+		{ "C\\++ Programming", 1 },
+		{ "a\\++b", 1 },
+		{ "a+\\+b", 1 },
+		{ "A\\B Testing", 0 },
 	};
 	for (size_t i = 0; i < sizeof(cases) / sizeof(*cases); i++) {
 		int got = plus_syntax(cases[i].text);
@@ -965,6 +1030,9 @@ static void test_views(void)
 						       SIZE(spans) == 0);
 				DEL(spans);
 			}
+			/* Escaped labels have authored views in test_escapes. */
+			if (strchr(label, '\\'))
+				continue;
 			J *q = OBJ(), *data = OBJ(), *values = ARR();
 			ADD(values, STR(label));
 			PUT(data, "Key", values);
@@ -992,6 +1060,147 @@ static void test_views(void)
 		}
 	}
 	mc_destroy(e);
+}
+
+/*
+ * The escape on its own: the helpers, the views an escaped label produces,
+ * the source spelling Turtle and JSON require, and match_terms telling an
+ * escaped term from a span term. craigtrim/mutatoc#29
+ */
+static void test_escapes(void)
+{
+	static const struct {
+		const char *in, *text; /* text: NULL when nothing changes */
+	} texts[] = {
+		{ "A\\+ Certification", "A+ Certification" },
+		{ "C\\+\\+ Programming", "C++ Programming" },
+		{ "A\\+ Certification+exam", "A+ Certification exam" },
+		{ "C\\++ Programming", "C+  Programming" },
+		{ "\\+", "+" },
+		{ "a\\\\+b", "a\\+b" },
+		{ "alpha+beta", "alpha beta" },
+		{ "C++", NULL },
+		{ "A\\B Testing", NULL },
+		{ "plain", NULL },
+	};
+	for (size_t i = 0; i < sizeof(texts) / sizeof(*texts); i++) {
+		char *got = plus_text(texts[i].in);
+		int same = texts[i].text ? got && !strcmp(got, texts[i].text) :
+					   got == NULL;
+		if (!same && failures < 40)
+			fprintf(stderr, "plus_text(\"%s\") = \"%s\"\n", texts[i].in,
+				got ? got : "(null)");
+		CHECK(same);
+		free(got);
+	}
+	static const struct {
+		const char *in, *parts;
+	} splits[] = {
+		{ "A\\+ Certification+exam", "[\"A+ Certification\",\"exam\"]" },
+		{ "alpha+beta+gamma", "[\"alpha\",\"beta\",\"gamma\"]" },
+		{ "a\\+b", "[\"a+b\"]" },
+		{ "C\\++ Programming", "[\"C+\",\" Programming\"]" },
+		{ "+", "[\"\",\"\"]" },
+	};
+	for (size_t i = 0; i < sizeof(splits) / sizeof(*splits); i++) {
+		J *got = plus_split(splits[i].in), *want = cJSON_Parse(splits[i].parts);
+		int same = cJSON_Compare(got, want, 1);
+		if (!same && failures < 40)
+			test_print_diff(splits[i].in, want, got);
+		CHECK(same);
+		DEL(got);
+		DEL(want);
+	}
+
+	/* Synonym and span views, written out by hand. */
+	mc_engine *e = mc_create();
+	static const struct {
+		const char *label, *form, *absent;
+	} forms[] = {
+		{ "A\\+ Certification", "a+ certification", "a certification" },
+		{ "C\\+\\+ Programming", "c++ programming", "c programming" },
+		{ "A\\+ Certification+exam", "a+ certification exam",
+		  "a certification exam" },
+		{ "\\+", "+", "\\+" },
+		{ "Security\\+", "security+", "security" },
+	};
+	for (size_t i = 0; i < sizeof(forms) / sizeof(*forms); i++) {
+		J *q = OBJ(), *data = OBJ(), *values = ARR();
+		ADD(values, STR(forms[i].label));
+		PUT(data, "Key", values);
+		PUT(q, "op", STR("generate_synonyms"));
+		PUT(q, "data", data);
+		J *fwd = request(e, q), *got = GET(fwd, "key");
+		if (!contains(got, forms[i].form) && failures < 40)
+			test_print_diff(forms[i].label, NULL, got);
+		CHECK(contains(got, forms[i].form));
+		CHECK(!contains(got, forms[i].absent));
+		DEL(fwd);
+	}
+	J *q = OBJ(), *data = OBJ(), *values = ARR();
+	ADD(values, STR("A\\+ Certification+exam"));
+	PUT(data, "Key", values);
+	PUT(q, "op", STR("generate_spans"));
+	PUT(q, "data", data);
+	PUT(q, "plus_only", BOOL(1));
+	J *spans = request(e, q);
+	J *rules = GET(spans, "A+ Certification");
+	CHECK(SIZE(spans) == 1 && SIZE(rules) == 1);
+	J *content = GET(AT(rules, 0), "content");
+	CHECK(SIZE(content) == 1 && !strcmp(S(AT(content, 0)), "exam"));
+	DEL(spans);
+	mc_destroy(e);
+
+	/* Turtle and JSON have no \+ escape; a source writes \\+ instead. */
+	static const struct {
+		const char *format, *content;
+	} raw[] = {
+		{ "turtle",
+		  "@prefix : <" NS "> .\n"
+		  "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
+		  ":A rdfs:label \"A\\+ Certification\" .\n" },
+		{ "json",
+		  "[{\"format\":\"mutatoc/1\",\"namespace\":\"" NS "\"},"
+		  "{\"id\":\"A\",\"type\":\"owl:Class\","
+		  "\"label\":\"A\\+ Certification\"}]" },
+		{ "jsonl",
+		  "{\"format\":\"mutatoc/1\",\"namespace\":\"" NS "\"}\n"
+		  "{\"id\":\"A\",\"type\":\"owl:Class\","
+		  "\"label\":\"A\\+ Certification\"}\n" },
+	};
+	for (size_t i = 0; i < sizeof(raw) / sizeof(*raw); i++) {
+		J *load = OBJ();
+		PUT(load, "op", STR("load"));
+		PUT(load, "content", STR(raw[i].content));
+		PUT(load, "format", STR(raw[i].format));
+		mc_engine *x = mc_create();
+		J *response = test_request(x, load);
+		CHECK(response && !cJSON_IsTrue(GET(response, "ok")));
+		DEL(response);
+		DEL(load);
+		mc_destroy(x);
+	}
+
+	/* An escaped term and a span term over the same words. */
+	J *terms = ARR();
+	ADD(terms, STR("A\\+ Certification"));
+	ADD(terms, STR("A+ Certification"));
+	q = OBJ();
+	PUT(q, "op", STR("match_terms"));
+	PUT(q, "text", STR("A+ Certification. A Certification. Certification A."));
+	PUT(q, "terms", terms);
+	mc_engine *t = mc_create();
+	J *actual = request(t, q);
+	mc_destroy(t);
+	J *expected = cJSON_Parse("[{\"term\":0,\"x\":0,\"y\":16},"
+				  "{\"term\":1,\"x\":18,\"y\":33},"
+				  "{\"term\":1,\"x\":35,\"y\":50}]");
+	int same = actual && cJSON_Compare(actual, expected, 1);
+	if (!same)
+		test_print_diff("escaped and span terms", expected, actual);
+	CHECK(same);
+	DEL(actual);
+	DEL(expected);
 }
 
 /* Terms that differ only in the whitespace around literal plus signs are one
@@ -1058,6 +1267,7 @@ int main(int argc, char **argv)
 	test_plus_syntax();
 	test_views();
 	test_term_identity();
+	test_escapes();
 	test_update_sequence();
 	test_loads();
 	test_updates();
