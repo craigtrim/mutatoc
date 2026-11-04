@@ -8,7 +8,15 @@
 
 ### Changed
 
-- A label, synonym or term whose plus signs are not span syntax now matches as written ([#28](https://github.com/craigtrim/mutatoc/issues/28)). A `+` is span syntax only when every part between the plus signs holds a word, as in `abdomen+wound` or `Human Behavior + Social Environment`, and those literals behave as before. Otherwise the plus signs are text: `C++ Programming` matches `C++ Programming` and no longer matches `C Programming`, a `C++` label no longer takes the letter `C` from a class labelled `C`, and `Notepad++`, `C+` and a lone `+` match only with their plus signs. A literal with an empty part makes no span rule, where it used to make one that needed an empty word and never matched. `alpha+`, `+beta` and `alpha++beta` no longer match `alpha`, `beta` or `alpha beta`; as `match_terms` terms they match only `alpha+`, `+beta` and `alpha++beta`. `A+ Certification` has a word on both sides of its `+`, so it is still a span rule. Prepared snapshots keep the views they were built with, so rebuild them from source to pick up the change.
+- A label, synonym or term whose plus signs are not span syntax now matches as written ([#28](https://github.com/craigtrim/mutatoc/issues/28)). A `+` is span syntax only when every part between the plus signs holds a word, as in `abdomen+wound` or `alpha + beta`, and those literals behave as before. Otherwise the plus signs are text: `C++ Programming` matches `C++ Programming` and no longer matches `C Programming`, a `C++` label no longer takes the letter `C` from a class labelled `C`, and `Notepad++`, `C+` and a lone `+` match only with their plus signs. A literal with an empty part makes no span rule, where it used to make one that needed an empty word and never matched. `alpha+`, `+beta` and `alpha++beta` no longer match `alpha`, `beta` or `alpha beta`; as `match_terms` terms they match only `alpha+`, `+beta` and `alpha++beta`. `A+ Certification` has a word on both sides of its `+`, so it is still a span rule. Prepared snapshots keep the views they were built with, so rebuild them from source to pick up the change.
+
+### Known limitations
+
+- A span part with several words, as in `Decrease+ brain function`, makes a rule that never matches, so the literal matches only as its exact phrase. Write `decrease+brain+function` instead.
+- A literal with a space before its first `+`, such as `gamma + delta`, can lose its span rule to another rule keyed by the same first word. Write `gamma+delta` instead.
+- In an ontology with the class `Human_Behavior`, the literal `Human Behavior + theory` makes no span rule that matches. Write `Human Behavior theory` instead.
+
+[Known limitations of span rules](docs/protocol.md#known-limitations-of-span-rules) has the details.
 
 ## 0.8.0 (2026-10-28)
 
