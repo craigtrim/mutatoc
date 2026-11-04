@@ -83,6 +83,54 @@ static void replay_session(void *ctx, int index)
 	mc_destroy(e);
 }
 
+/*
+ * Applies one file of authored corrections to the trace's blobs. A change
+ * replaces a key whose recorded value is "before", adds a key the recording
+ * lacks when it has no "before", or inserts a value into a list blob between
+ * two recorded neighbours. Each change checks the recording first, so a
+ * correction can never land on a value it was not written for.
+ * Plus-literal corrections: craigtrim/mutatoc#28
+ */
+static int correct(J *trace, const char *root, const char *relative,
+		   const char *label)
+{
+	J *corrections = test_read_json(root, relative);
+	J *changes = GET(corrections, "changes");
+	if (!test_require_cases(changes, label)) {
+		DEL(corrections);
+		return 0;
+	}
+	int ok = 1;
+	EACH(change, changes) {
+		J *blob = GET(GET(trace, "blobs"), S(GET(change, "blob")));
+		J *insert = GET(change, "insert");
+		if (insert) {
+			int at = (int)GET(change, "index")->valuedouble;
+			J *between = GET(change, "between");
+			ok = cJSON_IsArray(blob) && at > 0 && at < SIZE(blob) &&
+			     cJSON_Compare(AT(blob, at - 1), AT(between, 0), 1) &&
+			     cJSON_Compare(AT(blob, at), AT(between, 1), 1);
+			if (ok)
+				cJSON_InsertItemInArray(blob, at, DUP(insert));
+		} else {
+			const char *key = S(GET(change, "key"));
+			J *before = GET(change, "before");
+			ok = before ? cJSON_Compare(GET(blob, key), before, 1) :
+				      cJSON_IsObject(blob) && !GET(blob, key);
+			if (ok)
+				set(blob, key, DUP(GET(change, "after")));
+		}
+		if (!ok) {
+			fprintf(stderr, "%s: correction no longer matches reference: %s %s\n",
+				relative, S(GET(change, "blob")),
+				insert ? S(insert) : S(GET(change, "key")));
+			break;
+		}
+	}
+	DEL(corrections);
+	return ok;
+}
+
 int main(int argc, char **argv)
 {
 	if (argc != 2)
@@ -91,26 +139,15 @@ int main(int argc, char **argv)
 		test_read_json(argv[1], "tests/fixtures/upstream/trace.json");
 	if (!test_require_cases(GET(trace, "sessions"), "upstream trace"))
 		return 2;
-	/* Keep the frozen trace and check each authored correction's old value. */
-	J *corrections = test_read_json(
-		argv[1], "tests/fixtures/upstream/comma-lists.json");
-	J *changes = GET(corrections, "changes");
-	if (!test_require_cases(changes, "comma-list span corrections"))
+	/* Keep the frozen trace and check each authored correction's old value.
+	 * Plus-literal corrections build on the comma-list ones. */
+	if (!correct(trace, argv[1], "tests/fixtures/upstream/comma-lists.json",
+		     "comma-list span corrections") ||
+	    !correct(trace, argv[1], "tests/fixtures/upstream/plus-literals.json",
+		     "plus-literal corrections")) {
+		DEL(trace);
 		return 2;
-	EACH(change, changes) {
-		J *blob = GET(GET(trace, "blobs"), S(GET(change, "blob")));
-		const char *key = S(GET(change, "key"));
-		if (!cJSON_Compare(GET(blob, key), GET(change, "before"), 1)) {
-			fprintf(stderr,
-				"Comma-list correction no longer matches reference: %s\n",
-				key);
-			DEL(corrections);
-			DEL(trace);
-			return 2;
-		}
-		set(blob, key, DUP(GET(change, "after")));
 	}
-	DEL(corrections);
 	char *fixtures = test_path(argv[1], "tests/fixtures");
 	int count = SIZE(GET(trace, "sessions"));
 	Replay run = { calloc((size_t)count, sizeof(J *)), GET(trace, "blobs"),

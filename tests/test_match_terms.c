@@ -1045,23 +1045,36 @@ static void spans_family(void)
 			text_free(&t);
 		}
 	/*
-	 * Malformed patterns: an empty part never matches, and the parts that
-	 * are left still match as a phrase.
+	 * A pattern with an empty part has no span syntax: its plus signs are
+	 * text, so it matches only as written (craigtrim/mutatoc#28).
 	 */
 	static const struct {
 		const char *term, *text;
 		int x, y;
 	} malformed[] = {
-		{ "alpha+", "alpha beta", 0, 5 },
-		{ "+beta", "alpha beta", 6, 10 },
-		{ "alpha++beta", "alpha beta", 0, 10 },
+		{ "alpha+", "alpha beta", -1, -1 },
+		{ "alpha+", "alpha+ beta", 0, 6 },
+		{ "+beta", "alpha beta", -1, -1 },
+		{ "+beta", "alpha +beta", 6, 11 },
+		{ "alpha++beta", "alpha beta", -1, -1 },
 		{ "alpha++beta", "alpha x beta", -1, -1 },
+		{ "alpha++beta", "alpha++beta", 0, 11 },
+		{ "alpha++beta", "alpha + + beta", 0, 14 },
 		{ "+alpha+beta", "alpha x beta", -1, -1 },
-		{ "+alpha+beta", "alpha beta", 0, 10 },
+		{ "+alpha+beta", "alpha beta", -1, -1 },
+		{ "+alpha+beta", "+alpha+beta", 0, 11 },
 		{ "alpha+beta+", "beta x alpha", -1, -1 },
-		{ "alpha+beta+", "alpha beta", 0, 10 },
-		{ "+", "alpha + beta", -1, -1 },
+		{ "alpha+beta+", "alpha beta", -1, -1 },
+		{ "alpha+beta+", "alpha+beta+", 0, 11 },
+		{ "+", "alpha + beta", 6, 7 },
 		{ "++", "alpha beta", -1, -1 },
+		{ "++", "alpha ++ beta", 6, 8 },
+		{ "C++", "I know C++.", 7, 10 },
+		{ "C++", "I know C.", -1, -1 },
+		{ "C++ Programming", "C Programming", -1, -1 },
+		{ "C++ Programming", "C++ Programming", 0, 15 },
+		{ "Notepad++", "Notepad", -1, -1 },
+		{ "Notepad++", "Notepad++", 0, 9 },
 	};
 	for (size_t i = 0; i < sizeof(malformed) / sizeof(*malformed); i++) {
 		J *want = ARR();
@@ -1195,7 +1208,8 @@ static void lists_family(void)
 		{ { "beta+alpha", "alpha+beta" },
 		  "alpha x beta",
 		  { { 1, 0, 12 }, { -1 } } },
-		/* Empty and whitespace-only terms never match. */
+		/* Empty and whitespace-only terms never match, and a lone +
+		 * matches only a plus sign (craigtrim/mutatoc#28). */
 		{ { "", " ", "\t", "\n", "+", "data science" },
 		  "data science",
 		  { { 5, 0, 12 }, { -1 } } },
@@ -1653,8 +1667,8 @@ static void table_family(void)
 		{ { "alpha++beta" },
 		  "alpha beta",
 		  NULL,
-		  MATCH,
-		  { { 0, 0, 10 }, { -1 } } },
+		  NO_MATCH,
+		  { { -1 } } },
 		{ { "alpha++beta" },
 		  "alpha x beta",
 		  NULL,
@@ -1663,8 +1677,13 @@ static void table_family(void)
 		{ { "alpha+", "+beta" },
 		  "alpha beta",
 		  NULL,
+		  NO_MATCH,
+		  { { -1 } } },
+		{ { "alpha+", "+beta" },
+		  "alpha+ +beta",
+		  NULL,
 		  MATCH,
-		  { { 0, 0, 5 }, { 1, 6, 10 }, { -1 } } },
+		  { { 0, 0, 6 }, { 1, 7, 12 }, { -1 } } },
 		{ { "alpha+beta+gamma" },
 		  "alpha beta gamma",
 		  NULL,

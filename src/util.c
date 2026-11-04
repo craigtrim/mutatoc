@@ -694,6 +694,32 @@ J *split(const char *s, const char *sep)
 	return a;
 }
 
+/*
+ * A + in a label, synonym or term is span syntax only when every part between
+ * the plus signs holds a word once trimmed the way span words are. Otherwise
+ * none of its plus signs is syntax: they are text, as in C++ or Notepad++, and
+ * make no span rule. craigtrim/mutatoc#28
+ */
+int plus_syntax(const char *s)
+{
+	if (!strchr(s, '+'))
+		return 0;
+	for (const char *start = s;;) {
+		const char *end = strchr(start, '+');
+		char *part = slice(start, end ? (size_t)(end - start) :
+						strlen(start));
+		char *word = norm(part, 0, 1);
+		int empty = !*word;
+		free(word);
+		free(part);
+		if (empty)
+			return 0;
+		if (!end)
+			return 1;
+		start = end + 1;
+	}
+}
+
 const char *local(const char *s)
 {
 	const char *p = strrchr(s, '#');

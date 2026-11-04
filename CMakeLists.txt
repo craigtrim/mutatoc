@@ -137,6 +137,9 @@ if(BUILD_TESTING)
   # Term matching without an ontology (craigtrim/mutatoc#23).
   mutatoc_program(mutatoc_match_terms tests/test_match_terms.c)
   add_test(NAME match_terms COMMAND mutatoc_match_terms)
+  # Labels whose plus signs are text, such as C++ (craigtrim/mutatoc#28).
+  mutatoc_program(mutatoc_plus_literals tests/test_plus_literals.c)
+  add_test(NAME plus_literals COMMAND mutatoc_plus_literals ${CMAKE_CURRENT_SOURCE_DIR})
   # Timing ceilings only mean something in optimized builds without sanitizers.
   # Build type names are case-insensitive in CMake, so compare them uppercased.
   set(optimized_configurations Release RelWithDebInfo MinSizeRel)
