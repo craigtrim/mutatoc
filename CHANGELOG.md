@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `\+` writes a plus sign that is text anywhere in a label, synonym or `match_terms` term ([#29](https://github.com/craigtrim/mutatoc/issues/29)). `A\+ Certification` matches `A+ Certification` and `A + Certification` and never `A Certification`, while `A+ Certification` stays a span rule. Turtle and JSON have no `\+` escape of their own, so sources write `\\+`, as in `"A\\+ Certification"`. A backslash before any other character is unchanged. [Span rules](docs/protocol.md#span-rules) has a table of where the plus-sign rules draw their lines.
+
 ### Changed
 
 - A label, synonym or term whose plus signs are not span syntax now matches as written ([#28](https://github.com/craigtrim/mutatoc/issues/28)). A `+` is span syntax only when every part between the plus signs holds a word, as in `abdomen+wound` or `Human Behavior + Social Environment`, and those literals behave as before. Otherwise the plus signs are text: `C++ Programming` matches `C++ Programming` and no longer matches `C Programming`, a `C++` label no longer takes the letter `C` from a class labelled `C`, and `Notepad++`, `C+` and a lone `+` match only with their plus signs. A literal with an empty part makes no span rule, where it used to make one that needed an empty word and never matched. `alpha+`, `+beta` and `alpha++beta` no longer match `alpha`, `beta` or `alpha beta`; as `match_terms` terms they match only `alpha+`, `+beta` and `alpha++beta`. `A+ Certification` has a word on both sides of its `+`, so it is still a span rule. Prepared snapshots keep the views they were built with, so rebuild them from source to pick up the change.
