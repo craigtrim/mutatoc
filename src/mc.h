@@ -82,6 +82,10 @@ char *join(const J *, const char *);
 J *split(const char *, const char *);
 /* Whether a literal's + signs are span syntax (craigtrim/mutatoc#28). */
 int plus_syntax(const char *);
+/* \+ is a literal plus sign in labels and terms (craigtrim/mutatoc#29). */
+const char *plus_next(const char *);
+char *plus_text(const char *);
+J *plus_split(const char *);
 const char *local(const char *);
 typedef struct {
 	char *key;

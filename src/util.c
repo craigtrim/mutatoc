@@ -695,17 +695,32 @@ J *split(const char *s, const char *sep)
 }
 
 /*
+ * The next + that is not written \+, or NULL. The two characters \+ stand for
+ * a literal plus sign and never separate span parts. craigtrim/mutatoc#29
+ */
+const char *plus_next(const char *s)
+{
+	for (; *s; s++) {
+		if (*s == '\\' && s[1] == '+')
+			s++;
+		else if (*s == '+')
+			return s;
+	}
+	return NULL;
+}
+
+/*
  * A + in a label, synonym or term is span syntax only when every part between
  * the plus signs holds a word once trimmed the way span words are. Otherwise
  * none of its plus signs is syntax: they are text, as in C++ or Notepad++, and
- * make no span rule. craigtrim/mutatoc#28
+ * make no span rule. An escaped \+ is always text. craigtrim/mutatoc#28
  */
 int plus_syntax(const char *s)
 {
-	if (!strchr(s, '+'))
+	if (!plus_next(s))
 		return 0;
 	for (const char *start = s;;) {
-		const char *end = strchr(start, '+');
+		const char *end = plus_next(start);
 		char *part = slice(start, end ? (size_t)(end - start) :
 						strlen(start));
 		char *word = norm(part, 0, 1);
@@ -716,6 +731,52 @@ int plus_syntax(const char *s)
 			return 0;
 		if (!end)
 			return 1;
+		start = end + 1;
+	}
+}
+
+/*
+ * The text a literal matches as: \+ becomes +, and when the literal's plus
+ * signs are span syntax, each unescaped + becomes a space. NULL when nothing
+ * changes. craigtrim/mutatoc#29
+ */
+char *plus_text(const char *s)
+{
+	int syntax = plus_syntax(s);
+	if (!syntax && !strstr(s, "\\+"))
+		return NULL;
+	Buf b = { 0 };
+	for (; *s; s++) {
+		if (*s == '\\' && s[1] == '+') {
+			buf_put(&b, "+");
+			s++;
+		} else if (*s == '+' && syntax)
+			buf_put(&b, " ");
+		else
+			buf_add(&b, s, 1);
+	}
+	return buf_take(&b);
+}
+
+/* The parts between unescaped plus signs, each with \+ read as +. */
+J *plus_split(const char *s)
+{
+	J *parts = ARR();
+	for (const char *start = s;;) {
+		const char *end = plus_next(start);
+		Buf b = { 0 };
+		for (const char *p = start; end ? p < end : *p != 0; p++) {
+			if (*p == '\\' && p[1] == '+') {
+				buf_put(&b, "+");
+				p++;
+			} else
+				buf_add(&b, p, 1);
+		}
+		char *part = buf_take(&b);
+		ADD(parts, STR(part));
+		free(part);
+		if (!end)
+			return parts;
 		start = end + 1;
 	}
 }

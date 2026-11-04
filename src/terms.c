@@ -17,11 +17,14 @@
  * stand. Terms that read alike are one term. The normal forms of its tokens,
  * joined by underscores, give the words of its canonical form. A term whose
  * plus signs are text takes those words from all its tokens, plus signs
- * included, so C++ and a lone + are terms too (craigtrim/mutatoc#28).
+ * included, so C++ and a lone + are terms too (craigtrim/mutatoc#28). Only an
+ * unescaped + separates parts, and \+ reads as + (craigtrim/mutatoc#29).
  */
 static int words_of(const char *text, Buf *words)
 {
-	J *tokens = tokenize_text(text);
+	char *unescaped = plus_text(text);
+	J *tokens = tokenize_text(unescaped ? unescaped : text);
+	free(unescaped);
 	if (!tokens)
 		return 0;
 	EACH(t, tokens) {
@@ -44,7 +47,7 @@ static int label(const char *term, Buf *value, Buf *words)
 	int ok = 1, literal = strchr(term, '+') && !plus_syntax(term);
 	char *part = copy_of;
 	for (;;) {
-		char *plus = strchr(part, '+');
+		char *plus = (char *)plus_next(part);
 		if (plus)
 			*plus = 0;
 		char *trimmed = norm(part, 1, 1);

@@ -89,10 +89,9 @@ static J *synonyms_build(J *raw, int reverse, int consume, J **reverse_out)
 		for (J *v = input->child, *next; v; v = next) {
 			next = v->next;
 			/* A literal + stays in the key, so C++ keys as c++ and its
-			 * tokenized alias c + + (craigtrim/mutatoc#28). */
-			char *replaced = plus_syntax(S(v)) ?
-						       replace(S(v), "+", " ") :
-						       NULL;
+			 * tokenized alias c + + (craigtrim/mutatoc#28), and \+ keys
+			 * as + (craigtrim/mutatoc#29). */
+			char *replaced = plus_text(S(v));
 			const char *r = replaced ? replaced : S(v);
 			char *owned;
 			const char *normal = norm_borrowed(r, &owned);
@@ -666,7 +665,7 @@ static J *spans_build(J *raw, int distance, int plus_only, int comma_lists,
 		EACH(v, syns) {
 			if (!plus_syntax(S(v)))
 				continue;
-			J *ts = split(S(v), "+"), *content = ARR();
+			J *ts = plus_split(S(v)), *content = ARR();
 			for (int i = 1; i < SIZE(ts); i++) {
 				char *c = norm(S(AT(ts, i)), 0, 1);
 				unique(content, c);
@@ -705,7 +704,8 @@ static J *spans_build(J *raw, int distance, int plus_only, int comma_lists,
 			if (!strchr(S(v), ' ') && !strchr(S(v), '_'))
 				continue;
 			/* Plus signs that are text make no span rule of any kind, so
-			 * C + + Programming never matches C + Programming. */
+			 * C + + Programming never matches C + Programming, and an
+			 * escaped A\+ Certification never matches A Certification. */
 			if (strchr(S(v), '+') && !plus_syntax(S(v)))
 				continue;
 			char *l = lower(S(v)), *s = replace(l, " ", "_");
