@@ -1085,6 +1085,11 @@ static void spans_family(void)
 		{ "C\\+\\+", "I know C.", -1, -1 },
 		{ "alpha\\+beta", "alpha+beta", 0, 10 },
 		{ "alpha\\+beta", "alpha beta", -1, -1 },
+		/* Trimming a part never makes a backslash escape the plus after it. */
+		{ "alpha\\ +beta", "alpha \\ beta", 0, 12 },
+		{ "alpha\\ +beta", "alpha+beta", -1, -1 },
+		{ "alpha\\ +", "alpha+", -1, -1 },
+		{ "alpha\\ +", "alpha\\ +", 0, 8 },
 	};
 	for (size_t i = 0; i < sizeof(malformed) / sizeof(*malformed); i++) {
 		J *want = ARR();
