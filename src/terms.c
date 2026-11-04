@@ -60,6 +60,10 @@ static int label(const char *term, Buf *value, Buf *words)
 		free(trimmed);
 		if (!plus)
 			break;
+		/* A part that ends in a backslash keeps a space before the plus,
+		 * so trimming never turns a separator into an escaped \+. */
+		if (value->n && value->p[value->n - 1] == '\\')
+			buf_put(value, " ");
 		buf_put(value, "+");
 		part = plus + 1;
 	}
