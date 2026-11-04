@@ -149,7 +149,8 @@ A plus sign between two words always reads as span syntax, so `A+ Certification`
 | Written | Plus signs | Matches | Does not match |
 | --- | --- | --- | --- |
 | `alpha+beta`, `alpha + beta` | span syntax | `alpha beta`, `beta x alpha` | `alpha x x x x beta` |
-| `Decrease+ brain function` | span syntax | `brain function decrease` | |
+| `Decrease+ brain function` | span syntax, with a two-word part | `Decrease brain function` | `brain function decrease` |
+| `decrease+brain+function` | span syntax | `Decrease brain function`, `brain function decrease` | |
 | `A+ Certification` | span syntax | `A+ Certification`, `A Certification`, `Certification level A` | |
 | `A\+ Certification` | text | `A+ Certification`, `A + Certification` | `A Certification` |
 | `C++ Programming`, `C\+\+ Programming` | text | `C++ Programming`, `C + + Programming` | `C Programming`, `C+ Programming` |
@@ -166,6 +167,14 @@ A plus sign between two words always reads as span syntax, so `A+ Certification`
 The spans stage applies rules one at a time until none fits. Each round takes the rule whose canonical form has the most underscores, at its tightest window, and collapses that window, so a text gets every span its words allow. A parse runs three sweeps of exact, span and hierarchy matching (the request's `ctr` field changes the count), and the number of sweeps does not limit the spans; `transform_tokens` with `stage: "spans"` runs the same loop. A collapsed match is one position, so a later span may cover an earlier match, as `Psychology Behavioral` covers the exact match `psychology` with the span `behavioral_psychology`. The distance bounds each window in the stream as it stands, so nested spans can cover more of the original text than the distance suggests. A stage that applies 100,000 spans fails with code 4, as exact matching does.
 
 `tests/test_span_distance.c` holds these rules.
+
+### Known limitations of span rules
+
+Three kinds of `+` literal lose their span rule, and each item below gives a spelling that keeps it.
+
+- **A part with several words.** A span part must be one word. In `Decrease+ brain function` or `Human Behavior + Social Environment`, the rule keys or lists a two-word part, which never equals a word of the text, so the literal matches only as its exact phrase: `Decrease+ brain function` matches `Decrease brain function` and not `brain function decrease`. `match_terms` terms behave the same way. Write each word as its own part: `decrease+brain+function` matches both texts.
+- **A space before the first `+`.** The rule from `gamma + delta` is keyed `gamma ` with its space, and building the spans view trims that key to `gamma`; when another rule is already keyed `gamma`, only one of the two keys keeps its rules. `gamma + delta` loses its span rule when the ontology also has a multiword rule keyed `gamma`, which a class with an underscore in its ID makes from any label or synonym of several words that starts with `gamma`: `Gamma_Ray` labelled `gamma ray` makes one, and so does `GammaDelta_Class` labelled `gamma + delta` itself. With an unspaced `gamma+epsilon` in the same ontology, only one of the two keeps its rule, depending on their order in the source. The exact phrase still matches, and `match_terms` is not affected. Write the literal without spaces: `gamma+delta` keeps its rule.
+- **A `+` after the words of a two-word class ID.** When a label or synonym holds the two words of a class ID joined by an underscore, such as `Human Behavior` for the class `Human_Behavior`, loading adds a rule keyed by that class, so the label `Human Behavior theory` matches `theory of Human Behavior` after the exact stage has matched `Human Behavior`. Written as `Human Behavior + theory`, the literal gets a second plus sign in that rule (`human_behavior + + theory`), which makes no rule, and its own rule has the two-word part `Human Behavior`, so `theory of Human Behavior` does not match. Leave the plus sign out: `Human Behavior theory` matches it.
 
 ## Term matching
 
@@ -188,7 +197,7 @@ returns
 A term matches the way the same text matches as an ontology label, through the same tokenizer and [normalization](#normalization):
 
 - A plain term such as `data science` matches only as its exact phrase, in any case and with any whitespace between its words. An underscore inside a term is a word break, as in a label, so `data_science` matches `data science` and not `data_science`.
-- A term written `alpha+beta` also matches as a span rule with key `alpha` and content `beta`, under the [span rules](#span-rules) at distance 4: its words in either order, up to four positions apart. Case and spaces around `+` do not matter. A term with an empty part, such as `C++`, `alpha++beta`, `+beta` or a lone `+`, has no span syntax: its plus signs are text, and it matches only as written. A term writes `\+` for a plus sign that is text between two words, as in `A\+ Certification`, which the request JSON spells `"A\\+ Certification"`. Only `+` terms make span rules; a plain term with several words does not, unlike a multiword label in a load.
+- A term written `alpha+beta` also matches as a span rule with key `alpha` and content `beta`, under the [span rules](#span-rules) at distance 4: its words in either order, up to four positions apart. Case and spaces around `+` do not matter. Each part must be one word for the span to match, as in a load; see [known limitations](#known-limitations-of-span-rules). A term with an empty part, such as `C++`, `alpha++beta`, `+beta` or a lone `+`, has no span syntax: its plus signs are text, and it matches only as written. A term writes `\+` for a plus sign that is text between two words, as in `A\+ Certification`, which the request JSON spells `"A\\+ Certification"`. Only `+` terms make span rules; a plain term with several words does not, unlike a multiword label in a load.
 - `line_breaks` takes `ignore`, the default, or `boundary`, as for `parse`; see [line boundaries](#line-boundaries).
 
 When terms compete for the same words, the stages decide as they do for labels. The exact stage takes the longest phrase, then the leftmost. Among `+` terms, the one with the most words wins, then the one whose first word sorts first. Words that one match has taken are not reported again inside another term's match.
